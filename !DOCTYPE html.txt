@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilahia Trust Institutions | Official Portal & Advanced Admin Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+    <!-- Top Trust Bar & College Page Switcher -->
+    <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm py-2 px-4 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-2">
+                <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-semibold">Ilahia Trust Network</span>
+                <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
+            </div>
+            <div class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto max-w-full py-1">
+                <span class="text-slate-400 text-xs hidden lg:inline">Switch Campus:</span>
+                <button onclick="switchCollegePage('icet')" id="btn-icet" class="college-tab-btn bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition whitespace-nowrap shadow-sm">ICET (Engineering)</button>
+                <button onclick="switchCollegePage('arts')" id="btn-arts" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Arts & Science</button>
+                <button onclick="switchCollegePage('poly')" id="btn-poly" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Polytechnic</button>
+                <button onclick="switchCollegePage('school')" id="btn-school" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Public School</button>
+                <button onclick="switchCollegePage('iti')" id="btn-iti" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">ITI</button>
+            </div>
+        </div>
+    </header>
+    <!-- Main Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div id="navLogoBg" class="bg-blue-900 text-white p-2.5 rounded-lg font-bold text-xl flex items-center justify-center shadow-sm">
+                    <i id="navLogoIcon" class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 id="navTitle" class="font-bold text-base sm:text-lg text-slate-900 leading-tight">ICET Muvattupuzha</h1>
+                    <p id="navSub" class="text-xs text-slate-500">Mulavoor P.O., Muvattupuzha, Kerala</p>
+                </div>
+            </div>
+            <!-- Desktop Links & Portal Buttons -->
+            <div class="hidden md:flex items-center space-x-4 font-medium text-sm text-slate-700">
+                <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
+                <a href="#details" class="hover:text-blue-700 transition">Programs</a>
+                <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
+                <a href="#details" class="hover:text-blue-700 transition">Programs</a>
+                <a href="#campus-navigation" class="hover:text-blue-700 transition">Campus Map</a>
+                
+                <!-- Multi-language Selector -->
+                <div class="flex items-center space-x-1 bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-xs">
+                    <i class="fa-solid fa-globe text-blue-700"></i>
+                    <select id="globalLangSelect" onchange="changeLanguage(this.value)" class="bg-transparent focus:outline-none font-semibold text-slate-700 cursor-pointer">
+                        <option value="en">English</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                    </select>
+                </div>
+                
+                <button onclick="openPortalModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-2 rounded-lg transition flex items-center space-x-2 text-xs font-medium border border-slate-300">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                    <span>Portal Sign In</span>
+                </button>
+                
+                <button onclick="openAdminModal()" class="bg-blue-900 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow-sm transition flex items-center space-x-2 text-sm font-medium">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Admin Panel</span>
+                </button>
+            </div>
+            <!-- Mobile Buttons -->
+            <div class="md:hidden flex space-x-2 items-center">
+                <select id="mobileLangSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 border border-slate-200 rounded p-1 text-[11px] font-semibold">
+                    <option value="en">EN</option>
+                    <option value="ml">മല</option>
+                    <option value="ar">عربي</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ta">தமிழ்</option>
+                </select>
+                <button onclick="openPortalModal()" class="bg-slate-200 text-slate-800 text-xs px-2.5 py-1.5 rounded font-medium">Portals</button>
+                <button onclick="openAdminModal()" class="bg-blue-900 text-white text-xs px-2.5 py-1.5 rounded font-medium">Admin</button>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <header class="relative bg-slate-900 text-white py-20 px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-50">
+            <img id="heroImage" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80" alt="Ilahia Campus Real View" class="w-full h-full object-cover transition-opacity duration-500">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-10"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-20 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+                <span id="heroBadge" class="bg-blue-900/90 text-blue-200 text-xs px-3 py-1 rounded-md uppercase tracking-wider font-semibold border border-blue-700">
+                    AICTE Approved & KTU Affiliated
+                </span>
+                <h1 id="heroTitle" class="text-3xl sm:text-5xl font-extrabold mt-4 tracking-tight leading-tight text-white">
+                    Ilahia College of Engineering & Technology
+                </h1>
+                <p id="heroDesc" class="mt-4 text-slate-300 text-base sm:text-lg leading-relaxed">
+                    Established in 2002 at Mulavoor, Muvattupuzha — offering exceptional technical education and advanced infrastructural labs.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="#details" class="bg-blue-700 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition">
+                        Explore Departments
+                    </a>
+                    <a href="#contact" class="bg-transparent hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-lg border border-slate-600 transition">
+                        Campus Reach
+                    </a>
+                    <a href="#contact" class="bg-transparent hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-lg border border-slate-600 transition">
+                        Campus Reach
+                    </a>
+                    <a href="#campus-navigation" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
+                        Campus Navigation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Institution Overview Section -->
+    <section id="overview" class="py-16 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 id="overviewHeading" class="text-2xl sm:text-3xl font-bold text-slate-900">Campus Facilities & Infrastructure</h2>
+            <p id="overviewSubText" class="text-slate-600 mt-2 text-sm">Designed for comprehensive technical and academic development.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-slate-200 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-xl mb-4 font-bold">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <h3 id="facTitle1" class="text-lg font-bold text-slate-900 mb-2">Main Administrative & Class Blocks</h3>
+                <p id="facDesc1" class="text-slate-600 text-sm leading-relaxed">Spacious multi-story architectural block housing department offices, seminar halls, and smart classrooms.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-slate-200 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-xl mb-4 font-bold">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3 id="facTitle2" class="text-lg font-bold text-slate-900 mb-2">Advanced Computing & AI Labs</h3>
+                <p id="facDesc2" class="text-slate-600 text-sm leading-relaxed">Dedicated network labs, AI & Data Science computing centers equipped with modern high-speed terminals.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-slate-200 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-xl mb-4 font-bold">
+                    <i class="fa-solid fa-people-roof"></i>
+                </div>
+                <h3 id="facTitle3" class="text-lg font-bold text-slate-900 mb-2">Hostels & Campus Amenities</h3>
+                <p id="facDesc3" class="text-slate-600 text-sm leading-relaxed">Secure residential blocks for students with mess facilities, indoor sports, and transport bus fleet.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Detailed Programs / Departments Section -->
+    <section id="details" class="bg-slate-100/70 py-16 px-4 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-12">
+                <div>
+                    <h2 id="deptHeading" class="text-2xl sm:text-3xl font-bold text-slate-900">Departments & Course Offerings</h2>
+                    <p id="deptSub" class="text-slate-600 mt-2 text-sm">Approved undergraduate and postgraduate streams.</p>
+                </div>
+                <button onclick="openAdminModal()" class="mt-4 sm:mt-0 text-xs bg-blue-700 text-white px-3 py-2 rounded-lg font-medium shadow-sm hover:bg-blue-800 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Manage via Admin</span>
+                </button>
+            </div>
+            
+            <div id="offeringsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </section>
+    <!-- Footer / Contact Information -->
+    </section>
+    <!-- Campus Navigation and Illustrative Campus Plans -->
+    <section id="campus-navigation" class="py-16 px-4 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-8">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Trust Campus Guide</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Campus Navigation & Site Plans</h2>
+                <p class="text-sm text-slate-600 mt-2 max-w-3xl">Choose a campus for its map and directions. The diagrams are illustrative visitor guides, not surveyed or official architectural plans; confirm building locations with the institution.</p>
+            </div>
+            <div id="campusDirectory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 id="campusMapTitle" class="font-bold text-slate-900">Campus map</h3>
+                            <p id="campusMapAddress" class="text-xs text-slate-500 mt-1"></p>
+                        </div>
+                        <a id="campusDirectionsLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs font-semibold">
+                            <i class="fa-solid fa-diamond-turn-right"></i><span>Get directions in Google Maps</span>
+                        </a>
+                        <a id="campusOSMLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 text-blue-700 hover:text-blue-900 px-2 py-2 rounded-lg text-xs font-semibold">
+                            <i class="fa-solid fa-up-right-from-square"></i><span>Open larger map</span>
+                        </a>
+                    </div>
+                    <div id="campusMapFrame" class="w-full h-80" role="application" aria-label="Interactive campus map"></div>
+                    <iframe id="campusMapFallback" class="hidden w-full h-80 border-0" title="OpenStreetMap campus map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="px-4 py-3 border-t border-slate-200 bg-white">
+                        <p id="campusMapDataStatus" class="text-xs text-slate-600">Loading mapped campus buildings…</p>
+                        <ul id="campusMapFeatureList" class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-500"></ul>
+                        <p class="text-[10px] text-slate-400 mt-2">Map tiles and mapped building footprints © OpenStreetMap contributors. Map data may be incomplete; confirm campus facilities with the institution.</p>
+                    </div>
+                </div>
+                <div class="bg-slate-950 text-white rounded-2xl p-5 sm:p-6 overflow-hidden">
+                    <div class="flex items-start justify-between gap-3 mb-4">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-blue-300">Illustrative only · not to scale</span>
+                            <h3 id="campusPlanTitle" class="font-bold text-lg mt-1">Campus orientation plan</h3>
+                        </div>
+                        <i class="fa-solid fa-map text-blue-300 text-xl"></i>
+                    </div>
+                    <div class="rounded-xl border border-blue-900 bg-slate-900 p-3">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="campusPlanGrid"></div>
+                        <div class="mt-3 flex items-center justify-center gap-2 rounded-lg bg-blue-950 border border-blue-800 py-2 text-xs text-blue-100">
+                            <i class="fa-solid fa-road"></i><span id="campusPlanRoad">Approach road & visitor entrance</span>
+                        </div>
+                    </div>
+                    <p id="campusPlanNote" class="text-[11px] leading-relaxed text-slate-400 mt-3">This concept diagram groups typical visitor destinations. It does not show verified building footprints, entrances, or walking routes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer / Contact Information -->
+    <footer id="contact" class="bg-slate-950 text-slate-300 py-12 px-4 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 id="footerCollegeName" class="text-white font-bold text-base mb-3">Ilahia College of Engineering & Tech</h3>
+                <p id="footerAddress" class="text-xs text-slate-400 leading-relaxed">Mulavoor P.O., Muvattupuzha, Ernakulam Dist., Kerala, India - 686673.</p>
+                <p class="text-xs text-slate-400 mt-2">Managed by Ilahia Educational Trust</p>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-base mb-3">Quick Navigation</h3>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#overview" class="hover:text-white transition">Overview</a></li>
+                    <li><a href="#details" class="hover:text-white transition">Programs & Offerings</a></li>
+                    <li><a href="#" onclick="openPortalModal()" class="hover:text-white transition">Student & Teacher Portals</a></li>
+            <div>
+                <h3 class="text-white font-bold text-base mb-3">Quick Navigation</h3>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#overview" class="hover:text-white transition">Overview</a></li>
+                    <li><a href="#details" class="hover:text-white transition">Programs & Offerings</a></li>
+                    <li><a href="#campus-navigation" class="hover:text-white transition">Campus Map & Directions</a></li>
+                    <li><a href="#" onclick="openPortalModal()" class="hover:text-white transition">Student & Teacher Portals</a></li>
+                    <li><a href="#" onclick="openAdminModal()" class="hover:text-white transition">Control Dashboard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-base mb-3">Trust Profile</h3>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">Ilahia Trust operates multi-disciplinary educational campuses aiming for holistic student growth.</p>
+                <span class="inline-block bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded border border-slate-700">Minority Educational Institution</span>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-800/80 text-center text-xs text-slate-500">
+            &copy; 2026 Ilahia Educational Trust. All rights reserved.
+        </div>
+    </footer>
+    <!-- Floating AI Chat Assistant Widget -->
+    <div class="fixed bottom-5 right-5 z-50">
+        <button onclick="toggleChat()" class="bg-blue-700 hover:bg-blue-800 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-105">
+            <i class="fa-solid fa-robot"></i>
+        </button>
+        <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="bg-slate-900 text-white p-3.5 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2.5 h-2.5 bg-blue-400 rounded-full animate-pulse"></div>
+                    <div>
+                        <span id="chatBotTitle" class="font-bold text-xs block">Campus Virtual Assistant</span>
+                        <span id="chatLangIndicator" class="text-[9px] text-slate-300">Language: English</span>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="chatMessages" class="p-4 h-72 overflow-y-auto space-y-3 bg-slate-50 text-xs sm:text-sm">
+                <div id="chatWelcomeMsg" class="bg-blue-50 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[85%] border border-blue-100">
+                    Hello! Ask me about courses, fees, hostel, bus routes, placements, or admissions for any campus. (Supports English, Malayalam, Arabic, Hindi).
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+                <input type="text" id="chatInput" placeholder="Ask about ICET, fees, hostel..." class="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Portal Authentication & Dashboards Modal -->
+    <div id="portalModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        
+        <!-- View 1: Portal Role Selection Menu -->
+        <div id="portalMenuCard" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-slate-100">
+            <button onclick="closePortalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center text-xl mx-auto mb-2 font-bold">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Institutional Portal Sign-In</h3>
+                <p class="text-xs text-slate-500 mt-1">Select your portal to verify identity</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-600 transition bg-slate-50">
+                    <h4 class="font-bold text-sm text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-user-graduate text-blue-700"></i>
+                        <span>Student Portal Login</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-3">Sign in with University ID & student passcode.</p>
+                    <button onclick="showLoginForm('student')" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 rounded-lg text-xs transition">
+                        Proceed to Student Login
+                    </button>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-600 transition bg-slate-50">
+                    <h4 class="font-bold text-sm text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-chalkboard-user text-blue-700"></i>
+                        <span>Teacher Portal Login</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-3">Sign in with College Faculty ID & staff passcode.</p>
+                    <button onclick="showLoginForm('teacher')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2 rounded-lg text-xs transition">
+                        Proceed to Teacher Login
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- View 2: Student Login Form -->
+        <div id="studentLoginCard" class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100 hidden">
+            <button onclick="openPortalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-arrow-left text-base"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center text-xl mx-auto mb-2 font-bold">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Student Verification</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter your assigned University ID</p>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">University ID</label>
+                    <input type="text" id="studentUniId" placeholder="e.g. ILH26CS042" value="ILH26CS042" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
+                    <input type="password" id="studentPass" placeholder="••••••••" value="student123" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <div class="p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
+                    <span class="font-bold">Demo credentials:</span><br>ID: <code>ILH26CS042</code> | Pass: <code>student123</code>
+                </div>
+                <button onclick="verifyStudentLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
+                    Authenticate & Open Dashboard
+                </button>
+            </div>
+        </div>
+        <!-- View 3: Teacher Login Form -->
+        <div id="teacherLoginCard" class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100 hidden">
+            <button onclick="openPortalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-arrow-left text-base"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-2 font-bold">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Faculty Verification</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter your College Faculty ID</p>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">College ID</label>
+                    <input type="text" id="teacherCollegeId" placeholder="e.g. FAC-CS-902" value="FAC-CS-902" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
+                    <input type="password" id="teacherPass" placeholder="Enter your staff passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <div class="p-2.5 bg-slate-100 text-slate-800 rounded border border-slate-200 text-[11px]">
+                    Use the staff ID and passcode configured for this backend.
+                </div>
+                <button onclick="verifyTeacherLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
+                    Authenticate & Open Dashboard
+                </button>
+            </div>
+        </div>
+        <!-- View 4: Student Dashboard (Includes Dedicated ClassBot & Online Fee Payment System) -->
+        <div id="studentDashboardCard" class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] shadow-2xl hidden flex flex-col overflow-hidden border border-slate-200 relative">
+            <div class="bg-blue-900 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-700 p-2 rounded-lg text-white">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Student Academic Dashboard</h3>
+                        <p class="text-xs text-blue-200">Welcome, Alex Reji (Univ ID: ILH26CS042)</p>
+                    </div>
+                </div>
+                <button onclick="closePortalModal()" class="text-blue-200 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <!-- Academic Stats & Fee Payment Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-500 text-xs">Overall Attendance</div>
+                        <div class="text-xl font-bold text-emerald-600 mt-1">92.4%</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">Safe standing (&gt;75%)</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-500 text-xs">Current CGPA</div>
+                        <div class="text-xl font-bold text-blue-900 mt-1">8.84 / 10</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">Semester 6 Standing</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="flex justify-between items-center">
+                            <div class="text-slate-500 text-xs">Pending Fee Dues</div>
+                            <span id="feeStatusBadge" class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">Due</span>
+                        </div>
+                        <div id="feeAmountDisplay" class="text-xl font-bold text-slate-800 mt-1">₹ 14,500</div>
+                        <button onclick="openFeePaymentModal()" class="mt-2 w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-1.5 px-3 rounded text-xs transition flex items-center justify-center space-x-1">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <span>Pay Fees Online</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- ONLINE FEE PAYMENT INTERACTIVE SECTION CARD -->
+                <div id="feePaymentSection" class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/40">
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-blue-700"></i>
+                        <span>Secure Online Fee Payment Gateway</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Pay semester tuition fees, hostel dues, or examination fees securely via UPI, Net Banking, or Credit/Debit Card.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Fee Category</label>
+                            <select id="payFeeCategory" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Semester 6 Tuition Fee">Semester 6 Tuition Fee</option>
+                                <option value="Hostel & Mess Fee">Hostel & Mess Fee</option>
+                                <option value="University Examination Fee">University Examination Fee</option>
+                                <option value="Bus Transport Fee">Bus Transport Fee</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Payment Amount (₹)</label>
+                            <input type="number" id="payFeeAmount" value="14500" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Payment Mode</label>
+                            <select id="payFeeMode" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="UPI / Google Pay / PhonePe">UPI / Google Pay / PhonePe</option>
+                                <option value="Net Banking (SBI / HDFC / Federal)">Net Banking</option>
+                                <option value="Credit / Debit Card">Credit / Debit Card</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="processOnlineFeePayment()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-5 py-2.5 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Proceed Secure Payment (₹14,500)</span>
+                    </button>
+                    <!-- Payment Receipt Feedback Box -->
+                    <div id="feePaymentReceiptBox" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900"></div>
+                </div>
+                <!-- AI Request Sender Section (Added for Students) -->
+                <div class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/20">
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane text-blue-700"></i>
+                        <span>AI-Assisted Request & Application Sender</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Draft formal requests, leave applications, or department inquiries instantly with AI assistance.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Request Category</label>
+                            <select id="studentReqType" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Leave Application">Leave Application</option>
+                                <option value="Bonafide Certificate Request">Bonafide Certificate Request</option>
+                                <option value="Assignment Deadline Extension">Assignment Deadline Extension</option>
+                                <option value="Library Book Renewal">Library Book Renewal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Recipient Authority</label>
+                            <select id="studentReqRecipient" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Head of Department (CSE)">Head of Department (CSE)</option>
+                                <option value="Faculty Advisor / Mentor">Faculty Advisor / Mentor</option>
+                                <option value="College Principal">College Principal</option>
+                                <option value="Administrative Office">Administrative Office</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Key Details / Reason (AI will expand professionally)</label>
+                        <textarea id="studentReqPrompt" rows="2" placeholder="e.g. Need medical leave for 3 days due to viral fever from 22nd Sept..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="generateAIRequest('student')" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Generate & Send Request</span>
+                        </button>
+                    </div>
+                    <!-- Request Sender Feedback Box -->
+                    <div id="studentRequestResult" class="hidden mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800"></div>
+                </div>
+                <!-- AI Complaint Registration Section -->
+                <div class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/30">
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-robot text-blue-700"></i>
+                        <span>AI-Guided Department & Classroom Complaint System</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Report infrastructural, lab, or classroom issues. Our AI engine instantly tags and routes your ticket.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Select Department</label>
+                            <select id="studentCompDept" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                                <option value="AI & Data Science">AI & Data Science</option>
+                                <option value="Electronics & Communication">Electronics & Communication</option>
+                                <option value="Civil Engineering">Civil Engineering</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Location Type & Room/Lab No.</label>
+                            <input type="text" id="studentCompLocation" placeholder="e.g. Classroom 302 or AI Lab 1" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Describe Issue (AI will analyze severity & route automatically)</label>
+                        <textarea id="studentCompDesc" rows="2" placeholder="e.g. Projector bulb flickering and AC unit making loud noise in Lab 2..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
+                    </div>
+                    <button onclick="submitAIComplaint('student')" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Submit AI Complaint Ticket</span>
+                    </button>
+                    <!-- Feedback Box -->
+                    <div id="studentComplaintResult" class="hidden mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900"></div>
+                </div>
+                <!-- Schedule & Grades Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-calendar-days text-blue-700"></i>
+                            <span>Today's Class Schedule</span>
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>09:30 AM - Cloud Computing Architectures</span>
+                                <span class="font-semibold text-blue-700">Hall 304</span>
+                            </li>
+                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>11:15 AM - Machine Learning Lab</span>
+                                <span class="font-semibold text-blue-700">AI Lab 2</span>
+                            </li>
+                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>02:00 PM - Professional Ethics</span>
+                                <span class="font-semibold text-blue-700">Seminar Hall</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-file-lines text-blue-700"></i>
+                            <span>Recent Internal Grades</span>
+                        </h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>Compiler Design Test 2</span>
+                                <span class="font-bold text-emerald-600">46 / 50</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>Computer Networks Assignment</span>
+                                <span class="font-bold text-emerald-600">19 / 20</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded border border-slate-100">
+                                <span>Data Mining Quiz</span>
+                                <span class="font-bold text-emerald-600">24 / 25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+                <span>Authenticated via University Records</span>
+                <button onclick="openPortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+            </div>
+            <!-- INTEGRATED CLASSBOT WIDGET INSIDE STUDENT DASHBOARD -->
+            <div class="absolute bottom-4 right-4 z-50">
+                <button onclick="toggleStudentChat()" class="bg-blue-900 hover:bg-blue-800 text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center text-lg transition transform hover:scale-105 border-2 border-blue-400" title="Open ClassBot">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </button>
+                <div id="studentChatWindow" class="hidden absolute bottom-14 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-sans">
+                    <div class="bg-blue-900 text-white p-3.5 flex justify-between items-center border-b border-blue-800">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <div>
+                                <span class="font-bold text-xs block">ClassBot: Academic Assistant</span>
+                                <span class="text-[9px] text-blue-200">ID: ILH26CS042 | Multi-lingual AI</span>
+                            </div>
+                        </div>
+                        <button onclick="toggleStudentChat()" class="text-blue-200 hover:text-white transition">
+                            <i class="fa-solid fa-xmark text-base"></i>
+                        </button>
+                    </div>
+                    <div class="bg-slate-50 px-2.5 py-1.5 border-b border-slate-200 flex gap-1 overflow-x-auto text-[10px] whitespace-nowrap">
+                        <button onclick="sendQuickQuery('My attendance')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📊 Attendance</button>
+                        <button onclick="sendQuickQuery('Fee status')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">💳 Fees</button>
+                        <button onclick="sendQuickQuery('Today schedule')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📅 Timetable</button>
+                        <button onclick="sendQuickQuery('Internal grades')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Grades</button>
+                    </div>
+                    <div id="studentChatMessages" class="p-3 h-60 overflow-y-auto space-y-2.5 bg-slate-100/60 text-xs">
+                        <div class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">
+                            Hello Alex! I'm your ClassBot. Ask me about attendance, fees, timetable, or marks in English, Malayalam, Arabic, or Hindi.
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
+                        <input type="text" id="studentChatInput" placeholder="Ask in English, Malayalam, Arabic..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50" onkeypress="handleStudentKey(event)">
+                        <button onclick="sendStudentMessage()" class="bg-blue-900 hover:bg-blue-800 text-white w-8 h-8 rounded-xl flex items-center justify-center text-xs transition shadow-sm">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF CLASSBOT WIDGET -->
+        </div>
+        <!-- View 5: Teacher Dashboard (With Integrated AI FacultyBot Widget) -->
+        <div id="teacherDashboardCard" class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] shadow-2xl hidden flex flex-col overflow-hidden border border-slate-200 relative">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-slate-700 p-2 rounded-lg text-white">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Faculty & Department Dashboard</h3>
+                        <p class="text-xs text-slate-400">Welcome, Prof. Dr. Shoukath Ali (Faculty ID: FAC-CS-902)</p>
+                    </div>
+                </div>
+                <button onclick="closePortalModal()" class="text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <!-- Faculty Stats Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-500 text-xs">Assigned Classes Today</div>
+                        <div class="text-xl font-bold text-slate-900 mt-1">3 Lecture Sessions</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-500 text-xs">Enrolled Students Under Mentorship</div>
+                        <div class="text-xl font-bold text-slate-900 mt-1">64 Students</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-500 text-xs">Internal Submission Status</div>
+                        <div class="text-sm font-bold text-emerald-600 mt-1 flex items-center space-x-1">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Evaluations Up to Date</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- AI Request Sender Section (Added for Teachers) -->
+                <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs bg-gradient-to-br from-white to-slate-50">
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane text-slate-800"></i>
+                        <span>AI Faculty Official Request & Proposal Sender</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Draft formal memos, lab requisition requests, or leave/duty travel applications using AI.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Request Type</label>
+                            <select id="teacherReqType" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Lab Equipment Requisition">Lab Equipment Requisition</option>
+                                <option value="Conference / Duty Leave Approval">Conference / Duty Leave Approval</option>
+                                <option value="Research Grant Proposal">Research Grant Proposal</option>
+                                <option value="Syllabus Revision Submission">Syllabus Revision Submission</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Addressed To</label>
+                            <select id="teacherReqRecipient" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Trust Principal / Director">Trust Principal / Director</option>
+                                <option value="Academic Dean">Academic Dean</option>
+                                <option value="Purchase & Finance Committee">Purchase & Finance Committee</option>
+                                <option value="University KTU Coordinator">University KTU Coordinator</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Core Proposal / Request Notes</label>
+                        <textarea id="teacherReqPrompt" rows="2" placeholder="e.g. Require 15 high-end workstations for AI & Deep Learning Lab setup..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="generateAIRequest('teacher')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Generate & Dispatch Proposal</span>
+                        </button>
+                    </div>
+                    <!-- Request Sender Feedback Box -->
+                    <div id="teacherRequestResult" class="hidden mt-4 p-4 bg-slate-100 border border-slate-300 rounded-lg text-xs text-slate-900"></div>
+                </div>
+                 <!-- TEACHER AI STUDY MATERIAL MANAGER -->
+                 <div class="bg-white p-5 rounded-xl border border-cyan-200 shadow-xs bg-gradient-to-br from-white to-cyan-50/20">
+                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-1">
+                         <h4 class="font-bold text-slate-900 flex items-center space-x-2">
+                             <i class="fa-solid fa-book-open-reader text-cyan-700"></i>
+                             <span>Student AI Notes & Study Material</span>
+                         </h4>
+                         <span class="text-[10px] bg-cyan-50 text-cyan-800 border border-cyan-200 px-2 py-1 rounded-full font-semibold"><span id="teacherKnowledgeCount">0</span> notes shared</span>
+                     </div>
+                     <p class="text-xs text-slate-500 mb-4">Upload class notes, syllabus guidance, or study instructions for students. These entries will be available in ClassBot, not the public chatbot.</p>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                         <div>
+                             <label class="block text-xs font-semibold text-slate-700 mb-1">Note title</label>
+                             <input type="text" id="teacherKnowledgeTitle" placeholder="e.g. Unit 3 revision notes" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                         </div>
+                         <div>
+                             <label class="block text-xs font-semibold text-slate-700 mb-1">Subject / category</label>
+                             <select id="teacherKnowledgeCategory" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                 <option value="academics">Academics</option>
+                                 <option value="general">General</option>
+                                 <option value="policies">Policies</option>
+                                 <option value="services">Student services</option>
+                                 <option value="campus">Campus</option>
+                             </select>
+                         </div>
+                     </div>
+                     <div class="mb-3">
+                         <label class="block text-xs font-semibold text-slate-700 mb-1">Tags <span class="font-normal text-slate-400">(comma separated)</span></label>
+                         <input type="text" id="teacherKnowledgeTags" placeholder="e.g. cloud-computing, unit-3, revision" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                     </div>
+                     <div class="mb-3">
+                         <label class="block text-xs font-semibold text-slate-700 mb-1">Notes or instructions for students</label>
+                         <textarea id="teacherKnowledgeContent" rows="4" placeholder="Paste the notes or guidance students should be able to ask ClassBot about..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs bg-white"></textarea>
+                     </div>
+                      <div class="mb-3">
+                          <label class="block text-xs font-semibold text-slate-700 mb-1">Attach a PDF handout <span class="font-normal text-slate-400">(optional, max 25 MB)</span></label>
+                          <input type="file" id="teacherKnowledgePdf" accept="application/pdf,.pdf" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white file:mr-3 file:border-0 file:bg-cyan-50 file:px-2 file:py-1 file:rounded file:text-cyan-800">
+                          <p class="text-[10px] text-slate-400 mt-1">The PDF is stored securely and its text is added to the student AI context.</p>
+                      </div>
+                     <button onclick="addTeacherAIKnowledge()" class="bg-cyan-700 hover:bg-cyan-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                         <i class="fa-solid fa-cloud-arrow-up"></i>
+                         <span>Share with Student AI</span>
+                     </button>
+                     <div id="teacherKnowledgeFeedback" class="hidden mt-3 p-3 rounded-lg text-xs"></div>
+                     <div class="mt-5 border-t border-slate-100 pt-4">
+                         <div class="flex justify-between items-center mb-2">
+                             <h5 class="font-semibold text-slate-800 text-xs">Shared student notes</h5>
+                             <button onclick="loadTeacherKnowledge()" class="text-cyan-700 hover:text-cyan-900 text-[10px] font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                         </div>
+                         <div id="teacherKnowledgeList" class="space-y-2"></div>
+                     </div>
+                 </div>
+                <!-- AI Faculty Complaint Registration Section -->
+                <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs bg-gradient-to-br from-white to-slate-50">
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                        <i class="fa-solid fa-robot text-slate-800"></i>
+                        <span>AI Faculty & Staff Grievance / Maintenance Portal</span>
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Log faculty room or department lab issues for priority facility maintenance dispatch.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Department Wing</label>
+                            <select id="teacherCompDept" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Computer Science Department">Computer Science Department</option>
+                                <option value="AI & Data Science Wing">AI & Data Science Wing</option>
+                                <option value="Electronics Block">Electronics Block</option>
+                                <option value="Central Workshop">Central Workshop</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Room / Lab Name</label>
+                            <input type="text" id="teacherCompLocation" placeholder="e.g. Faculty Cabin 3 or Research Lab B" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Grievance / Maintenance Note</label>
+                        <textarea id="teacherCompDesc" rows="2" placeholder="e.g. Server rack cooling fan malfunctioning in Research Lab B..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
+                    </div>
+                    <button onclick="submitAIComplaint('teacher')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Submit Faculty AI Ticket</span>
+                    </button>
+                    <!-- Feedback Box -->
+                    <div id="teacherComplaintResult" class="hidden mt-4 p-3 bg-slate-100 border border-slate-300 rounded-lg text-xs text-slate-900"></div>
+                </div>
+                <!-- Recent Roster Table -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                    <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                        <i class="fa-solid fa-clipboard-user text-blue-700"></i>
+                        <span>Recent Roster & Assignment Submissions</span>
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-slate-500">
+                                    <th class="py-2">Student Name</th>
+                                    <th class="py-2">University ID</th>
+                                    <th class="py-2">Assignment Submission</th>
+                                    <th class="py-2">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                                <tr>
+                                    <td class="py-2 font-medium">Alex Reji</td>
+                                    <td class="py-2 text-slate-500">ILH26CS042</td>
+                                    <td class="py-2">Cloud Computing Case Study</td>
+                                    <td class="py-2 text-emerald-600 font-semibold">Evaluated (19/20)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 font-medium">Fathima Sherin</td>
+                                    <td class="py-2 text-slate-500">ILH26CS018</td>
+                                    <td class="py-2">Cloud Computing Case Study</td>
+                                    <td class="py-2 text-emerald-600 font-semibold">Evaluated (20/20)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 font-medium">Rahul Menon</td>
+                                    <td class="py-2 text-slate-500">ILH26CS089</td>
+                                    <td class="py-2">Cloud Computing Case Study</td>
+                                    <td class="py-2 text-amber-600 font-semibold">Pending Review</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+                <span>Authenticated via College Faculty Records</span>
+                <button onclick="openPortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+            </div>
+            <!-- INTEGRATED FACULTYBOT WIDGET INSIDE TEACHER DASHBOARD -->
+            <div class="absolute bottom-4 right-4 z-50">
+                <button onclick="toggleTeacherChat()" class="bg-slate-900 hover:bg-slate-800 text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center text-lg transition transform hover:scale-105 border-2 border-slate-600" title="Open FacultyBot">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </button>
+                <div id="teacherChatWindow" class="hidden absolute bottom-14 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-sans">
+                    <div class="bg-slate-900 text-white p-3.5 flex justify-between items-center border-b border-slate-800">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <div>
+                                <span class="font-bold text-xs block">FacultyBot: Assistant</span>
+                                <span class="text-[9px] text-slate-300">ID: FAC-CS-902 | Multi-lingual AI</span>
+                            </div>
+                        </div>
+                        <button onclick="toggleTeacherChat()" class="text-slate-300 hover:text-white transition">
+                            <i class="fa-solid fa-xmark text-base"></i>
+                        </button>
+                    </div>
+                    <div class="bg-slate-50 px-2.5 py-1.5 border-b border-slate-200 flex gap-1 overflow-x-auto text-[10px] whitespace-nowrap">
+                        <button onclick="sendTeacherQuickQuery('My classes today')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📅 Classes</button>
+                        <button onclick="sendTeacherQuickQuery('Mentorship count')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">👥 Ments</button>
+                        <button onclick="sendTeacherQuickQuery('Evaluation status')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Grading</button>
+                        <button onclick="sendTeacherQuickQuery('Grievance help')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">🛠️ Tickets</button>
+                    </div>
+                    <div id="teacherChatMessages" class="p-3 h-60 overflow-y-auto space-y-2.5 bg-slate-100/60 text-xs">
+                        <div class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">
+                            Hello Prof. Shoukath Ali! I am your FacultyBot. Ask me about your classes, student rosters, internal evaluations, or maintenance tickets.
+                        </div>
+                    </div>
+                    <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
+                        <input type="text" id="teacherChatInput" placeholder="Ask about classes, grading, rosters..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50" onkeypress="handleTeacherKey(event)">
+                        <button onclick="sendTeacherMessage()" class="bg-slate-900 hover:bg-slate-800 text-white w-8 h-8 rounded-xl flex items-center justify-center text-xs transition shadow-sm">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF FACULTYBOT WIDGET -->
+        </div>
+    </div>
+    <!-- Admin Authentication & EXPANDED Dashboard Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <!-- Step 1: Admin Login View -->
+        <div id="adminLoginCard" class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-2 font-bold">
+                    <i class="fa-solid fa-gauge-high"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Trust Webmaster Access</h3>
+                <p class="text-xs text-slate-500 mt-1">Authenticate to manage campus data</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Admin Username</label>
+                    <input type="text" id="adminUser" placeholder="admin" value="admin" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Master Password</label>
+                    <input type="password" id="adminPass" placeholder="Enter administrator password" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                </div>
+                <button onclick="verifyAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
+                    Launch Expanded Dashboard
+                </button>
+            </div>
+        </div>
+        <!-- Step 2: EXPANDED FULL FEATURE DASHBOARD VIEW -->
+        <div id="adminDashboardCard" class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] shadow-2xl hidden flex flex-col overflow-hidden border border-slate-200 font-sans">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Ilahia Web Control & Management Hub</h3>
+                        <p class="text-xs text-slate-400">Master Control Center for All Campuses</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Admin Nav Tabs -->
+            <div class="bg-slate-100 px-6 border-b border-slate-200 flex space-x-4 text-xs font-semibold overflow-x-auto">
+                <button onclick="switchAdminTab('overview')" id="admTab-overview" class="adm-tab-btn py-3 text-blue-700 border-b-2 border-blue-700 transition whitespace-nowrap">📊 Overview & Metrics</button>
+                <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📚 Program Manager</button>
+                <button onclick="switchAdminTab('complaints')" id="admTab-complaints" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📋 AI Tickets <span id="complaintsBadge" class="ml-1 bg-blue-700 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 bg-cyan-600 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('broadcast')" id="admTab-broadcast" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📢 Broadcast Announcement</button>
+                <button onclick="switchAdminTab('directory')" id="admTab-directory" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">👥 User Directory</button>
+                <button onclick="switchAdminTab('logs')" id="admTab-logs" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🛡️ Security Logs</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm flex-1">
+                
+                <!-- TAB 1: OVERVIEW -->
+                <div id="admSection-overview" class="adm-section space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                            <div class="text-slate-500 text-xs">Active Campuses</div>
+                            <div class="text-xl font-bold text-slate-900 mt-1">5 Units</div>
+                            <div class="text-[10px] text-emerald-600 mt-0.5">ICET, Arts, Poly, School, ITI</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                            <div class="text-slate-500 text-xs">Total Listed Programs</div>
+                            <div id="statTotalOfferings" class="text-xl font-bold text-blue-900 mt-1">0</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Across all branches</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                            <div class="text-slate-500 text-xs">Active Student Portals</div>
+                            <div class="text-xl font-bold text-slate-900 mt-1">3,450+</div>
+                            <div class="text-[10px] text-emerald-600 mt-0.5">98.2% Active Standing</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                            <div class="text-slate-500 text-xs">System Status</div>
+                            <div class="text-sm font-bold text-emerald-600 flex items-center space-x-1.5 mt-2">
+                                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                                <span>Encrypted & Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-pie text-blue-700"></i>
+                            <span>Quick Campus Metrics Editor</span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Target Campus</label>
+                                <select id="metricCampusKey" onchange="loadCampusMetricsIntoForm()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                    <option value="icet">ICET (Engineering)</option>
+                                    <option value="arts">Arts & Science</option>
+                                    <option value="poly">Polytechnic</option>
+                                    <option value="school">Public School</option>
+                                    <option value="iti">ITI</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Pass Rate Metric</label>
+                                <input type="text" id="metricPassRate" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Placement / Success Rate</label>
+                                <input type="text" id="metricPlacement" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <button onclick="saveCampusMetrics()" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm">
+                            Update Live Campus Metrics
+                        </button>
+                    </div>
+                </div>
+                <!-- TAB 2: PROGRAMS & COURSES MANAGER -->
+                <div id="admSection-programs" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-circle-plus text-blue-700"></i>
+                            <span>Add New Course or Department</span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Target Institution</label>
+                                <select id="adminTargetCollege" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                    <option value="icet">ICET (Engineering)</option>
+                                    <option value="arts">Arts & Science</option>
+                                    <option value="poly">Polytechnic</option>
+                                    <option value="school">Public School</option>
+                                    <option value="iti">ITI</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Category Badge</label>
+                                <input type="text" id="adminNewCat" placeholder="e.g. B.Tech Specialized" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Program Name</label>
+                                <input type="text" id="adminNewTitle" placeholder="e.g. Robotics & Automation" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Program Brief Description</label>
+                                <input type="text" id="adminNewDesc" placeholder="e.g. Advanced kinematics and automation engineering systems." class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <button onclick="addNewProgramFromAdmin()" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm">
+                            Publish Offering to Live Webpage
+                        </button>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check text-blue-700"></i>
+                            <span>Active Programs Listing & Deletion</span>
+                        </h4>
+                        <div class="overflow-x-auto max-h-60">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-500">
+                                        <th class="py-2">Campus</th>
+                                        <th class="py-2">Category</th>
+                                        <th class="py-2">Program Title</th>
+                                        <th class="py-2 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProgramsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- TAB 3: AI GRIEVANCE TICKETS MANAGEMENT -->
+                <div id="admSection-complaints" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
+                            <h4 class="font-bold text-slate-900 flex items-center space-x-2">
+                                <i class="fa-solid fa-ticket text-blue-700"></i>
+                                <span>AI-Routed Student & Faculty Grievance Tickets</span>
+                            </h4>
+                            <span class="text-xs text-slate-500">Live feed from campus portals</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-500">
+                                        <th class="py-2">Ticket ID</th>
+                                        <th class="py-2">Role / Dept</th>
+                                        <th class="py-2">Location & Issue</th>
+                                        <th class="py-2">AI Tag & Priority</th>
+                                        <th class="py-2 text-right">Status / Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminComplaintsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- TAB 4: AI KNOWLEDGE DATABASE MANAGER -->
+                <div id="admSection-ai-knowledge" class="adm-section space-y-6 hidden">
+                    <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-5 rounded-xl shadow-sm border border-slate-800">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <i class="fa-solid fa-brain text-cyan-300"></i>
+                                    <h4 class="font-bold">AI Knowledge Database</h4>
+                                </div>
+                                <p class="text-xs text-slate-300 max-w-2xl">Add trusted Ilahia-specific information that the AI assistant can use when answering students, faculty, and visitors. Entries are saved in this browser.</p>
+                            </div>
+                            <div class="bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-xs whitespace-nowrap">
+                                <span class="text-cyan-300 font-bold" id="aiKnowledgeContextCount">0</span> entries available to AI
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-circle-plus text-cyan-600"></i>
+                            <span>Add trusted AI knowledge</span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Knowledge title</label>
+                                <input type="text" id="aiKnowledgeTitle" placeholder="e.g. Admissions office hours" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                                <select id="aiKnowledgeCategory" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                    <option value="general">General</option>
+                                    <option value="admissions">Admissions</option>
+                                    <option value="academics">Academics</option>
+                                    <option value="campus">Campus</option>
+                                    <option value="policies">Policies</option>
+                                    <option value="services">Student services</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Source or reference</label>
+                                <input type="text" id="aiKnowledgeSource" placeholder="e.g. Admissions handbook" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tags <span class="font-normal text-slate-400">(comma separated)</span></label>
+                                <input type="text" id="aiKnowledgeTags" placeholder="e.g. admissions, documents, office-hours" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">What should the AI know?</label>
+                            <textarea id="aiKnowledgeContent" rows="4" placeholder="Write the accurate information the assistant should use..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs"></textarea>
+                        </div>
+                        <button onclick="addAIKnowledgeEntry()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Save to AI knowledge database</span>
+                        </button>
+                        <div id="aiKnowledgeFeedback" class="hidden mt-3 p-3 rounded-lg text-xs"></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
+                            <div>
+                                <h4 class="font-bold text-slate-900 flex items-center space-x-2">
+                                    <i class="fa-solid fa-database text-cyan-600"></i>
+                                    <span>Knowledge available to AI</span>
+                                </h4>
+                                <p class="text-[11px] text-slate-500 mt-1">Delete outdated or incorrect information so the AI stops using it.</p>
+                            </div>
+                            <input type="search" id="aiKnowledgeSearch" oninput="renderAIKnowledgeTable()" placeholder="Search knowledge..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-xs w-full sm:w-64">
+                        </div>
+                        <div class="overflow-x-auto max-h-96">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-500">
+                                        <th class="py-2">Title</th>
+                                        <th class="py-2">Category</th>
+                                        <th class="py-2">Source</th>
+                                        <th class="py-2">AI content</th>
+                                        <th class="py-2 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aiKnowledgeTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- TAB 5: BROADCAST ANNOUNCEMENT -->
+                <div id="admSection-broadcast" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
+                            <i class="fa-solid fa-bullhorn text-blue-700"></i>
+                            <span>Broadcast Campus-Wide Alert / Notice</span>
+                        </h4>
+                        <div class="space-y-3 mb-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Announcement Title</label>
+                                <input type="text" id="broadcastTitle" placeholder="e.g. Semester 6 Internal Exam Timetable Released" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Notice Details & Instructions</label>
+                                <textarea id="broadcastContent" rows="3" placeholder="All students are requested to check their respective portals..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Target Recipient Audience</label>
+                                <select id="broadcastTarget" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs bg-white">
+                                    <option value="all">All Campuses & Portals</option>
+                                    <option value="students">Student Portals Only</option>
+                                    <option value="teachers">Faculty Portals Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="sendBroadcastAnnouncement()" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2.5 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Publish Global Broadcast Notice</span>
+                        </button>
+                        <div id="broadcastFeedback" class="hidden mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900"></div>
+                    </div>
+                </div>
+                <!-- TAB 6: USER DIRECTORY -->
+                <div id="admSection-directory" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">
+                            <h4 class="font-bold text-slate-900 flex items-center space-x-2">
+                                <i class="fa-solid fa-address-book text-blue-700"></i>
+                                <span>Registered User Directory</span>
+                            </h4>
+                            <input type="text" id="directorySearchInput" onkeyup="filterDirectory()" placeholder="Search by name or ID..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-xs w-full sm:w-64">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-500">
+                                        <th class="py-2">Full Name</th>
+                                        <th class="py-2">Role / ID</th>
+                                        <th class="py-2">Department / Stream</th>
+                                        <th class="py-2">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="directoryTableBody" class="divide-y divide-slate-100 text-slate-700">
+                                    <tr>
+                                        <td class="py-2 font-medium">Alex Reji</td>
+                                        <td class="py-2 text-slate-500">Student (ILH26CS042)</td>
+                                        <td class="py-2">Computer Science & Engineering</td>
+                                        <td class="py-2 text-emerald-600 font-semibold">Active</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 font-medium">Prof. Dr. Shoukath Ali</td>
+                                        <td class="py-2 text-slate-500">Faculty (FAC-CS-902)</td>
+                                        <td class="py-2">Computer Science Department</td>
+                                        <td class="py-2 text-blue-700 font-semibold">Verified Lead</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- TAB 7: SECURITY LOGS -->
+                <div id="admSection-logs" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs font-mono text-[11px]">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-slate-900 flex items-center space-x-2 font-sans text-sm">
+                                <i class="fa-solid fa-shield-halved text-blue-700"></i>
+                                <span>Real-Time Web Security & Activity Audit Trail</span>
+                            </h4>
+                            <button onclick="clearSystemLogs()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded text-[10px] font-sans">Clear Logs</button>
+                        </div>
+                        <div id="systemLogsContainer" class="bg-slate-950 text-emerald-400 p-4 rounded-lg h-64 overflow-y-auto space-y-1.5">
+                            <div>[2026-09-20 13:30:00] [SYSTEM] Webmaster admin logged in successfully.</div>
+                            <div>[2026-09-20 13:32:15] [PORTAL] Student ID ILH26CS042 authenticated session initialized.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+                <span>Webmaster Session ID: #ILAHIA-ADM-9280</span>
+                <button onclick="logoutAdmin()" class="text-red-600 font-semibold hover:underline">Log out of Admin</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Script with Multi-Language AI & Online Fee Payment System -->
+    <script>
+        const collegeDatabase = {
+            icet: {
+                name: "Ilahia College of Engineering & Technology",
+                shortName: "ICET Muvattupuzha",
+                sub: "Mulavoor P.O., Muvattupuzha, Kerala",
+                badge: "AICTE Approved & KTU Affiliated",
+                desc: "Established in 2002 at Mulavoor, Muvattupuzha — offering exceptional technical education and advanced infrastructural labs.",
+                image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80",
+                address: "Mulavoor P.O., Muvattupuzha, Ernakulam Dist., Kerala - 686673.",
+                phone: "+91 485 2826500 / 501",
+                email: "info@icet.ac.in",
+                icon: "fa-graduation-cap",
+                metrics: { passRate: "94.5%", avgCgpa: "8.6 / 10", placements: "88% in Tier-1 & Core IT" },
+                hostel: "Separate well-furnished hostel facilities for boys and girls inside the campus with 24/7 Wi-Fi and mess.",
+                transport: "Dedicated college bus fleet operating across Ernakulam, Idukki, and Kottayam districts.",
+                fees: "Standard KTU fee structure with government-allocated merit seats, management quota, and minority scholarships.",
+                offerings: [
+                    { title: "Computer Science & Engineering", cat: "B.Tech Core", desc: "Software algorithms, cloud architectures, and full-stack systems engineering." },
+                    { title: "AI & Data Science", cat: "B.Tech Emerging Tech", desc: "Machine learning models, deep neural networks, and automated data processing." },
+                    { title: "Cyber Security", cat: "B.Tech Specialized", desc: "Ethical hacking, threat mitigation, network protection, and security auditing." },
+                    { title: "Electronics & Communication", cat: "B.Tech Core", desc: "Embedded microcontrollers, IoT design, VLSI circuits, and telecommunications." },
+                    { title: "Civil Engineering", cat: "B.Tech Core", desc: "Structural drafting, material testing labs, geotechnical engineering, and surveying." },
+                    { title: "Mechanical Engineering", cat: "B.Tech Core", desc: "Thermal dynamics, robotics manufacturing, CAD/CAM systems, and automotive tech." }
+                ]
+            },
+            arts: {
+                name: "Ilahia College of Arts & Science",
+                shortName: "Ilahia Arts College",
+                sub: "Pezhakkappilly, Muvattupuzha",
+                badge: "Affiliated to Mahatma Gandhi University",
+                desc: "Promoting intellectual distinction, research, and holistic personal development across commerce, management, and arts.",
+                image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1600&q=80",
+                address: "Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala - 686674.",
+                phone: "+91 485 2812345",
+                email: "arts@ilahiatrust.org",
+                icon: "fa-book-open-reader",
+                metrics: { passRate: "92.0%", avgCgpa: "8.4 / 10", placements: "82% Corporate & Banking" },
+                hostel: "Comfortable hostel accommodation near the campus with secure environment and wholesome dining.",
+                transport: "Convenient college bus connectivity connecting Muvattupuzha town and nearby suburban routes.",
+                fees: "Affordable MG University semester tuition structures with institutional fee concessions.",
+                offerings: [
+                    { title: "B.Com (Finance & Taxation)", cat: "Undergraduate", desc: "Corporate accounting, tax regulations, auditing, and financial market operations." },
+                    { title: "BBA (Bachelor of Business Admin)", cat: "Undergraduate", desc: "Business foundations, marketing principles, HR administration, and management skills." },
+                    { title: "B.Sc Computer Science", cat: "Undergraduate", desc: "Programming languages, database management, web design, and computational theory." }
+                ]
+            },
+            poly: {
+                name: "Ilahia Polytechnic College",
+                shortName: "Ilahia Polytechnic",
+                sub: "East Paipra Road, Pezhakkappilly, Muvattupuzha",
+                badge: "Approved by Directorate of Technical Education, Kerala",
+                desc: "Empowering students with hands-on industrial diploma programs focused on rigorous technical proficiencies.",
+                image: "https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?auto=format&fit=crop&w=1600&q=80",
+                address: "Mulavoor P.O., Muvattupuzha, Kerala - 686673.",
+                address: "East Paipra Road, Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala - 686673.",
+                phone: "+91 485 2826800",
+                email: "poly@ilahiatrust.org",
+                icon: "fa-screwdriver-wrench",
+                metrics: { passRate: "91.2%", avgCgpa: "8.2 / 10", placements: "85% Industrial Tech" },
+                hostel: "Access to common campus hostel amenities with technical study rooms and quiet reading spaces.",
+                transport: "Trust transport bus services available across major transit points in Muvattupuzha.",
+                fees: "Government-approved diploma fee structure governed by DTE Kerala.",
+                offerings: [
+                    { title: "Diploma in Computer Engineering", cat: "3-Year Diploma", desc: "Hardware diagnostics, software tools, network administration, and coding." },
+                    { title: "Diploma in Civil Engineering", cat: "3-Year Diploma", desc: "Building estimation, site surveying, AutoCAD drafting, and construction execution." },
+                    { title: "Diploma in Mechanical Engineering", cat: "3-Year Diploma", desc: "Workshop technology, machine tooling, hydraulic systems, and thermal engineering." }
+                ]
+            },
+            school: {
+                name: "Ilahia Public School (CBSE)",
+                shortName: "Ilahia Public School",
+                sub: "Market P.O., Vazhappilly, Muvattupuzha",
+                badge: "Affiliated to CBSE, New Delhi",
+                desc: "Nurturing young inquiring minds from kindergarten to senior secondary with robust moral and academic foundations.",
+                image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1600&q=80",
+                address: "Muvattupuzha Town, Ernakulam Dist., Kerala - 686661.",
+                address: "Market P.O., Vazhappilly, Muvattupuzha, Ernakulam, Kerala - 686673.",
+                phone: "+91 485 2831122",
+                email: "school@ilahiatrust.org",
+                icon: "fa-child-reaching",
+                metrics: { passRate: "100%", avgCgpa: "9.1 / 10", placements: "100% Higher Ed Progression" },
+                hostel: "Day-school format with specialized care systems and secure child pick-up protocols.",
+                transport: "Safe fleet of GPS-tracked school buses covering all residential zones around Muvattupuzha.",
+                fees: "Structured annual school tuition with flexible installment options.",
+                offerings: [
+                    { title: "Kindergarten & Primary Section", cat: "Foundation Years", desc: "Activity-based interactive learning, creative expression, and linguistic basics." },
+                    { title: "Senior Secondary (Science)", cat: "Grades 11 & 12", desc: "Advanced Physics, Chemistry, Mathematics, Biology, and Computer Science." },
+                    { title: "Senior Secondary (Commerce)", cat: "Grades 11 & 12", desc: "Accountancy, Business Studies, Economics, and Applied Quantitative Methods." }
+                ]
+            },
+            iti: {
+                name: "Ilahia Private I.T.I.",
+                shortName: "Ilahia ITI",
+                sub: "Mulavoor, Muvattupuzha",
+                badge: "NCVT Affiliated Vocational Training",
+                desc: "Providing precise vocational trades training for quick deployment into industrial and technical sectors.",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80", 
+                address: "Mulavoor, Muvattupuzha, Kerala - 686673.", 
+                phone: "+91 485 2826999", 
+                email: "iti@ilahiatrust.org", 
+                icon: "fa-bolt", 
+                metrics: { passRate: "95.0%", avgCgpa: "8.5 / 10", placements: "90% Technical Apprenticeships" }, 
+                hostel: "Affordable accommodation options adjacent to Mulavoor campus workshops.", 
+                transport: "Connected via trust transport bus routes.", 
+                fees: "Economical NCVT vocational fee schedule with quick apprenticeship stipends.", 
+                offerings: [ 
+                    { title: "Electrician Trade", cat: "NCVT Certification", desc: "Industrial wiring, electrical panels maintenance, safety protocols, and transformers." }, 
+                    { title: "Fitter Trade", cat: "NCVT Certification", desc: "Component assembling, precision metal cutting, blueprint reading, and machine fitting." }, 
+                    { title: "COPA (Computer Operator)", cat: "NCVT Certification", desc: "Office automation systems, database maintenance, internet tools, and peripheral upkeep." } 
+                ] 
+            } 
+        }; 
+ 
+        const campusNavigationData = {
+            icet: {
+                mapQuery: 'Ilahia College of Engineering and Technology, Mulavoor P.O., Muvattupuzha, Kerala 686673',
+                coordinates: [10.02896, 76.59811],
+                plan: ['Visitor entry', 'Administration', 'Academic blocks', 'Engineering labs', 'Library', 'Auditorium', 'Hostel & transport']
+            },
+            arts: {
+                mapQuery: 'Ilahia College of Arts and Science, Pezhakkappilly P.O., Muvattupuzha, Kerala 686674',
+                coordinates: [10.02556, 76.56795],
+                plan: ['Visitor entry', 'Administration', 'Teaching blocks', 'Computer & science labs', 'Library', 'Student common areas']
+            },
+            poly: {
+                mapQuery: 'Ilahia Polytechnic College, East Paipra Road, Pezhakkappilly, Muvattupuzha, Kerala 686673',
+                coordinates: [10.02664, 76.56755],
+                plan: ['Visitor entry', 'Administration', 'Diploma classrooms', 'Engineering workshops', 'Practical labs', 'Library & common areas']
+            },
+            school: {
+                mapQuery: 'Ilahia Public School, Market P.O., Vazhappilly, Muvattupuzha, Kerala 686673',
+                coordinates: [9.99526, 76.5825],
+                plan: ['Secure entry', 'School office', 'Primary learning areas', 'Secondary classrooms', 'Activity spaces', 'Playground & pickup']
+            },
+            iti: {
+                mapQuery: 'Ilahia Private ITI, Pezhakkappilly P.O., Muvattupuzha, Kerala 686673',
+                coordinates: [10.0261, 76.5677],
+                approximate: true,
+                plan: ['Visitor entry', 'Administration', 'Trade classrooms', 'Practical workshops', 'Equipment area', 'Student services']
+            }
+        };
+        let campusLeafletMap = null;
+        let campusMapMarkers = null;
+        let campusBuildingsLayer = null;
+        let campusMapRequestNumber = 0;
+ 
+        let currentActiveKey = 'icet'; 
+        let globalTickets = [];
+         let currentLang = 'en';
+         const AI_KNOWLEDGE_STORAGE_KEY = 'ilahia_ai_knowledge';
+         let aiKnowledgeEntries = loadAIKnowledgeEntries();
+         let studentAIKnowledgeEntries = aiKnowledgeEntries.slice();
+         let aiKnowledgeDatabaseReady = false;
+         function loadAIKnowledgeEntries() {
+             const fallbackEntries = [
+                 {
+                     id: 'seed-admissions-hours',
+                     title: 'Admissions office hours',
+                     category: 'admissions',
+                         audience: 'all',
+                     source: 'Admissions handbook',
+                     tags: ['admissions', 'office-hours', 'documents'],
+                     content: 'The Ilahia Trust admissions office is open Monday through Saturday from 9:30 AM to 4:30 PM. Applicants should bring their latest academic records and a valid photo ID.'
+                 },
+                 {
+                     id: 'seed-ai-programme',
+                     title: 'AI and Data Science programme',
+                     category: 'academics',
+                         audience: 'all',
+                     source: 'Programme catalogue',
+                     tags: ['AI', 'data-science', 'B.Tech'],
+                     content: 'The B.Tech AI and Data Science programme covers machine learning, deep neural networks, data processing, and applied computing. Students can access dedicated AI and data science lab facilities.'
+                 },
+                 {
+                     id: 'seed-portal-support',
+                     title: 'Student portal support',
+                     category: 'services',
+                         audience: 'all',
+                     source: 'Student portal guide',
+                     tags: ['student-portal', 'support', 'complaints'],
+                     content: 'Students can raise academic requests, fee questions, and classroom or lab complaints through the student portal. Urgent campus safety concerns should be reported directly to the administrative office.'
+                 }
+             ];
+             try {
+                 const saved = JSON.parse(localStorage.getItem(AI_KNOWLEDGE_STORAGE_KEY) || 'null');
+                 return Array.isArray(saved) ? saved : fallbackEntries;
+             } catch (error) {
+                 return fallbackEntries;
+             }
+         }
+         function saveAIKnowledgeEntries() {
+             localStorage.setItem(AI_KNOWLEDGE_STORAGE_KEY, JSON.stringify(aiKnowledgeEntries));
+         }
+          async function requestAIKnowledge(url, options = {}) {
+              const response = await fetch(url, {
+                  ...options,
+                  headers: {
+                      'Content-Type': 'application/json',
+                      ...(options.headers || {})
+                  }
+              });
+              if (!response.ok) {
+                  const errorBody = await response.json().catch(() => ({}));
+                  throw new Error(errorBody.error || `Knowledge request failed (${response.status})`);
+              }
+              return response.status === 204 ? null : response.json();
+          }
+          async function loadAIKnowledgeFromDatabase() {
+              try {
+                  const [publicEntries, studentEntries] = await Promise.all([
+                      requestAIKnowledge('/api/ai-knowledge?audience=all'),
+                      requestAIKnowledge('/api/ai-knowledge?audience=students')
+                  ]);
+                  aiKnowledgeEntries = publicEntries;
+                  studentAIKnowledgeEntries = [...publicEntries, ...studentEntries];
+                  aiKnowledgeDatabaseReady = true;
+                  saveAIKnowledgeEntries();
+                  updateAdminStats();
+                  renderTeacherKnowledgeList(studentEntries);
+              } catch (error) {
+                  aiKnowledgeDatabaseReady = false;
+                  logSystemActivity(`[AI KNOWLEDGE] Database sync unavailable; using local cached knowledge.`);
+              }
+          }
+          async function loadTeacherKnowledge() {
+              const list = document.getElementById('teacherKnowledgeList');
+              if (!list) return;
+              list.innerHTML = '<div class="text-xs text-slate-400 py-2">Loading shared student notes...</div>';
+              try {
+                  const entries = await requestAIKnowledge('/api/ai-knowledge?audience=students');
+                  renderTeacherKnowledgeList(entries);
+              } catch (error) {
+                  list.innerHTML = '<div class="text-xs text-red-600 py-2">Could not load shared notes. Please try again.</div>';
+              }
+          }
+          function renderTeacherKnowledgeList(entries = []) {
+              const list = document.getElementById('teacherKnowledgeList');
+              const count = document.getElementById('teacherKnowledgeCount');
+              if (!list) return;
+              if (count) count.textContent = entries.length;
+              list.innerHTML = '';
+              if (!entries.length) {
+                  list.innerHTML = '<div class="text-xs text-slate-400 py-2">No student notes have been shared yet.</div>';
+                  return;
+              }
+              entries.forEach(entry => {
+                  const item = document.createElement('div');
+                  item.className = 'flex items-start justify-between gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50';
+                  const copy = document.createElement('div');
+                  copy.className = 'min-w-0';
+                  const title = document.createElement('div');
+                  title.className = 'font-semibold text-slate-800 text-xs';
+                  title.textContent = entry.title;
+                  const content = document.createElement('div');
+                  content.className = 'text-[11px] text-slate-500 mt-1 line-clamp-2';
+                  content.textContent = entry.content;
+                  copy.append(title, content);
+                  if (entry.attachmentPath) {
+                      const pdfLink = document.createElement('a');
+                      pdfLink.className = 'inline-flex items-center gap-1 mt-2 text-[10px] text-cyan-700 hover:text-cyan-900 font-semibold';
+                      pdfLink.href = `/api/storage${entry.attachmentPath}`;
+                      pdfLink.target = '_blank';
+                      pdfLink.rel = 'noopener';
+                      pdfLink.textContent = `📄 ${entry.attachmentName || 'Open PDF handout'}`;
+                      copy.appendChild(pdfLink);
+                  }
+                  const remove = document.createElement('button');
+                  remove.className = 'shrink-0 text-red-600 hover:text-red-800 text-[10px] font-semibold';
+                  remove.textContent = 'Delete';
+                  remove.addEventListener('click', () => deleteTeacherAIKnowledge(entry));
+                  item.append(copy, remove);
+                  list.appendChild(item);
+              });
+          }
+          function findRelevantAIKnowledge(query, entries = aiKnowledgeEntries) {
+             const words = query
+                 .toLowerCase()
+                 .replace(/[^\w\s]/g, ' ')
+                 .split(/\s+/)
+                 .filter(word => word.length > 2);
+             if (!words.length) return null;
+             let bestMatch = null;
+             let bestScore = 0;
+             entries.forEach(entry => {
+                 const searchable = [
+                     entry.title,
+                     entry.content,
+                     entry.category,
+                     entry.source,
+                     ...(entry.tags || [])
+                 ].join(' ').toLowerCase();
+                 const score = words.reduce((total, word) => total + (searchable.includes(word) ? 1 : 0), 0);
+                 if (score > bestScore) {
+                     bestScore = score;
+                     bestMatch = entry;
+                 }
+             });
+             return bestMatch;
+         }
+        const i18n = {
+            en: {
+                overviewHeading: "Campus Facilities & Infrastructure",
+                overviewSubText: "Designed for comprehensive technical and academic development.",
+                deptHeading: "Departments & Course Offerings",
+                deptSub: "Approved undergraduate and postgraduate streams.",
+                chatWelcome: "Hello! Ask me about courses, fees, hostel, bus routes, placements, or admissions.",
+                feeTitle: "Pending Fee Dues",
+                feeBtn: "Pay Fees Online"
+            },
+            ml: {
+                overviewHeading: "കാമ്പസ് സൗകര്യങ്ങളും അടിസ്ഥാന സൗകര്യങ്ങളും",
+                overviewSubText: "സമഗ്രമായ സാങ്കേതിക, അക്കാദമിക പുരോഗതിക്കായി രൂപകൽപ്പന ചെയ്തിരിക്കുന്നു.",
+                deptHeading: "വകുപ്പുകളും കോഴ്സുകളും",
+                deptSub: "അംഗീകൃത ബിരുദ, ബിരുദാനന്തര കോഴ്സുകൾ.",
+                chatWelcome: "നമസ്കാരം! കോഴ്സുകൾ, ഫീസ്, ഹോസ്റ്റൽ, ബസ് റൂട്ടുകൾ, പ്ലേസ്മെന്റുകൾ എന്നിവയെക്കുറിച്ച് ചോദിക്കുക.",
+                feeTitle: "അടയ്ക്കാനുള്ള ഫീസ്",
+                feeBtn: "ഓൺലൈനായി ഫീസ് അടയ്ക്കുക"
+            },
+            ar: {
+                overviewHeading: "مرافق الحرم الجامعي والبنية التحتية",
+                overviewSubText: "مصممة للتطوير التقني والأكاديمي الشامل.",
+                deptHeading: "الأقسام والعروض الدراسية",
+                deptSub: "برامج البكالوريوس والدراسات العليا المعتمدة.",
+                chatWelcome: "مرحباً! اسألني عن الدورات، الرسوم، السكن، الحافلات، أو القبول.",
+                feeTitle: "الرسوم المستحقة",
+                feeBtn: "دفع الرسوم عبر الإنترنت"
+            },
+            hi: {
+                overviewHeading: "परिसर सुविधाएं और बुनियादी ढांचा",
+                overviewSubText: "व्यापक तकनीकी और अकादमिक विकास के लिए डिज़ाइन किया गया।",
+                deptHeading: "विभाग और पाठ्यक्रम",
+                deptSub: "अनुमोदित स्नातक और स्नातकोत्तर पाठ्यक्रम।",
+                chatWelcome: "नमस्ते! मुझसे पाठ्यक्रमों, फीस, हॉस्टल, बस रूट या प्रवेश के बारे में पूछें।",
+                feeTitle: "लंबित शुल्क बकाया",
+                feeBtn: "ऑनलाइन फीस भुगतान करें"
+            }
+        };
+        const translationCache = new Map();
+        const translationRequests = new Map();
+        const originalTextNodes = new WeakMap();
+        const originalAttributes = new WeakMap();
+        const translationLanguages = { en: 'en', ml: 'ml', ar: 'ar', hi: 'hi', ta: 'ta' };
+        const protectedInstitutionNames = [
+            'Ilahia College of Engineering & Technology',
+            'Ilahia College of Arts & Science',
+            'Ilahia Polytechnic College',
+            'Ilahia Public School (CBSE)',
+            'Ilahia Private I.T.I.',
+            'Ilahia Trust Institutions',
+            'Ilahia Educational Trust',
+            'Ilahia Trust',
+            'Ilahia'
+        ];
+        let translationRun = 0;
+        async function translateText(text, targetLang = currentLang, sourceLang = 'en') {
+            const source = String(text || '').trim();
+            if (!source || targetLang === sourceLang) return source;
+            const cacheKey = `${sourceLang}:${targetLang}:${source}`;
+            if (translationCache.has(cacheKey)) return translationCache.get(cacheKey);
+            if (translationRequests.has(cacheKey)) return translationRequests.get(cacheKey);
+            const protectedValues = [];
+            let translatableSource = source;
+            protectedInstitutionNames.forEach((name, index) => {
+                const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                translatableSource = translatableSource.replace(new RegExp(escapedName, 'gi'), match => {
+                    const token = `ZXQINSTITUTION${index}TOKENQXZ`;
+                    protectedValues.push({ token, match });
+                    return token;
+                });
+            });
+            const request = (async () => {
+            try {
+                const url = new URL('https://translate.googleapis.com/translate_a/single');
+                url.searchParams.set('client', 'gtx');
+                url.searchParams.set('sl', sourceLang);
+                url.searchParams.set('tl', translationLanguages[targetLang] || 'en');
+                url.searchParams.set('dt', 't');
+                url.searchParams.set('q', translatableSource);
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Translation service returned ${response.status}`);
+                const data = await response.json();
+                let translated = (data[0] || []).map(part => part[0] || '').join('').trim();
+                if (!translated) throw new Error('Translation service returned no text');
+                protectedValues.forEach(({ token, match }) => {
+                    translated = translated.replace(new RegExp(token, 'gi'), match);
+                });
+                translationCache.set(cacheKey, translated);
+                return translated;
+            } catch (error) {
+                console.warn('Translation unavailable; showing the original text.', error);
+                return source;
+            }
+            })();
+            translationRequests.set(cacheKey, request);
+            const result = await request;
+            translationRequests.delete(cacheKey);
+            return result;
+        }
+        async function runTranslationJobs(jobs, concurrency = 4) {
+            let next = 0;
+            const workers = Array.from({ length: Math.min(concurrency, jobs.length) }, async () => {
+                while (next < jobs.length) {
+                    const job = jobs[next++];
+                    await job();
+                }
+            });
+            await Promise.all(workers);
+        }
+        function getTranslatableTextNodes() {
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    const parent = node.parentElement;
+                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option')) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            return nodes;
+        }
+        async function translatePage(lang) {
+            const run = ++translationRun;
+            const nodes = getTranslatableTextNodes();
+            const translatableAttributes = ['placeholder', 'title', 'aria-label'];
+            if (lang === 'en') {
+                nodes.forEach(node => {
+                    if (originalTextNodes.has(node)) node.textContent = originalTextNodes.get(node);
+                });
+                document.querySelectorAll('input,textarea,button,[aria-label],[title]').forEach(element => {
+                    const saved = originalAttributes.get(element);
+                    if (saved) Object.entries(saved).forEach(([name, value]) => element.setAttribute(name, value));
+                });
+                return;
+            }
+            const jobs = nodes.map(node => async () => {
+                if (!originalTextNodes.has(node)) originalTextNodes.set(node, node.textContent);
+                const original = originalTextNodes.get(node);
+                const translated = await translateText(original, lang, 'en');
+                if (run === translationRun && currentLang === lang) node.textContent = translated;
+            });
+            document.querySelectorAll('input,textarea,button,[aria-label],[title]').forEach(element => {
+                translatableAttributes.forEach(name => {
+                    if (!element.hasAttribute(name)) return;
+                    let saved = originalAttributes.get(element);
+                    if (!saved) { saved = {}; originalAttributes.set(element, saved); }
+                    if (!(name in saved)) saved[name] = element.getAttribute(name);
+                    jobs.push(async () => {
+                        const value = await translateText(saved[name], lang, 'en');
+                        if (run === translationRun && currentLang === lang) element.setAttribute(name, value);
+                    });
+                });
+            });
+            await runTranslationJobs(jobs);
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        }
+        function changeLanguage(lang) {
+            currentLang = translationLanguages[lang] ? lang : 'en';
+            ['globalLangSelect', 'mobileLangSelect'].forEach(id => {
+                const selector = document.getElementById(id);
+                if (selector) selector.value = currentLang;
+            });
+            const languageNames = { en: 'English', ml: 'Malayalam', ar: 'Arabic', hi: 'Hindi', ta: 'Tamil' };
+            const indicator = document.getElementById('chatLangIndicator');
+            if (indicator) indicator.textContent = `Language: ${languageNames[currentLang]}`;
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            translatePage(currentLang);
+            logSystemActivity(`[LANGUAGE] Active interface language switched to ${currentLang.toUpperCase()}`);
+        }
+        function openFeePaymentModal() {
+            const section = document.getElementById('feePaymentSection');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+        function processOnlineFeePayment() {
+            const category = document.getElementById('payFeeCategory').value;
+            const amount = document.getElementById('payFeeAmount').value;
+            const mode = document.getElementById('payFeeMode').value;
+            const receiptBox = document.getElementById('feePaymentReceiptBox');
+            if(!amount || amount <= 0) {
+                alert('Please enter a valid payment amount.');
+                return;
+            }
+            const txnId = "ILH-TXN-" + Math.floor(100000 + Math.random() * 900000);
+            const dateStr = new Date().toLocaleString();
+            receiptBox.classList.remove('hidden');
+            receiptBox.innerHTML = `
+                <div class="font-bold flex items-center space-x-1.5 mb-1 text-emerald-950 text-sm">
+                    <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                    <span>Payment Successful & Verified!</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-slate-800 mt-2 border-t border-emerald-200 pt-2">
+                    <div><span class="font-semibold">Transaction ID:</span> <code class="font-mono font-bold">${txnId}</code></div>
+                    <div><span class="font-semibold">Date & Time:</span> ${dateStr}</div>
+                    <div><span class="font-semibold">Category:</span> ${category}</div>
+                    <div><span class="font-semibold">Amount Paid:</span> <span class="text-emerald-700 font-bold">₹${amount}</span></div>
+                    <div><span class="font-semibold">Payment Mode:</span> ${mode}</div>
+                    <div><span class="font-semibold">Status:</span> <span class="text-emerald-700 font-bold">Paid & Credited</span></div>
+                </div>
+                <div class="mt-3 flex gap-2">
+                    <button onclick="window.print()" class="bg-emerald-800 text-white px-3 py-1 rounded text-[10px] font-medium"><i class="fa-solid fa-print"></i> Print Receipt</button>
+                    <span class="text-[10px] text-emerald-700 self-center">Receipt sent to registered student email.</span>
+                </div>
+            `;
+            document.getElementById('feeAmountDisplay').textContent = '₹ 0.00';
+            document.getElementById('feeStatusBadge').className = 'px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]';
+            document.getElementById('feeStatusBadge').textContent = 'Fully Paid';
+            logSystemActivity(`[FINANCE] Fee payment successful (${txnId}) for amount ₹${amount} via ${mode}`);
+        }
+        function generateAIRequest(role) {
+            const reqType = document.getElementById(`${role}ReqType`).value;
+            const recipient = document.getElementById(`${role}ReqRecipient`).value;
+            const promptText = document.getElementById(`${role}ReqPrompt`).value.trim();
+            const resultBox = document.getElementById(`${role}RequestResult`);
+            if(!promptText) {
+                alert('Please enter core details or reason for your request.');
+                return;
+            }
+            const requestId = "ILH-REQ-" + Math.floor(10000 + Math.random() * 90000);
+            const dateStr = new Date().toLocaleDateString();
+            const senderName = role === 'student' ? 'Alex Reji (ILH26CS042)' : 'Prof. Dr. Shoukath Ali (FAC-CS-902)';
+            resultBox.classList.remove('hidden');
+            resultBox.innerHTML = `
+                <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-200">
+                    <span class="font-bold text-blue-900"><i class="fa-solid fa-file-contract"></i> AI Drafted Request (${requestId})</span>
+                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">Successfully Dispatched</span>
+                </div>
+                <div class="space-y-1 text-slate-700 font-serif bg-white p-3 rounded border border-slate-200">
+                    <p><strong>To:</strong> ${recipient}</p>
+                    <p><strong>From:</strong> ${senderName}</p>
+                    <p><strong>Date:</strong> ${dateStr}</p>
+                    <p><strong>Subject:</strong> Formal Request regarding ${reqType}</p>
+                    <hr class="my-1 border-slate-100">
+                    <p class="italic text-slate-600">"Respected Authority,<br><br>I am writing to formally submit a request concerning <strong>${reqType.toLowerCase()}</strong>. ${promptText}<br><br>Kindly review and approve the same at your earliest convenience.<br><br>Sincerely,<br>${senderName}"</p>
+                </div>
+                <div class="mt-2 text-[10px] text-emerald-700 flex items-center space-x-1">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Routed securely to recipient inbox and logged into institutional database.</span>
+                </div>
+            `;
+            logSystemActivity(`[REQUEST] ${role.toUpperCase()} submitted AI-generated ${reqType} to ${recipient} (${requestId})`);
+        }
+        function switchCollegePage(key) { 
+            currentActiveKey = key; 
+            const data = collegeDatabase[key]; 
+            if(!data) return; 
+ 
+            document.querySelectorAll('.college-tab-btn').forEach(btn => { 
+                btn.className = "college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap"; 
+            }); 
+            const activeBtn = document.getElementById(`btn-${key}`); 
+            if(activeBtn) { 
+                activeBtn.className = "college-tab-btn bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition whitespace-nowrap shadow-sm"; 
+            } 
+ 
+            document.getElementById('navTitle').textContent = data.shortName; 
+            document.getElementById('navSub').textContent = data.sub; 
+            document.getElementById('navLogoIcon').className = `fa-solid ${data.icon}`; 
+            document.getElementById('heroBadge').textContent = data.badge; 
+            document.getElementById('heroTitle').textContent = data.name; 
+            document.getElementById('heroDesc').textContent = data.desc; 
+            document.getElementById('heroImage').src = data.image; 
+            document.getElementById('footerCollegeName').textContent = data.name; 
+            document.getElementById('footerAddress').textContent = data.address; 
+            document.getElementById('chatBotTitle').textContent = `${data.shortName} Assistant`; 
+ 
+            renderOfferings();
+            renderCampusNavigation();
+            if (currentLang !== 'en') translatePage(currentLang);
+            updateAdminStats();
+        } 
+ 
+        function renderCampusNavigation() {
+            const directory = document.getElementById('campusDirectory');
+            const mapContainer = document.getElementById('campusMapFrame');
+            const directionsLink = document.getElementById('campusDirectionsLink');
+            const osmLink = document.getElementById('campusOSMLink');
+            const mapTitle = document.getElementById('campusMapTitle');
+            const mapAddress = document.getElementById('campusMapAddress');
+            const planTitle = document.getElementById('campusPlanTitle');
+            const planGrid = document.getElementById('campusPlanGrid');
+            const dataStatus = document.getElementById('campusMapDataStatus');
+            const mapFallback = document.getElementById('campusMapFallback');
+            if (!directory || !mapContainer || !directionsLink || !osmLink || !planGrid) return;
+            directory.innerHTML = Object.entries(campusNavigationData).map(([key, campus]) => {
+                const item = collegeDatabase[key];
+                const active = key === currentActiveKey;
+                const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(campus.mapQuery)}`;
+                return `<div class="rounded-xl border ${active ? 'border-blue-600 ring-2 ring-blue-100' : 'border-slate-200'} bg-white p-3 shadow-sm">
+                    <button type="button" onclick="switchCollegePage('${key}'); document.getElementById('campus-navigation').scrollIntoView({behavior:'smooth'});" class="w-full text-left">
+                        <span class="block text-xs font-bold text-slate-900">${item.shortName}</span>
+                        <span class="block text-[10px] text-slate-500 mt-1">${item.sub}</span>
+                    </button>
+                    <a href="${directions}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 mt-3 text-[10px] text-blue-700 hover:text-blue-900 font-semibold"><i class="fa-solid fa-diamond-turn-right"></i> Directions</a>
+                </div>`;
+            }).join('');
+            const campus = campusNavigationData[currentActiveKey];
+            const institution = collegeDatabase[currentActiveKey];
+            const encodedQuery = encodeURIComponent(campus.mapQuery);
+            mapTitle.textContent = `${institution.name} · OpenStreetMap`;
+            mapAddress.textContent = campus.approximate ? `Approximate pin near Pezhakkappilly; use directions to confirm: ${campus.mapQuery}` : campus.mapQuery;
+            directionsLink.href = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
+            const [lat, lon] = campus.coordinates;
+            if (mapFallback) {
+                const bounds = (lon - 0.006) + "," + (lat - 0.004) + "," + (lon + 0.006) + "," + (lat + 0.004);
+                mapFallback.src = "https://www.openstreetmap.org/export/embed.html?bbox=" + bounds + "&layer=mapnik&marker=" + lat + "," + lon;
+            }
+            osmLink.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}`;
+            planTitle.textContent = `${institution.shortName} · visitor orientation`;
+            planGrid.innerHTML = campus.plan.map((label, index) => `<div class="min-h-16 rounded-lg border border-blue-800 bg-slate-800 p-2 flex flex-col justify-between">
+                <span class="text-[9px] uppercase tracking-wider text-blue-300">Area ${index + 1}</span>
+                <span class="text-[11px] leading-tight font-medium">${label}</span>
+            </div>`).join('');
+
+            if (!window.L) {
+                mapContainer.classList.add('hidden');
+                if (mapFallback) mapFallback.classList.remove('hidden');
+                if (dataStatus) dataStatus.textContent = 'Interactive map library did not load. Use Google Maps directions above or open the campus in OpenStreetMap.';
+                return;
+            }
+
+            mapContainer.classList.remove('hidden');
+            if (mapFallback) mapFallback.classList.add('hidden');
+            if (!campusLeafletMap) {
+                campusLeafletMap = L.map(mapContainer, { scrollWheelZoom: false }).setView([lat, lon], 18);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+                }).addTo(campusLeafletMap);
+                campusMapMarkers = L.layerGroup().addTo(campusLeafletMap);
+                campusBuildingsLayer = L.geoJSON(null, {
+                    style: { color: '#1d4ed8', weight: 2, fillColor: '#60a5fa', fillOpacity: 0.3 },
+                    pointToLayer: (feature, point) => L.circleMarker(point, { radius: 6, color: '#0f172a', weight: 2, fillColor: '#f59e0b', fillOpacity: 0.9 }),
+                    onEachFeature: (feature, layer) => {
+                        const tags = feature.properties || {};
+                        const label = tags.name || tags['name:en'] || (tags.building ? `${tags.building} building` : tags.amenity || 'Mapped campus feature');
+                        layer.bindPopup(`<strong>${escapeHTML(label)}</strong><br><span>${escapeHTML(tags.amenity || tags.building || 'OpenStreetMap feature')}</span>`);
+                    }
+                }).addTo(campusLeafletMap);
+            } else {
+                campusLeafletMap.setView([lat, lon], 18);
+            }
+            campusMapMarkers.clearLayers();
+            campusBuildingsLayer.clearLayers();
+            const markerLabel = campus.approximate ? `${institution.shortName} — approximate area pin` : institution.shortName;
+            L.marker([lat, lon]).bindPopup(`<strong>${escapeHTML(markerLabel)}</strong><br>${escapeHTML(campus.mapQuery)}`).addTo(campusMapMarkers);
+            setTimeout(() => campusLeafletMap && campusLeafletMap.invalidateSize(), 100);
+            if (dataStatus) dataStatus.textContent = campus.approximate
+                ? 'Showing an approximate Pezhakkappilly area pin; confirm the exact ITI entrance in Google Maps.'
+                : 'Loading mapped buildings and campus features from OpenStreetMap…';
+            loadCampusMapFeatures(currentActiveKey, lat, lon);
+        }
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+        }
+
+        async function loadCampusMapFeatures(campusKey, lat, lon) {
+            const requestNumber = ++campusMapRequestNumber;
+            const status = document.getElementById('campusMapDataStatus');
+            const list = document.getElementById('campusMapFeatureList');
+            if (list) list.innerHTML = '';
+            const query = `[out:json][timeout:18];(way(around:350,${lat},${lon})[building];nwr(around:350,${lat},${lon})[amenity~"school|college|university|library|classroom|workshop"];);out center geom tags;`;
+            const endpoints = [
+                'https://overpass-api.de/api/interpreter',
+                'https://overpass.kumi.systems/api/interpreter'
+            ];
+            let result = null;
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error(`Map data request failed (${response.status})`);
+                    result = await response.json();
+                    break;
+                } catch (error) {
+                    console.warn('Campus detail source unavailable:', error);
+                }
+            }
+            if (requestNumber !== campusMapRequestNumber || campusKey !== currentActiveKey) return;
+            if (!result || !Array.isArray(result.elements)) {
+                if (status) status.textContent = 'The map is active, but detailed building data could not be loaded. Try again later or use Google Maps directions.';
+                return;
+            }
+
+            const uniqueElements = [...new Map(result.elements.map(element => [`${element.type}/${element.id}`, element])).values()];
+            const features = [];
+            uniqueElements.forEach(element => {
+                const tags = element.tags || {};
+                if (element.type === 'way' && Array.isArray(element.geometry) && element.geometry.length >= 3) {
+                    const ring = element.geometry.map(point => [point.lon, point.lat]);
+                    ring.push(ring[0]);
+                    features.push({ type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] }, properties: tags });
+                } else {
+                    const center = element.lat && element.lon ? element : element.center;
+                    if (center) features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [center.lon, center.lat] }, properties: tags });
+                }
+            });
+            campusBuildingsLayer.clearLayers();
+            campusBuildingsLayer.addData({ type: 'FeatureCollection', features });
+            const namedFeatures = uniqueElements.filter(element => {
+                const tags = element.tags || {};
+                return tags.name || tags['name:en'] || (tags.building && tags.building !== 'yes');
+            }).slice(0, 24);
+            if (list) {
+                list.innerHTML = namedFeatures.length
+                    ? namedFeatures.map(element => {
+                        const tags = element.tags || {};
+                        const label = tags.name || tags['name:en'] || `${tags.building} building`;
+                        return `<li><i class="fa-solid fa-location-dot text-blue-600 mr-1"></i>${escapeHTML(label)}</li>`;
+                    }).join('')
+                    : '<li>No named buildings are mapped here yet; zoom in to inspect available building footprints.</li>';
+            }
+            if (status) status.textContent = `${features.length} mapped building or campus feature(s) loaded near this campus from OpenStreetMap. Locations are community-mapped and may be incomplete.`;
+        }
+ 
+        function renderOfferings() { 
+            const data = collegeDatabase[currentActiveKey]; 
+            const grid = document.getElementById('offeringsGrid'); 
+            grid.innerHTML = ''; 
+            data.offerings.forEach(item => { 
+                const card = document.createElement('div'); 
+                card.className = "bg-white p-6 rounded-xl shadow-xs border border-slate-200 hover:border-blue-600 transition"; 
+                card.innerHTML = ` 
+                    <div class="text-blue-700 font-bold text-xs mb-1 uppercase tracking-wider">${item.cat}</div> 
+                    <h3 class="text-lg font-bold text-slate-900">${item.title}</h3> 
+                    <p class="text-slate-600 text-sm mt-2 leading-relaxed">${item.desc}</p> 
+                `; 
+                grid.appendChild(card); 
+            }); 
+        } 
+ 
+        function updateAdminStats() { 
+            let total = 0; 
+            for(let k in collegeDatabase) { 
+                total += collegeDatabase[k].offerings.length; 
+            } 
+            document.getElementById('statTotalOfferings').textContent = total; 
+            renderAdminProgramsTable(); 
+            renderAdminComplaintsTable();
+             renderAIKnowledgeTable();
+        } 
+         function getAIKnowledgeCategoryLabel(category) {
+             const labels = {
+                 general: 'General',
+                 admissions: 'Admissions',
+                 academics: 'Academics',
+                 campus: 'Campus',
+                 policies: 'Policies',
+                 services: 'Student services'
+             };
+             return labels[category] || 'General';
+         }
+         function renderAIKnowledgeTable() {
+             const tbody = document.getElementById('aiKnowledgeTableBody');
+             const badge = document.getElementById('aiKnowledgeBadge');
+             const contextCount = document.getElementById('aiKnowledgeContextCount');
+             if (!tbody) return;
+             const query = (document.getElementById('aiKnowledgeSearch')?.value || '').trim().toLowerCase();
+             const filtered = aiKnowledgeEntries.filter(entry => {
+                 const searchable = [
+                     entry.title,
+                     entry.content,
+                     entry.category,
+                     entry.source,
+                     ...(entry.tags || [])
+                 ].join(' ').toLowerCase();
+                 return searchable.includes(query);
+             });
+             if (badge) badge.textContent = aiKnowledgeEntries.length;
+             if (contextCount) contextCount.textContent = aiKnowledgeEntries.length;
+             tbody.innerHTML = '';
+             if (filtered.length === 0) {
+                 const row = document.createElement('tr');
+                 row.innerHTML = '<td colspan="5" class="py-6 text-center text-slate-400">No matching AI knowledge entries found.</td>';
+                 tbody.appendChild(row);
+                 return;
+             }
+             filtered.forEach(entry => {
+                 const row = document.createElement('tr');
+                 row.className = 'hover:bg-slate-50 align-top';
+                 const titleCell = document.createElement('td');
+                 titleCell.className = 'py-3 pr-3';
+                 const title = document.createElement('div');
+                 title.className = 'font-semibold text-slate-900';
+                 title.textContent = entry.title;
+                 const tags = document.createElement('div');
+                 tags.className = 'text-[10px] text-slate-400 mt-1';
+                 tags.textContent = (entry.tags || []).map(tag => `#${tag}`).join(' ');
+                 titleCell.append(title, tags);
+                 const categoryCell = document.createElement('td');
+                 categoryCell.className = 'py-3 pr-3';
+                 categoryCell.innerHTML = `<span class="px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 font-semibold text-[10px]">${getAIKnowledgeCategoryLabel(entry.category)}</span>`;
+                 const sourceCell = document.createElement('td');
+                 sourceCell.className = 'py-3 pr-3 text-slate-500';
+                 sourceCell.textContent = entry.source || 'Admin entry';
+                 const contentCell = document.createElement('td');
+                 contentCell.className = 'py-3 pr-3 text-slate-600 max-w-sm';
+                 contentCell.textContent = entry.content.length > 120 ? `${entry.content.slice(0, 120)}…` : entry.content;
+                 const actionCell = document.createElement('td');
+                 actionCell.className = 'py-3 text-right';
+                 const deleteButton = document.createElement('button');
+                 deleteButton.className = 'bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded text-[11px] font-medium';
+                 deleteButton.textContent = 'Delete';
+                 deleteButton.addEventListener('click', () => deleteAIKnowledgeEntry(entry.id));
+                 actionCell.appendChild(deleteButton);
+                 row.append(titleCell, categoryCell, sourceCell, contentCell, actionCell);
+                 tbody.appendChild(row);
+             });
+         }
+          async function addAIKnowledgeEntry() {
+             const title = document.getElementById('aiKnowledgeTitle').value.trim();
+             const category = document.getElementById('aiKnowledgeCategory').value;
+             const source = document.getElementById('aiKnowledgeSource').value.trim() || 'Admin entry';
+             const tags = document.getElementById('aiKnowledgeTags').value
+                 .split(',')
+                 .map(tag => tag.trim())
+                 .filter(Boolean);
+             const content = document.getElementById('aiKnowledgeContent').value.trim();
+             const feedback = document.getElementById('aiKnowledgeFeedback');
+             if (!title || !content) {
+                 feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-red-50 border border-red-200 text-red-800';
+                 feedback.textContent = 'Please provide both a knowledge title and the information the AI should know.';
+                 return;
+             }
+             if (content.length < 10) {
+                 feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-red-50 border border-red-200 text-red-800';
+                 feedback.textContent = 'Please add a little more detail so the AI has useful context.';
+                 return;
+             }
+             const payload = { title, category, audience: 'all', source, tags, content };
+             try {
+                 await requestAIKnowledge('/api/ai-knowledge', {
+                     method: 'POST',
+                     body: JSON.stringify(payload)
+                 });
+                 await loadAIKnowledgeFromDatabase();
+                 feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
+                 feedback.textContent = 'Knowledge saved to the shared database. The public AI assistant can use it now.';
+                 logSystemActivity(`[AI KNOWLEDGE] Added "${title}" to the shared ${getAIKnowledgeCategoryLabel(category)} library.`);
+             } catch (error) {
+                 const localEntry = { id: `local-${Date.now()}`, ...payload };
+                 aiKnowledgeEntries.unshift(localEntry);
+                 saveAIKnowledgeEntries();
+                 updateAdminStats();
+                 feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-amber-50 border border-amber-200 text-amber-800';
+                 feedback.textContent = 'Database unavailable. Saved locally in this browser only; reconnect before relying on it.';
+             }
+             document.getElementById('aiKnowledgeTitle').value = '';
+             document.getElementById('aiKnowledgeSource').value = '';
+             document.getElementById('aiKnowledgeTags').value = '';
+             document.getElementById('aiKnowledgeContent').value = '';
+         }
+          async function deleteAIKnowledgeEntry(entryId) {
+              const entry = [...aiKnowledgeEntries, ...studentAIKnowledgeEntries].find(item => String(item.id) === String(entryId));
+             if (!entry) return;
+             if (!confirm(`Delete "${entry.title}" from the AI knowledge database? The assistant will stop using this information.`)) {
+                 return;
+             }
+             try {
+                 if (aiKnowledgeDatabaseReady && Number.isFinite(Number(entryId))) {
+                     await requestAIKnowledge(`/api/ai-knowledge/${entryId}`, { method: 'DELETE' });
+                     await loadAIKnowledgeFromDatabase();
+                 } else {
+                     aiKnowledgeEntries = aiKnowledgeEntries.filter(item => String(item.id) !== String(entryId));
+                     studentAIKnowledgeEntries = studentAIKnowledgeEntries.filter(item => String(item.id) !== String(entryId));
+                     saveAIKnowledgeEntries();
+                     updateAdminStats();
+                 }
+                 logSystemActivity(`[AI KNOWLEDGE] Deleted "${entry.title}" from the shared assistant context.`);
+             } catch (error) {
+                 alert('The database could not delete this entry. Please try again while connected.');
+             }
+          }
+          async function deleteTeacherAIKnowledge(entry) {
+              if (!confirm(`Delete "${entry.title}" from the student AI notes? Students will no longer receive it in ClassBot.`)) return;
+              try {
+                  await requestAIKnowledge(`/api/ai-knowledge/${entry.id}`, { method: 'DELETE' });
+                  await loadAIKnowledgeFromDatabase();
+                  await loadTeacherKnowledge();
+                  logSystemActivity(`[AI KNOWLEDGE] Teacher note "${entry.title}" deleted from student context.`);
+              } catch (error) {
+                  alert('The shared student note could not be deleted. Please try again.');
+              }
+         }
+          async function addTeacherAIKnowledge() {
+              const title = document.getElementById('teacherKnowledgeTitle').value.trim();
+              const category = document.getElementById('teacherKnowledgeCategory').value;
+              const tags = document.getElementById('teacherKnowledgeTags').value
+                  .split(',')
+                  .map(tag => tag.trim())
+                  .filter(Boolean);
+              const content = document.getElementById('teacherKnowledgeContent').value.trim();
+              const pdfInput = document.getElementById('teacherKnowledgePdf');
+              const pdf = pdfInput?.files?.[0];
+              const feedback = document.getElementById('teacherKnowledgeFeedback');
+              if (!title || (content.length < 10 && !pdf)) {
+                  feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-red-50 border border-red-200 text-red-800';
+                  feedback.textContent = 'Please provide a title and notes, or attach a PDF handout.';
+                  return;
+              }
+              if (pdf && (pdf.type !== 'application/pdf' || pdf.size > 25 * 1024 * 1024)) {
+                  feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-red-50 border border-red-200 text-red-800';
+                  feedback.textContent = 'Please choose a valid PDF file smaller than 25 MB.';
+                  return;
+              }
+              try {
+                  feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-cyan-50 border border-cyan-200 text-cyan-800';
+                  feedback.textContent = pdf ? 'Uploading PDF and reading its text...' : 'Saving note...';
+                  let attachmentPath = null;
+                  let extractedPdfText = '';
+                  if (pdf) {
+                      const upload = await requestAIKnowledge('/api/storage/uploads/request-url', {
+                          method: 'POST',
+                          body: JSON.stringify({
+                              name: pdf.name,
+                              size: pdf.size,
+                              contentType: 'application/pdf'
+                          })
+                      });
+                      const uploadResponse = await fetch(upload.uploadURL, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/pdf' },
+                          body: pdf
+                      });
+                      if (!uploadResponse.ok) throw new Error('PDF upload failed.');
+                      const uploadResult = await uploadResponse.json();
+                      attachmentPath = uploadResult.objectPath || upload.objectPath;
+                      extractedPdfText = uploadResult.extractedText || '';
+                  }
+                  const knowledgeContent = [content, extractedPdfText].filter(Boolean).join('\n\n');
+                  if (knowledgeContent.trim().length < 10) {
+                      throw new Error('No readable text was found in this PDF. Paste the notes into the text box, then upload the PDF again.');
+                  }
+                  await requestAIKnowledge('/api/ai-knowledge', {
+                      method: 'POST',
+                      body: JSON.stringify({
+                          title,
+                          category,
+                          audience: 'students',
+                          source: pdf ? 'Faculty PDF handout' : 'Faculty note',
+                          tags,
+                          content: knowledgeContent,
+                          attachmentPath,
+                          attachmentName: pdf?.name,
+                          attachmentSize: pdf?.size
+                      })
+                  });
+                  await loadAIKnowledgeFromDatabase();
+                  await loadTeacherKnowledge();
+                  document.getElementById('teacherKnowledgeTitle').value = '';
+                  document.getElementById('teacherKnowledgeTags').value = '';
+                  document.getElementById('teacherKnowledgeContent').value = '';
+                  if (pdfInput) pdfInput.value = '';
+                  feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
+                  feedback.textContent = pdf ? 'PDF saved. Readable PDF text is now available to students in ClassBot.' : 'Note shared. Students can ask ClassBot about it now.';
+                  logSystemActivity(`[AI KNOWLEDGE] Faculty ${pdf ? 'PDF handout' : 'note'} "${title}" shared with student ClassBot.`);
+              } catch (error) {
+                  feedback.className = 'mt-3 p-3 rounded-lg text-xs bg-red-50 border border-red-200 text-red-800';
+                  feedback.textContent = error.message || 'The note could not be saved to the shared database. Please try again.';
+              }
+          }
+ 
+        function switchAdminTab(tabId) { 
+            document.querySelectorAll('.adm-section').forEach(sec => sec.classList.add('hidden')); 
+            document.querySelectorAll('.adm-tab-btn').forEach(btn => { 
+                btn.className = "adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap"; 
+            }); 
+            document.getElementById(`admSection-${tabId}`).classList.remove('hidden'); 
+            document.getElementById(`admTab-${tabId}`).className = "adm-tab-btn py-3 text-blue-700 border-b-2 border-blue-700 transition font-semibold whitespace-nowrap"; 
+        } 
+ 
+        function loadCampusMetricsIntoForm() { 
+            const key = document.getElementById('metricCampusKey').value; 
+            const campus = collegeDatabase[key]; 
+            document.getElementById('metricPassRate').value = campus.metrics.passRate; 
+            document.getElementById('metricPlacement').value = campus.metrics.placements; 
+        } 
+ 
+        function saveCampusMetrics() { 
+            const key = document.getElementById('metricCampusKey').value; 
+            collegeDatabase[key].metrics.passRate = document.getElementById('metricPassRate').value; 
+            collegeDatabase[key].metrics.placements = document.getElementById('metricPlacement').value; 
+            alert(`Metrics successfully updated for ${collegeDatabase[key].shortName}!`); 
+            logSystemActivity(`[METRICS] Updated performance statistics for ${key}`); 
+        } 
+ 
+        function renderAdminProgramsTable() { 
+            const tbody = document.getElementById('adminProgramsTableBody'); 
+            tbody.innerHTML = ''; 
+            for(let key in collegeDatabase) { 
+                collegeDatabase[key].offerings.forEach((prog, index) => { 
+                    const tr = document.createElement('tr'); 
+                    tr.className = "hover:bg-slate-50"; 
+                    tr.innerHTML = ` 
+                        <td class="py-2 font-medium">${collegeDatabase[key].shortName}</td> 
+                        <td class="py-2 text-slate-500">${prog.cat}</td> 
+                        <td class="py-2 font-semibold text-slate-900">${prog.title}</td> 
+                        <td class="py-2 text-right"> 
+                            <button onclick="deleteProgram('${key}', ${index})" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded text-[11px] font-medium">Delete</button> 
+                        </td> 
+                    `; 
+                    tbody.appendChild(tr); 
+                }); 
+            } 
+        } 
+        function renderAdminComplaintsTable() {
+            const tbody = document.getElementById('adminComplaintsTableBody');
+            const badge = document.getElementById('complaintsBadge');
+            if(!tbody) return;
+            badge.textContent = globalTickets.length;
+            tbody.innerHTML = '';
+            
+            if(globalTickets.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">No AI grievance tickets logged yet.</td></tr>`;
+                return;
+            }
+            globalTickets.forEach((t, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="py-2 font-mono font-bold text-blue-900">${t.ticketId}</td>
+                    <td class="py-2"><span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-semibold">${t.role.toUpperCase()}</span></td>
+                    <td class="py-2"><span class="font-semibold">${t.loc}</span><br><span class="text-slate-600 text-[11px]">${t.desc}</span></td>
+                    <td class="py-2"><span class="text-blue-700 font-medium">${t.category}</span></td>
+                    <td class="py-2 text-right">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.status === 'Resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${t.status}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+ 
+        function deleteProgram(collegeKey, index) { 
+            if(confirm('Are you sure you want to remove this program offering?')) { 
+                collegeDatabase[collegeKey].offerings.splice(index, 1); 
+                updateAdminStats(); 
+                if(collegeKey === currentActiveKey) renderOfferings(); 
+                logSystemActivity(`[DATABASE] Removed course offering from ${collegeKey}`); 
+            } 
+        } 
+        function addNewProgramFromAdmin() {
+            const college = document.getElementById('adminTargetCollege').value;
+            const cat = document.getElementById('adminNewCat').value.trim();
+            const title = document.getElementById('adminNewTitle').value.trim();
+            const desc = document.getElementById('adminNewDesc').value.trim();
+            if(!title || !cat) {
+                alert('Please provide a program title and category.');
+                return;
+            }
+            collegeDatabase[college].offerings.push({ title, cat, desc: desc || 'Newly added curriculum program.' });
+            updateAdminStats();
+            if(college === currentActiveKey) renderOfferings();
+            document.getElementById('adminNewTitle').value = '';
+            document.getElementById('adminNewCat').value = '';
+            document.getElementById('adminNewDesc').value = '';
+            alert('New course offering successfully published to live webpage!');
+            logSystemActivity(`[DATABASE] Added new course "${title}" to ${college}`);
+        }
+ 
+        function sendBroadcastAnnouncement() { 
+            const title = document.getElementById('broadcastTitle').value.trim(); 
+            const content = document.getElementById('broadcastContent').value.trim(); 
+            const target = document.getElementById('broadcastTarget').value; 
+            const feedback = document.getElementById('broadcastFeedback'); 
+ 
+            if(!title || !content) { 
+                alert('Please fill out both the announcement title and content.'); 
+                return; 
+            } 
+ 
+            feedback.classList.remove('hidden'); 
+            feedback.innerHTML = `<strong>Broadcast Successful!</strong> Notice "${title}" has been dispatched instantly.`; 
+            document.getElementById('broadcastTitle').value = ''; 
+            document.getElementById('broadcastContent').value = ''; 
+            logSystemActivity(`[BROADCAST] Notice published: "${title}"`); 
+        } 
+ 
+        function filterDirectory() { 
+            const query = document.getElementById('directorySearchInput').value.toLowerCase(); 
+            const rows = document.querySelectorAll('#directoryTableBody tr'); 
+            rows.forEach(row => { 
+                const text = row.textContent.toLowerCase(); 
+                row.style.display = text.includes(query) ? '' : 'none'; 
+            }); 
+        } 
+ 
+        function logSystemActivity(logText) { 
+            const container = document.getElementById('systemLogsContainer'); 
+            if(!container) return; 
+            const time = new Date().toISOString().replace('T', ' ').substring(0, 19); 
+            const entry = document.createElement('div'); 
+            entry.textContent = `[${time}] ${logText}`; 
+            container.prepend(entry); 
+        } 
+ 
+        function clearSystemLogs() { 
+            document.getElementById('systemLogsContainer').innerHTML = '<div>[SYSTEM] Log audit trail cleared by webmaster.</div>'; 
+        } 
+ 
+        function openPortalModal() { 
+            document.getElementById('portalModal').classList.remove('hidden'); 
+            document.getElementById('portalMenuCard').classList.remove('hidden'); 
+            document.getElementById('studentLoginCard').classList.add('hidden'); 
+            document.getElementById('teacherLoginCard').classList.add('hidden'); 
+            document.getElementById('studentDashboardCard').classList.add('hidden'); 
+            document.getElementById('teacherDashboardCard').classList.add('hidden'); 
+        } 
+ 
+        function closePortalModal() { 
+            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
+            document.getElementById('portalModal').classList.add('hidden'); 
+        } 
+ 
+        function showLoginForm(role) { 
+            document.getElementById('portalMenuCard').classList.add('hidden'); 
+            if(role === 'student') { 
+                document.getElementById('studentLoginCard').classList.remove('hidden'); 
+            } else if(role === 'teacher') { 
+                document.getElementById('teacherLoginCard').classList.remove('hidden'); 
+            } 
+        } 
+ 
+        function verifyStudentLogin() { 
+            const uid = document.getElementById('studentUniId').value.trim(); 
+            const pass = document.getElementById('studentPass').value.trim(); 
+            if(uid === 'ILH26CS042' && pass === 'student123') { 
+                document.getElementById('studentLoginCard').classList.add('hidden'); 
+                document.getElementById('studentDashboardCard').classList.remove('hidden'); 
+                logSystemActivity(`[PORTAL] Student ${uid} successfully logged in.`); 
+            } else { 
+                alert('Invalid University ID or passcode! Use ILH26CS042 / student123'); 
+            } 
+        } 
+ 
+        async function verifyTeacherLogin() { 
+            const cid = document.getElementById('teacherCollegeId').value.trim(); 
+            const pass = document.getElementById('teacherPass').value.trim(); 
+            try {
+                const response = await fetch('/api/session/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: cid, password: pass, role: 'teacher' })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(result.error || 'Invalid teacher ID or passcode.');
+                document.getElementById('teacherLoginCard').classList.add('hidden'); 
+                document.getElementById('teacherDashboardCard').classList.remove('hidden'); 
+                await loadTeacherKnowledge();
+                logSystemActivity(`[PORTAL] Faculty ${cid} successfully logged in.`); 
+            } catch (error) {
+                alert(error.message || 'Could not sign in. Start the local backend and try again.');
+            } 
+        } 
+ 
+        function submitAIComplaint(role) { 
+            const dept = document.getElementById(`${role}CompDept`).value; 
+            const loc = document.getElementById(`${role}CompLocation`).value.trim(); 
+            const desc = document.getElementById(`${role}CompDesc`).value.trim(); 
+            const resultBox = document.getElementById(`${role}ComplaintResult`); 
+ 
+            if(!loc || !desc) { 
+                alert('Please fill out both the location and description fields.'); 
+                return; 
+            } 
+ 
+            let ticketId = "ILH-TKT-" + Math.floor(1000 + Math.random() * 9000); 
+            globalTickets.unshift({ ticketId, role, dept, loc, desc, category: "Maintenance Ticket", status: 'Pending' }); 
+            updateAdminStats(); 
+ 
+            resultBox.classList.remove('hidden'); 
+            resultBox.innerHTML = `<strong>AI Ticket Generated Successfully! (${ticketId})</strong> Routed to campus maintenance.`; 
+            document.getElementById(`${role}CompDesc`).value = ''; 
+            document.getElementById(`${role}CompLocation`).value = ''; 
+        } 
+ 
+        function openAdminModal() { 
+            document.getElementById('adminModal').classList.remove('hidden'); 
+            document.getElementById('adminLoginCard').classList.remove('hidden'); 
+            document.getElementById('adminDashboardCard').classList.add('hidden'); 
+        } 
+ 
+        function closeAdminModal() { 
+            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
+            document.getElementById('adminModal').classList.add('hidden'); 
+        } 
+ 
+        async function verifyAdminLogin() { 
+            const u = document.getElementById('adminUser').value; 
+            const p = document.getElementById('adminPass').value; 
+            try {
+                const response = await fetch('/api/session/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: u, password: p, role: 'admin' })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(result.error || 'Invalid administrator credentials.');
+                document.getElementById('adminLoginCard').classList.add('hidden'); 
+                document.getElementById('adminDashboardCard').classList.remove('hidden'); 
+                updateAdminStats(); 
+                loadCampusMetricsIntoForm(); 
+            } catch (error) {
+                alert(error.message || 'Could not sign in. Start the local backend and try again.');
+            } 
+        } 
+ 
+        function logoutAdmin() { 
+            document.getElementById('adminModal').classList.add('hidden'); 
+            logSystemActivity('[SYSTEM] Webmaster logged out.'); 
+        }
+        // CHAT ASSISTANT HANDLERS
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('hidden');
+        }
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+        async function appendChatReply(inputText, messages, styleClass, entries, fallback, rules) {
+            const englishText = currentLang === 'en' ? inputText : await translateText(inputText, 'en', currentLang);
+            const lower = englishText.toLowerCase();
+            const match = findRelevantAIKnowledge(englishText, entries);
+            let reply = match ? match.content : fallback;
+            if (!match) {
+                for (const [terms, response] of rules) {
+                    if (terms.some(term => lower.includes(term))) { reply = response; break; }
+                }
+            }
+            const bubble = document.createElement('div');
+            bubble.className = styleClass;
+            bubble.textContent = currentLang === 'en' ? reply : await translateText(reply, currentLang, 'en');
+            messages.appendChild(bubble);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const messages = document.getElementById('chatMessages');
+            const bubble = document.createElement('div');
+            bubble.className = 'bg-blue-700 text-white p-3 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-xs sm:text-sm';
+            bubble.textContent = text;
+            messages.appendChild(bubble);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            await loadAIKnowledgeFromDatabase();
+            await appendChatReply(text, messages, 'bg-blue-50 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[85%] border border-blue-100 text-xs sm:text-sm', aiKnowledgeEntries,
+                'Thank you for your inquiry about Ilahia Trust Institutions. Explore the programs or sign into your portal for details.', [
+                    [['fee', 'tuition'], 'Tuition varies by institution and program. Contact the college office for the current fee schedule.'],
+                    [['hostel', 'room'], 'Please contact the selected campus for current hostel availability and facilities.'],
+                    [['bus', 'transport', 'route'], 'Contact the selected campus for current bus routes and schedules.'],
+                    [['admission', 'seat'], 'Contact the admissions office for current eligibility, seats, and application dates.']
+                ]);
+        }
+        // STUDENT CLASSBOT HANDLERS
+        function toggleStudentChat() {
+            document.getElementById('studentChatWindow').classList.toggle('hidden');
+        }
+        function handleStudentKey(event) {
+            if (event.key === 'Enter') sendStudentMessage();
+        }
+        function sendQuickQuery(query) {
+            document.getElementById('studentChatInput').value = query;
+            sendStudentMessage();
+        }
+        async function sendStudentMessage() {
+            const input = document.getElementById('studentChatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const messages = document.getElementById('studentChatMessages');
+            const bubble = document.createElement('div');
+            bubble.className = 'bg-blue-900 text-white p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-xs';
+            bubble.textContent = text;
+            messages.appendChild(bubble);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            await loadAIKnowledgeFromDatabase();
+            await appendChatReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', studentAIKnowledgeEntries,
+                'I have logged your student portal question. Please contact the campus office for account-specific help.', [
+                    [['attendance'], 'Check the attendance section of your student portal for your latest record.'],
+                    [['fee'], 'Check the fees section of your student portal for your current balance.'],
+                    [['schedule', 'timetable', 'today'], 'Check your student portal for the latest timetable.'],
+                    [['grade', 'mark'], 'Check the results section of your student portal for your latest grades.']
+                ]);
+        }
+        // TEACHER FACULTYBOT HANDLERS
+        function toggleTeacherChat() {
+            document.getElementById('teacherChatWindow').classList.toggle('hidden');
+        }
+        function handleTeacherKey(event) {
+            if (event.key === 'Enter') sendTeacherMessage();
+        }
+        function sendTeacherQuickQuery(query) {
+            document.getElementById('teacherChatInput').value = query;
+            sendTeacherMessage();
+        }
+        async function sendTeacherMessage() {
+            const input = document.getElementById('teacherChatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const messages = document.getElementById('teacherChatMessages');
+            const bubble = document.createElement('div');
+            bubble.className = 'bg-slate-900 text-white p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-xs';
+            bubble.textContent = text;
+            messages.appendChild(bubble);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            await loadAIKnowledgeFromDatabase();
+            await appendChatReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', aiKnowledgeEntries,
+                'Your faculty question has been noted. Please contact the campus office for policy or account-specific information.', [
+                    [['class', 'schedule'], 'Check the faculty portal for the current class schedule.'],
+                    [['mentorship', 'student'], 'Check the faculty portal for your current student assignments.'],
+                    [['grade', 'evaluation', 'eval'], 'Check the faculty portal for pending evaluations.'],
+                    [['ticket', 'grievance'], 'Use the faculty grievance form to submit a service request.']
+                ]);
+        }
+        // Initialize on load
+        window.onload = async function() {
+            switchCollegePage('icet');
+            await loadAIKnowledgeFromDatabase();
+            setInterval(loadAIKnowledgeFromDatabase, 30000);
+        };
+    </script>
+</body>
+</html>
+
