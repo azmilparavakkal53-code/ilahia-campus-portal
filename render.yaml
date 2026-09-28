@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ilahia-campus-portal
+    runtime: node
+    plan: starter
+    rootDir: .
+    buildCommand: node --check server.js
+    startCommand: node server.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: TEACHER_ID
+        sync: false
+      - key: TEACHER_PASSWORD
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+    disk:
+      name: ilahia-campus-data
+      mountPath: /var/data
+      sizeGB: 1
+
