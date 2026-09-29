@@ -109,9 +109,6 @@
                     <a href="#contact" class="bg-transparent hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-lg border border-slate-600 transition">
                         Campus Reach
                     </a>
-                    <a href="#contact" class="bg-transparent hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-lg border border-slate-600 transition">
-                        Campus Reach
-                    </a>
                     <a href="#campus-navigation" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
                         Campus Navigation
                     </a>
@@ -343,10 +340,10 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
-                    <input type="password" id="studentPass" placeholder="••••••••" value="student123" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                    <input type="password" id="studentPass" placeholder="Enter your student passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <div class="p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
-                    <span class="font-bold">Demo credentials:</span><br>ID: <code>ILH26CS042</code> | Pass: <code>student123</code>
+                    Use the student ID and passcode configured for this backend.
                 </div>
                 <button onclick="verifyStudentLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -366,6 +363,13 @@
                 <p class="text-xs text-slate-500 mt-1">Enter your College Faculty ID</p>
             </div>
             <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Staff role</label>
+                    <select id="staffLoginRole" onchange="updateStaffLoginRole()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+                        <option value="teacher">Teacher / Mentor</option>
+                        <option value="hod">Head of Department (HOD)</option>
+                    </select>
+                </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">College ID</label>
                     <input type="text" id="teacherCollegeId" placeholder="e.g. FAC-CS-902" value="FAC-CS-902" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
@@ -394,12 +398,19 @@
                         <p class="text-xs text-blue-200">Welcome, Alex Reji (Univ ID: ILH26CS042)</p>
                     </div>
                 </div>
-                <button onclick="closePortalModal()" class="text-blue-200 hover:text-white text-xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleStudentLeaveInbox()" class="relative text-blue-100 hover:text-white text-lg" title="Leave request updates" aria-label="Open leave request updates">
+                        <i class="fa-solid fa-envelope"></i><span id="studentLeaveBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-blue-950 text-[9px] font-bold"></span>
+                    </button>
+                    <button onclick="closePortalModal()" class="text-blue-200 hover:text-white text-xl" aria-label="Close student portal"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <section id="studentLeaveInbox" class="hidden bg-white p-5 rounded-xl border border-blue-200 shadow-xs">
+                    <div class="flex justify-between items-center gap-3 mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-blue-700 mr-2"></i>My Leave Requests</h4><button onclick="loadStudentLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                    <div id="studentLeaveRequestList" class="space-y-3"><p class="text-slate-500">Sign in to see your request updates.</p></div>
+                </section>
                 <!-- Academic Stats & Fee Payment Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -473,7 +484,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Request Category</label>
-                            <select id="studentReqType" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                            <select id="studentReqType" onchange="updateStudentRequestRecipient()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
                                 <option value="Leave Application">Leave Application</option>
                                 <option value="Bonafide Certificate Request">Bonafide Certificate Request</option>
                                 <option value="Assignment Deadline Extension">Assignment Deadline Extension</option>
@@ -481,7 +492,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Recipient Authority</label>
+                            <label id="studentReqRecipientLabel" class="block text-xs font-semibold text-slate-700 mb-1">Recipient Authority</label>
                             <select id="studentReqRecipient" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
                                 <option value="Head of Department (CSE)">Head of Department (CSE)</option>
                                 <option value="Faculty Advisor / Mentor">Faculty Advisor / Mentor</option>
@@ -634,13 +645,16 @@
                         <i class="fa-solid fa-chalkboard-user"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-base">Faculty & Department Dashboard</h3>
-                        <p class="text-xs text-slate-400">Welcome, Prof. Dr. Shoukath Ali (Faculty ID: FAC-CS-902)</p>
+                        <h3 id="staffDashboardTitle" class="font-bold text-base">Faculty & Department Dashboard</h3>
+                        <p id="staffDashboardWelcome" class="text-xs text-slate-400">Staff leave request inbox</p>
                     </div>
                 </div>
-                <button onclick="closePortalModal()" class="text-slate-400 hover:text-white text-xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleStaffLeaveInbox()" class="relative text-slate-300 hover:text-white text-lg" title="Incoming leave requests" aria-label="Open incoming leave requests">
+                        <i class="fa-solid fa-envelope"></i><span id="staffLeaveBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-bold"></span>
+                    </button>
+                    <button onclick="closePortalModal()" class="text-slate-400 hover:text-white text-xl" aria-label="Close staff portal"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
@@ -662,6 +676,10 @@
                         </div>
                     </div>
                 </div>
+                <section id="staffLeaveInbox" class="hidden bg-white p-5 rounded-xl border border-amber-200 shadow-xs">
+                    <div class="flex justify-between items-center gap-3 mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-amber-700 mr-2"></i>Incoming Leave Requests</h4><button onclick="loadStaffLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                    <div id="staffLeaveRequestList" class="space-y-3"><p class="text-slate-500">Sign in to load the inbox.</p></div>
+                </section>
                 <!-- AI Request Sender Section (Added for Teachers) -->
                 <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs bg-gradient-to-br from-white to-slate-50">
                     <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
@@ -923,6 +941,7 @@
                 <button onclick="switchAdminTab('overview')" id="admTab-overview" class="adm-tab-btn py-3 text-blue-700 border-b-2 border-blue-700 transition whitespace-nowrap">📊 Overview & Metrics</button>
                 <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📚 Program Manager</button>
                 <button onclick="switchAdminTab('complaints')" id="admTab-complaints" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📋 AI Tickets <span id="complaintsBadge" class="ml-1 bg-blue-700 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('leave-requests'); loadOfficeLeaveRequests()" id="admTab-leave-requests" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📩 Office Leave Inbox <span id="officeLeaveBadge" class="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
                 <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 bg-cyan-600 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
                 <button onclick="switchAdminTab('broadcast')" id="admTab-broadcast" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📢 Broadcast Announcement</button>
                 <button onclick="switchAdminTab('directory')" id="admTab-directory" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">👥 User Directory</button>
@@ -1071,6 +1090,12 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <div id="admSection-leave-requests" class="adm-section space-y-6 hidden">
+                    <div class="bg-white p-5 rounded-xl border border-amber-200 shadow-xs">
+                        <div class="flex justify-between items-center gap-3 mb-4"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-amber-700 mr-2"></i>Office Leave Requests</h4><p class="text-xs text-slate-500 mt-1">Requests forwarded by the mentor and HOD. The office records the final decision.</p></div><button onclick="loadOfficeLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                        <div id="officeLeaveRequestList" class="space-y-3"><p class="text-slate-500">Loading office inbox…</p></div>
                     </div>
                 </div>
                 <!-- TAB 4: AI KNOWLEDGE DATABASE MANAGER -->
@@ -1402,6 +1427,8 @@
  
         let currentActiveKey = 'icet'; 
         let globalTickets = [];
+        let currentSessionRole = null;
+        let currentSessionUserId = '';
          let currentLang = 'en';
          const AI_KNOWLEDGE_STORAGE_KEY = 'ilahia_ai_knowledge';
          let aiKnowledgeEntries = loadAIKnowledgeEntries();
@@ -1763,13 +1790,129 @@
             document.getElementById('feeStatusBadge').textContent = 'Fully Paid';
             logSystemActivity(`[FINANCE] Fee payment successful (${txnId}) for amount ₹${amount} via ${mode}`);
         }
-        function generateAIRequest(role) {
+        function updateStudentRequestRecipient() {
+            const requestType = document.getElementById('studentReqType');
+            const recipient = document.getElementById('studentReqRecipient');
+            const label = document.getElementById('studentReqRecipientLabel');
+            if (!requestType || !recipient || !label) return;
+            const isLeave = requestType.value === 'Leave Application';
+            label.textContent = isLeave ? 'Leave approval route' : 'Recipient Authority';
+            recipient.disabled = isLeave;
+            if (isLeave) recipient.value = 'Faculty Advisor / Mentor';
+            recipient.classList.toggle('bg-slate-100', isLeave);
+        }
+
+        function setInboxBadge(id, count) {
+            const badge = document.getElementById(id);
+            if (!badge) return;
+            badge.textContent = count ? String(count) : '';
+            badge.classList.toggle('hidden', !count);
+        }
+
+        function renderLeaveRequest(item, audience) {
+            const history = (item.history || []).map(step => `<li class="text-[10px] text-slate-500">${escapeHTML(step.label)} · ${escapeHTML(new Date(step.at).toLocaleString())}</li>`).join('');
+            let action = '';
+            if (audience === 'mentor') action = `<button onclick="actOnLeaveRequest('${item.id}','forward')" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Forward to HOD</button>`;
+            if (audience === 'hod') action = `<button onclick="actOnLeaveRequest('${item.id}','forward')" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Forward to Office</button>`;
+            if (audience === 'office') action = `<div class="flex gap-2"><button onclick="actOnLeaveRequest('${item.id}','approve')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Approve</button><button onclick="actOnLeaveRequest('${item.id}','reject')" class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Reject</button></div>`;
+            return `<article class="border border-slate-200 rounded-lg p-3 bg-white"><div class="flex flex-wrap justify-between gap-2"><div><strong>${escapeHTML(item.subject)}</strong><span class="ml-2 text-[10px] text-slate-500">${escapeHTML(item.studentId)} · ${escapeHTML(new Date(item.createdAt).toLocaleString())}</span></div><span class="px-2 py-1 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold">${escapeHTML(item.statusLabel)}</span></div><p class="mt-2 whitespace-pre-wrap text-slate-700">${escapeHTML(item.reason)}</p><ol class="mt-2 space-y-1 list-disc list-inside">${history}</ol>${action ? `<div class="mt-3">${action}</div>` : ''}</article>`;
+        }
+
+        async function loadStudentLeaveRequests() {
+            const list = document.getElementById('studentLeaveRequestList');
+            if (!list) return;
+            try {
+                const response = await fetch('/api/leave-requests');
+                const requests = await response.json().catch(() => []);
+                if (!response.ok) throw new Error(requests.error || 'Could not load request updates.');
+                const pending = requests.filter(item => !['approved', 'rejected'].includes(item.status)).length;
+                setInboxBadge('studentLeaveBadge', pending);
+                list.innerHTML = requests.length ? requests.map(item => renderLeaveRequest(item, 'student')).join('') : '<p class="text-slate-500">You have not submitted a leave request yet.</p>';
+            } catch (error) {
+                list.innerHTML = `<p class="text-red-700">${escapeHTML(error.message || 'Sign in again to see request updates.')}</p>`;
+            }
+        }
+
+        async function loadStaffLeaveRequests() {
+            const list = document.getElementById('staffLeaveRequestList');
+            if (!list) return;
+            try {
+                const response = await fetch('/api/leave-requests');
+                const requests = await response.json().catch(() => []);
+                if (!response.ok) throw new Error(requests.error || 'Could not load the staff inbox.');
+                setInboxBadge('staffLeaveBadge', requests.length);
+                const audience = currentSessionRole === 'hod' ? 'hod' : 'mentor';
+                list.innerHTML = requests.length ? requests.map(item => renderLeaveRequest(item, audience)).join('') : '<p class="text-slate-500">No incoming leave requests.</p>';
+            } catch (error) {
+                list.innerHTML = `<p class="text-red-700">${escapeHTML(error.message || 'Sign in again to open the inbox.')}</p>`;
+            }
+        }
+
+        async function loadOfficeLeaveRequests() {
+            const list = document.getElementById('officeLeaveRequestList');
+            if (!list) return;
+            try {
+                const response = await fetch('/api/leave-requests');
+                const requests = await response.json().catch(() => []);
+                if (!response.ok) throw new Error(requests.error || 'Could not load the office inbox.');
+                setInboxBadge('officeLeaveBadge', requests.length);
+                list.innerHTML = requests.length ? requests.map(item => renderLeaveRequest(item, 'office')).join('') : '<p class="text-slate-500">No requests are waiting for the office.</p>';
+            } catch (error) {
+                list.innerHTML = `<p class="text-red-700">${escapeHTML(error.message || 'Sign in as office administrator to view this inbox.')}</p>`;
+            }
+        }
+
+        async function actOnLeaveRequest(requestId, action) {
+            const label = action === 'approve' ? 'approve' : action === 'reject' ? 'reject' : 'forward';
+            if (!confirm(`Do you want to ${label} this leave request?`)) return;
+            try {
+                const response = await fetch(`/api/leave-requests/${encodeURIComponent(requestId)}/action`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(result.error || 'The request could not be updated.');
+                if (currentSessionRole === 'admin') await loadOfficeLeaveRequests();
+                else await loadStaffLeaveRequests();
+            } catch (error) { alert(error.message || 'The request could not be updated.'); }
+        }
+
+        function toggleStudentLeaveInbox() {
+            const inbox = document.getElementById('studentLeaveInbox');
+            inbox.classList.toggle('hidden');
+            if (!inbox.classList.contains('hidden')) loadStudentLeaveRequests();
+        }
+
+        function toggleStaffLeaveInbox() {
+            const inbox = document.getElementById('staffLeaveInbox');
+            inbox.classList.toggle('hidden');
+            if (!inbox.classList.contains('hidden')) loadStaffLeaveRequests();
+        }
+
+        async function generateAIRequest(role) {
             const reqType = document.getElementById(`${role}ReqType`).value;
             const recipient = document.getElementById(`${role}ReqRecipient`).value;
             const promptText = document.getElementById(`${role}ReqPrompt`).value.trim();
             const resultBox = document.getElementById(`${role}RequestResult`);
             if(!promptText) {
                 alert('Please enter core details or reason for your request.');
+                return;
+            }
+            if (role === 'student' && reqType === 'Leave Application') {
+                try {
+                    const response = await fetch('/api/leave-requests', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ subject: 'Student Leave Application', reason: promptText })
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.error || 'The leave request could not be submitted.');
+                    resultBox.classList.remove('hidden');
+                    resultBox.textContent = `Leave request ${result.id.slice(0, 8)} submitted to your mentor. Use the envelope icon to follow its progress.`;
+                    document.getElementById('studentReqPrompt').value = '';
+                    await loadStudentLeaveRequests();
+                    logSystemActivity(`[LEAVE] Student ${currentSessionUserId} submitted a leave request (${result.id}).`);
+                } catch (error) {
+                    alert(error.message || 'Sign in to submit a leave request.');
+                }
                 return;
             }
             const requestId = "ILH-REQ-" + Math.floor(10000 + Math.random() * 90000);
@@ -2360,10 +2503,14 @@
             document.getElementById('teacherLoginCard').classList.add('hidden'); 
             document.getElementById('studentDashboardCard').classList.add('hidden'); 
             document.getElementById('teacherDashboardCard').classList.add('hidden'); 
+            document.getElementById('studentLeaveInbox')?.classList.add('hidden');
+            document.getElementById('staffLeaveInbox')?.classList.add('hidden');
         } 
  
         function closePortalModal() { 
             fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
+            currentSessionRole = null;
+            currentSessionUserId = '';
             document.getElementById('portalModal').classList.add('hidden'); 
         } 
  
@@ -2376,32 +2523,53 @@
             } 
         } 
  
-        function verifyStudentLogin() { 
+        async function verifyStudentLogin() { 
             const uid = document.getElementById('studentUniId').value.trim(); 
             const pass = document.getElementById('studentPass').value.trim(); 
-            if(uid === 'ILH26CS042' && pass === 'student123') { 
+            try {
+                const response = await fetch('/api/session/login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: uid, password: pass, role: 'student' })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(result.error || 'Invalid student ID or passcode.');
+                currentSessionRole = 'student';
+                currentSessionUserId = uid;
+                updateStudentRequestRecipient();
                 document.getElementById('studentLoginCard').classList.add('hidden'); 
                 document.getElementById('studentDashboardCard').classList.remove('hidden'); 
+                await loadStudentLeaveRequests();
                 logSystemActivity(`[PORTAL] Student ${uid} successfully logged in.`); 
-            } else { 
-                alert('Invalid University ID or passcode! Use ILH26CS042 / student123'); 
-            } 
+            } catch (error) { alert(error.message || 'Could not sign in. Start the backend and try again.'); }
         } 
  
+        function updateStaffLoginRole() {
+            const role = document.getElementById('staffLoginRole').value;
+            const idInput = document.getElementById('teacherCollegeId');
+            if (role === 'hod' && idInput.value === 'FAC-CS-902') idInput.value = 'FAC-HOD-001';
+            else if (role === 'teacher' && idInput.value === 'FAC-HOD-001') idInput.value = 'FAC-CS-902';
+            idInput.placeholder = role === 'hod' ? 'Enter your HOD ID' : 'Enter your faculty ID';
+        }
+
         async function verifyTeacherLogin() { 
             const cid = document.getElementById('teacherCollegeId').value.trim(); 
             const pass = document.getElementById('teacherPass').value.trim(); 
+            const role = document.getElementById('staffLoginRole').value;
             try {
                 const response = await fetch('/api/session/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: cid, password: pass, role: 'teacher' })
+                    body: JSON.stringify({ id: cid, password: pass, role })
                 });
                 const result = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(result.error || 'Invalid teacher ID or passcode.');
+                if (!response.ok) throw new Error(result.error || 'Invalid staff ID or passcode.');
+                currentSessionRole = result.role;
+                currentSessionUserId = cid;
+                document.getElementById('staffDashboardTitle').textContent = role === 'hod' ? 'Head of Department Dashboard' : 'Faculty & Department Dashboard';
+                document.getElementById('staffDashboardWelcome').textContent = `${role === 'hod' ? 'HOD' : 'Teacher / Mentor'} · ID ${cid}`;
                 document.getElementById('teacherLoginCard').classList.add('hidden'); 
                 document.getElementById('teacherDashboardCard').classList.remove('hidden'); 
-                await loadTeacherKnowledge();
+                await Promise.all([loadTeacherKnowledge(), loadStaffLeaveRequests()]);
                 logSystemActivity(`[PORTAL] Faculty ${cid} successfully logged in.`); 
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
@@ -2437,6 +2605,8 @@
  
         function closeAdminModal() { 
             fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
+            currentSessionRole = null;
+            currentSessionUserId = '';
             document.getElementById('adminModal').classList.add('hidden'); 
         } 
  
@@ -2451,16 +2621,22 @@
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid administrator credentials.');
+                currentSessionRole = 'admin';
+                currentSessionUserId = u;
                 document.getElementById('adminLoginCard').classList.add('hidden'); 
                 document.getElementById('adminDashboardCard').classList.remove('hidden'); 
                 updateAdminStats(); 
                 loadCampusMetricsIntoForm(); 
+                await loadOfficeLeaveRequests();
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
             } 
         } 
  
         function logoutAdmin() { 
+            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
+            currentSessionRole = null;
+            currentSessionUserId = '';
             document.getElementById('adminModal').classList.add('hidden'); 
             logSystemActivity('[SYSTEM] Webmaster logged out.'); 
         }
