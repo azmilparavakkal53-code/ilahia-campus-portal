@@ -1,55 +1,44 @@
-Ilahia portal backend (local use)
-=================================
+Ilahia portal backend
+=====================
+
+Local development in VS Code
+----------------------------
 
 Requirements: Node.js 18 or newer. No npm packages are needed.
 
-Start it in PowerShell:
+Open this folder in VS Code. In the integrated PowerShell terminal:
 
-  cd "C:\Users\hp\OneDrive\Desktop\project\public"
-  $env:TEACHER_ID = "FAC-CS-902"
-  $env:TEACHER_PASSWORD = "teacher123"
-  $env:ADMIN_ID = "admin"
-  $env:ADMIN_PASSWORD = "ilahia2026"
+  $env:TEACHER_ID = "your-teacher-id"
+  $env:TEACHER_PASSWORD = "choose-a-private-password"
+  $env:ADMIN_ID = "your-admin-id"
+  $env:ADMIN_PASSWORD = "choose-another-private-password"
   node server.js
 
-Then open http://127.0.0.1:3000/ (do not open the HTML with file://).
-Sign in with the teacher ID/password configured above. For admin sign-in,
-use the admin ID/password configured above. These are demo defaults; replace
-them with private passwords before using this beyond your own PC.
+Then open http://127.0.0.1:3000/. Keep the terminal running while using it.
+Never commit real passwords or the data/ folder to GitHub.
 
-Teacher notes are saved in data/ai-knowledge.json and become available to
-student ClassBot whenever students visit this same running site. Uploaded
-PDFs are stored in data/uploads. Text-based PDFs are extracted for ClassBot;
-scanned/image-only PDFs need pasted notes or OCR before the AI can use them.
+Teacher notes are saved locally in data/ai-knowledge.json and PDFs in
+data/uploads. Back up this folder privately; it contains teacher materials.
 
-The server listens only on this PC by default. This local setup will not make
-notes available to students on other devices or over the Internet. For that,
-deploy the backend and site to an HTTPS host. The server automatically listens
-on the host's PORT and 0.0.0.0 when NODE_ENV=production. Set DATA_DIR to the
-host's persistent storage mount, and set strong TEACHER_PASSWORD and
-ADMIN_PASSWORD secrets in the host dashboard. A temporary/ephemeral data folder
-will lose notes and PDFs when the host restarts or redeploys.
+Free public website setup (Render Blueprint)
+============================================
 
-Keep the data folder private and make backups of it. It contains teacher notes
-and uploaded handouts.
+The included render.yaml is configured for Render's free Node web service.
+It provides a public HTTPS URL at no monthly service charge under current
+free-plan limits. Free instances sleep after 15 minutes without traffic; the
+first visit after sleeping can take about a minute.
 
-Public website setup (Render Blueprint)
-=======================================
+Important: the backend uses local files for teacher notes and PDF uploads.
+Render's free filesystem is temporary, and notes/PDFs can be lost whenever the
+service sleeps, restarts, or redeploys. Keep private backups and do not rely
+on this free setup as the only copy of important school materials.
 
-The included render.yaml is configured for a public Node web service and a
-persistent disk. On Render, persistent disks require a paid service. Do not
-create the Blueprint unless that plan and its cost are acceptable. Render's
-free web services cannot keep this app's local JSON/PDF storage after restarts.
+The source is already in the private GitHub repository. In Render, finish
+account verification, then create a Blueprint and connect
+azmilparavakkal53-code/ilahia-campus-portal. Select render.yaml and enter
+teacher/admin IDs and strong passwords in Render's environment-variable
+fields. Do not put passwords in source files or GitHub. Deploy; Render will
+provide the public HTTPS URL.
 
-1. Create a PRIVATE GitHub repository. Upload the contents of this public
-   folder to the repository root: server.js, render.yaml, .gitignore, and
-   1 index.html. Do not upload the data folder; it may contain private notes.
-2. In Render, create a new Blueprint and connect that repository. Choose its
-   render.yaml file. Set teacher/admin IDs and strong passwords when prompted.
-3. Deploy the Blueprint. Render gives the service a public HTTPS URL. Open that
-   URL; do not use the localhost preview for the public site.
-
-If your repository includes this folder as a subfolder instead of putting its
-contents at the repository root, change rootDir in render.yaml to that folder
-name. The Render Blueprint file must also be selected from that folder.
-
+For persistent notes and PDFs, the app would need a separate durable database
+and file-storage configuration. That is not included in this free setup.
