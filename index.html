@@ -9,6 +9,13 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <style>
+        .leaflet-tooltip.campus-building-label { background: #fff; border: 2px solid #1d4ed8; border-radius: 6px; box-shadow: 0 2px 8px #0f172a40; color: #0f172a; font-size: 12px; font-weight: 700; min-width: 230px; padding: 5px 8px; text-align: center; white-space: nowrap; }
+        .leaflet-tooltip.campus-building-label::before { border-top-color: #1d4ed8; }
+        #portalModal, #adminModal { z-index: 10000 !important; }
+        #campus-navigation.campus-map-overlay-active { position: fixed; inset: 0; z-index: 8000; height: 100vh; overflow-y: auto; padding-top: 1rem; padding-bottom: 1rem; background: #fff; }
+        body.campus-map-open { overflow: hidden; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
     <!-- Top Trust Bar & College Page Switcher -->
@@ -19,12 +26,15 @@
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto max-w-full py-1">
-                <span class="text-slate-400 text-xs hidden lg:inline">Switch Campus:</span>
+                <span class="text-slate-400 text-xs hidden lg:inline">Switch Institute:</span>
                 <button onclick="switchCollegePage('icet')" id="btn-icet" class="college-tab-btn bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition whitespace-nowrap shadow-sm">ICET (Engineering)</button>
                 <button onclick="switchCollegePage('arts')" id="btn-arts" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Arts & Science</button>
                 <button onclick="switchCollegePage('poly')" id="btn-poly" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Polytechnic</button>
-                <button onclick="switchCollegePage('school')" id="btn-school" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Public School</button>
+                <button onclick="switchCollegePage('law')" id="btn-law" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Law College</button>
+                <button onclick="switchCollegePage('pharmacy')" id="btn-pharmacy" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Pharmacy</button>
                 <button onclick="switchCollegePage('iti')" id="btn-iti" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">ITI</button>
+                <button onclick="switchCollegePage('school')" id="btn-school" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">Public School</button>
+                <button onclick="switchCollegePage('kmlps')" id="btn-kmlps" class="college-tab-btn hover:bg-slate-900 text-slate-300 px-3 py-1 rounded text-xs transition whitespace-nowrap">KMLP School</button>
             </div>
         </div>
     </header>
@@ -44,9 +54,7 @@
             <div class="hidden md:flex items-center space-x-4 font-medium text-sm text-slate-700">
                 <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
                 <a href="#details" class="hover:text-blue-700 transition">Programs</a>
-                <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
-                <a href="#details" class="hover:text-blue-700 transition">Programs</a>
-                <a href="#campus-navigation" class="hover:text-blue-700 transition">Campus Map</a>
+                <button type="button" onclick="openCampusMapPage()" class="hover:text-blue-700 transition">Campus Map</button>
                 
                 <!-- Multi-language Selector -->
                 <div class="flex items-center space-x-1 bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-xs">
@@ -72,6 +80,7 @@
             </div>
             <!-- Mobile Buttons -->
             <div class="md:hidden flex space-x-2 items-center">
+                <button type="button" onclick="openCampusMapPage()" class="bg-blue-700 text-white text-xs px-2.5 py-1.5 rounded font-medium">Map</button>
                 <select id="mobileLangSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 border border-slate-200 rounded p-1 text-[11px] font-semibold">
                     <option value="en">EN</option>
                     <option value="ml">മല</option>
@@ -109,9 +118,9 @@
                     <a href="#contact" class="bg-transparent hover:bg-white/10 text-white font-semibold px-6 py-3 rounded-lg border border-slate-600 transition">
                         Campus Reach
                     </a>
-                    <a href="#campus-navigation" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
+                    <button type="button" onclick="openCampusMapPage()" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
                         Campus Navigation
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -170,12 +179,48 @@
     <!-- Campus Navigation and Illustrative Campus Plans -->
     <section id="campus-navigation" class="py-16 px-4 bg-white border-t border-slate-200">
         <div class="max-w-7xl mx-auto">
+            <div id="campusMapOverlayBar" class="hidden sticky top-0 z-50 mb-4 flex items-center justify-between rounded-xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur">
+                <div><p class="text-xs font-bold text-slate-900">Campus Map</p><p class="text-[10px] text-slate-500">Choose an institute and view its map.</p></div>
+                <button type="button" onclick="closeCampusMapPage()" class="rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-arrow-left mr-1"></i> Back to website</button>
+            </div>
             <div class="mb-8">
                 <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Trust Campus Guide</span>
                 <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Campus Navigation & Site Plans</h2>
                 <p class="text-sm text-slate-600 mt-2 max-w-3xl">Choose a campus for its map and directions. The diagrams are illustrative visitor guides, not surveyed or official architectural plans; confirm building locations with the institution.</p>
             </div>
             <div id="campusDirectory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-8"></div>
+            <div class="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <div class="flex flex-col gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-lg font-bold text-slate-900">Campus crowd heat map</h3>
+                            <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold tracking-wide text-amber-900">MODEL PREVIEW · SIMULATED</span>
+                        </div>
+                        <p class="mt-1 max-w-3xl text-xs leading-relaxed text-slate-600">Illustrative activity index for sample campus zones. This demo uses generated data, not live student locations, cameras, or verified occupancy counts.</p>
+                    </div>
+                    <div class="flex shrink-0 gap-2">
+                        <button id="crowdModelToggle" type="button" onclick="toggleCrowdModel()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">Pause model</button>
+                        <button type="button" onclick="updateCrowdHeatMap(true)" class="rounded-lg bg-blue-700 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh now</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
+                    <div id="crowdHeatMap" class="h-80 w-full bg-slate-100 sm:h-96" role="application" aria-label="Simulated campus crowd activity heat map"></div>
+                    <div class="border-t border-slate-200 p-5 lg:border-l lg:border-t-0">
+                        <div class="flex items-center justify-between gap-3">
+                            <h4 class="text-sm font-bold text-slate-900">Modeled zone activity</h4>
+                            <span id="crowdModelState" class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700"><span class="h-2 w-2 animate-pulse rounded-full bg-emerald-500"></span>Updating</span>
+                        </div>
+                        <p id="crowdModelCampus" class="mt-1 text-[11px] text-slate-500"></p>
+                        <ul id="crowdZoneList" class="mt-3 space-y-2"></ul>
+                        <div class="mt-4 border-t border-slate-200 pt-3">
+                            <div class="flex items-center justify-between text-[10px] text-slate-500"><span>Less activity</span><span>More activity</span></div>
+                            <div class="mt-1.5 h-2 rounded-full bg-gradient-to-r from-blue-500 via-yellow-400 to-red-600"></div>
+                            <p id="crowdModelUpdated" class="mt-2 text-[10px] text-slate-400"></p>
+                        </div>
+                        <p class="mt-3 rounded-lg bg-slate-50 p-2.5 text-[10px] leading-relaxed text-slate-500">Activity levels are simulated. CSE and Mechanical zone pins follow mapped building footprints when available; verify campus locations on site. Connect an approved anonymous people counter to use real occupancy data.</p>
+                    </div>
+                </div>
+            </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden">
                     <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -189,6 +234,26 @@
                         <a id="campusOSMLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 text-blue-700 hover:text-blue-900 px-2 py-2 rounded-lg text-xs font-semibold">
                             <i class="fa-solid fa-up-right-from-square"></i><span>Open larger map</span>
                         </a>
+                        <button id="campusEarthToggle" type="button" onclick="toggleCampusEarthPanel()" aria-expanded="false" class="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-700 bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-800">
+                            <span>Open 3D navigation</span>
+                        </button>
+                    </div>
+                    <div id="campusEarthPanel" class="hidden border-t border-slate-200 bg-emerald-50 p-4">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">Google Earth 3D</p>
+                                <p id="campusEarthDescription" class="mt-1 text-xs text-slate-600">Open the selected campus in Google Earth. Use its 3D Buildings and tilt controls to explore.</p>
+                            </div>
+                            <div class="flex shrink-0 gap-2">
+                                <a id="campusEarthLaunchLink" href="https://earth.google.com/web/" target="_blank" rel="noopener noreferrer" class="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-800">Launch in Google Earth</a>
+                                <button type="button" onclick="toggleCampusEarthPanel(false)" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100">Close</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-t border-emerald-200 pt-3">
+                            <p class="mb-2 text-[11px] font-bold uppercase tracking-wide text-slate-700">Campus waypoints · open in Google Earth</p>
+                            <div id="campusEarthStops" class="flex flex-wrap gap-2"></div>
+                            <p class="mt-2 text-[10px] text-slate-500">These are outdoor campus locations. Google Earth may not have indoor rooms or floor-by-floor imagery for this college.</p>
+                        </div>
                     </div>
                     <div id="campusMapFrame" class="w-full h-80" role="application" aria-label="Interactive campus map"></div>
                     <iframe id="campusMapFallback" class="hidden w-full h-80 border-0" title="OpenStreetMap campus map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -223,6 +288,7 @@
             <div>
                 <h3 id="footerCollegeName" class="text-white font-bold text-base mb-3">Ilahia College of Engineering & Tech</h3>
                 <p id="footerAddress" class="text-xs text-slate-400 leading-relaxed">Mulavoor P.O., Muvattupuzha, Ernakulam Dist., Kerala, India - 686673.</p>
+                <p id="footerContact" class="text-xs text-slate-400 leading-relaxed mt-2"></p>
                 <p class="text-xs text-slate-400 mt-2">Managed by Ilahia Educational Trust</p>
             </div>
             <div>
@@ -230,15 +296,9 @@
                 <ul class="space-y-2 text-xs text-slate-400">
                     <li><a href="#overview" class="hover:text-white transition">Overview</a></li>
                     <li><a href="#details" class="hover:text-white transition">Programs & Offerings</a></li>
+                    <li><a href="#" onclick="openCampusMapPage(); return false;" class="hover:text-white transition">Campus Map & Directions</a></li>
                     <li><a href="#" onclick="openPortalModal()" class="hover:text-white transition">Student & Teacher Portals</a></li>
-            <div>
-                <h3 class="text-white font-bold text-base mb-3">Quick Navigation</h3>
-                <ul class="space-y-2 text-xs text-slate-400">
-                    <li><a href="#overview" class="hover:text-white transition">Overview</a></li>
-                    <li><a href="#details" class="hover:text-white transition">Programs & Offerings</a></li>
-                    <li><a href="#campus-navigation" class="hover:text-white transition">Campus Map & Directions</a></li>
-                    <li><a href="#" onclick="openPortalModal()" class="hover:text-white transition">Student & Teacher Portals</a></li>
-                    <li><a href="#" onclick="openAdminModal()" class="hover:text-white transition">Control Dashboard</a></li>
+                    <li><a href="#" onclick="openAdminModal()" class="hover:text-white transition">Admin Panel</a></li>
                 </ul>
             </div>
             <div>
@@ -295,7 +355,7 @@
                     <i class="fa-solid fa-id-card-clip"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Institutional Portal Sign-In</h3>
-                <p class="text-xs text-slate-500 mt-1">Select your portal to verify identity</p>
+                <p class="text-xs text-slate-500 mt-1">The public pages stay open to everyone. Sign in for the college page currently selected: <strong id="portalMenuCampusName">ICET</strong>.</p>
             </div>
             
             <div class="space-y-4">
@@ -304,7 +364,7 @@
                         <i class="fa-solid fa-user-graduate text-blue-700"></i>
                         <span>Student Portal Login</span>
                     </h4>
-                    <p class="text-xs text-slate-500 mb-3">Sign in with University ID & student passcode.</p>
+                    <p class="text-xs text-slate-500 mb-3">Sign in with the student account assigned by your college.</p>
                     <button onclick="showLoginForm('student')" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 rounded-lg text-xs transition">
                         Proceed to Student Login
                     </button>
@@ -331,19 +391,19 @@
                     <i class="fa-solid fa-user-graduate"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Student Verification</h3>
-                <p class="text-xs text-slate-500 mt-1">Enter your assigned University ID</p>
+                <p class="text-xs text-slate-500 mt-1">College: <strong id="studentLoginCampusName">ICET</strong></p>
             </div>
             <div class="space-y-4 text-xs">
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">University ID</label>
-                    <input type="text" id="studentUniId" placeholder="e.g. ILH26CS042" value="ILH26CS042" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                    <input type="text" id="studentUniId" placeholder="Your college student ID" value="ILH26CS042" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
                     <input type="password" id="studentPass" placeholder="Enter your student passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
-                <div class="p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
-                    Use the student ID and passcode configured for this backend.
+                <div id="studentDemoCredentialHint" class="hidden p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
+                    Local demo passcode: <strong id="studentDemoPassword"></strong>
                 </div>
                 <button onclick="verifyStudentLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -360,7 +420,7 @@
                     <i class="fa-solid fa-chalkboard-user"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Faculty Verification</h3>
-                <p class="text-xs text-slate-500 mt-1">Enter your College Faculty ID</p>
+                <p class="text-xs text-slate-500 mt-1">College: <strong id="teacherLoginCampusName">ICET</strong></p>
             </div>
             <div class="space-y-4 text-xs">
                 <div>
@@ -372,14 +432,14 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">College ID</label>
-                    <input type="text" id="teacherCollegeId" placeholder="e.g. FAC-CS-902" value="FAC-CS-902" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                    <input type="text" id="teacherCollegeId" placeholder="Your college staff ID" value="FAC-CS-902" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
                     <input type="password" id="teacherPass" placeholder="Enter your staff passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
-                <div class="p-2.5 bg-slate-100 text-slate-800 rounded border border-slate-200 text-[11px]">
-                    Use the staff ID and passcode configured for this backend.
+                <div id="teacherDemoCredentialHint" class="hidden p-2.5 bg-slate-100 text-slate-800 rounded border border-slate-200 text-[11px]">
+                    Local demo passcode: <strong id="teacherDemoPassword"></strong>
                 </div>
                 <button onclick="verifyTeacherLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -394,8 +454,8 @@
                         <i class="fa-solid fa-user-graduate"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-base">Student Academic Dashboard</h3>
-                        <p class="text-xs text-blue-200">Welcome, Alex Reji (Univ ID: ILH26CS042)</p>
+                        <h3 id="studentDashboardTitle" class="font-bold text-base">Student Academic Dashboard</h3>
+                        <p id="studentDashboardWelcome" class="text-xs text-blue-200">Student portal</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -414,14 +474,14 @@
                 <!-- Academic Stats & Fee Payment Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div class="text-slate-500 text-xs">Overall Attendance</div>
-                        <div class="text-xl font-bold text-emerald-600 mt-1">92.4%</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">Safe standing (&gt;75%)</div>
+                        <div id="studentAttendanceTitle" class="text-slate-500 text-xs">Overall Attendance</div>
+                        <div id="studentAttendanceValue" class="text-xl font-bold text-emerald-600 mt-1">92.4%</div>
+                        <div id="studentAttendanceCaption" class="text-[10px] text-slate-400 mt-0.5">Sample model data</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div class="text-slate-500 text-xs">Current CGPA</div>
-                        <div class="text-xl font-bold text-blue-900 mt-1">8.84 / 10</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">Semester 6 Standing</div>
+                        <div id="studentAcademicMetricTitle" class="text-slate-500 text-xs">Current CGPA</div>
+                        <div id="studentAcademicMetricValue" class="text-xl font-bold text-blue-900 mt-1">8.84 / 10</div>
+                        <div id="studentAcademicMetricCaption" class="text-[10px] text-slate-400 mt-0.5">Sample model data</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                         <div class="flex justify-between items-center">
@@ -439,15 +499,15 @@
                 <div id="feePaymentSection" class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/40">
                     <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
                         <i class="fa-solid fa-file-invoice-dollar text-blue-700"></i>
-                        <span>Secure Online Fee Payment Gateway</span>
+                        <span>Fee Payment Demo</span>
                     </h4>
-                    <p class="text-xs text-slate-500 mb-4">Pay semester tuition fees, hostel dues, or examination fees securely via UPI, Net Banking, or Credit/Debit Card.</p>
+                    <p class="text-xs text-slate-500 mb-4">Payment preview only. This demo does not connect to a bank or transfer money.</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Fee Category</label>
                             <select id="payFeeCategory" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
-                                <option value="Semester 6 Tuition Fee">Semester 6 Tuition Fee</option>
+                                <option value="Tuition Fee">Tuition Fee</option>
                                 <option value="Hostel & Mess Fee">Hostel & Mess Fee</option>
                                 <option value="University Examination Fee">University Examination Fee</option>
                                 <option value="Bus Transport Fee">Bus Transport Fee</option>
@@ -459,16 +519,31 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Payment Mode</label>
-                            <select id="payFeeMode" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                            <select id="payFeeMode" onchange="handleFeePaymentModeChange()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="">Choose a payment method</option>
                                 <option value="UPI / Google Pay / PhonePe">UPI / Google Pay / PhonePe</option>
                                 <option value="Net Banking (SBI / HDFC / Federal)">Net Banking</option>
                                 <option value="Credit / Debit Card">Credit / Debit Card</option>
                             </select>
                         </div>
                     </div>
-                    <button onclick="processOnlineFeePayment()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-5 py-2.5 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
-                        <i class="fa-solid fa-lock"></i>
-                        <span>Proceed Secure Payment (₹14,500)</span>
+                    <div id="feeDemoQrPanel" class="hidden mb-3 p-4 rounded-xl border border-blue-200 bg-blue-50">
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <div class="relative p-3 bg-white border-4 border-slate-900 rounded-lg">
+                                <div id="feeDemoQrCode" class="grid grid-cols-11 gap-px w-36 h-36" role="img" aria-label="Decorative mock QR code"></div>
+                                <span class="absolute inset-x-1 bottom-1 bg-white/95 text-center text-[8px] font-bold tracking-wider text-rose-700">DEMO · NOT PAYABLE</span>
+                            </div>
+                            <div class="flex-1 text-center sm:text-left">
+                                <h5 class="font-bold text-slate-900 text-sm"><i class="fa-solid fa-qrcode mr-1 text-blue-700"></i> Mock QR scanner</h5>
+                                <p class="text-[11px] text-slate-600 mt-1">This is a visual simulation only. It is not a real UPI QR and cannot charge or transfer money.</p>
+                                <p id="feeDemoQrStatus" class="text-xs font-semibold text-amber-700 mt-2">Waiting for simulated scan</p>
+                                <button id="feeDemoScanButton" onclick="simulateFeeQrScan()" class="mt-2 bg-blue-800 hover:bg-blue-900 text-white px-3 py-2 rounded-lg text-xs font-semibold">Simulate QR scan</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="feeDemoPayButton" onclick="processOnlineFeePayment()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-5 py-2.5 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-flask"></i>
+                        <span>Run Demo Payment</span>
                     </button>
                     <!-- Payment Receipt Feedback Box -->
                     <div id="feePaymentReceiptBox" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900"></div>
@@ -484,8 +559,9 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Request Category</label>
-                            <select id="studentReqType" onchange="updateStudentRequestRecipient()" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                            <select id="studentReqType" onchange="handlePersonalRequestTypeChange('student')" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
                                 <option value="Leave Application">Leave Application</option>
+                                <option value="Gate Pass Request">Gate Pass Request</option>
                                 <option value="Bonafide Certificate Request">Bonafide Certificate Request</option>
                                 <option value="Assignment Deadline Extension">Assignment Deadline Extension</option>
                                 <option value="Library Book Renewal">Library Book Renewal</option>
@@ -501,18 +577,24 @@
                             </select>
                         </div>
                     </div>
+                    <div id="studentGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-blue-100 bg-blue-50/60 p-3" style="display:none">
+                        <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Destination</label><input id="studentGatepassDestination" type="text" maxlength="180" placeholder="Where are you going?" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div>
+                        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Departure date & time</label><div class="grid grid-cols-2 gap-2"><input id="studentGatepassDepartureDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="studentGatepassDepartureTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
+                        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Expected return date & time</label><div class="grid grid-cols-2 gap-2"><input id="studentGatepassReturnDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="studentGatepassReturnTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
+                    </div>
                     <div class="mb-3">
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Key Details / Reason (AI will expand professionally)</label>
+                        <label id="studentReqPromptLabel" class="block text-xs font-semibold text-slate-700 mb-1">Key Details / Reason (AI will expand professionally)</label>
                         <textarea id="studentReqPrompt" rows="2" placeholder="e.g. Need medical leave for 3 days due to viral fever from 22nd Sept..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="generateAIRequest('student')" class="bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>Generate & Send Request</span>
+                            <span id="studentReqSubmitLabel">Generate & Send Request</span>
                         </button>
                     </div>
                     <!-- Request Sender Feedback Box -->
                     <div id="studentRequestResult" class="hidden mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800"></div>
+                    <section id="studentGatepassListSection" class="mt-4 rounded-xl border border-slate-200 bg-white p-4"><div class="mb-2 flex items-center justify-between gap-3"><h4 class="font-bold text-slate-900">My gate passes</h4><button type="button" onclick="loadMyGatepasses('student')" class="text-xs font-semibold text-blue-700">Refresh</button></div><div id="studentGatepassList" class="space-y-2 text-xs text-slate-500">Sign in to view your gate passes.</div></section>
                 </div>
                 <!-- AI Complaint Registration Section -->
                 <div class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/30">
@@ -554,9 +636,9 @@
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                         <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
                             <i class="fa-solid fa-calendar-days text-blue-700"></i>
-                            <span>Today's Class Schedule</span>
+                            <span id="studentScheduleHeading">Institute Programmes & Learning Areas</span>
                         </h4>
-                        <ul class="space-y-2 text-xs text-slate-700">
+                        <ul id="studentScheduleList" class="space-y-2 text-xs text-slate-700">
                             <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
                                 <span>09:30 AM - Cloud Computing Architectures</span>
                                 <span class="font-semibold text-blue-700">Hall 304</span>
@@ -574,9 +656,9 @@
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                         <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
                             <i class="fa-solid fa-file-lines text-blue-700"></i>
-                            <span>Recent Internal Grades</span>
+                            <span id="studentMarksHeading">Recent Internal Marks</span>
                         </h4>
-                        <div class="space-y-2 text-xs">
+                        <div id="studentMarksList" class="space-y-2 text-xs">
                             <div class="flex justify-between items-center p-2 bg-slate-50 rounded border border-slate-100">
                                 <span>Compiler Design Test 2</span>
                                 <span class="font-bold text-emerald-600">46 / 50</span>
@@ -596,7 +678,7 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via University Records</span>
-                <button onclick="openPortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+                <button onclick="closePortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED CLASSBOT WIDGET INSIDE STUDENT DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -609,7 +691,7 @@
                             <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
                             <div>
                                 <span class="font-bold text-xs block">ClassBot: Academic Assistant</span>
-                                <span class="text-[9px] text-blue-200">ID: ILH26CS042 | Multi-lingual AI</span>
+                                <span class="text-[9px] text-blue-200">Syllabus and study support · multilingual</span>
                             </div>
                         </div>
                         <button onclick="toggleStudentChat()" class="text-blue-200 hover:text-white transition">
@@ -618,17 +700,18 @@
                     </div>
                     <div class="bg-slate-50 px-2.5 py-1.5 border-b border-slate-200 flex gap-1 overflow-x-auto text-[10px] whitespace-nowrap">
                         <button onclick="sendQuickQuery('My attendance')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📊 Attendance</button>
-                        <button onclick="sendQuickQuery('Fee status')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">💳 Fees</button>
-                        <button onclick="sendQuickQuery('Today schedule')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📅 Timetable</button>
-                        <button onclick="sendQuickQuery('Internal grades')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Grades</button>
+                        <button onclick="sendQuickQuery('Syllabus and subjects')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📚 Syllabus</button>
+                        <button onclick="sendQuickQuery('Show my sample weekly timetable')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">🕒 Timetable</button>
+                        <button onclick="sendQuickQuery('Help me make an exam study plan')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">🗓️ Study plan</button>
+                        <button onclick="sendQuickQuery('My term marks and grades')" class="bg-white hover:bg-blue-50 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Marks</button>
                     </div>
                     <div id="studentChatMessages" class="p-3 h-60 overflow-y-auto space-y-2.5 bg-slate-100/60 text-xs">
                         <div class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">
-                            Hello Alex! I'm your ClassBot. Ask me about attendance, fees, timetable, or marks in English, Malayalam, Arabic, or Hindi.
+                            Hi! I'm ClassBot. Ask about your syllabus, timetable, subjects, assignments, exam preparation, attendance, or marks. Never send sign-in details here.
                         </div>
                     </div>
                     <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
-                        <input type="text" id="studentChatInput" placeholder="Ask in English, Malayalam, Arabic..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50" onkeypress="handleStudentKey(event)">
+                        <input type="text" id="studentChatInput" placeholder="Ask about a subject or syllabus in English, Malayalam, Tamil..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-600 bg-slate-50" onkeypress="handleStudentKey(event)">
                         <button onclick="sendStudentMessage()" class="bg-blue-900 hover:bg-blue-800 text-white w-8 h-8 rounded-xl flex items-center justify-center text-xs transition shadow-sm">
                             <i class="fa-solid fa-paper-plane"></i>
                         </button>
@@ -661,18 +744,18 @@
                 <!-- Faculty Stats Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div class="text-slate-500 text-xs">Assigned Classes Today</div>
-                        <div class="text-xl font-bold text-slate-900 mt-1">3 Lecture Sessions</div>
+                        <div id="staffAcademicTrackLabel" class="text-slate-500 text-xs">Academic Track</div>
+                        <div id="staffAcademicTrackValue" class="text-xl font-bold text-slate-900 mt-1">Selected institute curriculum</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div class="text-slate-500 text-xs">Enrolled Students Under Mentorship</div>
-                        <div class="text-xl font-bold text-slate-900 mt-1">64 Students</div>
+                        <div id="staffAssessmentTitle" class="text-slate-500 text-xs">Assessment System</div>
+                        <div id="staffAssessmentValue" class="text-xl font-bold text-slate-900 mt-1">Course-specific assessment</div>
                     </div>
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                        <div class="text-slate-500 text-xs">Internal Submission Status</div>
+                        <div class="text-slate-500 text-xs">Live Academic Records</div>
                         <div class="text-sm font-bold text-emerald-600 mt-1 flex items-center space-x-1">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Evaluations Up to Date</span>
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span id="staffLiveRecordsStatus">Roster and grade records not connected</span>
                         </div>
                     </div>
                 </div>
@@ -691,11 +774,12 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Request Type</label>
-                            <select id="teacherReqType" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                            <select id="teacherReqType" onchange="handlePersonalRequestTypeChange('teacher')" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
                                 <option value="Lab Equipment Requisition">Lab Equipment Requisition</option>
                                 <option value="Conference / Duty Leave Approval">Conference / Duty Leave Approval</option>
                                 <option value="Research Grant Proposal">Research Grant Proposal</option>
                                 <option value="Syllabus Revision Submission">Syllabus Revision Submission</option>
+                                <option value="Gate Pass Request">Gate Pass Request</option>
                             </select>
                         </div>
                         <div>
@@ -705,21 +789,28 @@
                                 <option value="Academic Dean">Academic Dean</option>
                                 <option value="Purchase & Finance Committee">Purchase & Finance Committee</option>
                                 <option value="University KTU Coordinator">University KTU Coordinator</option>
+                                <option value="Administrative Office">Administrative Office</option>
                             </select>
                         </div>
                     </div>
+                    <div id="teacherGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3" style="display:none">
+                        <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Destination</label><input id="teacherGatepassDestination" type="text" maxlength="180" placeholder="Where are you going?" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div>
+                        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Departure date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassDepartureDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassDepartureTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
+                        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Expected return date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassReturnDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassReturnTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
+                    </div>
                     <div class="mb-3">
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Core Proposal / Request Notes</label>
+                        <label id="teacherReqPromptLabel" class="block text-xs font-semibold text-slate-700 mb-1">Core Proposal / Request Notes</label>
                         <textarea id="teacherReqPrompt" rows="2" placeholder="e.g. Require 15 high-end workstations for AI & Deep Learning Lab setup..." class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></textarea>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="generateAIRequest('teacher')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-sm flex items-center space-x-2">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>Generate & Dispatch Proposal</span>
+                            <span id="teacherReqSubmitLabel">Generate & Dispatch Proposal</span>
                         </button>
                     </div>
                     <!-- Request Sender Feedback Box -->
                     <div id="teacherRequestResult" class="hidden mt-4 p-4 bg-slate-100 border border-slate-300 rounded-lg text-xs text-slate-900"></div>
+                    <section class="mt-4 rounded-xl border border-slate-200 bg-white p-4"><div class="mb-2 flex items-center justify-between gap-3"><h4 class="font-bold text-slate-900">My gate passes</h4><button type="button" onclick="loadMyGatepasses('teacher')" class="text-xs font-semibold text-blue-700">Refresh</button></div><div id="teacherGatepassList" class="space-y-2 text-xs text-slate-500">Sign in to view your gate passes.</div></section>
                 </div>
                  <!-- TEACHER AI STUDY MATERIAL MANAGER -->
                  <div class="bg-white p-5 rounded-xl border border-cyan-200 shadow-xs bg-gradient-to-br from-white to-cyan-50/20">
@@ -850,7 +941,7 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via College Faculty Records</span>
-                <button onclick="openPortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+                <button onclick="closePortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED FACULTYBOT WIDGET INSIDE TEACHER DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -863,7 +954,7 @@
                             <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
                             <div>
                                 <span class="font-bold text-xs block">FacultyBot: Assistant</span>
-                                <span class="text-[9px] text-slate-300">ID: FAC-CS-902 | Multi-lingual AI</span>
+                                <span class="text-[9px] text-slate-300">Lesson planning and teaching support · multilingual</span>
                             </div>
                         </div>
                         <button onclick="toggleTeacherChat()" class="text-slate-300 hover:text-white transition">
@@ -871,14 +962,14 @@
                         </button>
                     </div>
                     <div class="bg-slate-50 px-2.5 py-1.5 border-b border-slate-200 flex gap-1 overflow-x-auto text-[10px] whitespace-nowrap">
-                        <button onclick="sendTeacherQuickQuery('My classes today')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📅 Classes</button>
-                        <button onclick="sendTeacherQuickQuery('Mentorship count')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">👥 Ments</button>
-                        <button onclick="sendTeacherQuickQuery('Evaluation status')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Grading</button>
-                        <button onclick="sendTeacherQuickQuery('Grievance help')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">🛠️ Tickets</button>
+                        <button onclick="sendTeacherQuickQuery('Make a lesson plan for my syllabus')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📚 Lesson plan</button>
+                        <button onclick="sendTeacherQuickQuery('Create a short assessment from this unit')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📝 Assessment</button>
+                        <button onclick="sendTeacherQuickQuery('Create a worksheet for my class')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">📄 Worksheet</button>
+                        <button onclick="sendTeacherQuickQuery('Show syllabus and subjects')" class="bg-white hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-full border border-slate-300 transition">🧭 Syllabus</button>
                     </div>
                     <div id="teacherChatMessages" class="p-3 h-60 overflow-y-auto space-y-2.5 bg-slate-100/60 text-xs">
                         <div class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">
-                            Hello Prof. Shoukath Ali! I am your FacultyBot. Ask me about your classes, student rosters, internal evaluations, or maintenance tickets.
+                            Hi! I'm FacultyBot. Ask about syllabus planning, lesson outlines, assessments, practical activities, or shared academic notes. Never send sign-in details here.
                         </div>
                     </div>
                     <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
@@ -913,7 +1004,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Master Password</label>
-                    <input type="password" id="adminPass" placeholder="Enter administrator password" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
+                    <input type="password" id="adminPass" placeholder="Enter administrator password" value="ilahia2026" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <button onclick="verifyAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Launch Expanded Dashboard
@@ -937,15 +1028,16 @@
                 </button>
             </div>
             <!-- Admin Nav Tabs -->
-            <div class="bg-slate-100 px-6 border-b border-slate-200 flex space-x-4 text-xs font-semibold overflow-x-auto">
-                <button onclick="switchAdminTab('overview')" id="admTab-overview" class="adm-tab-btn py-3 text-blue-700 border-b-2 border-blue-700 transition whitespace-nowrap">📊 Overview & Metrics</button>
-                <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📚 Program Manager</button>
-                <button onclick="switchAdminTab('complaints')" id="admTab-complaints" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📋 AI Tickets <span id="complaintsBadge" class="ml-1 bg-blue-700 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
-                <button onclick="switchAdminTab('leave-requests'); loadOfficeLeaveRequests()" id="admTab-leave-requests" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📩 Office Leave Inbox <span id="officeLeaveBadge" class="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
-                <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 bg-cyan-600 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
-                <button onclick="switchAdminTab('broadcast')" id="admTab-broadcast" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📢 Broadcast Announcement</button>
-                <button onclick="switchAdminTab('directory')" id="admTab-directory" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">👥 User Directory</button>
-                <button onclick="switchAdminTab('logs')" id="admTab-logs" class="adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🛡️ Security Logs</button>
+            <div class="bg-slate-100 px-6 border-b border-slate-200 flex space-x-4 text-xs font-semibold overflow-x-auto shrink-0">
+                <button onclick="switchAdminTab('overview')" id="admTab-overview" class="adm-tab-btn shrink-0 py-3 text-blue-700 border-b-2 border-blue-700 transition whitespace-nowrap">📊 Overview & Metrics</button>
+                <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📚 Program Manager</button>
+                <button onclick="switchAdminTab('complaints')" id="admTab-complaints" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📋 AI Tickets <span id="complaintsBadge" class="ml-1 bg-blue-700 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('leave-requests'); loadOfficeLeaveRequests()" id="admTab-leave-requests" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📩 Office Requests Inbox <span id="officeLeaveBadge" class="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('gatepasses'); loadOfficeGatepasses()" id="admTab-gatepasses" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🎫 Gate Pass Inbox <span id="officeGatepassBadge" class="ml-1 rounded-full bg-violet-600 px-1.5 py-0.2 text-[10px] text-white">0</span></button>
+                <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 bg-cyan-600 text-white px-1.5 py-0.2 rounded-full text-[10px]">0</span></button>
+                <button onclick="switchAdminTab('broadcast')" id="admTab-broadcast" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">📢 Broadcast Announcement</button>
+                <button onclick="switchAdminTab('directory')" id="admTab-directory" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">👥 User Directory</button>
+                <button onclick="switchAdminTab('logs')" id="admTab-logs" class="adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap">🛡️ Security Logs</button>
             </div>
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm flex-1">
                 
@@ -953,9 +1045,9 @@
                 <div id="admSection-overview" class="adm-section space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                            <div class="text-slate-500 text-xs">Active Campuses</div>
-                            <div class="text-xl font-bold text-slate-900 mt-1">5 Units</div>
-                            <div class="text-[10px] text-emerald-600 mt-0.5">ICET, Arts, Poly, School, ITI</div>
+                            <div class="text-slate-500 text-xs">Institutions in Directory</div>
+                            <div class="text-xl font-bold text-slate-900 mt-1">9 Institutions</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">6 colleges/institutes · 1 ITI · 2 schools</div>
                         </div>
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                             <div class="text-slate-500 text-xs">Total Listed Programs</div>
@@ -963,15 +1055,15 @@
                             <div class="text-[10px] text-slate-400 mt-0.5">Across all branches</div>
                         </div>
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-                            <div class="text-slate-500 text-xs">Active Student Portals</div>
-                            <div class="text-xl font-bold text-slate-900 mt-1">3,450+</div>
-                            <div class="text-[10px] text-emerald-600 mt-0.5">98.2% Active Standing</div>
+                            <div class="text-slate-500 text-xs">Live Student Records</div>
+                            <div class="text-xl font-bold text-slate-900 mt-1">Not connected</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Portal marks and attendance are demo values</div>
                         </div>
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
                             <div class="text-slate-500 text-xs">System Status</div>
                             <div class="text-sm font-bold text-emerald-600 flex items-center space-x-1.5 mt-2">
                                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                                <span>Encrypted & Online</span>
+                                <span>Demo environment</span>
                             </div>
                         </div>
                     </div>
@@ -1094,8 +1186,14 @@
                 </div>
                 <div id="admSection-leave-requests" class="adm-section space-y-6 hidden">
                     <div class="bg-white p-5 rounded-xl border border-amber-200 shadow-xs">
-                        <div class="flex justify-between items-center gap-3 mb-4"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-amber-700 mr-2"></i>Office Leave Requests</h4><p class="text-xs text-slate-500 mt-1">Requests forwarded by the mentor and HOD. The office records the final decision.</p></div><button onclick="loadOfficeLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                        <div class="flex justify-between items-center gap-3 mb-4"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-amber-700 mr-2"></i>Office Requests</h4><p class="text-xs text-slate-500 mt-1">Leave requests forwarded by the HOD appear here. Gate-pass requests are in the separate Gate Pass Inbox.</p></div><button onclick="loadOfficeLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
                         <div id="officeLeaveRequestList" class="space-y-3"><p class="text-slate-500">Loading office inbox…</p></div>
+                    </div>
+                </div>
+                <div id="admSection-gatepasses" class="adm-section space-y-6 hidden">
+                    <div class="rounded-xl border border-violet-200 bg-white p-5 shadow-xs">
+                        <div class="mb-4 flex items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-ticket text-violet-700 mr-2"></i>Gate Pass Requests</h4><p class="mt-1 text-xs text-slate-500">Approve or decline requests from student and teacher portals. Approved passes become downloadable in the requester’s portal.</p></div><button onclick="loadOfficeGatepasses()" class="text-xs font-semibold text-blue-700"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                        <div id="officeGatepassList" class="space-y-3"><p class="text-slate-500">Loading gate pass requests…</p></div>
                     </div>
                 </div>
                 <!-- TAB 4: AI KNOWLEDGE DATABASE MANAGER -->
@@ -1107,12 +1205,16 @@
                                     <i class="fa-solid fa-brain text-cyan-300"></i>
                                     <h4 class="font-bold">AI Knowledge Database</h4>
                                 </div>
-                                <p class="text-xs text-slate-300 max-w-2xl">Add trusted Ilahia-specific information that the AI assistant can use when answering students, faculty, and visitors. Entries are saved in this browser.</p>
+                                <p class="text-xs text-slate-300 max-w-2xl">The AI uses shared knowledge, including facts refreshed from official Ilahia institute websites every 24 hours. Add trusted notes below.</p>
                             </div>
                             <div class="bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-xs whitespace-nowrap">
                                 <span class="text-cyan-300 font-bold" id="aiKnowledgeContextCount">0</span> entries available to AI
                             </div>
                         </div>
+                    </div>
+                    <div class="flex flex-col gap-3 rounded-xl border border-cyan-200 bg-cyan-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div><p class="text-sm font-bold text-slate-900">Official college website refresh</p><p id="officialSiteSyncStatus" class="mt-1 text-xs text-slate-600">Automatic refresh runs every 24 hours while the backend is active.</p></div>
+                        <button id="officialSiteSyncButton" type="button" onclick="syncOfficialCollegeKnowledgeNow()" class="shrink-0 rounded-lg bg-cyan-800 px-4 py-2 text-xs font-semibold text-white hover:bg-cyan-900">Refresh official sites now</button>
                     </div>
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                         <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
@@ -1193,7 +1295,7 @@
                         <div class="space-y-3 mb-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Announcement Title</label>
-                                <input type="text" id="broadcastTitle" placeholder="e.g. Semester 6 Internal Exam Timetable Released" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs">
+                                <input type="text" id="broadcastTitle" placeholder="e.g. Upcoming Exam or Assessment Timetable" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">Notice Details & Instructions</label>
@@ -1277,6 +1379,7 @@
         </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js" crossorigin=""></script>
     <!-- Script with Multi-Language AI & Online Fee Payment System -->
     <script>
         const collegeDatabase = {
@@ -1389,15 +1492,73 @@
                     { title: "Fitter Trade", cat: "NCVT Certification", desc: "Component assembling, precision metal cutting, blueprint reading, and machine fitting." }, 
                     { title: "COPA (Computer Operator)", cat: "NCVT Certification", desc: "Office automation systems, database maintenance, internet tools, and peripheral upkeep." } 
                 ] 
-            } 
-        }; 
- 
-        const campusNavigationData = {
-            icet: {
-                mapQuery: 'Ilahia College of Engineering and Technology, Mulavoor P.O., Muvattupuzha, Kerala 686673',
-                coordinates: [10.02896, 76.59811],
-                plan: ['Visitor entry', 'Administration', 'Academic blocks', 'Engineering labs', 'Library', 'Auditorium', 'Hostel & transport']
             },
+            law: {
+                name: "Ilahia Law College",
+                shortName: "Ilahia Law College",
+                sub: "Pezhakkappilly P.O., Muvattupuzha, Kerala",
+                badge: "Law programmes · verify current admission details",
+                desc: "Ilahia Law College lists a three-year LL.B and a five-year integrated B.A. LL.B. (Hons.) programme. Check the college for current admissions, affiliation and approval details.",
+                image: "https://images.unsplash.com/photo-1589828660015-47f45f8a7c6a?auto=format&fit=crop&w=1600&q=80",
+                address: "Pezhakkappilly P.O., Muvattupuzha, Ernakulam District, Kerala - 686673.",
+                phone: "+91 94001 30499",
+                email: "ilahialaw@gmail.com",
+                icon: "fa-scale-balanced",
+                metrics: { passRate: "Contact institute", avgCgpa: "Contact institute", placements: "Contact institute" },
+                hostel: "Contact the college for current accommodation information.",
+                transport: "Contact the college for current transport routes.",
+                fees: "Confirm current fee details with the college.",
+                offerings: [
+                    { title: "LL.B", cat: "3-year law programme", desc: "The college website lists a three-year LL.B programme. Confirm current eligibility and admissions with the college." },
+                    { title: "B.A. LL.B. (Hons.)", cat: "5-year integrated law programme", desc: "The college website lists a five-year integrated B.A. LL.B. (Hons.) programme. Confirm current eligibility and admissions with the college." }
+                ]
+            },
+            pharmacy: {
+                name: "Ilahia College of Pharmacy",
+                shortName: "Ilahia Pharmacy",
+                sub: "Near Ilahia Arts College, Pezhakkappilly P.O., Muvattupuzha",
+                badge: "Pharmacy education · check current admissions",
+                desc: "Ilahia College of Pharmacy publishes information about its Bachelor of Pharmacy programme and pharmacy subject areas. Check the college for current admissions and regulatory details.",
+                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=80",
+                address: "Near Ilahia Arts College, Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala - 686673.",
+                phone: "+91 94476 08456",
+                email: "ilahiapharmacy@gmail.com",
+                icon: "fa-prescription-bottle-medical",
+                metrics: { passRate: "Contact institute", avgCgpa: "Contact institute", placements: "Contact institute" },
+                hostel: "Contact the college for current accommodation information.",
+                transport: "Contact the college for current transport routes.",
+                fees: "Confirm current fee details and course availability with the college.",
+                offerings: [
+                    { title: "Bachelor of Pharmacy (B.Pharm)", cat: "4-year programme", desc: "The college course page describes a four-year B.Pharm programme, with pharmacy subject areas including pharmaceutics, pharmacology, pharmaceutical chemistry and analysis. Confirm current intake and approval status with the college and relevant regulator." }
+                ]
+            },
+            kmlps: {
+                name: "Kavumkara Muslim L.P. School",
+                shortName: "KMLP School",
+                sub: "Kavumkara, Muvattupuzha, Kerala",
+                badge: "Aided lower primary school · school code 28409",
+                desc: "A lower primary school in Kavumkara, Muvattupuzha. Kerala's Sametham school directory lists classes 1 to 4; contact the school to confirm current admissions and facilities.",
+                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80",
+                address: "Kavumkara, Muvattupuzha, Ernakulam, Kerala - 686673.",
+                phone: "9188136647",
+                email: "kmlpsmuvattupuzha@gmail.com",
+                icon: "fa-school",
+                metrics: { passRate: "Contact school", avgCgpa: "Not applicable", placements: "Not applicable" },
+                hostel: "Contact the school for student services information.",
+                transport: "Contact the school for current transport information.",
+                fees: "Contact the school for current admission and fee details.",
+                offerings: [
+                    { title: "Lower Primary Classes", cat: "Classes 1–4", desc: "Kerala's Sametham directory lists the school at lower-primary level for classes 1 to 4. Confirm current language and admission details with the school." }
+                ]
+            }
+        }; 
+
+        const studentAcademicModels = {
+            icet: { attendance: '92.4%', attendanceNote: 'Engineering attendance · demo data', metric: 'Semester CGPA', value: '8.84 / 10', caption: 'Class percentile: 78th · demo data', marksTitle: 'Recent Internal Marks · Demo', marks: [['Data Structures', '46 / 50'], ['Engineering Mathematics', '42 / 50'], ['AI Lab', '24 / 25']] },
+            arts: { attendance: '90.6%', attendanceNote: 'Semester attendance · demo data', metric: 'Semester CGPA', value: '8.40 / 10', caption: 'Class percentile: 81st · demo data', marksTitle: 'Recent Semester Marks · Demo', marks: [['Core paper', '82 / 100'], ['Language paper', '78 / 100'], ['Project / practical', '88 / 100']] },
+            poly: { attendance: '91.2%', attendanceNote: 'Diploma attendance · demo data', metric: 'Semester Average Mark', value: '82%', caption: 'Percentage grading · demo data; no CGPA used', marksTitle: 'Recent Diploma Marks · Demo', marks: [['Theory paper', '82 / 100'], ['Workshop practical', '86 / 100'], ['Internal assessment', '78 / 100']] },
+            school: { attendance: '95.1%', attendanceNote: 'School-year attendance · demo data', metric: 'Current Class-Year Grade', value: 'A', caption: 'Term average: 86% · school-year progression, no CGPA', marksTitle: 'Recent Term Marks · Demo', marks: [['English', '88 / 100'], ['Mathematics', '84 / 100'], ['Science', '86 / 100']] },
+            iti: { attendance: '90.4%', attendanceNote: 'Trade-year attendance · demo data', metric: 'Training-Year Assessment', value: '79%', caption: 'Year-wise theory + practical percentage · demo; no CGPA', marksTitle: 'Recent Trade-Year Marks · Demo', marks: [['Trade theory', '76 / 100'], ['Practical assessment', '84 / 100'], ['Employability skills', '78 / 100']] },
             arts: {
                 mapQuery: 'Ilahia College of Arts and Science, Pezhakkappilly P.O., Muvattupuzha, Kerala 686674',
                 coordinates: [10.02556, 76.56795],
@@ -1408,31 +1569,129 @@
                 coordinates: [10.02664, 76.56755],
                 plan: ['Visitor entry', 'Administration', 'Diploma classrooms', 'Engineering workshops', 'Practical labs', 'Library & common areas']
             },
-            school: {
-                mapQuery: 'Ilahia Public School, Market P.O., Vazhappilly, Muvattupuzha, Kerala 686673',
-                coordinates: [9.99526, 76.5825],
-                plan: ['Secure entry', 'School office', 'Primary learning areas', 'Secondary classrooms', 'Activity spaces', 'Playground & pickup']
+            law: {
+                mapQuery: 'Ilahia Law College, Pezhakkappilly P.O., Muvattupuzha, Kerala 686673',
+                coordinates: [10.02556, 76.56795],
+                approximate: true,
+                plan: ['Approximate area marker', 'Contact college for verified building locations']
+            },
+            pharmacy: {
+                mapQuery: 'Ilahia College of Pharmacy, Pezhakkappilly P.O., Muvattupuzha, Kerala 686673',
+                coordinates: [10.02556, 76.56795],
+                approximate: true,
+                plan: ['Approximate area marker', 'Contact college for verified building locations']
             },
             iti: {
                 mapQuery: 'Ilahia Private ITI, Pezhakkappilly P.O., Muvattupuzha, Kerala 686673',
                 coordinates: [10.0261, 76.5677],
                 approximate: true,
                 plan: ['Visitor entry', 'Administration', 'Trade classrooms', 'Practical workshops', 'Equipment area', 'Student services']
+            },
+            school: {
+                mapQuery: 'Ilahia Public School, Market P.O., Vazhappilly, Muvattupuzha, Kerala 686673',
+                coordinates: [9.99526, 76.5825],
+                plan: ['Secure entry', 'School office', 'Primary learning areas', 'Secondary classrooms', 'Activity spaces', 'Playground & pickup']
+            },
+            kmlps: {
+                mapQuery: 'Kavumkara Muslim L.P. School, Kavumkara, Muvattupuzha, Kerala',
+                coordinates: [9.9868, 76.5795],
+                approximate: true,
+                plan: ['Approximate town marker', 'School office', 'Classes 1–4 (directory listing)', 'Contact school for verified campus layout']
             }
         };
         let campusLeafletMap = null;
         let campusMapMarkers = null;
+        let campusDepartmentLabels = null;
         let campusBuildingsLayer = null;
         let campusMapRequestNumber = 0;
+        let crowdHeatMapInstance = null;
+        let crowdHeatLayer = null;
+        let crowdZoneMarkers = null;
+        let crowdModelTimer = null;
+        let crowdModelPaused = false;
+        const crowdZoneNames = {
+            icet: ['Main gate / bus stop', 'CSE Department', 'Mechanical Block', 'Canteen / common area', 'Library', 'Administration'],
+            arts: ['Main entrance', 'Teaching blocks', 'Common area', 'Library', 'Administration'],
+            poly: ['Main entrance', 'Classrooms', 'Workshop area', 'Library', 'Administration'],
+            school: ['School gate / pickup', 'Primary classrooms', 'Playground', 'Activity area', 'School office'],
+            iti: ['Main entrance', 'Trade classrooms', 'Practical workshops', 'Student services', 'Administration'],
+            law: ['College area (approximate)', 'Classrooms', 'Library', 'Student services', 'Administration'],
+            pharmacy: ['College area (approximate)', 'Teaching spaces', 'Pharmacy labs', 'Library', 'Administration'],
+            kmlps: ['School area (approximate)', 'Classrooms', 'Activity space', 'School office', 'Pickup area']
+        };
+        // Relative demonstration points around the ICET campus pin. Exact building coordinates
+        // are not verified; labels are explicitly marked illustrative in the visitor map UI.
+        const crowdZoneOffsets = [[-55, -30], [35, -15], [-15, 55], [75, 35], [-80, 55], [15, 90]];
+        let icetDepartmentMapPoints = null;
  
         let currentActiveKey = 'icet'; 
         let globalTickets = [];
+        const myGatepassCache = { student: [], teacher: [] };
         let currentSessionRole = null;
         let currentSessionUserId = '';
+
+        function openCampusMapPage() {
+            const section = document.getElementById('campus-navigation');
+            const overlayBar = document.getElementById('campusMapOverlayBar');
+            if (!section || !overlayBar) return;
+            section.classList.add('campus-map-overlay-active');
+            overlayBar.classList.remove('hidden');
+            document.body.classList.add('campus-map-open');
+            section.scrollTop = 0;
+            setTimeout(() => {
+                if (campusLeafletMap) campusLeafletMap.invalidateSize();
+                if (crowdHeatMapInstance) crowdHeatMapInstance.invalidateSize();
+            }, 120);
+        }
+
+        function closeCampusMapPage() {
+            const section = document.getElementById('campus-navigation');
+            const overlayBar = document.getElementById('campusMapOverlayBar');
+            if (!section || !overlayBar) return;
+            section.classList.remove('campus-map-overlay-active');
+            overlayBar.classList.add('hidden');
+            document.body.classList.remove('campus-map-open');
+            setTimeout(() => {
+                if (campusLeafletMap) campusLeafletMap.invalidateSize();
+                if (crowdHeatMapInstance) crowdHeatMapInstance.invalidateSize();
+            }, 120);
+        }
+
+        function toggleCampusEarthPanel(forceOpen) {
+            const panel = document.getElementById('campusEarthPanel');
+            const toggle = document.getElementById('campusEarthToggle');
+            if (!panel || !toggle) return;
+            const isOpen = typeof forceOpen === 'boolean' ? forceOpen : panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', !isOpen);
+            toggle.setAttribute('aria-expanded', String(isOpen));
+            const label = toggle.querySelector('span');
+            if (label) label.textContent = isOpen ? 'Close 3D navigation' : 'Open 3D navigation';
+        }
+
+        function googleEarthLocationUrl(point) {
+            const [lat, lon] = point;
+            return `https://earth.google.com/web/@${lat},${lon},180a,900d,55y,0h,0t,0r`;
+        }
+
+        function renderCampusEarthStops(stops) {
+            const container = document.getElementById('campusEarthStops');
+            if (!container) return;
+            const uniqueStops = [...new Map(stops.filter(stop => Array.isArray(stop.point)).map(stop => [stop.label, stop])).values()];
+            container.innerHTML = uniqueStops.map(stop => `<a class="rounded-full border border-emerald-300 bg-white px-3 py-1.5 text-[11px] font-semibold text-emerald-900 hover:bg-emerald-100" href="${googleEarthLocationUrl(stop.point)}" target="_blank" rel="noopener noreferrer">${escapeHTML(stop.label)}</a>`).join('');
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && document.getElementById('campus-navigation')?.classList.contains('campus-map-overlay-active')) closeCampusMapPage();
+        });
+        let currentSessionCampusKey = '';
+        let feeDemoQrScanned = false;
+        let portalCampusAccounts = {};
+        let portalCampusInitPromise = null;
          let currentLang = 'en';
          const AI_KNOWLEDGE_STORAGE_KEY = 'ilahia_ai_knowledge';
          let aiKnowledgeEntries = loadAIKnowledgeEntries();
          let studentAIKnowledgeEntries = aiKnowledgeEntries.slice();
+         let campusAcademicNotes = [];
          let aiKnowledgeDatabaseReady = false;
          function loadAIKnowledgeEntries() {
              const fallbackEntries = [
@@ -1462,6 +1721,26 @@
                      source: 'Student portal guide',
                      tags: ['student-portal', 'support', 'complaints'],
                      content: 'Students can raise academic requests, fee questions, and classroom or lab complaints through the student portal. Urgent campus safety concerns should be reported directly to the administrative office.'
+                 },
+                 {
+                     id: 'seed-ilahia-institutions', title: 'Ilahia Trust institutions directory', category: 'institutions', audience: 'all',
+                     source: 'Ilahia College of Engineering and Technology institutions page', tags: ['Ilahia Trust', 'institutions', 'campuses'],
+                     content: 'The official ICET institutions page lists Ilahia College of Engineering and Technology, Ilahia College of Arts and Science, Ilahia Polytechnic College, Ilahia Public School, Ilahia Law College, Ilahia College of Pharmacy, and Kavumkara Muslim L.P. School (KMLP). Details and admissions should be confirmed with each institution. Source: https://icet.ac.in/'
+                 },
+                 {
+                     id: 'seed-ilahia-law', title: 'Ilahia Law College programmes and contact', category: 'institutions', audience: 'all',
+                     source: 'Ilahia Law College', tags: ['law', 'LLB', 'BA LLB', 'admissions'],
+                     content: 'Ilahia Law College lists a three-year LL.B and a five-year integrated B.A. LL.B. (Hons.) programme. Address: Pezhakkappilly P.O., Muvattupuzha, Ernakulam District, Kerala 686673. Phone: +91 94001 30499; email: ilahialaw@gmail.com. Confirm current programme, affiliation and admission details with the college. Sources: https://www.ilahialawcollege.com/ and https://ilahialawcollege.com/contactpage'
+                 },
+                 {
+                     id: 'seed-ilahia-pharmacy', title: 'Ilahia College of Pharmacy', category: 'institutions', audience: 'all',
+                     source: 'Ilahia College of Pharmacy', tags: ['pharmacy', 'B.Pharm', 'admissions'],
+                     content: 'Ilahia College of Pharmacy publishes a four-year B.Pharm course page and information on pharmacy subject areas. Address: Near Ilahia Arts College, Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala 686673. Phone: +91 94476 08456; email: ilahiapharmacy@gmail.com. Confirm current course availability, intake and regulatory approval directly with the college and relevant regulator. Sources: https://ilahiacollegeofpharmacy.com/all-courses/ and https://ilahiacollegeofpharmacy.com/contact/'
+                 },
+                 {
+                     id: 'seed-kmlps-school', title: 'Kavumkara Muslim L.P. School (KMLPS)', category: 'institutions', audience: 'all',
+                     source: 'Kerala Sametham school directory', tags: ['KMLPS', 'KMLP', 'school', 'classes 1 to 4'],
+                     content: 'Kerala Sametham school directory lists Kavumkara Muslim L.P. School, school code 28409, as an aided lower-primary school for classes 1 to 4 in Muvattupuzha. Listed phone: 9188136647; email: kmlpsmuvattupuzha@gmail.com. Confirm current admissions and contact details with the school. Sources: https://sametham.kite.kerala.gov.in/28409 and https://www.kmlps.in/'
                  }
              ];
              try {
@@ -1503,6 +1782,42 @@
               } catch (error) {
                   aiKnowledgeDatabaseReady = false;
                   logSystemActivity(`[AI KNOWLEDGE] Database sync unavailable; using local cached knowledge.`);
+              }
+          }
+          function renderOfficialSiteSyncStatus(status = {}) {
+              const label = document.getElementById('officialSiteSyncStatus');
+              if (!label) return;
+              const lastSuccess = status.lastSuccessAt ? new Date(status.lastSuccessAt).toLocaleString() : 'not yet completed';
+              label.textContent = `${status.message || 'Official site status unavailable.'} Last successful refresh: ${lastSuccess}${status.inProgress ? ' · Refresh running…' : ''}`;
+          }
+          async function loadOfficialSiteSyncStatus() {
+              try {
+                  const status = await requestAIKnowledge('/api/ai-knowledge/sync-status');
+                  renderOfficialSiteSyncStatus(status);
+                  return status;
+              } catch (error) {
+                  renderOfficialSiteSyncStatus({ message: error.message || 'Could not load refresh status.' });
+                  return null;
+              }
+          }
+          async function syncOfficialCollegeKnowledgeNow() {
+              const button = document.getElementById('officialSiteSyncButton');
+              if (button) { button.disabled = true; button.textContent = 'Starting refresh…'; }
+              try {
+                  await requestAIKnowledge('/api/ai-knowledge/sync', { method: 'POST', body: '{}' });
+                  await loadOfficialSiteSyncStatus();
+                  const poll = async () => {
+                      const status = await loadOfficialSiteSyncStatus();
+                      if (status?.inProgress) setTimeout(poll, 2500);
+                      else {
+                          await loadAIKnowledgeFromDatabase();
+                          if (button) { button.disabled = false; button.textContent = 'Refresh official sites now'; }
+                      }
+                  };
+                  setTimeout(poll, 2500);
+              } catch (error) {
+                  alert(error.message || 'Could not start the official website refresh. Sign in as the administrator and retry.');
+                  if (button) { button.disabled = false; button.textContent = 'Refresh official sites now'; }
               }
           }
           async function loadTeacherKnowledge() {
@@ -1555,31 +1870,114 @@
                   list.appendChild(item);
               });
           }
-          function findRelevantAIKnowledge(query, entries = aiKnowledgeEntries) {
-             const words = query
-                 .toLowerCase()
-                 .replace(/[^\w\s]/g, ' ')
-                 .split(/\s+/)
-                 .filter(word => word.length > 2);
+          function detectCampusInQuestion(query, fallbackKey = currentActiveKey) {
+              const text = query.toLowerCase();
+              const aliases = {
+                  icet: ['ilahia college of engineering and technology', 'engineering college', 'icet'],
+                  arts: ['ilahia college of arts and science', 'arts and science college', 'arts college', 'icas'],
+                  poly: ['ilahia polytechnic college', 'polytechnic', 'poly'],
+                  school: ['ilahia public school', 'public school', 'cbse school'],
+                  iti: ['ilahia private iti', 'private iti', 'industrial training institute', 'iti'],
+                  law: ['ilahia law college', 'law college'],
+                  pharmacy: ['ilahia college of pharmacy', 'pharmacy college', 'ilahia pharmacy'],
+                  kmlps: ['kavumkara muslim l.p. school', 'kavumkara muslim lp school', 'kmlps', 'kmlp school']
+              };
+              const matches = Object.entries(aliases).flatMap(([key, names]) => names.filter(name => text.includes(name)).map(name => ({ key, length: name.length })));
+              matches.sort((a, b) => b.length - a.length);
+              return matches[0]?.key || (collegeDatabase[fallbackKey] ? fallbackKey : 'icet');
+          }
+          function campusKeyForKnowledgeEntry(entry) {
+              if (entry.campusKey && collegeDatabase[entry.campusKey]) return entry.campusKey;
+              const id = String(entry.id || '');
+              if (id === 'seed-ilahia-institutions') return 'trust';
+              
+              if (/law/i.test(id)) return 'law';
+              if (/pharmacy/i.test(id)) return 'pharmacy';
+              if (/kmlp/i.test(id)) return 'kmlps';
+              if (/poly/i.test(id)) return 'poly';
+              if (/public-school/i.test(id)) return 'school';
+              if (/\biti\b/i.test(id)) return 'iti';
+              if (/icas|arts/i.test(id)) return 'arts';
+              if (/icet|ai-programme/i.test(id)) return 'icet';
+              return null;
+          }
+          function findRelevantAIKnowledge(query, entries = aiKnowledgeEntries, activeCampusKey = currentActiveKey) {
+             const stopWords = new Set(['the','what','which','where','when','who','why','how','tell','about','give','show','me','for','from','with','this','that','are','is','was','were','can','could','would','should','does','do','did','and','or','to','of','in','on','at','a','an','my','your','their','there','please','college','campus','institute','institution','details','information']);
+             const aliases = { courses: 'course', programmes: 'program', programs: 'program', fees: 'fee', hostels: 'hostel', buses: 'bus', placements: 'placement', admissions: 'admission', facilities: 'facility', labs: 'lab' };
+             const words = query.toLowerCase().normalize('NFKC').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/)
+                 .map(word => aliases[word] || word).filter(word => word.length > 1 && !stopWords.has(word));
              if (!words.length) return null;
              let bestMatch = null;
              let bestScore = 0;
+             const campusKey = detectCampusInQuestion(query, activeCampusKey);
+             const trustWideQuestion = /\b(all|every|other|list|name|which|group|trust)\b.{0,40}\b(colleges?|institutions?|campuses)\b|\b(colleges?|institutions?|campuses)\b.{0,40}\b(all|every|other|list|name|trust)\b/i.test(query);
              entries.forEach(entry => {
-                 const searchable = [
-                     entry.title,
-                     entry.content,
-                     entry.category,
-                     entry.source,
-                     ...(entry.tags || [])
-                 ].join(' ').toLowerCase();
-                 const score = words.reduce((total, word) => total + (searchable.includes(word) ? 1 : 0), 0);
+                 const ownerCampus = campusKeyForKnowledgeEntry(entry);
+                 if (ownerCampus === 'trust' && !trustWideQuestion) return;
+                 if (ownerCampus && ownerCampus !== 'trust' && ownerCampus !== campusKey) return;
+                 const title = String(entry.title || '').toLowerCase();
+                 const tags = (entry.tags || []).join(' ').toLowerCase();
+                 const content = String(entry.content || '').toLowerCase();
+                 const searchable = [title, content, entry.category, entry.source, tags].join(' ');
+                 let score = words.reduce((total, word) => total + (title.includes(word) ? 4 : 0) + (tags.includes(word) ? 3 : 0) + (content.includes(word) ? 1 : 0), 0);
+                 if (score > 0 && ownerCampus === campusKey) score += 4;
+                 if (score > 0 && entry.category === 'institution-profile') score += 1;
+                 if (words.length > 1 && searchable.includes(words.join(' '))) score += 4;
                  if (score > bestScore) {
                      bestScore = score;
                      bestMatch = entry;
                  }
              });
-             return bestMatch;
-         }
+             return bestScore >= 2 ? bestMatch : null;
+          }
+
+        function answerCampusQuestion(query, campusKey, entries) {
+            const campus = collegeDatabase[campusKey] || collegeDatabase.icet;
+            const text = query.toLowerCase();
+            if (/^\s*(hi|hello|hey|good morning|good afternoon|good evening)\b/i.test(text)) return `Hello! I’m ${campus.shortName} Assistant. Ask me about programmes, admissions, fees, transport, facilities, or another question about this campus.`;
+              const offerings = campus.offerings || [];
+              const cleanRecordText = value => String(value || '').replace(/\s*(?:sources?|source page):?\s*https?:\/\/\S+(?:\s*,\s*https?:\/\/\S+)*/gi, '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
+              const entry = findRelevantAIKnowledge(query, entries, campusKey);
+              const courseQuestion = /\b(course|courses|program|programs|programme|programmes|degree|diploma|b\.? ?tech|m\.? ?tech|bca|bba|bcom|bsc|mba|mca|llb|pharm|trade|class|grade)\b/i.test(text);
+              const feeQuestion = /\b(fee|fees|tuition|cost|scholarship|payment)\b/i.test(text);
+              const hostelQuestion = /\b(hostel|accommodation|boarding|dorm|room)\b/i.test(text);
+              const transportQuestion = /\b(bus|transport|route|pickup|pick up|commute)\b/i.test(text);
+              const contactQuestion = /\b(address|location|where|phone|telephone|contact|email|mail|reach)\b/i.test(text);
+              const admissionQuestion = /\b(admission|apply|application|eligibility|eligible|qualification|requirement|intake|seat)\b/i.test(text);
+              const placementQuestion = /\b(placement|job|career|recruit|employer|salary|internship)\b/i.test(text);
+              const facilityQuestion = /\b(facility|facilities|lab|laboratory|library|auditorium|sports|infrastructure|wifi|wifi|canteen)\b/i.test(text);
+              const overviewQuestion = /\b(about|overview|profile|detail|details|describe|tell me|information)\b/i.test(text);
+              const titleMatches = offerings.filter(item => {
+                  const requested = text.match(/\b(b\.?\s?tech|m\.?\s?tech|bca|bba|bcom|bsc|mba|mca|llb|pharm|copa|electrician|mechanical|civil|computer science|psychology|economics|english|commerce|accounting|logistics|cyber security|agricultural|biomedical|food technology)\b/i);
+                  return !requested || `${item.title} ${item.cat} ${item.desc}`.toLowerCase().includes(requested[0].replace(/\s+/g, ' '));
+              });
+              const courseList = (titleMatches.length ? titleMatches : offerings).map(item => `• ${item.title}${item.cat ? ` (${item.cat})` : ''}${item.desc ? ` — ${cleanRecordText(item.desc)}` : ''}`).join('\n');
+              if (courseQuestion && courseList) return `${campus.name} course information:\n${courseList}`;
+              if (feeQuestion) {
+                  const detail = cleanRecordText(campus.fees);
+                  return `${campus.name} fee information: ${detail || 'A verified fee schedule is not included in the information currently available to me.'}${entry ? `\n\nRelated college information: ${cleanRecordText(entry.content).slice(0, 900)}` : ''}`;
+              }
+              if (hostelQuestion) {
+                  const detail = cleanRecordText(campus.hostel);
+                  if (/^contact (the )?(college|institution|school|institute)/i.test(detail)) return `${campus.name}: I don't have verified hostel or accommodation details for this institution in my current campus records.`;
+                  return `${campus.name} accommodation information: ${detail || 'Verified hostel details are not included in my current campus records.'}`;
+              }
+              if (transportQuestion) {
+                  const detail = cleanRecordText(campus.transport);
+                  if (/^contact (the )?(college|institution|school|institute)/i.test(detail)) return `${campus.name}: My current records don't include verified bus routes or schedules for this campus.`;
+                  return `${campus.name} transport information: ${detail || 'Verified route and schedule details are not included in my current campus records.'}`;
+              }
+              if (contactQuestion) return `${campus.name}\nAddress: ${campus.address || 'Not listed in my current records.'}\nPhone: ${campus.phone || 'Not listed in my current records.'}\nEmail: ${campus.email || 'Not listed in my current records.'}${admissionQuestion && entry ? `\n\nAdmissions details: ${cleanRecordText(entry.content).slice(0, 900)}` : ''}`;
+              if (admissionQuestion && entry) return `${campus.name} admissions information: ${cleanRecordText(entry.content).slice(0, 1200)}`;
+              if (facilityQuestion && entry) return `${campus.name} facilities: ${cleanRecordText(entry.content).slice(0, 1200)}`;
+              if (placementQuestion && entry) return `${campus.name} placement information: ${cleanRecordText(entry.content).slice(0, 1200)}`;
+              if (overviewQuestion || placementQuestion || facilityQuestion) {
+                  const summary = `${campus.name}. ${cleanRecordText(campus.desc)}\nLocation: ${campus.address}\nAffiliation/recognition: ${campus.badge}\nProgrammes: ${offerings.map(item => item.title).join(', ') || 'Not listed in my current records.'}`;
+                  return entry ? `${summary}\n\nMore information: ${cleanRecordText(entry.content).slice(0, 700)}` : summary;
+              }
+              if (entry) return cleanRecordText(entry.content).slice(0, 1400);
+              return `${campus.name}: I don't have a matching detail for that question in the information currently loaded. I can answer questions about its programmes, fees, admissions, address, facilities, accommodation, or transport.`;
+          }
         const i18n = {
             en: {
                 overviewHeading: "Campus Facilities & Infrastructure",
@@ -1755,40 +2153,88 @@
             const section = document.getElementById('feePaymentSection');
             section.scrollIntoView({ behavior: 'smooth' });
         }
+        function renderMockFeeQr() {
+            const grid = document.getElementById('feeDemoQrCode');
+            if (!grid || grid.childElementCount) return;
+            grid.style.gridTemplateColumns = 'repeat(21, minmax(0, 1fr))';
+            const finderAt = (x, y, ox, oy) => x >= ox && x < ox + 7 && y >= oy && y < oy + 7;
+            const isFinderDark = (x, y, ox, oy) => {
+                const dx = x - ox, dy = y - oy;
+                return dx === 0 || dx === 6 || dy === 0 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
+            };
+            for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) {
+                const finders = [[0, 0], [14, 0], [0, 14]];
+                const finder = finders.find(([ox, oy]) => finderAt(x, y, ox, oy));
+                const dark = finder ? isFinderDark(x, y, finder[0], finder[1]) : ((x * 13 + y * 7 + x * y * 3) % 11 < 5);
+                const cell = document.createElement('span');
+                cell.style.background = dark ? '#111827' : '#fff';
+                grid.appendChild(cell);
+            }
+        }
+        function handleFeePaymentModeChange() {
+            const mode = document.getElementById('payFeeMode').value;
+            const isUpi = mode.toLowerCase().startsWith('upi');
+            const panel = document.getElementById('feeDemoQrPanel');
+            panel.classList.toggle('hidden', !isUpi);
+            feeDemoQrScanned = false;
+            renderMockFeeQr();
+            const status = document.getElementById('feeDemoQrStatus');
+            if (status) {
+                status.textContent = 'Waiting for simulated scan';
+                status.className = 'text-xs font-semibold text-amber-700 mt-2';
+            }
+            const scanButton = document.getElementById('feeDemoScanButton');
+            if (scanButton) { scanButton.disabled = false; scanButton.textContent = 'Simulate QR scan'; }
+        }
+        function simulateFeeQrScan() {
+            if (!document.getElementById('payFeeMode').value.toLowerCase().startsWith('upi')) return;
+            feeDemoQrScanned = true;
+            document.getElementById('feeDemoQrStatus').textContent = 'Mock scan complete — no payment was made';
+            document.getElementById('feeDemoQrStatus').className = 'text-xs font-semibold text-emerald-700 mt-2';
+            const scanButton = document.getElementById('feeDemoScanButton');
+            scanButton.disabled = true;
+            scanButton.textContent = 'Demo scan complete';
+        }
         function processOnlineFeePayment() {
             const category = document.getElementById('payFeeCategory').value;
-            const amount = document.getElementById('payFeeAmount').value;
+            const amount = Number(document.getElementById('payFeeAmount').value);
             const mode = document.getElementById('payFeeMode').value;
             const receiptBox = document.getElementById('feePaymentReceiptBox');
-            if(!amount || amount <= 0) {
+            if (!mode) {
+                alert('Choose a payment method first.');
+                return;
+            }
+            if (!Number.isFinite(amount) || amount <= 0) {
                 alert('Please enter a valid payment amount.');
                 return;
             }
-            const txnId = "ILH-TXN-" + Math.floor(100000 + Math.random() * 900000);
+            if (mode.toLowerCase().startsWith('upi') && !feeDemoQrScanned) {
+                alert('Choose UPI and complete the simulated QR scan first.');
+                return;
+            }
+            const txnId = "DEMO-" + Math.floor(100000 + Math.random() * 900000);
             const dateStr = new Date().toLocaleString();
             receiptBox.classList.remove('hidden');
             receiptBox.innerHTML = `
                 <div class="font-bold flex items-center space-x-1.5 mb-1 text-emerald-950 text-sm">
-                    <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
-                    <span>Payment Successful & Verified!</span>
+                    <i class="fa-solid fa-flask text-amber-600 text-base"></i>
+                    <span>Demo complete — no payment was made</span>
                 </div>
+                <p class="text-[11px] text-amber-900">This is a sample receipt only. No money moved and your fee balance has not changed.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-slate-800 mt-2 border-t border-emerald-200 pt-2">
-                    <div><span class="font-semibold">Transaction ID:</span> <code class="font-mono font-bold">${txnId}</code></div>
+                    <div><span class="font-semibold">Demo reference:</span> <code class="font-mono font-bold">${txnId}</code></div>
                     <div><span class="font-semibold">Date & Time:</span> ${dateStr}</div>
                     <div><span class="font-semibold">Category:</span> ${category}</div>
-                    <div><span class="font-semibold">Amount Paid:</span> <span class="text-emerald-700 font-bold">₹${amount}</span></div>
+                    <div><span class="font-semibold">Demo amount entered:</span> <span class="text-emerald-700 font-bold">₹${amount}</span></div>
                     <div><span class="font-semibold">Payment Mode:</span> ${mode}</div>
-                    <div><span class="font-semibold">Status:</span> <span class="text-emerald-700 font-bold">Paid & Credited</span></div>
+                    <div><span class="font-semibold">Status:</span> <span class="text-amber-700 font-bold">Simulation only</span></div>
                 </div>
                 <div class="mt-3 flex gap-2">
                     <button onclick="window.print()" class="bg-emerald-800 text-white px-3 py-1 rounded text-[10px] font-medium"><i class="fa-solid fa-print"></i> Print Receipt</button>
-                    <span class="text-[10px] text-emerald-700 self-center">Receipt sent to registered student email.</span>
+                    <span class="text-[10px] text-amber-800 self-center">No email or bank transaction was made.</span>
                 </div>
             `;
-            document.getElementById('feeAmountDisplay').textContent = '₹ 0.00';
-            document.getElementById('feeStatusBadge').className = 'px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]';
-            document.getElementById('feeStatusBadge').textContent = 'Fully Paid';
-            logSystemActivity(`[FINANCE] Fee payment successful (${txnId}) for amount ₹${amount} via ${mode}`);
+            logSystemActivity(`[FINANCE] Demo payment simulation (${txnId}) for amount ₹${amount} via ${mode}; no money transferred.`);
         }
         function updateStudentRequestRecipient() {
             const requestType = document.getElementById('studentReqType');
@@ -1796,10 +2242,35 @@
             const label = document.getElementById('studentReqRecipientLabel');
             if (!requestType || !recipient || !label) return;
             const isLeave = requestType.value === 'Leave Application';
+            const isGatepass = requestType.value === 'Gate Pass Request';
             label.textContent = isLeave ? 'Leave approval route' : 'Recipient Authority';
-            recipient.disabled = isLeave;
+            if (isGatepass) recipient.value = 'Administrative Office';
+            recipient.disabled = isLeave || isGatepass;
             if (isLeave) recipient.value = 'Faculty Advisor / Mentor';
             recipient.classList.toggle('bg-slate-100', isLeave);
+        }
+
+        function handlePersonalRequestTypeChange(role) {
+            const requestType = document.getElementById(`${role}ReqType`)?.value;
+            const isGatepass = requestType === 'Gate Pass Request';
+            const fields = document.getElementById(`${role}GatepassFields`);
+            if (fields) {
+                fields.classList.toggle('hidden', !isGatepass);
+                fields.style.display = isGatepass ? 'grid' : 'none';
+                fields.querySelectorAll('input').forEach(input => { input.required = isGatepass; });
+            }
+            const promptLabel = document.getElementById(`${role}ReqPromptLabel`);
+            const prompt = document.getElementById(`${role}ReqPrompt`);
+            if (promptLabel) promptLabel.textContent = isGatepass ? 'Purpose / reason for leaving' : role === 'student' ? 'Key Details / Reason (AI will expand professionally)' : 'Core Proposal / Request Notes';
+            if (prompt) prompt.placeholder = isGatepass ? 'Explain why you need to leave campus.' : role === 'student' ? 'e.g. Need medical leave for 3 days due to viral fever...' : 'Describe your request or proposal...';
+            const recipient = document.getElementById(`${role}ReqRecipient`);
+            if (role === 'student') updateStudentRequestRecipient();
+            else if (recipient) {
+                recipient.disabled = isGatepass;
+                if (isGatepass) recipient.value = 'Administrative Office';
+            }
+            const submitLabel = document.getElementById(`${role}ReqSubmitLabel`);
+            if (submitLabel) submitLabel.textContent = isGatepass ? 'Submit Gate Pass Request' : role === 'student' ? 'Generate & Send Request' : 'Generate & Dispatch Proposal';
         }
 
         function setInboxBadge(id, count) {
@@ -1813,7 +2284,7 @@
             const history = (item.history || []).map(step => `<li class="text-[10px] text-slate-500">${escapeHTML(step.label)} · ${escapeHTML(new Date(step.at).toLocaleString())}</li>`).join('');
             let action = '';
             if (audience === 'mentor') action = `<button onclick="actOnLeaveRequest('${item.id}','forward')" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Forward to HOD</button>`;
-            if (audience === 'hod') action = `<button onclick="actOnLeaveRequest('${item.id}','forward')" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Forward to Office</button>`;
+            if (audience === 'hod') action = `<div class="flex flex-wrap gap-2"><button onclick="actOnLeaveRequest('${item.id}','approve')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Approve at HOD</button><button onclick="actOnLeaveRequest('${item.id}','reject')" class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Decline at HOD</button><button onclick="actOnLeaveRequest('${item.id}','forward')" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Forward to Office</button></div>`;
             if (audience === 'office') action = `<div class="flex gap-2"><button onclick="actOnLeaveRequest('${item.id}','approve')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Approve</button><button onclick="actOnLeaveRequest('${item.id}','reject')" class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded text-xs font-semibold">Reject</button></div>`;
             return `<article class="border border-slate-200 rounded-lg p-3 bg-white"><div class="flex flex-wrap justify-between gap-2"><div><strong>${escapeHTML(item.subject)}</strong><span class="ml-2 text-[10px] text-slate-500">${escapeHTML(item.studentId)} · ${escapeHTML(new Date(item.createdAt).toLocaleString())}</span></div><span class="px-2 py-1 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold">${escapeHTML(item.statusLabel)}</span></div><p class="mt-2 whitespace-pre-wrap text-slate-700">${escapeHTML(item.reason)}</p><ol class="mt-2 space-y-1 list-disc list-inside">${history}</ol>${action ? `<div class="mt-3">${action}</div>` : ''}</article>`;
         }
@@ -1862,6 +2333,102 @@
             }
         }
 
+        function formatGatepassDateTime(date, time) {
+            const value = new Date(`${date}T${time}`);
+            return Number.isNaN(value.getTime()) ? `${date} ${time}` : value.toLocaleString();
+        }
+
+        function renderMyGatepasses(role, requests) {
+            myGatepassCache[role] = requests;
+            const list = document.getElementById(`${role}GatepassList`);
+            if (!list) return;
+            if (!requests.length) {
+                list.innerHTML = '<p class="text-slate-500">No gate pass requests yet.</p>';
+                return;
+            }
+            list.innerHTML = requests.map(item => {
+                const approved = item.status === 'approved';
+                const rejected = item.status === 'rejected';
+                const badgeClass = approved ? 'bg-emerald-100 text-emerald-800' : rejected ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900';
+                return `<article class="rounded-lg border border-slate-200 p-3"><div class="flex flex-wrap items-center justify-between gap-2"><strong class="text-slate-900">${escapeHTML(item.passCode)}</strong><span class="rounded-full px-2 py-1 text-[10px] font-bold ${badgeClass}">${escapeHTML(item.statusLabel)}</span></div><p class="mt-1 text-slate-600">${escapeHTML(item.destination)} · ${escapeHTML(formatGatepassDateTime(item.departureDate, item.departureTime))}</p><p class="mt-1 text-slate-500">Expected return: ${escapeHTML(formatGatepassDateTime(item.returnDate, item.returnTime))}</p>${approved ? `<button type="button" onclick="downloadVirtualGatepass('${role}','${item.id}')" class="mt-3 rounded bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-download mr-1"></i>Download approved gate pass</button><button type="button" onclick="printVirtualGatepass('${role}','${item.id}')" class="ml-2 mt-3 rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Print / Save as PDF</button>` : ''}</article>`;
+            }).join('');
+        }
+
+        async function loadMyGatepasses(role) {
+            const list = document.getElementById(`${role}GatepassList`);
+            if (!list) return;
+            try {
+                const response = await fetch('/api/gatepasses');
+                const requests = await response.json().catch(() => []);
+                if (!response.ok) throw new Error(requests.error || 'Could not load gate passes.');
+                renderMyGatepasses(role, requests);
+            } catch (error) {
+                list.innerHTML = `<p class="text-red-700">${escapeHTML(error.message || 'Sign in to view your gate passes.')}</p>`;
+            }
+        }
+
+        function gatepassDocument(item) {
+            const e = escapeHTML;
+            return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Campus Gate Pass ${e(item.passCode)}</title><style>body{font:16px Arial,sans-serif;color:#172033;margin:0;padding:32px;background:#f1f5f9}.pass{max-width:720px;margin:auto;background:#fff;border:2px solid #1e3a8a;border-radius:16px;padding:32px}.head{text-align:center;border-bottom:2px solid #dbeafe;padding-bottom:18px}.seal{color:#1e40af;font-size:13px;font-weight:bold;letter-spacing:2px}.title{font-size:28px;margin:10px 0 4px}.approved{display:inline-block;background:#dcfce7;color:#166534;padding:7px 12px;border-radius:20px;font-weight:bold}.code{font-size:22px;letter-spacing:1px;color:#1e3a8a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0}.label{font-size:11px;text-transform:uppercase;color:#64748b;letter-spacing:1px}.value{font-weight:600;margin-top:5px}.reason{padding:14px;background:#f8fafc;border-radius:8px;line-height:1.5}.foot{border-top:1px solid #cbd5e1;margin-top:24px;padding-top:16px;font-size:12px;color:#64748b}@media print{body{background:#fff;padding:0}.pass{border-radius:0;max-width:none}}</style></head><body><main class="pass"><header class="head"><div class="seal">ILAHIA TRUST INSTITUTIONS</div><h1 class="title">Campus Gate Pass</h1><span class="approved">${e(item.statusLabel)}</span><p class="code">${e(item.passCode)}</p></header><section class="grid"><div><div class="label">Issued to</div><div class="value">${e(item.requesterId)} (${e(item.requesterRole)})</div></div><div><div class="label">Destination</div><div class="value">${e(item.destination)}</div></div><div><div class="label">Departure</div><div class="value">${e(formatGatepassDateTime(item.departureDate,item.departureTime))}</div></div><div><div class="label">Expected return</div><div class="value">${e(formatGatepassDateTime(item.returnDate,item.returnTime))}</div></div><div><div class="label">Approved by</div><div class="value">Office · ${e(item.approvedBy || 'Authorized Office')}</div></div><div><div class="label">Approved on</div><div class="value">${e(item.approvedAt ? new Date(item.approvedAt).toLocaleString() : '')}</div></div></section><div class="label">Purpose</div><p class="reason">${e(item.reason)}</p><footer class="foot">This virtual pass is valid only for the departure and return times shown above. Present it with your campus ID. Campus security should confirm the approval status against the portal record.</footer></main></body></html>`;
+        }
+
+        function getMyGatepass(role, requestId) {
+            return (myGatepassCache[role] || []).find(item => item.id === requestId && item.status === 'approved');
+        }
+
+        function downloadVirtualGatepass(role, requestId) {
+            const item = getMyGatepass(role, requestId);
+            if (!item) { alert('This gate pass is not approved yet. Refresh your gate pass list.'); return; }
+            const blob = new Blob([gatepassDocument(item)], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Gate-Pass-${item.passCode}.html`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function printVirtualGatepass(role, requestId) {
+            const item = getMyGatepass(role, requestId);
+            if (!item) { alert('This gate pass is not approved yet. Refresh your gate pass list.'); return; }
+            const printWindow = window.open('', '_blank', 'width=850,height=900');
+            if (!printWindow) { alert('Allow pop-ups to print or save the gate pass as PDF.'); return; }
+            printWindow.document.open();
+            printWindow.document.write(gatepassDocument(item));
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => printWindow.print(), 300);
+        }
+
+        async function loadOfficeGatepasses() {
+            const list = document.getElementById('officeGatepassList');
+            if (!list) return;
+            try {
+                const response = await fetch('/api/gatepasses');
+                const requests = await response.json().catch(() => []);
+                if (!response.ok) throw new Error(requests.error || 'Could not load gate pass requests.');
+                setInboxBadge('officeGatepassBadge', requests.length);
+                list.innerHTML = requests.length ? requests.map(item => `<article class="rounded-lg border border-slate-200 bg-white p-3"><div class="flex flex-wrap items-center justify-between gap-2"><strong>${escapeHTML(item.passCode)} · ${escapeHTML(item.requesterRole)} ${escapeHTML(item.requesterId)}</strong><span class="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-bold text-amber-900">${escapeHTML(item.statusLabel)}</span></div><p class="mt-2"><strong>Destination:</strong> ${escapeHTML(item.destination)}</p><p><strong>Departure:</strong> ${escapeHTML(formatGatepassDateTime(item.departureDate,item.departureTime))} · <strong>Return:</strong> ${escapeHTML(formatGatepassDateTime(item.returnDate,item.returnTime))}</p><p class="mt-1 whitespace-pre-wrap text-slate-600"><strong>Purpose:</strong> ${escapeHTML(item.reason)}</p><div class="mt-3 flex gap-2"><button onclick="actOnGatepass('${item.id}','approve')" class="rounded bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white">Approve</button><button onclick="actOnGatepass('${item.id}','reject')" class="rounded bg-red-700 px-3 py-1.5 text-xs font-semibold text-white">Decline</button></div></article>`).join('') : '<p class="text-slate-500">No gate pass requests are waiting for approval.</p>';
+            } catch (error) {
+                list.innerHTML = `<p class="text-red-700">${escapeHTML(error.message || 'Sign in as office administrator to review gate passes.')}</p>`;
+            }
+        }
+
+        async function actOnGatepass(requestId, action) {
+            const verb = action === 'approve' ? 'approve' : 'decline';
+            if (!confirm(`Do you want to ${verb} this gate pass request?`)) return;
+            try {
+                const response = await fetch(`/api/gatepasses/${encodeURIComponent(requestId)}/action`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(result.error || 'The gate pass could not be updated.');
+                await loadOfficeGatepasses();
+            } catch (error) { alert(error.message || 'The gate pass could not be updated.'); }
+        }
+
         async function actOnLeaveRequest(requestId, action) {
             const label = action === 'approve' ? 'approve' : action === 'reject' ? 'reject' : 'forward';
             if (!confirm(`Do you want to ${label} this leave request?`)) return;
@@ -1895,6 +2462,35 @@
             const resultBox = document.getElementById(`${role}RequestResult`);
             if(!promptText) {
                 alert('Please enter core details or reason for your request.');
+                return;
+            }
+            if (reqType === 'Gate Pass Request') {
+                const prefix = role;
+                const destination = document.getElementById(`${prefix}GatepassDestination`).value.trim();
+                const departureDate = document.getElementById(`${prefix}GatepassDepartureDate`).value;
+                const departureTime = document.getElementById(`${prefix}GatepassDepartureTime`).value;
+                const returnDate = document.getElementById(`${prefix}GatepassReturnDate`).value;
+                const returnTime = document.getElementById(`${prefix}GatepassReturnTime`).value;
+                if (!destination || !departureDate || !departureTime || !returnDate || !returnTime) {
+                    alert('Complete the gate pass destination, departure, and expected return details.');
+                    return;
+                }
+                try {
+                    const response = await fetch('/api/gatepasses', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ destination, departureDate, departureTime, returnDate, returnTime, reason: promptText })
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.error || 'The gate pass request could not be submitted.');
+                    resultBox.classList.remove('hidden');
+                    resultBox.textContent = `Gate pass ${result.passCode} sent to the office for approval. After approval, download it from My gate passes.`;
+                    document.getElementById(`${prefix}ReqPrompt`).value = '';
+                    document.getElementById(`${prefix}GatepassDestination`).value = '';
+                    await loadMyGatepasses(role);
+                    logSystemActivity(`[GATE PASS] ${role} ${currentSessionUserId} submitted request ${result.passCode}.`);
+                } catch (error) {
+                    alert(error.message || 'Sign in to request a gate pass.');
+                }
                 return;
             }
             if (role === 'student' && reqType === 'Leave Application') {
@@ -1961,6 +2557,7 @@
             document.getElementById('heroImage').src = data.image; 
             document.getElementById('footerCollegeName').textContent = data.name; 
             document.getElementById('footerAddress').textContent = data.address; 
+            document.getElementById('footerContact').textContent = `Phone: ${data.phone} · Email: ${data.email}`;
             document.getElementById('chatBotTitle').textContent = `${data.shortName} Assistant`; 
  
             renderOfferings();
@@ -1980,6 +2577,8 @@
             const planGrid = document.getElementById('campusPlanGrid');
             const dataStatus = document.getElementById('campusMapDataStatus');
             const mapFallback = document.getElementById('campusMapFallback');
+            const earthLink = document.getElementById('campusEarthLaunchLink');
+            const earthDescription = document.getElementById('campusEarthDescription');
             if (!directory || !mapContainer || !directionsLink || !osmLink || !planGrid) return;
             directory.innerHTML = Object.entries(campusNavigationData).map(([key, campus]) => {
                 const item = collegeDatabase[key];
@@ -1995,11 +2594,17 @@
             }).join('');
             const campus = campusNavigationData[currentActiveKey];
             const institution = collegeDatabase[currentActiveKey];
+            updateCrowdHeatMap(true);
             const encodedQuery = encodeURIComponent(campus.mapQuery);
             mapTitle.textContent = `${institution.name} · OpenStreetMap`;
             mapAddress.textContent = campus.approximate ? `Approximate pin near Pezhakkappilly; use directions to confirm: ${campus.mapQuery}` : campus.mapQuery;
             directionsLink.href = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
             const [lat, lon] = campus.coordinates;
+            if (earthLink) earthLink.href = `https://earth.google.com/web/@${lat},${lon},0a,1800d,35y,0h,0t,0r`;
+            if (earthDescription) earthDescription.textContent = campus.approximate
+                ? `Open Google Earth near ${institution.shortName}. This campus pin is approximate; enable 3D Buildings and tilt in Google Earth to explore nearby terrain.`
+                : `Open ${institution.shortName} in Google Earth. Enable 3D Buildings and tilt in Google Earth to explore the campus area.`;
+            renderCampusEarthStops([{ label: `${institution.shortName} overview`, point: campus.coordinates }]);
             if (mapFallback) {
                 const bounds = (lon - 0.006) + "," + (lat - 0.004) + "," + (lon + 0.006) + "," + (lat + 0.004);
                 mapFallback.src = "https://www.openstreetmap.org/export/embed.html?bbox=" + bounds + "&layer=mapnik&marker=" + lat + "," + lon;
@@ -2027,12 +2632,13 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
                 }).addTo(campusLeafletMap);
                 campusMapMarkers = L.layerGroup().addTo(campusLeafletMap);
+                campusDepartmentLabels = L.layerGroup().addTo(campusLeafletMap);
                 campusBuildingsLayer = L.geoJSON(null, {
                     style: { color: '#1d4ed8', weight: 2, fillColor: '#60a5fa', fillOpacity: 0.3 },
                     pointToLayer: (feature, point) => L.circleMarker(point, { radius: 6, color: '#0f172a', weight: 2, fillColor: '#f59e0b', fillOpacity: 0.9 }),
                     onEachFeature: (feature, layer) => {
                         const tags = feature.properties || {};
-                        const label = tags.name || tags['name:en'] || (tags.building ? `${tags.building} building` : tags.amenity || 'Mapped campus feature');
+                        const label = campusFeatureLabel(tags) || (tags.building ? `${tags.building} building` : tags.amenity || 'Mapped campus feature');
                         layer.bindPopup(`<strong>${escapeHTML(label)}</strong><br><span>${escapeHTML(tags.amenity || tags.building || 'OpenStreetMap feature')}</span>`);
                     }
                 }).addTo(campusLeafletMap);
@@ -2040,13 +2646,16 @@
                 campusLeafletMap.setView([lat, lon], 18);
             }
             campusMapMarkers.clearLayers();
+            if (campusDepartmentLabels) campusDepartmentLabels.clearLayers();
             campusBuildingsLayer.clearLayers();
             const markerLabel = campus.approximate ? `${institution.shortName} — approximate area pin` : institution.shortName;
             L.marker([lat, lon]).bindPopup(`<strong>${escapeHTML(markerLabel)}</strong><br>${escapeHTML(campus.mapQuery)}`).addTo(campusMapMarkers);
             setTimeout(() => campusLeafletMap && campusLeafletMap.invalidateSize(), 100);
             if (dataStatus) dataStatus.textContent = campus.approximate
                 ? 'Showing an approximate Pezhakkappilly area pin; confirm the exact ITI entrance in Google Maps.'
-                : 'Loading mapped buildings and campus features from OpenStreetMap…';
+                : currentActiveKey === 'icet'
+                    ? 'Loading OpenStreetMap building footprints to place the CSE and Mechanical block labels…'
+                    : 'Loading mapped buildings and campus features from OpenStreetMap…';
             loadCampusMapFeatures(currentActiveKey, lat, lon);
         }
 
@@ -2054,12 +2663,115 @@
             return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
         }
 
+        function getModelActivity(zoneIndex, now) {
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            const gaussianPeak = (center, width) => Math.exp(-Math.pow((minutes - center) / width, 2) / 2);
+            const entryPeak = gaussianPeak(9 * 60, 55) * 0.2;
+            const lunchPeak = gaussianPeak(12 * 60 + 30, 65) * (zoneIndex === 2 ? 0.32 : 0.13);
+            const exitPeak = gaussianPeak(16 * 60, 55) * (zoneIndex === 0 ? 0.25 : 0.08);
+            const weekdayFactor = now.getDay() === 0 ? 0.18 : now.getDay() === 6 ? 0.55 : 1;
+            const baseline = [0.24, 0.38, 0.3, 0.18, 0.2][zoneIndex];
+            const gentleVariation = Math.sin(now.getTime() / 55000 + zoneIndex * 1.8) * 0.045;
+            return Math.max(0.06, Math.min(0.98, (baseline + entryPeak + lunchPeak + exitPeak + gentleVariation) * weekdayFactor));
+        }
+
+        function activityLabel(activity) {
+            if (activity >= 0.68) return 'Busy';
+            if (activity >= 0.38) return 'Moderate';
+            return 'Low';
+        }
+
+        function activityColor(activity) {
+            if (activity >= 0.68) return '#dc2626';
+            if (activity >= 0.38) return '#f59e0b';
+            return '#2563eb';
+        }
+
+        function ensureCrowdHeatMap(center) {
+            const container = document.getElementById('crowdHeatMap');
+            if (!container || !window.L) return;
+            if (!crowdHeatMapInstance) {
+                crowdHeatMapInstance = L.map(container, { scrollWheelZoom: false, zoomControl: true }).setView(center, 18);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+                }).addTo(crowdHeatMapInstance);
+                crowdHeatLayer = window.L.heatLayer
+                    ? L.heatLayer([], { radius: 42, blur: 30, maxZoom: 20, max: 1, gradient: { 0.15: '#2563eb', 0.5: '#facc15', 0.78: '#f97316', 1: '#dc2626' } }).addTo(crowdHeatMapInstance)
+                    : L.layerGroup().addTo(crowdHeatMapInstance);
+                crowdZoneMarkers = L.layerGroup().addTo(crowdHeatMapInstance);
+            } else {
+                crowdHeatMapInstance.setView(center, 18);
+            }
+            setTimeout(() => crowdHeatMapInstance && crowdHeatMapInstance.invalidateSize(), 120);
+        }
+
+        function toggleCrowdModel() {
+            crowdModelPaused = !crowdModelPaused;
+            const button = document.getElementById('crowdModelToggle');
+            const state = document.getElementById('crowdModelState');
+            if (button) button.textContent = crowdModelPaused ? 'Resume model' : 'Pause model';
+            if (state) {
+                state.innerHTML = crowdModelPaused
+                    ? '<span class="h-2 w-2 rounded-full bg-slate-400"></span>Paused'
+                    : '<span class="h-2 w-2 animate-pulse rounded-full bg-emerald-500"></span>Updating';
+                state.className = `inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide ${crowdModelPaused ? 'text-slate-500' : 'text-emerald-700'}`;
+            }
+            if (!crowdModelPaused) updateCrowdHeatMap(true);
+        }
+
+        function updateCrowdHeatMap(force = false) {
+            if (crowdModelPaused && !force) return;
+            const campus = campusNavigationData[currentActiveKey];
+            const institution = collegeDatabase[currentActiveKey];
+            const [centerLat, centerLon] = campus.coordinates;
+            const now = new Date();
+            const names = crowdZoneNames[currentActiveKey] || crowdZoneNames.icet;
+            const readings = names.map((name, index) => {
+                const mappedPoint = currentActiveKey === 'icet' && index === 1 ? icetDepartmentMapPoints?.cse
+                    : currentActiveKey === 'icet' && index === 2 ? icetDepartmentMapPoints?.mechanical : null;
+                const [northMeters, eastMeters] = crowdZoneOffsets[index] || [0, 0];
+                const lat = mappedPoint?.[0] ?? centerLat + northMeters / 111320;
+                const lon = mappedPoint?.[1] ?? centerLon + eastMeters / (111320 * Math.cos(centerLat * Math.PI / 180));
+                return { name, lat, lon, activity: getModelActivity(index, now) };
+            });
+
+            const campusLabel = document.getElementById('crowdModelCampus');
+            const updatedLabel = document.getElementById('crowdModelUpdated');
+            const zoneList = document.getElementById('crowdZoneList');
+            if (campusLabel) campusLabel.textContent = `${institution.shortName} · activity index, not people count`;
+            if (updatedLabel) updatedLabel.textContent = `Model refreshed ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+            if (zoneList) zoneList.innerHTML = readings.map(reading => {
+                const percent = Math.round(reading.activity * 100);
+                return `<li class="rounded-lg border border-slate-200 p-2.5"><div class="flex items-center justify-between gap-2"><span class="text-[11px] font-medium text-slate-800">${escapeHTML(reading.name)}</span><span class="text-[10px] font-bold" style="color:${activityColor(reading.activity)}">${activityLabel(reading.activity)}</span></div><div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full" style="width:${percent}%;background:${activityColor(reading.activity)}"></div></div></li>`;
+            }).join('');
+
+            ensureCrowdHeatMap([centerLat, centerLon]);
+            if (crowdHeatMapInstance && crowdHeatLayer && crowdZoneMarkers) {
+                const heatPoints = readings.map(reading => [reading.lat, reading.lon, reading.activity]);
+                if (typeof crowdHeatLayer.setLatLngs === 'function') {
+                    crowdHeatLayer.setLatLngs(heatPoints);
+                } else {
+                    crowdHeatLayer.clearLayers();
+                    readings.forEach(reading => L.circle([reading.lat, reading.lon], {
+                        radius: 25 + reading.activity * 45, color: activityColor(reading.activity), weight: 1,
+                        opacity: 0.18, fillColor: activityColor(reading.activity), fillOpacity: 0.14 + reading.activity * 0.15
+                    }).addTo(crowdHeatLayer));
+                }
+                crowdZoneMarkers.clearLayers();
+                readings.forEach(reading => L.circleMarker([reading.lat, reading.lon], {
+                    radius: 5, color: '#fff', weight: 2, fillColor: activityColor(reading.activity), fillOpacity: 1
+                }).bindTooltip(`${escapeHTML(reading.name)} · ${activityLabel(reading.activity)} model activity`).addTo(crowdZoneMarkers));
+            }
+            if (!crowdModelTimer) crowdModelTimer = setInterval(() => updateCrowdHeatMap(), 20000);
+        }
+
         async function loadCampusMapFeatures(campusKey, lat, lon) {
             const requestNumber = ++campusMapRequestNumber;
             const status = document.getElementById('campusMapDataStatus');
             const list = document.getElementById('campusMapFeatureList');
             if (list) list.innerHTML = '';
-            const query = `[out:json][timeout:18];(way(around:350,${lat},${lon})[building];nwr(around:350,${lat},${lon})[amenity~"school|college|university|library|classroom|workshop"];);out center geom tags;`;
+            const query = `[out:json][timeout:18];(way(around:350,${lat},${lon})[building];nwr(around:350,${lat},${lon})[amenity~"school|college|university|library|classroom|workshop"];nwr(around:350,${lat},${lon})[name~"canteen",i];);out center geom tags;`;
             const endpoints = [
                 'https://overpass-api.de/api/interpreter',
                 'https://overpass.kumi.systems/api/interpreter'
@@ -2096,20 +2808,93 @@
             });
             campusBuildingsLayer.clearLayers();
             campusBuildingsLayer.addData({ type: 'FeatureCollection', features });
+            if (campusKey === 'icet') {
+                const named = element => String(element.tags?.name || element.tags?.['name:en'] || '');
+                const cseElement = uniqueElements.find(element => /^(cse department|computer science and engineering department|department of computer science and engineering)$/i.test(named(element).trim()))
+                    || uniqueElements.find(element => /^ilahia college of management studies$/i.test(named(element).trim()));
+                const elementPoint = element => {
+                    if (Array.isArray(element?.geometry) && element.geometry.length) {
+                        const sum = element.geometry.reduce((point, item) => ({ lat: point.lat + item.lat, lon: point.lon + item.lon }), { lat: 0, lon: 0 });
+                        return [sum.lat / element.geometry.length, sum.lon / element.geometry.length];
+                    }
+                    const point = element?.center || element;
+                    return Number.isFinite(point?.lat) && Number.isFinite(point?.lon) ? [point.lat, point.lon] : null;
+                };
+                const buildingArea = element => {
+                    const points = element.geometry;
+                    if (!Array.isArray(points) || points.length < 4) return 0;
+                    const meanLat = points.reduce((sum, point) => sum + point.lat, 0) / points.length;
+                    const scaleX = 111320 * Math.cos(meanLat * Math.PI / 180);
+                    const projected = points.map(point => [point.lon * scaleX, point.lat * 111320]);
+                    let area = 0;
+                    for (let i = 0; i < projected.length; i++) {
+                        const current = projected[i], next = projected[(i + 1) % projected.length];
+                        area += current[0] * next[1] - next[0] * current[1];
+                    }
+                    return Math.abs(area / 2);
+                };
+                const mechanicalNamedElement = uniqueElements.find(element => /^(mechanical block|mechanical engineering block|mech block|mechanical engineering department|department of mechanical engineering)$/i.test(named(element).trim()));
+                const mechanicalFallback = uniqueElements
+                    .filter(element => element.type === 'way' && element.tags?.building && element.tags.building !== 'house' && !named(element) && element.id !== cseElement?.id)
+                    .map(element => ({ element, point: elementPoint(element), area: buildingArea(element) }))
+                    .filter(item => {
+                        if (!item.point || item.area < 150 || item.area > 20000) return false;
+                        const fromCampus = Math.hypot((item.point[0] - lat) * 111320, (item.point[1] - lon) * 111320 * Math.cos(lat * Math.PI / 180));
+                        return fromCampus <= 250;
+                    })
+                    .sort((a, b) => b.area - a.area)[0]?.element || null;
+                const mechanicalElement = mechanicalNamedElement || mechanicalFallback;
+                icetDepartmentMapPoints = { cse: elementPoint(cseElement), mechanical: elementPoint(mechanicalElement) };
+                campusDepartmentLabels?.clearLayers();
+                if (icetDepartmentMapPoints.cse) {
+                    L.tooltip({ permanent: true, direction: 'center', className: 'campus-building-label', opacity: 1 })
+                        .setLatLng(icetDepartmentMapPoints.cse).setContent('CSE Department').addTo(campusDepartmentLabels);
+                }
+                if (icetDepartmentMapPoints.mechanical) {
+                    L.tooltip({ permanent: true, direction: 'center', className: 'campus-building-label', opacity: 1 })
+                        .setLatLng(icetDepartmentMapPoints.mechanical).setContent('Mechanical Block').addTo(campusDepartmentLabels);
+                }
+                const earthStops = [{ label: 'ICET campus overview', point: campusNavigationData.icet.coordinates }];
+                if (icetDepartmentMapPoints.cse) earthStops.push({ label: 'CSE Department', point: icetDepartmentMapPoints.cse });
+                if (icetDepartmentMapPoints.mechanical) earthStops.push({ label: 'Mechanical Block', point: icetDepartmentMapPoints.mechanical });
+                uniqueElements.forEach(element => {
+                    const label = campusFeatureLabel(element.tags || {});
+                    if (!label || !/civil|electrical|information technology|canteen|library|administration/i.test(label)) return;
+                    const point = elementPoint(element);
+                    if (point) earthStops.push({ label, point });
+                });
+                renderCampusEarthStops(earthStops);
+                updateCrowdHeatMap(true);
+            }
             const namedFeatures = uniqueElements.filter(element => {
                 const tags = element.tags || {};
                 return tags.name || tags['name:en'] || (tags.building && tags.building !== 'yes');
             }).slice(0, 24);
             if (list) {
-                list.innerHTML = namedFeatures.length
-                    ? namedFeatures.map(element => {
+                const visibleLabels = [];
+                if (campusKey === 'icet') {
+                    if (icetDepartmentMapPoints?.cse) visibleLabels.push('CSE Department');
+                    if (icetDepartmentMapPoints?.mechanical) visibleLabels.push('Mechanical Block');
+                }
+                const mappedLabels = namedFeatures.map(element => {
                         const tags = element.tags || {};
-                        const label = tags.name || tags['name:en'] || `${tags.building} building`;
-                        return `<li><i class="fa-solid fa-location-dot text-blue-600 mr-1"></i>${escapeHTML(label)}</li>`;
-                    }).join('')
+                        const label = campusFeatureLabel(tags) || `${tags.building} building`;
+                        return label;
+                    }).filter(label => !visibleLabels.includes(label) && !(campusKey === 'icet' && /^mechanical(?: engineering)?(?: block| department)?$/i.test(label.trim())));
+                const allLabels = [...visibleLabels, ...mappedLabels];
+                list.innerHTML = allLabels.length
+                    ? allLabels.map(label => `<li><i class="fa-solid fa-location-dot text-blue-600 mr-1"></i>${escapeHTML(label)}</li>`).join('')
                     : '<li>No named buildings are mapped here yet; zoom in to inspect available building footprints.</li>';
             }
-            if (status) status.textContent = `${features.length} mapped building or campus feature(s) loaded near this campus from OpenStreetMap. Locations are community-mapped and may be incomplete.`;
+            if (status) status.textContent = campusKey === 'icet'
+                ? `${features.length} OpenStreetMap features loaded. Existing mapped department names are preserved; “Ilahia College of Management Studies” is labeled CSE Department. Mechanical Block uses its named map feature when available, otherwise the largest unnamed campus building footprint.`
+                : `${features.length} mapped building or campus feature(s) loaded near this campus from OpenStreetMap. Locations are community-mapped and may be incomplete.`;
+        }
+
+        function campusFeatureLabel(tags) {
+            const name = tags.name || tags['name:en'] || '';
+            if (/^ilahia college of management studies$/i.test(name.trim())) return 'CSE Department';
+            return name;
         }
  
         function renderOfferings() { 
@@ -2362,10 +3147,10 @@
         function switchAdminTab(tabId) { 
             document.querySelectorAll('.adm-section').forEach(sec => sec.classList.add('hidden')); 
             document.querySelectorAll('.adm-tab-btn').forEach(btn => { 
-                btn.className = "adm-tab-btn py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap"; 
+                btn.className = "adm-tab-btn shrink-0 py-3 text-slate-600 hover:text-slate-900 transition whitespace-nowrap"; 
             }); 
             document.getElementById(`admSection-${tabId}`).classList.remove('hidden'); 
-            document.getElementById(`admTab-${tabId}`).className = "adm-tab-btn py-3 text-blue-700 border-b-2 border-blue-700 transition font-semibold whitespace-nowrap"; 
+            document.getElementById(`admTab-${tabId}`).className = "adm-tab-btn shrink-0 py-3 text-blue-700 border-b-2 border-blue-700 transition font-semibold whitespace-nowrap"; 
         } 
  
         function loadCampusMetricsIntoForm() { 
@@ -2505,16 +3290,20 @@
             document.getElementById('teacherDashboardCard').classList.add('hidden'); 
             document.getElementById('studentLeaveInbox')?.classList.add('hidden');
             document.getElementById('staffLeaveInbox')?.classList.add('hidden');
+            portalCampusInitPromise = initializePortalCampusSelector();
         } 
  
         function closePortalModal() { 
             fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
             currentSessionRole = null;
             currentSessionUserId = '';
+            currentSessionCampusKey = '';
             document.getElementById('portalModal').classList.add('hidden'); 
         } 
  
-        function showLoginForm(role) { 
+        async function showLoginForm(role) {
+            if (portalCampusInitPromise) await portalCampusInitPromise;
+            setPortalLoginCampus(currentActiveKey);
             document.getElementById('portalMenuCard').classList.add('hidden'); 
             if(role === 'student') { 
                 document.getElementById('studentLoginCard').classList.remove('hidden'); 
@@ -2522,23 +3311,77 @@
                 document.getElementById('teacherLoginCard').classList.remove('hidden'); 
             } 
         } 
+
+        async function initializePortalCampusSelector() {
+            setPortalLoginCampus(currentActiveKey);
+            try {
+                const response = await fetch('/api/campuses');
+                if (response.ok) {
+                    const rows = await response.json();
+                    portalCampusAccounts = Object.fromEntries(rows.map(row => [row.key, row.accounts]));
+                    setPortalLoginCampus(currentActiveKey);
+                }
+            } catch (_) { /* The campus list below still works if the API is offline. */ }
+        }
+
+        function setPortalLoginCampus(campusKey) {
+            if (!collegeDatabase[campusKey]) return;
+            const name = collegeDatabase[campusKey].name;
+            const menuName = document.getElementById('portalMenuCampusName');
+            if (menuName) menuName.textContent = name;
+            const studentName = document.getElementById('studentLoginCampusName');
+            const teacherName = document.getElementById('teacherLoginCampusName');
+            if (studentName) studentName.textContent = name;
+            if (teacherName) teacherName.textContent = name;
+            const studentAccount = portalCampusAccounts[campusKey]?.student;
+            const teacherRole = document.getElementById('staffLoginRole')?.value || 'teacher';
+            const staffAccount = portalCampusAccounts[campusKey]?.[teacherRole];
+            const studentId = document.getElementById('studentUniId');
+            const studentPass = document.getElementById('studentPass');
+            const staffId = document.getElementById('teacherCollegeId');
+            const staffPass = document.getElementById('teacherPass');
+            if (studentId && studentAccount?.id) studentId.value = studentAccount.id;
+            if (studentPass) studentPass.value = studentAccount?.demoPassword || '';
+            const studentDemoHint = document.getElementById('studentDemoCredentialHint');
+            const studentDemoPassword = document.getElementById('studentDemoPassword');
+            if (studentDemoHint) studentDemoHint.classList.toggle('hidden', !studentAccount?.demoPassword);
+            if (studentDemoPassword) studentDemoPassword.textContent = studentAccount?.demoPassword || '';
+            if (staffId && staffAccount?.id) staffId.value = staffAccount.id;
+            if (staffPass) staffPass.value = staffAccount?.demoPassword || '';
+            const teacherDemoHint = document.getElementById('teacherDemoCredentialHint');
+            const teacherDemoPassword = document.getElementById('teacherDemoPassword');
+            if (teacherDemoHint) teacherDemoHint.classList.toggle('hidden', !staffAccount?.demoPassword);
+            if (teacherDemoPassword) teacherDemoPassword.textContent = staffAccount?.demoPassword || '';
+        }
+
+        function ensureBackendPageForLogin() {
+            if (window.location.protocol !== 'file:') return true;
+            alert('Opening the portal through its running backend so sign-in can work.');
+            window.location.assign('http://127.0.0.1:3001/');
+            return false;
+        }
  
         async function verifyStudentLogin() { 
+            if (!ensureBackendPageForLogin()) return;
             const uid = document.getElementById('studentUniId').value.trim(); 
             const pass = document.getElementById('studentPass').value.trim(); 
             try {
                 const response = await fetch('/api/session/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: uid, password: pass, role: 'student' })
+                    body: JSON.stringify({ id: uid, password: pass, role: 'student', campusKey: currentActiveKey })
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid student ID or passcode.');
                 currentSessionRole = 'student';
                 currentSessionUserId = uid;
+                currentSessionCampusKey = currentActiveKey;
+                customizeStudentPortalForCampus(currentSessionCampusKey);
+                document.getElementById('studentUniId').value = '';
+                document.getElementById('studentPass').value = '';
                 updateStudentRequestRecipient();
                 document.getElementById('studentLoginCard').classList.add('hidden'); 
                 document.getElementById('studentDashboardCard').classList.remove('hidden'); 
-                await loadStudentLeaveRequests();
+                await Promise.all([loadStudentLeaveRequests(), loadMyGatepasses('student'), loadCampusAcademicNotes()]);
                 logSystemActivity(`[PORTAL] Student ${uid} successfully logged in.`); 
             } catch (error) { alert(error.message || 'Could not sign in. Start the backend and try again.'); }
         } 
@@ -2546,12 +3389,22 @@
         function updateStaffLoginRole() {
             const role = document.getElementById('staffLoginRole').value;
             const idInput = document.getElementById('teacherCollegeId');
-            if (role === 'hod' && idInput.value === 'FAC-CS-902') idInput.value = 'FAC-HOD-001';
+            const passInput = document.getElementById('teacherPass');
+            const campusKey = currentActiveKey;
+            const account = portalCampusAccounts[campusKey]?.[role];
+            if (account?.id) idInput.value = account.id;
+            else if (role === 'hod' && idInput.value === 'FAC-CS-902') idInput.value = 'FAC-HOD-001';
             else if (role === 'teacher' && idInput.value === 'FAC-HOD-001') idInput.value = 'FAC-CS-902';
+            passInput.value = account?.demoPassword || '';
+            const demoHint = document.getElementById('teacherDemoCredentialHint');
+            const demoPassword = document.getElementById('teacherDemoPassword');
+            if (demoHint) demoHint.classList.toggle('hidden', !account?.demoPassword);
+            if (demoPassword) demoPassword.textContent = account?.demoPassword || '';
             idInput.placeholder = role === 'hod' ? 'Enter your HOD ID' : 'Enter your faculty ID';
         }
 
         async function verifyTeacherLogin() { 
+            if (!ensureBackendPageForLogin()) return;
             const cid = document.getElementById('teacherCollegeId').value.trim(); 
             const pass = document.getElementById('teacherPass').value.trim(); 
             const role = document.getElementById('staffLoginRole').value;
@@ -2559,17 +3412,21 @@
                 const response = await fetch('/api/session/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: cid, password: pass, role })
+                    body: JSON.stringify({ id: cid, password: pass, role, campusKey: currentActiveKey })
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid staff ID or passcode.');
                 currentSessionRole = result.role;
                 currentSessionUserId = cid;
-                document.getElementById('staffDashboardTitle').textContent = role === 'hod' ? 'Head of Department Dashboard' : 'Faculty & Department Dashboard';
-                document.getElementById('staffDashboardWelcome').textContent = `${role === 'hod' ? 'HOD' : 'Teacher / Mentor'} · ID ${cid}`;
+                currentSessionCampusKey = currentActiveKey;
+                customizeTeacherPortalForCampus(currentSessionCampusKey);
+                document.getElementById('staffDashboardTitle').textContent = `${collegeDatabase[currentSessionCampusKey]?.shortName || 'College'} ${role === 'hod' ? 'HOD' : 'Teacher'} Portal`;
+                document.getElementById('staffDashboardWelcome').textContent = `${collegeDatabase[currentSessionCampusKey]?.name || ''} · ${role === 'hod' ? 'HOD' : 'Teacher / Mentor'}`;
+                document.getElementById('teacherCollegeId').value = '';
+                document.getElementById('teacherPass').value = '';
                 document.getElementById('teacherLoginCard').classList.add('hidden'); 
                 document.getElementById('teacherDashboardCard').classList.remove('hidden'); 
-                await Promise.all([loadTeacherKnowledge(), loadStaffLeaveRequests()]);
+                await Promise.all([loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusAcademicNotes()]);
                 logSystemActivity(`[PORTAL] Faculty ${cid} successfully logged in.`); 
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
@@ -2611,6 +3468,7 @@
         } 
  
         async function verifyAdminLogin() { 
+            if (!ensureBackendPageForLogin()) return;
             const u = document.getElementById('adminUser').value; 
             const p = document.getElementById('adminPass').value; 
             try {
@@ -2628,6 +3486,7 @@
                 updateAdminStats(); 
                 loadCampusMetricsIntoForm(); 
                 await loadOfficeLeaveRequests();
+                await loadOfficialSiteSyncStatus();
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
             } 
@@ -2647,12 +3506,13 @@
         function handleKeyPress(event) {
             if (event.key === 'Enter') sendMessage();
         }
-        async function appendChatReply(inputText, messages, styleClass, entries, fallback, rules) {
+        async function appendChatReply(inputText, messages, styleClass, entries, fallback, rules, pageCampusKey = currentActiveKey) {
             const englishText = currentLang === 'en' ? inputText : await translateText(inputText, 'en', currentLang);
             const lower = englishText.toLowerCase();
-            const match = findRelevantAIKnowledge(englishText, entries);
-            let reply = match ? match.content : fallback;
-            if (!match) {
+            const campusKey = detectCampusInQuestion(englishText, pageCampusKey);
+            let reply = answerCampusQuestion(englishText, campusKey, entries);
+            if (!reply && fallback) reply = fallback;
+            if (!reply) {
                 for (const [terms, response] of rules) {
                     if (terms.some(term => lower.includes(term))) { reply = response; break; }
                 }
@@ -2674,14 +3534,15 @@
             messages.appendChild(bubble);
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
+            const pageCampusKey = currentActiveKey;
             await loadAIKnowledgeFromDatabase();
             await appendChatReply(text, messages, 'bg-blue-50 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[85%] border border-blue-100 text-xs sm:text-sm', aiKnowledgeEntries,
                 'Thank you for your inquiry about Ilahia Trust Institutions. Explore the programs or sign into your portal for details.', [
-                    [['fee', 'tuition'], 'Tuition varies by institution and program. Contact the college office for the current fee schedule.'],
-                    [['hostel', 'room'], 'Please contact the selected campus for current hostel availability and facilities.'],
-                    [['bus', 'transport', 'route'], 'Contact the selected campus for current bus routes and schedules.'],
-                    [['admission', 'seat'], 'Contact the admissions office for current eligibility, seats, and application dates.']
-                ]);
+                    [['fee', 'tuition'], 'I don\'t have a verified fee amount in the selected college records yet.'],
+                    [['hostel', 'room'], 'Verified hostel information is not in the selected college records yet.'],
+                    [['bus', 'transport', 'route'], 'Verified bus routes and schedules are not in the selected college records yet.'],
+                    [['admission', 'seat'], 'I don\'t have a verified current admission date or seat count in the selected college records yet.']
+                ], pageCampusKey);
         }
         // STUDENT CLASSBOT HANDLERS
         function toggleStudentChat() {
@@ -2699,20 +3560,18 @@
             const text = input.value.trim();
             if (!text) return;
             const messages = document.getElementById('studentChatMessages');
+            if (sensitiveAcademicQuery(text)) {
+                input.value = '';
+                await showCredentialPrivacyReply(messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs');
+                return;
+            }
             const bubble = document.createElement('div');
             bubble.className = 'bg-blue-900 text-white p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-xs';
             bubble.textContent = text;
             messages.appendChild(bubble);
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
-            await loadAIKnowledgeFromDatabase();
-            await appendChatReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', studentAIKnowledgeEntries,
-                'I have logged your student portal question. Please contact the campus office for account-specific help.', [
-                    [['attendance'], 'Check the attendance section of your student portal for your latest record.'],
-                    [['fee'], 'Check the fees section of your student portal for your current balance.'],
-                    [['schedule', 'timetable', 'today'], 'Check your student portal for the latest timetable.'],
-                    [['grade', 'mark'], 'Check the results section of your student portal for your latest grades.']
-                ]);
+            await appendAcademicBotReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', 'student');
         }
         // TEACHER FACULTYBOT HANDLERS
         function toggleTeacherChat() {
@@ -2730,20 +3589,18 @@
             const text = input.value.trim();
             if (!text) return;
             const messages = document.getElementById('teacherChatMessages');
+            if (sensitiveAcademicQuery(text)) {
+                input.value = '';
+                await showCredentialPrivacyReply(messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs');
+                return;
+            }
             const bubble = document.createElement('div');
             bubble.className = 'bg-slate-900 text-white p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-xs';
             bubble.textContent = text;
             messages.appendChild(bubble);
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
-            await loadAIKnowledgeFromDatabase();
-            await appendChatReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', aiKnowledgeEntries,
-                'Your faculty question has been noted. Please contact the campus office for policy or account-specific information.', [
-                    [['class', 'schedule'], 'Check the faculty portal for the current class schedule.'],
-                    [['mentorship', 'student'], 'Check the faculty portal for your current student assignments.'],
-                    [['grade', 'evaluation', 'eval'], 'Check the faculty portal for pending evaluations.'],
-                    [['ticket', 'grievance'], 'Use the faculty grievance form to submit a service request.']
-                ]);
+            await appendAcademicBotReply(text, messages, 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs text-xs', 'teacher');
         }
         // Initialize on load
         window.onload = async function() {
@@ -2754,4 +3611,3 @@
     </script>
 </body>
 </html>
-

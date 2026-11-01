@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-labelledby="title desc">
+  <title id="title">Ilahia Ecosystem</title>
+  <desc id="desc">A blue and gold academic emblem with connected leaves beside the Ilahia Ecosystem name.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123b78"/>
+      <stop offset="1" stop-color="#071a36"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4cf70"/>
+      <stop offset="1" stop-color="#c38a2e"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8 8)">
+    <circle cx="62" cy="62" r="57" fill="url(#blue)"/>
+    <circle cx="62" cy="62" r="49" fill="none" stroke="url(#gold)" stroke-width="2.5"/>
+    <path d="M28 76c13-2 23-9 31-22 8 13 18 20 37 22M34 84h56" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+    <path d="M59 54c-1-15 7-26 23-31 2 15-5 26-23 31Zm-3 8C43 60 35 52 33 38c14 1 22 8 23 24Z" fill="url(#gold)"/>
+    <path d="M61 52v31" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
+    <circle cx="38" cy="97" r="3" fill="#f4cf70"/><circle cx="86" cy="97" r="3" fill="#f4cf70"/>
+  </g>
+  <text x="140" y="77" fill="#102b52" font-family="Georgia, 'Times New Roman', serif" font-size="53" font-weight="700" letter-spacing="1">ILAHIA</text>
+  <path d="M143 91h330" stroke="#c38a2e" stroke-width="2"/>
+  <text x="145" y="119" fill="#34506f" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="6">ECOSYSTEM</text>
+</svg>

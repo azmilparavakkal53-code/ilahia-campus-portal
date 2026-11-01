@@ -6,24 +6,15 @@ services:
     rootDir: .
     buildCommand: node --check server.js
     startCommand: node server.js
-    healthCheckPath: /
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: TEACHER_ID
-        sync: false
-      - key: TEACHER_PASSWORD
-        sync: false
-      - key: HOD_ID
-        sync: false
-      - key: HOD_PASSWORD
-        sync: false
-      - key: STUDENT_ID
-        sync: false
-      - key: STUDENT_PASSWORD
+      - key: CAMPUS_ACCOUNTS_JSON
         sync: false
       - key: ADMIN_ID
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
-
+      - key: GATEPASS_CODE_SECRET
+        generateValue: true
