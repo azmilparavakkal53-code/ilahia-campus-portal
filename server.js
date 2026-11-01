@@ -19,6 +19,7 @@ const SKILL_OFFERS_FILE = path.join(DATA_DIR, 'skill-offers.json');
 const SKILL_REQUESTS_FILE = path.join(DATA_DIR, 'skill-learning-requests.json');
 const SKILL_MESSAGES_FILE = path.join(DATA_DIR, 'skill-learning-messages.json');
 const SKILL_PAYMENTS_FILE = path.join(DATA_DIR, 'skill-learning-payments.json');
+const SKILL_VERIFICATIONS_FILE = path.join(DATA_DIR, 'skill-learning-verifications.json');
 const FEE_PAYMENTS_FILE = path.join(DATA_DIR, 'fee-payments.json');
 const CAMPUS_LIFE_FILE = path.join(DATA_DIR, 'campus-life.json');
 const CERTIFICATES_FILE = path.join(DATA_DIR, 'certificates.json');
@@ -34,6 +35,7 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'skill-learning-requests.json': SKILL_REQUESTS_FILE,
   'skill-learning-messages.json': SKILL_MESSAGES_FILE,
   'skill-learning-payments.json': SKILL_PAYMENTS_FILE,
+  'skill-learning-verifications.json': SKILL_VERIFICATIONS_FILE,
   'fee-payments.json': FEE_PAYMENTS_FILE,
   'campus-life.json': CAMPUS_LIFE_FILE,
   'certificates.json': CERTIFICATES_FILE,
@@ -111,7 +113,7 @@ if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(AI_DELETED_IDS_FILE)) fs.writeFileSync(AI_DELETED_IDS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(LEAVE_REQUESTS_FILE)) fs.writeFileSync(LEAVE_REQUESTS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(GATEPASSES_FILE)) fs.writeFileSync(GATEPASSES_FILE, '[]\n', 'utf8');
-for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE, SKILL_PAYMENTS_FILE, FEE_PAYMENTS_FILE, CERTIFICATES_FILE, CANTEEN_ORDERS_FILE]) {
+for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE, SKILL_PAYMENTS_FILE, SKILL_VERIFICATIONS_FILE, FEE_PAYMENTS_FILE, CERTIFICATES_FILE, CANTEEN_ORDERS_FILE]) {
   if (!fs.existsSync(file)) fs.writeFileSync(file, '[]\n', 'utf8');
 }
 if (!fs.existsSync(CAMPUS_LIFE_FILE)) fs.writeFileSync(CAMPUS_LIFE_FILE, '{"appointments":[],"lostFound":[],"maintenance":[],"events":[],"alerts":[],"rsvps":[],"eventCheckins":[],"placements":[],"applications":[],"progress":[],"counselling":[],"alumniMentors":[],"mentorshipRequests":[],"busRoutes":[],"busTracking":[]}\n', 'utf8');
@@ -220,6 +222,7 @@ function requireStudent(req, res, errorMessage = 'Sign in to an eligible college
 }
 
 function safeText(value, maxLength) { return String(value || '').trim().replace(/[<>]/g, '').slice(0, maxLength); }
+function normalizeSkillName(value) { return safeText(value, 100).toLocaleLowerCase().replace(/\s+/g, ' '); }
 function campusLocalDate() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
 
 function razorpayConfigured() { return Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET); }
@@ -626,11 +629,11 @@ function validatePortalBackup(backup) {
     throw Object.assign(new Error('This is not a supported Ilahia portal backup.'), { status: 400 });
   }
   const expectedStores = Object.keys(PORTAL_BACKUP_STORE_FILES);
-  const optionalStores = ['certificates.json'];
+  const optionalStores = ['certificates.json', 'skill-learning-verifications.json'];
   if (expectedStores.some(name => !Object.hasOwn(backup.stores, name) && !optionalStores.includes(name)) || Object.keys(backup.stores).some(name => !expectedStores.includes(name))) {
     throw Object.assign(new Error('The backup is missing required data or contains an unsupported data file.'), { status: 400 });
   }
-  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [] };
+  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [], 'skill-learning-verifications.json': backup.stores['skill-learning-verifications.json'] || [] };
   for (const name of expectedStores) {
     const value = stores[name];
     const isArrayStore = name !== 'ai-knowledge-sync-status.json' && name !== 'campus-life.json';
@@ -1254,10 +1257,54 @@ const server = http.createServer(async (req, res) => {
       writeJsonArray(CANTEEN_ORDERS_FILE, orders); sendJson(res, 200, order); return;
     }
 
+    if (pathname === '/api/skill-learning/verifications' && req.method === 'GET') {
+      const session = requireStudent(req, res); if (!session) return;
+      const requests = readJsonArray(SKILL_VERIFICATIONS_FILE).filter(item => item.studentId === session.userId && item.campusKey === session.campusKey);
+      sendJson(res, 200, requests.map(({ studentId, ...item }) => item)); return;
+    }
+    if (pathname === '/api/skill-learning/verifications' && req.method === 'POST') {
+      const session = requireStudent(req, res); if (!session) return;
+      const body = await readJson(req);
+      const skill = safeText(body.skill, 100), evidence = safeText(body.evidence, 2000), evidenceUrl = safeText(body.evidenceUrl, 500);
+      if (skill.length < 2 || evidence.length < 30) { sendJson(res, 400, { error: 'Enter a skill and at least 30 characters describing your teaching experience or evidence.' }); return; }
+      if (evidenceUrl) {
+        try { const url = new URL(evidenceUrl); if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Invalid URL'); }
+        catch { sendJson(res, 400, { error: 'Evidence links must be valid HTTPS URLs.' }); return; }
+      }
+      const requests = readJsonArray(SKILL_VERIFICATIONS_FILE), skillKey = normalizeSkillName(skill);
+      const duplicate = requests.find(item => item.studentId === session.userId && normalizeSkillName(item.skill) === skillKey && ['pending', 'verified'].includes(item.status));
+      if (duplicate) { sendJson(res, 409, { error: duplicate.status === 'verified' ? 'This skill is already verified.' : 'A teacher is already reviewing this skill.' }); return; }
+      const request = { id: crypto.randomUUID(), studentId: session.userId, studentName: safeText(session.displayName, 60) || 'Student', campusKey: session.campusKey, skill, evidence, evidenceUrl, status: 'pending', submittedAt: new Date().toISOString() };
+      requests.unshift(request); writeJsonArray(SKILL_VERIFICATIONS_FILE, requests);
+      sendJson(res, 201, { id: request.id, skill: request.skill, status: request.status, submittedAt: request.submittedAt }); return;
+    }
+    if (pathname === '/api/skill-learning/verifications/review' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session) { sendJson(res, 401, { error: 'Sign in as a teacher to review skill verification requests.' }); return; }
+      if (session.role !== 'teacher') { sendJson(res, 403, { error: 'Only teachers can verify a student’s teaching skill.' }); return; }
+      const requests = readJsonArray(SKILL_VERIFICATIONS_FILE).filter(item => item.campusKey === session.campusKey && item.status === 'pending');
+      sendJson(res, 200, requests.map(({ studentId, ...item }) => ({ ...item, studentId }))); return;
+    }
+    const skillVerificationReviewMatch = pathname.match(/^\/api\/skill-learning\/verifications\/([a-f0-9-]+)\/review$/i);
+    if (skillVerificationReviewMatch && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session) { sendJson(res, 401, { error: 'Sign in as a teacher to review skill verification requests.' }); return; }
+      if (session.role !== 'teacher') { sendJson(res, 403, { error: 'Only teachers can verify a student’s teaching skill.' }); return; }
+      const body = await readJson(req), action = body.action === 'verify' ? 'verified' : body.action === 'reject' ? 'rejected' : '';
+      const note = safeText(body.note, 500);
+      if (!action) { sendJson(res, 400, { error: 'Choose verify or reject.' }); return; }
+      if (action === 'rejected' && note.length < 5) { sendJson(res, 400, { error: 'Add a short reason so the student knows what to improve.' }); return; }
+      const requests = readJsonArray(SKILL_VERIFICATIONS_FILE), request = requests.find(item => item.id === skillVerificationReviewMatch[1] && item.campusKey === session.campusKey);
+      if (!request) { sendJson(res, 404, { error: 'Skill verification request was not found for your campus.' }); return; }
+      if (request.status !== 'pending') { sendJson(res, 409, { error: 'This verification request has already been reviewed.' }); return; }
+      request.status = action; request.reviewNote = note; request.reviewedAt = new Date().toISOString(); request.reviewerName = safeText(session.displayName, 60) || 'Teacher';
+      writeJsonArray(SKILL_VERIFICATIONS_FILE, requests); sendJson(res, 200, { ok: true, id: request.id, status: request.status }); return;
+    }
     if (pathname === '/api/skill-learning/offers' && req.method === 'GET') {
       const session = requireStudent(req, res); if (!session) return;
       const offers = readJsonArray(SKILL_OFFERS_FILE).filter(item => item.campusKey !== 'school' && item.campusKey !== 'kmlps' && item.status === 'active');
-      sendJson(res, 200, offers.map(({ id, skill, description, mode, exchangeSkill, cashPrice, campusKey, displayName, createdAt, ownerId }) => ({ id, skill, description, mode, exchangeSkill, cashPrice, campusKey, displayName, createdAt, isMine: ownerId === session.userId })));
+      const verifiedSkills = new Set(readJsonArray(SKILL_VERIFICATIONS_FILE).filter(item => item.status === 'verified').map(item => `${item.studentId}|${normalizeSkillName(item.skill)}`));
+      sendJson(res, 200, offers.map(({ id, skill, description, mode, exchangeSkill, cashPrice, campusKey, displayName, createdAt, ownerId }) => ({ id, skill, description, mode, exchangeSkill, cashPrice, campusKey, displayName, createdAt, isMine: ownerId === session.userId, teacherVerified: verifiedSkills.has(`${ownerId}|${normalizeSkillName(skill)}`) })));
       return;
     }
     if (pathname === '/api/skill-learning/offers' && req.method === 'POST') {
