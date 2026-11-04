@@ -748,7 +748,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/ecosystem-launch-20261104-v2.svg', '/assets/icons/ecosystem-launch-20261104-v2-180.png', '/assets/icons/ecosystem-launch-20261104-v2-192.png', '/assets/icons/ecosystem-launch-20261104-v2-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg', '/assets/campuses/ilahia-public-school-hero.jpg']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-final-logo-180.png', '/assets/icons/ilahia-ecosystem-final-logo-192.png', '/assets/icons/ilahia-ecosystem-final-logo-512.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -893,13 +893,23 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 200, { ok: true, role: session.role, userId: session.userId, displayName: session.displayName, campusKey: session.campusKey || null });
       return;
     }
+    if (req.method === 'GET' && pathname === '/api/public/campus-events') {
+      const campusKey = String(url.searchParams.get('campusKey') || '');
+      if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
+      const items = readCampusLife().events
+        .filter(item => item.status === 'published' && item.campusKey === campusKey && (!item.date || item.date >= campusLocalDate()))
+        .slice(0, 24)
+        .map(item => ({ id: item.id, type: item.type || 'event', title: item.title, details: item.details, date: item.date || '', location: item.location || '', createdAt: item.createdAt }));
+      sendJson(res, 200, { campusKey, items }, { 'Cache-Control': 'no-store' });
+      return;
+    }
     if (req.method === 'GET' && pathname === '/api/public/news') {
       const campusKey = String(url.searchParams.get('campusKey') || 'all');
       if (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
-      const data = readCampusLife(), visible = item => item.campusKey === campusKey || item.campusKey === 'all';
+      const data = readCampusLife(), visible = item => campusKey === 'all' || item.campusKey === campusKey || item.campusKey === 'all';
       const items = [
-        ...data.alerts.filter(item => item.status === 'active' && visible(item)).map(item => ({ id: item.id, type: 'alert', title: item.title, details: item.details, location: item.location || '', createdAt: item.createdAt })),
-        ...data.events.filter(item => item.status === 'published' && visible(item) && (!item.date || item.date >= campusLocalDate())).map(item => ({ id: item.id, type: item.type || 'event', title: item.title, details: item.details, date: item.date || '', location: item.location || '', createdAt: item.createdAt }))
+        ...data.alerts.filter(item => item.status === 'active' && visible(item)).map(item => ({ id: item.id, campusKey: item.campusKey || 'all', type: 'alert', title: item.title, details: item.details, location: item.location || '', createdAt: item.createdAt })),
+        ...data.events.filter(item => item.status === 'published' && visible(item) && (!item.date || item.date >= campusLocalDate())).map(item => ({ id: item.id, campusKey: item.campusKey || 'all', type: item.type || 'event', title: item.title, details: item.details, date: item.date || '', location: item.location || '', createdAt: item.createdAt }))
       ].slice(0, 12);
       sendJson(res, 200, { items }, { 'Cache-Control': 'public, max-age=60' });
       return;
