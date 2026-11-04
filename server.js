@@ -39,6 +39,7 @@ const CERTIFICATES_FILE = path.join(DATA_DIR, 'certificates.json');
 const CANTEEN_ORDERS_FILE = path.join(DATA_DIR, 'canteen-orders.json');
 const CANTEEN_PAYMENTS_FILE = path.join(DATA_DIR, 'canteen-payments.json');
 const FEEDBACK_FORMS_FILE = path.join(DATA_DIR, 'student-feedback-forms.json');
+const CAMPUS_NEWS_FILE = path.join(DATA_DIR, 'campus-news.json');
 const PORTAL_BACKUP_DIR = path.join(DATA_DIR, 'backups');
 const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'ai-knowledge.json': DB_FILE,
@@ -56,7 +57,8 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'certificates.json': CERTIFICATES_FILE,
   'canteen-orders.json': CANTEEN_ORDERS_FILE,
   'canteen-payments.json': CANTEEN_PAYMENTS_FILE,
-  'student-feedback-forms.json': FEEDBACK_FORMS_FILE
+  'student-feedback-forms.json': FEEDBACK_FORMS_FILE,
+  'campus-news.json': CAMPUS_NEWS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
@@ -140,6 +142,7 @@ for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE,
   if (!fs.existsSync(file)) fs.writeFileSync(file, '[]\n', 'utf8');
 }
 if (!fs.existsSync(CAMPUS_LIFE_FILE)) fs.writeFileSync(CAMPUS_LIFE_FILE, '{"appointments":[],"lostFound":[],"maintenance":[],"events":[],"alerts":[],"rsvps":[],"eventCheckins":[],"placements":[],"applications":[],"progress":[],"counselling":[],"alumniMentors":[],"mentorshipRequests":[],"busRoutes":[],"busTracking":[]}\n', 'utf8');
+if (!fs.existsSync(CAMPUS_NEWS_FILE)) fs.writeFileSync(CAMPUS_NEWS_FILE, '[]\n', 'utf8');
 
 function readJsonArray(file) {
   try { const value = JSON.parse(fs.readFileSync(file, 'utf8')); return Array.isArray(value) ? value : []; }
@@ -718,11 +721,11 @@ function validatePortalBackup(backup) {
     throw Object.assign(new Error('This is not a supported Ilahia portal backup.'), { status: 400 });
   }
   const expectedStores = Object.keys(PORTAL_BACKUP_STORE_FILES);
-  const optionalStores = ['certificates.json', 'skill-learning-verifications.json', 'canteen-payments.json', 'student-feedback-forms.json'];
+  const optionalStores = ['certificates.json', 'skill-learning-verifications.json', 'canteen-payments.json', 'student-feedback-forms.json', 'campus-news.json'];
   if (expectedStores.some(name => !Object.hasOwn(backup.stores, name) && !optionalStores.includes(name)) || Object.keys(backup.stores).some(name => !expectedStores.includes(name))) {
     throw Object.assign(new Error('The backup is missing required data or contains an unsupported data file.'), { status: 400 });
   }
-  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [], 'skill-learning-verifications.json': backup.stores['skill-learning-verifications.json'] || [], 'canteen-payments.json': backup.stores['canteen-payments.json'] || [], 'student-feedback-forms.json': backup.stores['student-feedback-forms.json'] || [] };
+  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [], 'skill-learning-verifications.json': backup.stores['skill-learning-verifications.json'] || [], 'canteen-payments.json': backup.stores['canteen-payments.json'] || [], 'student-feedback-forms.json': backup.stores['student-feedback-forms.json'] || [], 'campus-news.json': backup.stores['campus-news.json'] || [] };
   for (const name of expectedStores) {
     const value = stores[name];
     const isArrayStore = name !== 'ai-knowledge-sync-status.json' && name !== 'campus-life.json';
@@ -800,7 +803,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-messbuzz-gatepass-v4' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-admin-campus-news-v5' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -931,11 +934,39 @@ const server = http.createServer(async (req, res) => {
       if (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
       const data = readCampusLife(), visible = item => campusKey === 'all' || item.campusKey === campusKey || item.campusKey === 'all';
       const items = [
+        ...readJsonArray(CAMPUS_NEWS_FILE).filter(item => item.status === 'published' && visible(item) && (!item.expiresOn || item.expiresOn >= campusLocalDate())).map(item => ({ id: item.id, campusKey: item.campusKey || 'all', type: item.type || 'news', title: item.title, details: item.details, createdAt: item.createdAt, expiresOn: item.expiresOn || '' })),
         ...data.alerts.filter(item => item.status === 'active' && visible(item)).map(item => ({ id: item.id, campusKey: item.campusKey || 'all', type: 'alert', title: item.title, details: item.details, location: item.location || '', createdAt: item.createdAt })),
         ...data.events.filter(item => item.status === 'published' && visible(item) && (!item.date || item.date >= campusLocalDate())).map(item => ({ id: item.id, campusKey: item.campusKey || 'all', type: item.type || 'event', title: item.title, details: item.details, date: item.date || '', location: item.location || '', createdAt: item.createdAt }))
-      ].slice(0, 12);
+      ].sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0, 12);
       sendJson(res, 200, { items }, { 'Cache-Control': 'public, max-age=60' });
       return;
+    }
+    if (pathname === '/api/admin/news' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || session.role !== 'admin') { sendJson(res, 401, { error: 'Administrator sign-in is required to manage front-page news.' }); return; }
+      sendJson(res, 200, { items: readJsonArray(CAMPUS_NEWS_FILE) }); return;
+    }
+    if (pathname === '/api/admin/news' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'admin') { sendJson(res, 401, { error: 'Administrator sign-in is required to publish front-page news.' }); return; }
+      const body = await readJson(req), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || '');
+      if (!type || title.length < 3 || details.length < 8 || (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey))) { sendJson(res, 400, { error: 'Choose a type and campus, and enter a title and details.' }); return; }
+      if (expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn) || !Number.isFinite(new Date(`${expiresOn}T12:00:00`).getTime()) || expiresOn < campusLocalDate())) { sendJson(res, 400, { error: 'Choose a valid expiry date today or later, or leave it empty.' }); return; }
+      const items = readJsonArray(CAMPUS_NEWS_FILE), now = new Date().toISOString(), item = { id: crypto.randomUUID(), campusKey, type, title, details, expiresOn, status: 'published', createdAt: now, updatedAt: now };
+      items.unshift(item); writeJsonArray(CAMPUS_NEWS_FILE, items); sendJson(res, 201, { item }); return;
+    }
+    const adminNewsAction = pathname.match(/^\/api\/admin\/news\/([a-f0-9-]+)$/i);
+    if (adminNewsAction && ['PATCH', 'DELETE'].includes(req.method)) {
+      const session = getSession(req);
+      if (!session || session.role !== 'admin') { sendJson(res, 401, { error: 'Administrator sign-in is required to manage front-page news.' }); return; }
+      const items = readJsonArray(CAMPUS_NEWS_FILE), index = items.findIndex(item => item.id === adminNewsAction[1]);
+      if (index < 0) { sendJson(res, 404, { error: 'News item was not found.' }); return; }
+      if (req.method === 'DELETE') { items.splice(index, 1); writeJsonArray(CAMPUS_NEWS_FILE, items); sendJson(res, 200, { ok: true }); return; }
+      const body = await readJson(req), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || '');
+      if (!type || title.length < 3 || details.length < 8 || (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey))) { sendJson(res, 400, { error: 'Choose a type and campus, and enter a title and details.' }); return; }
+      if (expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn) || !Number.isFinite(new Date(`${expiresOn}T12:00:00`).getTime()) || expiresOn < campusLocalDate())) { sendJson(res, 400, { error: 'Choose a valid expiry date today or later, or leave it empty.' }); return; }
+      items[index] = { ...items[index], campusKey, type, title, details, expiresOn, updatedAt: new Date().toISOString() };
+      writeJsonArray(CAMPUS_NEWS_FILE, items); sendJson(res, 200, { item: items[index] }); return;
     }
     if (pathname === '/api/feedback/forms' && req.method === 'GET') {
       const session = getSession(req);
