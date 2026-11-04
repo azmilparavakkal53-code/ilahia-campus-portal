@@ -897,7 +897,7 @@ const server = http.createServer(async (req, res) => {
       }
       loginAttemptBuckets.delete(ip);
       // Keep a security workstation signed in across restarts until its operator signs out.
-      const token = crypto.randomBytes(32).toString('hex'), expires = Number.MAX_SAFE_INTEGER;
+      const token = crypto.randomBytes(32).toString('hex'), expires = 8.64e15;
       const securitySessions = readSecuritySessions().filter(item => item.expires > Date.now());
       securitySessions.push({ tokenHash: crypto.createHash('sha256').update(token).digest('hex'), userId: accountId, displayName: displayName || 'Campus Security', campusKey, expires });
       writeSecuritySessions(securitySessions);
@@ -1659,23 +1659,33 @@ const server = http.createServer(async (req, res) => {
       const dateTimePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
       const departure = parseCampusDateTime(departureDate, departureTime);
       const expectedReturn = parseCampusDateTime(returnDate, returnTime);
-      if (!destination || !reason || !dateTimePattern.test(`${departureDate}T${departureTime}`) || !dateTimePattern.test(`${returnDate}T${returnTime}`) || Number.isNaN(departure.getTime()) || Number.isNaN(expectedReturn.getTime()) || expectedReturn <= departure) {
-        sendJson(res, 400, { error: 'Enter a destination, purpose, departure time, and a return time later than departure.' }); return;
-      }
+      if (!destination) { sendJson(res, 400, { error: 'Enter where you plan to go.' }); return; }
+      if (!reason) { sendJson(res, 400, { error: 'Explain why you need to leave campus.' }); return; }
+      if (session.role === 'student' && !mentorName) { sendJson(res, 400, { error: 'Choose or enter your mentor’s name so the request goes to mentor review first.' }); return; }
+      if (!dateTimePattern.test(`${departureDate}T${departureTime}`) || !dateTimePattern.test(`${returnDate}T${returnTime}`) || Number.isNaN(departure.getTime()) || Number.isNaN(expectedReturn.getTime())) { sendJson(res, 400, { error: 'Enter both departure and expected return dates and times.' }); return; }
+      if (expectedReturn <= departure) { sendJson(res, 400, { error: 'Expected return must be later than departure.' }); return; }
+      if (departure.getTime() <= Date.now()) { sendJson(res, 400, { error: 'Choose a departure time in the future.' }); return; }
       const now = new Date().toISOString();
+      const reviewStatus = session.role === 'student' ? 'mentor_pending' : 'hod_pending';
       const request = {
         id: crypto.randomUUID(), passCode: `ILH-GP-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
         requesterRole: session.role, requesterId: session.userId, requesterName: safeText(session.displayName, 60), campusKey: session.campusKey,
         destination, mentorName, reason, departureDate, departureTime, returnDate, returnTime,
-        status: 'pending', statusLabel: 'Waiting for HOD Approval',
+        status: reviewStatus, statusLabel: session.role === 'student' ? 'Waiting for Mentor Review' : 'Waiting for HOD Approval',
         createdAt: now, updatedAt: now, approvedAt: null, approvedBy: null,
-        history: [{ label: 'Submitted for HOD Approval', actor: session.userId, at: now }]
+        history: [{ label: session.role === 'student' ? 'Submitted to Mentor' : 'Submitted to HOD', actor: session.userId, at: now, note: '' }]
       };
       const requests = readGatepasses();
       requests.unshift(request);
       writeGatepasses(requests);
       sendJson(res, 201, request);
       return;
+    }
+    if (req.method === 'GET' && pathname === '/api/gatepasses/mentor-inbox') {
+      const session = getSession(req);
+      if (!session || session.role !== 'teacher') { sendJson(res, 401, { error: 'Sign in as a teacher or mentor to review gate passes.' }); return; }
+      const requests = readGatepasses().filter(item => item.status === 'mentor_pending' && item.campusKey === session.campusKey).map(item => ({ ...item, statusLabel: 'Waiting for Mentor Review' }));
+      sendJson(res, 200, requests); return;
     }
     const virtualGatepassCodeMatch = pathname.match(/^\/api\/gatepasses\/([a-f0-9-]+)\/virtual-code$/i);
     if (req.method === 'GET' && virtualGatepassCodeMatch) {
@@ -1734,35 +1744,55 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && pathname === '/api/gatepasses/inbox') {
       const session = getSession(req);
       if (!session || session.role !== 'hod') { sendJson(res, 401, { error: 'Sign in as HOD to review campus gate-pass requests.' }); return; }
-      const requests = readGatepasses().filter(item => item.status === 'pending' && item.campusKey === session.campusKey && !(item.requesterRole === 'hod' && item.requesterId === session.userId)).map(item => ({ ...item, statusLabel: 'Waiting for HOD Approval' }));
+      const requests = readGatepasses().filter(item => ['hod_pending', 'pending'].includes(item.status) && item.campusKey === session.campusKey && !(item.requesterRole === 'hod' && item.requesterId === session.userId)).map(item => ({ ...item, statusLabel: 'Waiting for HOD Approval' }));
       sendJson(res, 200, requests); return;
     }
     const gatepassActionMatch = pathname.match(/^\/api\/gatepasses\/([a-f0-9-]+)\/action$/i);
     if (req.method === 'POST' && gatepassActionMatch) {
       const session = getSession(req);
-      if (!session || session.role !== 'hod') { sendJson(res, 401, { error: 'Sign in as HOD to approve or decline gate passes.' }); return; }
+      if (!session || !['teacher', 'hod'].includes(session.role)) { sendJson(res, 401, { error: 'Sign in as a mentor or HOD to review gate passes.' }); return; }
       const body = await readJson(req);
-      if (!['approve', 'reject'].includes(body.action)) { sendJson(res, 400, { error: 'Choose approve or decline.' }); return; }
+      const isMentor = session.role === 'teacher';
+      const validActions = isMentor ? ['forward', 'reject'] : ['approve', 'reject'];
+      if (!validActions.includes(body.action)) { sendJson(res, 400, { error: isMentor ? 'Choose forward to HOD or decline.' : 'Choose approve or decline.' }); return; }
       const requests = readGatepasses();
       const request = requests.find(item => item.id === gatepassActionMatch[1] && isInSessionCampus(item, session));
       if (!request) { sendJson(res, 404, { error: 'Gate pass request not found.' }); return; }
-      if (request.requesterRole === 'hod' && request.requesterId === session.userId) { sendJson(res, 403, { error: 'HODs cannot approve their own gate-pass requests.' }); return; }
-      if (request.status !== 'pending') { sendJson(res, 409, { error: 'This gate pass request has already been decided.' }); return; }
+      if (request.requesterRole === session.role && request.requesterId === session.userId) { sendJson(res, 403, { error: 'You cannot review your own gate-pass request.' }); return; }
+      const expectedStatus = isMentor ? 'mentor_pending' : 'hod_pending';
+      if (request.status !== expectedStatus && !(session.role === 'hod' && request.status === 'pending')) { sendJson(res, 409, { error: 'This gate pass request is no longer waiting for your review.' }); return; }
+      if (!isMentor && body.action === 'approve' && parseCampusDateTime(request.departureDate, request.departureTime).getTime() <= Date.now()) { sendJson(res, 409, { error: 'The requested departure time has passed. Decline the request and ask for updated times.' }); return; }
+      const note = safeText(body.note, 1000);
+      if ((isMentor && body.action === 'forward' && note.length < 8) || (body.action === 'reject' && note.length < 5)) {
+        sendJson(res, 400, { error: isMentor && body.action === 'forward' ? 'Explain why you recommend this request for HOD approval.' : 'Add a short reason so the requester understands the decision.' }); return;
+      }
+      if (isMentor && body.action === 'forward') {
+        const destination = safeText(body.destination ?? request.destination, 180), reason = safeText(body.reason ?? request.reason, 2000);
+        const departureDate = safeText(body.departureDate ?? request.departureDate, 10), departureTime = safeText(body.departureTime ?? request.departureTime, 5);
+        const returnDate = safeText(body.returnDate ?? request.returnDate, 10), returnTime = safeText(body.returnTime ?? request.returnTime, 5);
+        const departure = parseCampusDateTime(departureDate, departureTime), expectedReturn = parseCampusDateTime(returnDate, returnTime);
+        if (!destination || !reason || Number.isNaN(departure.getTime()) || Number.isNaN(expectedReturn.getTime()) || departure.getTime() <= Date.now() || expectedReturn <= departure) { sendJson(res, 400, { error: 'Check the edited destination, purpose, and travel times. Departure must be in the future and return must be later.' }); return; }
+        request.destination = destination; request.reason = reason;
+        request.departureDate = departureDate; request.departureTime = departureTime;
+        request.returnDate = returnDate; request.returnTime = returnTime;
+        request.mentorNote = note; request.mentorReviewedBy = session.userId;
+        request.status = 'hod_pending'; request.statusLabel = 'Mentor Recommended · Waiting for HOD';
+      } else if (body.action === 'reject') {
+        request.status = 'rejected'; request.statusLabel = isMentor ? 'Declined by Mentor' : 'Declined by HOD';
+        request.decisionNote = note;
+      } else {
+        request.status = 'approved'; request.statusLabel = 'Approved by HOD';
+      }
       const now = new Date().toISOString();
-      request.status = body.action === 'approve' ? 'approved' : 'rejected';
-      request.statusLabel = body.action === 'approve' ? 'Approved by HOD' : 'Declined by HOD';
       request.updatedAt = now;
-      request.approvedAt = body.action === 'approve' ? now : null;
-      request.approvedBy = body.action === 'approve' ? session.userId : null;
-      if (body.action === 'approve') {
+      request.approvedAt = !isMentor && body.action === 'approve' ? now : null;
+      request.approvedBy = !isMentor && body.action === 'approve' ? session.userId : null;
+      if (!isMentor && body.action === 'approve') {
         const returnAt = parseCampusDateTime(request.returnDate, request.returnTime).getTime();
         request.gatepassExpiresAt = new Date(Math.min(Date.now() + 10 * 60 * 60 * 1000, returnAt)).toISOString();
-      } else {
-        const note = safeText(body.note, 1000);
-        if (note.length < 5) { sendJson(res, 400, { error: 'Add a short reason so the student knows why the gate pass was declined.' }); return; }
-        request.decisionNote = note;
       }
-      request.history.push({ label: request.statusLabel, actor: session.userId, at: now, note: request.decisionNote || '' });
+      request.history ||= [];
+      request.history.push({ label: request.statusLabel, actor: session.userId, at: now, note: isMentor && body.action === 'forward' ? note : body.action === 'reject' ? note : '' });
       writeGatepasses(requests);
       sendJson(res, 200, request);
       return;
