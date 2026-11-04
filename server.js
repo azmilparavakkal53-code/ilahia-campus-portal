@@ -742,7 +742,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-180.png', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-180.png', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/assets/icons/app-icon-gold-leaf.svg', '/assets/icons/app-icon-gold-leaf-180.png', '/assets/icons/app-icon-gold-leaf-192.png', '/assets/icons/app-icon-gold-leaf-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
