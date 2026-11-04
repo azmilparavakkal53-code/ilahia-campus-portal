@@ -1038,6 +1038,7 @@
                     </button>
                     <button id="staffGatepassButton" onclick="toggleStaffGatepassInbox()" class="hidden relative text-slate-300 hover:text-white text-lg" title="HOD gate-pass inbox" aria-label="Open HOD gate-pass inbox"><i class="fa-solid fa-ticket"></i><span id="hodGatepassBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-violet-400 text-slate-950 text-[9px] font-bold"></span></button>
                     <button id="mentorGatepassButton" onclick="toggleMentorGatepassInbox()" class="hidden relative text-slate-300 hover:text-white text-lg" title="Mentor gate-pass inbox" aria-label="Open mentor gate-pass inbox"><i class="fa-solid fa-ticket-simple"></i><span id="mentorGatepassBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-bold"></span></button>
+                    <button onclick="logoutPortalSession()" class="rounded-lg border border-slate-500 px-2.5 py-1.5 text-[10px] font-semibold text-slate-100 hover:bg-white/10" title="Sign out before switching to another campus account">Sign out / switch campus</button>
                     <button onclick="closePortalModal()" class="text-slate-400 hover:text-white text-xl" aria-label="Close staff portal"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
@@ -5769,7 +5770,10 @@
                 const session = await response.json();
                 currentSessionRole = session.role; currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
-                if (session.campusKey && collegeDatabase[session.campusKey]) currentActiveKey = session.campusKey;
+                if (session.campusKey && collegeDatabase[session.campusKey]) {
+                    currentActiveKey = session.campusKey;
+                    switchCollegePage(session.campusKey);
+                }
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
