@@ -4853,8 +4853,24 @@
         async function navigateCollegePage(key) {
             if (!collegeDatabase[key]) return;
             const isChangingCampus = key !== currentActiveKey;
-            const campusBoundPortalSession = ['student', 'teacher', 'hod'].includes(currentSessionRole);
+            let activeRole = currentSessionRole;
+            let activeCampusKey = currentSessionCampusKey;
+            if (isChangingCampus && !['student', 'teacher', 'hod', 'admin'].includes(activeRole)) {
+                try {
+                    const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
+                    if (response.ok) {
+                        const session = await response.json();
+                        activeRole = session.role;
+                        activeCampusKey = session.campusKey || '';
+                    }
+                } catch (_) {}
+            }
+            const campusBoundPortalSession = ['student', 'teacher', 'hod'].includes(activeRole);
             if (isChangingCampus && campusBoundPortalSession) {
+                if (!currentSessionRole) {
+                    currentSessionRole = activeRole;
+                    currentSessionCampusKey = activeCampusKey;
+                }
                 await logoutPortalSession();
             }
             switchCollegePage(key);
