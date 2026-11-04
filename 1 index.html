@@ -6519,7 +6519,15 @@
             const track = document.getElementById('campusNewsTrack'), button = document.getElementById('campusNewsPause'); if (!track || !button) return;
             const paused = track.classList.toggle('paused'); button.textContent = paused ? 'Resume' : 'Pause'; button.setAttribute('aria-label', paused ? 'Resume scrolling news' : 'Pause scrolling news');
         }
-        document.addEventListener('DOMContentLoaded', loadCampusNewsTicker);
+        document.addEventListener('DOMContentLoaded', () => {
+            void loadCampusNewsTicker();
+            window.setInterval(() => {
+                const landing = document.getElementById('instituteLanding');
+                const campusPage = document.getElementById('collegeContent');
+                if (landing && !landing.classList.contains('hidden')) void loadCampusNewsTicker();
+                else if (campusPage && !campusPage.classList.contains('hidden')) void loadCampusEventInbox();
+            }, 180000);
+        });
 </script>
 <script>
         (() => {
