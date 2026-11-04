@@ -1373,6 +1373,7 @@
                         <button onclick="openAdminEventManager()" id="admTab-events" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">📅 Events &amp; Alerts</button>
                         <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">📚 Programs</button>
                         <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 rounded-full bg-cyan-600 px-1.5 py-0.2 text-[10px] text-white">0</span></button>
+                        <a href="/canteen-admin.html" target="_blank" rel="noopener" class="adm-tab-btn block rounded-lg bg-white px-3 py-2.5 text-left text-xs font-semibold text-slate-700 hover:bg-blue-50">🍽️ Mess Menu Editor ↗</a>
                         <p class="hidden px-2 pt-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-slate-400 md:block">Administration</p>
                         <button onclick="switchAdminTab('directory')" id="admTab-directory" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">👥 User Directory</button>
                         <button onclick="switchAdminTab('logs')" id="admTab-logs" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">🛡️ Security & Activity</button>
@@ -16729,7 +16730,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.openCanteenBookingPanel=function(){
     if(!panel||!frame)return;
     if(!document.getElementById('collegeContent')?.classList.contains('hidden')&&['school','kmlps'].includes(currentActiveKey))return;
-    if(frame.getAttribute('src')==='about:blank')frame.setAttribute('src','/canteen.html?embedded=1');
+    frame.setAttribute('src','/canteen.html?embedded=1&campusKey='+encodeURIComponent(currentActiveKey));
     previousOverflow=document.body.style.overflow;
     panel.style.display='flex';
     document.body.style.overflow='hidden';
