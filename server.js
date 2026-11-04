@@ -888,12 +888,13 @@ const server = http.createServer(async (req, res) => {
         attempts.count++; loginAttemptBuckets.set(ip, attempts); sendJson(res, 401, { error: 'The security ID or password is incorrect.' }); return;
       }
       loginAttemptBuckets.delete(ip);
-      const token = crypto.randomBytes(32).toString('hex'), lifetime = 30 * 24 * 60 * 60 * 1000, expires = Date.now() + lifetime;
+      // Keep a security workstation signed in across restarts until its operator signs out.
+      const token = crypto.randomBytes(32).toString('hex'), expires = Number.MAX_SAFE_INTEGER;
       const securitySessions = readSecuritySessions().filter(item => item.expires > Date.now());
       securitySessions.push({ tokenHash: crypto.createHash('sha256').update(token).digest('hex'), userId: accountId, displayName: displayName || 'Campus Security', campusKey, expires });
       writeSecuritySessions(securitySessions);
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true, displayName: displayName || 'Campus Security', campusKey }, { 'Set-Cookie': `ilahia_security_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2592000${secureCookie}` });
+      sendJson(res, 200, { ok: true, displayName: displayName || 'Campus Security', campusKey }, { 'Set-Cookie': `ilahia_security_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
     }
     if (pathname === '/api/security/session/logout' && req.method === 'POST') {
