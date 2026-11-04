@@ -27,6 +27,42 @@
 <div id="successModal" class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true"><header class="modalhead"><h2>Order received</h2><button class="close" onclick="closeSuccess()">×</button></header><div class="modalbody"><div id="successContent" class="notice"></div><div class="checkout-actions"><button class="secondary" onclick="closeSuccess()">Continue browsing</button><button class="primary" onclick="closeSuccess();switchTab('orders')">Track order</button></div></div></section></div><div id="toasts" class="toasts" aria-live="polite"></div>
 <script>
 "use strict";
+function enhancePasswordVisibility(root = document) {
+    root.querySelectorAll('input[type="password"]').forEach(input => {
+if (input.parentElement?.classList.contains('password-visibility-wrap')) return;
+const wrapper = document.createElement('span');
+wrapper.className = 'password-visibility-wrap';
+wrapper.style.cssText = 'display:block;position:relative;width:100%';
+input.parentNode.insertBefore(wrapper, input);
+wrapper.appendChild(input);
+input.style.paddingRight = '3.25rem';
+const button = document.createElement('button');
+button.type = 'button';
+button.className = 'password-visibility-toggle';
+button.setAttribute('aria-label', 'Show password');
+button.setAttribute('aria-pressed', 'false');
+button.title = 'Show password';
+button.style.cssText = 'position:absolute;right:.5rem;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;border:0;border-radius:.5rem;background:transparent;color:#475569;cursor:pointer';
+const eye = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const eyeOff = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-3 3.7M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.7 10.7 0 0 0 4-.8"/></svg>';
+button.innerHTML = eye;
+button.addEventListener('click', () => {
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    button.innerHTML = show ? eyeOff : eye;
+    button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    button.setAttribute('aria-pressed', String(show));
+    button.title = show ? 'Hide password' : 'Show password';
+});
+wrapper.appendChild(button);
+    });
+}
+enhancePasswordVisibility();
+new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(node => {
+    if (node.nodeType !== 1) return;
+    if (node.matches?.('input[type="password"]')) enhancePasswordVisibility(node.parentElement || document);
+    else if (node.querySelectorAll) enhancePasswordVisibility(node);
+}))).observe(document.body, { childList: true, subtree: true });
 const PRODUCTS=[
 {id:"veg-sandwich",name:"Garden Veg Sandwich",category:"Quick bites",price:90,emoji:"🥪",veg:true,popular:98,prep:8,desc:"Toasted bread, fresh vegetables and mint chutney.",tags:["Bestseller","8 min"],ingredients:"Wheat, vegetables, mint chutney"},
 {id:"masala-dosa",name:"Masala Dosa",category:"Meals",price:70,emoji:"🥞",veg:true,popular:94,prep:12,desc:"Crisp dosa with spiced potato, sambar and chutney.",tags:["Bestseller","12 min"],ingredients:"Rice, lentils, potato"},
