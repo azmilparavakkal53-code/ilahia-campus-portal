@@ -771,7 +771,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gatepass-mentor' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gatepass-register' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1733,7 +1733,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && pathname === '/api/security/gatepasses/scanned') {
       const session = getSession(req);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Campus security sign-in is required.' }); return; }
-      const recent = readGatepasses().filter(item => item.campusKey === session.campusKey && item.scannedAt).sort((a, b) => Date.parse(b.scannedAt) - Date.parse(a.scannedAt)).slice(0, 30).map(item => ({ passCode: item.passCode, requesterRole: item.requesterRole, requesterId: item.requesterId, requesterName: item.requesterName || '', destination: item.destination, scannedAt: item.scannedAt, scannedBy: item.scannedBy }));
+      const recent = readGatepasses().filter(item => item.campusKey === session.campusKey && item.scannedAt).sort((a, b) => Date.parse(b.scannedAt) - Date.parse(a.scannedAt)).map(item => ({ passCode: item.passCode, requesterRole: item.requesterRole, requesterId: item.requesterId, requesterName: item.requesterName || '', campusKey: item.campusKey, destination: item.destination, reason: item.reason, departureDate: item.departureDate, departureTime: item.departureTime, returnDate: item.returnDate, returnTime: item.returnTime, scannedAt: item.scannedAt, scannedBy: item.scannedBy }));
       sendJson(res, 200, recent); return;
     }
     if (req.method === 'POST' && pathname === '/api/gatepasses/verify-code') {
