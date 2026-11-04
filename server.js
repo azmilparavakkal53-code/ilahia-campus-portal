@@ -61,8 +61,10 @@ const SKILL_ROUTE_ACCOUNTS = (() => {
 const PORT = Number(process.env.PORT || 3001);
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
-const HOST = process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
-const REQUIRE_CONFIGURED_ACCOUNTS = process.env.NODE_ENV === 'production' || HOST === '0.0.0.0';
+// Bind the local demo server to the LAN so a phone on the same Wi-Fi can open it.
+// Production already binds to all interfaces; override HOST=127.0.0.1 to keep a local-only session.
+const HOST = process.env.HOST || '0.0.0.0';
+const REQUIRE_CONFIGURED_ACCOUNTS = process.env.NODE_ENV === 'production' || process.env.REQUIRE_CONFIGURED_ACCOUNTS === 'true';
 const TEACHER_ID = process.env.TEACHER_ID || 'FAC-CS-902';
 const TEACHER_PASSWORD = process.env.TEACHER_PASSWORD || 'teacher123';
 const HOD_ID = process.env.HOD_ID || 'FAC-HOD-001';

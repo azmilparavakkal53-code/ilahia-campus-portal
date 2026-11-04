@@ -10,15 +10,18 @@ modules and does not require npm packages.
 1. Open this folder in VS Code.
 2. Open the integrated PowerShell terminal in this folder.
 3. Run: node server.js
-4. Open: http://127.0.0.1:3001/
+4. On this computer open: http://127.0.0.1:3001/
+5. To open on a phone connected to the same Wi-Fi, run `ipconfig` on the computer,
+   find its Wi-Fi IPv4 Address, then open `http://<that-address>:3001/` on the phone.
 
 Keep the terminal open. Local demonstration accounts are supplied by the
 development server and shown in the local sign-in flow. These passwords are
 for localhost demonstration only. Never reuse them on a public deployment.
 
-The server listens on 127.0.0.1 during local development. In production it
-binds to 0.0.0.0 and refuses to start unless production account configuration
-is present.
+The server listens on all network interfaces so a phone on the same Wi-Fi can
+open the local demo. Use this only on a trusted private network; demo accounts
+are not suitable for public access. Production refuses to start unless
+production account configuration is present.
 
 RENDER BLUEPRINT SETUP
 ---------------------
