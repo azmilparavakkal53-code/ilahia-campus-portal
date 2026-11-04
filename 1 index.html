@@ -533,6 +533,15 @@
     </div>
     <!-- Portal Authentication & Dashboards Modal -->
     <div id="portalModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div id="portalCampusMismatchCard" class="hidden bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-amber-200" role="alertdialog" aria-labelledby="portalCampusMismatchTitle" aria-describedby="portalCampusMismatchMessage">
+            <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-amber-100 text-amber-800"><i class="fa-solid fa-building-circle-exclamation"></i></div>
+            <h3 id="portalCampusMismatchTitle" class="text-lg font-bold text-slate-900">Your saved sign-in belongs to another campus</h3>
+            <p id="portalCampusMismatchMessage" class="mt-2 text-sm text-slate-600"></p>
+            <div class="mt-5 grid gap-2 sm:grid-cols-2">
+                <button type="button" onclick="logoutPortalSession()" class="rounded-lg bg-blue-700 px-3 py-2.5 text-xs font-bold text-white">Sign out and use this campus</button>
+                <button type="button" onclick="continueWithSavedCampusSession()" class="rounded-lg border border-slate-300 px-3 py-2.5 text-xs font-bold text-slate-700">Continue with saved campus</button>
+            </div>
+        </div>
         
         <!-- View 1: Portal Role Selection Menu -->
         <div id="portalMenuCard" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-slate-100">
@@ -2410,6 +2419,7 @@
         let currentSessionRole = null;
         let currentSessionUserId = '';
         let currentPortalDisplayName = '';
+        let pendingPortalCampusSession = null;
         let localAdminDemoCredentials = null;
 
         function openCampusMapPage() {
@@ -5727,6 +5737,7 @@
         function openPortalModal() { 
             document.getElementById('portalModal').classList.remove('hidden'); 
             document.getElementById('portalMenuCard').classList.remove('hidden'); 
+            document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
             document.getElementById('studentLoginCard').classList.add('hidden'); 
             document.getElementById('teacherLoginCard').classList.add('hidden'); 
             document.getElementById('studentDashboardCard').classList.add('hidden'); 
@@ -5752,14 +5763,27 @@
             closeStudentCampusHub();
             if (campusIssueStatusRefreshTimer) { clearInterval(campusIssueStatusRefreshTimer); campusIssueStatusRefreshTimer = null; }
             currentSessionRole = null; currentSessionUserId = ''; currentSessionCampusKey = ''; currentPortalDisplayName = '';
+            pendingPortalCampusSession = null;
             aiKnowledgeDatabaseReady = false; aiKnowledgeLoadedForSession = ''; clearAcademicBotConversations();
             document.getElementById('studentDashboardCard').classList.add('hidden');
             document.getElementById('teacherDashboardCard').classList.add('hidden');
             document.getElementById('studentLoginCard').classList.add('hidden');
             document.getElementById('teacherLoginCard').classList.add('hidden');
+            document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
             document.getElementById('portalMenuCard').classList.remove('hidden');
             document.getElementById('portalModal').classList.add('hidden');
             void loadAIKnowledgeFromDatabase(true);
+        }
+
+        async function continueWithSavedCampusSession() {
+            const session = pendingPortalCampusSession;
+            if (!session || !session.campusKey || !collegeDatabase[session.campusKey]) return;
+            pendingPortalCampusSession = null;
+            document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
+            document.getElementById('portalMenuCard').classList.remove('hidden');
+            currentActiveKey = session.campusKey;
+            switchCollegePage(session.campusKey);
+            await restorePortalSession();
         }
 
         async function restorePortalSession() {
@@ -5768,12 +5792,23 @@
                 const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 if (!response.ok) return false;
                 const session = await response.json();
+                if (session.role !== 'admin' && session.campusKey && collegeDatabase[session.campusKey] && session.campusKey !== currentActiveKey) {
+                    pendingPortalCampusSession = session;
+                    const campusName = collegeDatabase[session.campusKey]?.name || session.campusKey;
+                    const selectedName = collegeDatabase[currentActiveKey]?.name || currentActiveKey;
+                    const roleName = session.role === 'hod' ? 'HOD' : session.role === 'teacher' ? 'teacher' : 'student';
+                    const notice = document.getElementById('portalCampusMismatchMessage');
+                    if (notice) notice.textContent = `This browser is still signed in as a ${roleName} at ${campusName}, while ${selectedName} is selected. Sign out to use the selected campus, or continue with the saved ${campusName} account.`;
+                    document.getElementById('portalMenuCard').classList.add('hidden');
+                    document.getElementById('studentLoginCard').classList.add('hidden');
+                    document.getElementById('teacherLoginCard').classList.add('hidden');
+                    document.getElementById('portalCampusMismatchCard')?.classList.remove('hidden');
+                    return true;
+                }
+                pendingPortalCampusSession = null;
+                document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
                 currentSessionRole = session.role; currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
-                if (session.campusKey && collegeDatabase[session.campusKey]) {
-                    currentActiveKey = session.campusKey;
-                    switchCollegePage(session.campusKey);
-                }
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
