@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ilahia Campus">
-    <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="icon" type="image/png" href="/assets/icons/ilahia-ecosystem-icon-v3-192.png">
-    <link rel="apple-touch-icon" href="/assets/icons/ilahia-ecosystem-icon-v3-180.png">
+    <link rel="manifest" href="/manifest.webmanifest?v=22">
+    <link rel="icon" type="image/png" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><link rel="shortcut icon" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-icon-v4-512.png">
+    <link rel="apple-touch-icon" href="/assets/icons/ilahia-ecosystem-icon-v4-180.png">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -39,9 +39,9 @@
         #translationToast { z-index: 9500; }
         #quickActionPalette { z-index: 12000; }
         #quickActionResults button[aria-selected="true"] { background:#eff6ff; outline:2px solid #60a5fa; }
-        .ilahia-trust-mark { width: 158px; height: 65px; overflow: hidden; flex: 0 0 auto; border-radius: 6px; background: transparent; padding: 0; }
+        .ilahia-trust-mark { width: 136px; height: 56px; overflow: hidden; flex: 0 0 auto; border-radius: 6px; background: transparent; padding: 0; }
         .ilahia-trust-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
-        .ilahia-trust-mark.compact { width: 154px; height: 40px; }
+        .ilahia-trust-mark.compact { width: 126px; height: 36px; }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -197,6 +197,7 @@
                 <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
                 <a href="#details" class="hover:text-blue-700 transition">Programs</a>
                 <button type="button" onclick="openCampusMapPage()" class="hover:text-blue-700 transition">Campus Map</button>
+                <a id="desktopCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="hover:text-blue-700 transition">MessBuzz · College Mess</a>
                 
                 <!-- Multi-language Selector -->
                 <div class="flex items-center space-x-1 bg-slate-100 border border-slate-200 rounded-lg px-2 py-1 text-xs">
@@ -224,6 +225,7 @@
             <div id="mobileNavActions" class="md:hidden grid grid-cols-3 items-stretch gap-2">
                 <button type="button" onclick="returnToInstituteLanding()" class="min-h-9 rounded-lg bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-800">Institute</button>
                 <button type="button" onclick="openCampusMapPage()" class="min-h-9 rounded-lg bg-blue-700 px-2 py-2 text-xs font-semibold text-white">Map</button>
+                <a id="mobileCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="flex min-h-9 items-center justify-center rounded-lg bg-amber-500 px-2 py-2 text-xs font-semibold text-white">Mess</a>
                 <select id="mobileLangSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 border border-slate-200 rounded p-1 text-[11px] font-semibold">
                     <option value="en">EN</option>
                     <option value="ml">മല</option>
@@ -276,6 +278,7 @@
                     <button type="button" onclick="openCampusMapPage()" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/30 transition">
                         Campus Navigation
                     </button>
+                    <a id="landingCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="bg-amber-500 hover:bg-amber-400 text-white font-semibold px-6 py-3 rounded-lg shadow transition">🍽️ MessBuzz · College Mess</a>
                 </div>
             </div>
         </div>
@@ -340,8 +343,8 @@
                 <div class="w-12 h-12 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-xl mb-4 font-bold">
                     <i class="fa-solid fa-people-roof"></i>
                 </div>
-                <h3 id="facTitle3" class="text-lg font-bold text-slate-900 mb-2">Hostels & Campus Amenities</h3>
-                <p id="facDesc3" class="text-slate-600 text-sm leading-relaxed">Secure residential blocks for students with mess facilities, indoor sports, and transport bus fleet.</p>
+                <h3 id="facTitle3" class="text-lg font-bold text-slate-900 mb-2">Student Support</h3>
+                <p id="facDesc3" class="text-slate-600 text-sm leading-relaxed">Campus services, transport and student support information.</p>
             </div>
         </div>
     </section>
@@ -521,7 +524,7 @@
                 </div>
             </div>
             <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
-                <input type="text" id="chatInput" placeholder="Ask about ICET, fees, hostel..." class="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
+                <input type="text" id="chatInput" placeholder="Ask about courses, fees, admissions or campus services…" class="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
                 <button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -1830,9 +1833,8 @@
                 icon: "fa-graduation-cap",
                 logo: "https://icet.ac.in/wp-content/uploads/2025/02/logo-illahia-2-2048x547.png",
                 metrics: { passRate: "Not published", avgCgpa: "Not published", placements: "Not published" },
-                hostel: "ICET’s official site describes separate boys’ and girls’ hostels on campus. The boys’ hostel has two residence blocks with accommodation for around 400 students, a kitchen and dining hall, plus study and recreation spaces and laundry facilities. The ladies’ hostel page lists 24-hour water, RO drinking water, Wi-Fi, a study hall, fitness and indoor/outdoor games, and 24-hour security. Confirm current room availability, hostel and mess charges, and application dates with the hostel office before applying.",
-                facilitiesSummary: "ICET lists a library, department laboratories and workshops, a language lab, sports facilities, a gymnasium, cafeteria and ATM. Hostels are described separately in this portal’s campus information.",
-                facilityCards: [{ title: "Engineering & Research", desc: "Engineering departments, laboratories, workshops and research activities." }, { title: "Student Support", desc: "Separate hostels, campus transport, counselling and student support." }, { title: "Campus Life", desc: "Library, language lab, sports, gymnasium, cafeteria and student activities." }],
+                facilitiesSummary: "ICET lists a library, department laboratories and workshops, a language lab, sports facilities, a gymnasium, cafeteria and ATM.",
+                facilityCards: [{ title: "Engineering & Research", desc: "Engineering departments, laboratories, workshops and research activities." }, { title: "Student Support", desc: "Campus transport, counselling and student support." }, { title: "Campus Life", desc: "Library, language lab, sports, gymnasium, cafeteria and student activities." }],
                 placementSummary: "ICET has a Training and Placement Cell for career counselling. Current placement figures and salary statistics are not available in this portal.",
                 transport: "Current bus routes and schedules are not published in this campus directory.",
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees and scholarship eligibility with the institute.",
@@ -1866,10 +1868,9 @@
                 icon: "fa-book-open-reader",
                 logo: "https://www.icas.ac.in/favicon.ico",
                 metrics: { passRate: "Not published", avgCgpa: "Not published", placements: "Not published" },
-                facilitiesSummary: "The college describes a green hilltop campus, computer lab, student clubs and campus activities. It also reports campus hostel facilities for boys and girls, subject to availability.",
-                facilityCards: [{ title: "Learning & Technology", desc: "Honours programmes, computer lab and learning spaces for arts, commerce, science and management." }, { title: "Campus Community", desc: "Student clubs, campus events and activities alongside academic programmes." }, { title: "Student Facilities", desc: "Green hilltop campus and hostel facilities for boys and girls, subject to availability." }],
+                facilitiesSummary: "The college describes a green hilltop campus, computer lab, student clubs and campus activities.",
+                facilityCards: [{ title: "Learning & Technology", desc: "Honours programmes, computer lab and learning spaces for arts, commerce, science and management." }, { title: "Campus Community", desc: "Student clubs, campus events and activities alongside academic programmes." }, { title: "Student Facilities", desc: "Campus facilities and student support services." }],
                 placementSummary: "The college website reports 2024 placement highlights of 120+ companies, 1,200+ placements and a ₹6 LPA average package. These are college-reported figures, not independently verified in this portal.",
-                hostel: "The college reports separate boys’ and girls’ hostel facilities on campus, managed with wardens and dining/study spaces. Accommodation is subject to availability; current room vacancies and charges are not listed here.",
                 transport: "Current bus routes and schedules are not published in this campus directory.",
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees and scholarship eligibility with the college.",
                 offerings: [
@@ -1895,10 +1896,9 @@
                 icon: "fa-screwdriver-wrench",
                 logo: "",
                 metrics: { passRate: "Not published", avgCgpa: "Not applicable", placements: "Not published" },
-                facilitiesSummary: "The campus lists engineering labs, a computer centre, library, auditorium, seminar halls, sports grounds, language lab, cafeteria, hostel and first-aid/medical support.",
-                facilityCards: [{ title: "Technical Training", desc: "Engineering workshops, laboratories, computer centre and language lab support practical diploma learning." }, { title: "Student Life", desc: "Auditorium, seminar halls, cricket/football/badminton grounds and campus canteens." }, { title: "Student Support", desc: "On-campus hostel, transport service and first-aid support are listed by the college." }],
+                facilitiesSummary: "The campus lists engineering labs, a computer centre, library, auditorium, seminar halls, sports grounds, language lab, cafeteria and first-aid/medical support.",
+                facilityCards: [{ title: "Technical Training", desc: "Engineering workshops, laboratories, computer centre and language lab support practical diploma learning." }, { title: "Student Life", desc: "Auditorium, seminar halls, cricket/football/badminton grounds and campus canteens." }, { title: "Student Support", desc: "Transport service and first-aid support are listed by the college." }],
                 placementSummary: "Current placement statistics are not available in this portal.",
-                hostel: "The college describes furnished student hostel rooms, a TV room, mess facilities and faculty wardens. Current vacancy and charges are not listed here.",
                 transport: "The college describes student and staff bus transport serving Muvattupuzha and nearby areas. Current routes and timings are not listed here.",
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees with the college.",
                 offerings: [
@@ -1924,7 +1924,6 @@
                 facilitiesSummary: "The school profile lists computer, biology, chemistry and physics labs, indoor games, music, yoga, an audio-visual room and health check-ups.",
                 facilityCards: [{ title: "Academic Learning", desc: "Computer, biology, chemistry and physics laboratories support school learning." }, { title: "Activities & Wellbeing", desc: "The school profile lists indoor games, music, yoga and health check-ups." }, { title: "School Community", desc: "CBSE senior-secondary school managed by Ilahia Trust; grade availability is confirmed by the school for each session." }],
                 placementSummary: "Not applicable to a school; ask about higher-secondary subject choices and student guidance instead.",
-                hostel: "",
                 transport: "Current bus routes and schedules are not published in this campus directory.",
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees with the school.",
                 offerings: [
@@ -1948,7 +1947,6 @@
                 icon: "fa-bolt", 
                 logo: "",
                 metrics: { passRate: "Not published", avgCgpa: "Not applicable", placements: "Not published" }, 
-                hostel: "",
                 transport: "Current bus routes and schedules are not published in this campus directory.", 
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees with the ITI.", 
                 offerings: [ 
@@ -1970,10 +1968,9 @@
                 icon: "fa-scale-balanced",
                 logo: "https://ilahialawcollege.com/static/images/logo1.png",
                 metrics: { passRate: "Contact institute", avgCgpa: "Contact institute", placements: "Contact institute" },
-                facilitiesSummary: "The campus lists a law library, cyber facilities, moot court, air-conditioned auditoriums, sports grounds, legal-aid and internship support, separate hostels, and student bus transport.",
-                facilityCards: [{ title: "Legal Practice", desc: "Moot court, law library, cyber facilities and legal-aid activities support practical legal learning." }, { title: "Campus Life", desc: "Auditoriums, sports grounds, student activities and career guidance." }, { title: "Student Support", desc: "Separate boys’ and girls’ hostels and student bus transport are listed by the college." }],
+                facilitiesSummary: "The campus lists a law library, cyber facilities, moot court, air-conditioned auditoriums, sports grounds, legal-aid, internship support and student bus transport.",
+                facilityCards: [{ title: "Legal Practice", desc: "Moot court, law library, cyber facilities and legal-aid activities support practical legal learning." }, { title: "Campus Life", desc: "Auditoriums, sports grounds, student activities and career guidance." }, { title: "Student Support", desc: "Student bus transport and academic support are listed by the college." }],
                 placementSummary: "The college describes internship support, legal-aid work, skill development and career guidance. Current placement counts are not available in this portal.",
-                hostel: "The college lists separate boys’ and girls’ hostels with wardens and medical support. Its facilities page gives capacities of 100 boys and 150 girls; current vacancies and charges are not listed here.",
                 transport: "The college provides student bus transport. Current route availability and timings are not listed in this portal.",
                 fees: "Confirm current fee details with the college.",
                 offerings: [
@@ -1999,7 +1996,6 @@
                 facilitiesSummary: "The college describes pharmacy laboratories, experienced faculty and an industry-aligned curriculum for practical pharmaceutical learning.",
                 facilityCards: [{ title: "Pharmacy Learning", desc: "B.Pharm study across pharmaceutical sciences, supported by practical laboratory work." }, { title: "Practice & Research", desc: "The college describes industry-aligned learning, pharmacy labs and research exposure." }, { title: "Student Development", desc: "Learning is aimed at professional practice across pharmacy and healthcare settings." }],
                 placementSummary: "Pharmacy career paths can include community or hospital pharmacy, pharmaceutical quality, medical sales and research. The college’s current placement figures are not in this portal.",
-                hostel: "Contact the college for current accommodation information.",
                 transport: "Contact the college for current transport routes.",
                 fees: "Confirm current fee details and course availability with the college.",
                 offerings: [
@@ -2024,7 +2020,6 @@
                 facilitiesSummary: "The school highlights activities including a Scout Unit, Health Club, Balasabha, Students’ Bank and student radio. Current transport and other facilities are not listed in this portal.",
                 facilityCards: [{ title: "Primary Learning", desc: "Malayalam- and English-medium learning from LKG through Standard 4." }, { title: "Student Activities", desc: "Scout Unit, Health Club, Balasabha and student radio are listed by the school." }, { title: "Student Participation", desc: "Students’ Bank and school clubs support age-appropriate responsibility and participation." }],
                 placementSummary: "Not applicable to a primary school; ask the school about grade progression and student activities.",
-                hostel: "",
                 transport: "Current bus routes and schedules are not published in this campus directory.",
                 fees: "A verified current fee schedule is not published in this campus directory. Confirm fees with the school.",
                 offerings: [
@@ -2747,7 +2742,7 @@
           }
           function findRelevantAIKnowledge(query, entries = aiKnowledgeEntries, activeCampusKey = currentActiveKey) {
              const stopWords = new Set(['the','what','which','where','when','who','why','how','tell','about','give','show','me','for','from','with','this','that','are','is','was','were','can','could','would','should','does','do','did','and','or','to','of','in','on','at','a','an','my','your','their','there','please','college','campus','institute','institution','details','information']);
-             const aliases = { courses: 'course', programmes: 'program', programs: 'program', fees: 'fee', hostels: 'hostel', buses: 'bus', placements: 'placement', admissions: 'admission', facilities: 'facility', labs: 'lab' };
+             const aliases = { courses: 'course', programmes: 'program', programs: 'program', fees: 'fee', buses: 'bus', placements: 'placement', admissions: 'admission', facilities: 'facility', labs: 'lab' };
              const words = query.toLowerCase().normalize('NFKC').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/)
                  .map(word => aliases[word] || word).filter(word => word.length > 1 && !stopWords.has(word));
              if (!words.length) return null;
@@ -2790,7 +2785,7 @@
               const entry = findRelevantAIKnowledge(query, entries, campusKey);
               const courseQuestion = /\b(course|courses|program|programs|programme|programmes|degree|diploma|b\.? ?tech|m\.? ?tech|bca|bba|bcom|bsc|mba|mca|llb|pharm|trade|class|grade)\b/i.test(text);
               const feeQuestion = /\b(fee|fees|tuition|cost|scholarship|payment)\b/i.test(text);
-              const hostelQuestion = /\b(hostel|accommodation|boarding|dorm|room)\b/i.test(text);
+              const hostelQuestion = /\b(hostel|accommodation|boarding|dorm|residence hall)\b/i.test(text);
               const transportQuestion = /\b(bus|transport|route|pickup|pick up|commute)\b/i.test(text);
               const contactQuestion = /\b(address|location|where|phone|telephone|contact|email|mail|reach)\b/i.test(text);
               const admissionQuestion = /\b(admission|apply|application|eligibility|eligible|qualification|requirement|intake|seat|new student|documents?|checklist|how to join)\b/i.test(text);
@@ -2804,25 +2799,12 @@
                   return !requested || `${item.title} ${item.cat} ${item.desc}`.toLowerCase().includes(requested[0].replace(/\s+/g, ' '));
               });
               const courseList = (titleMatches.length ? titleMatches : offerings).map(item => item.title).join(' · ');
+              if (hostelQuestion) return 'Hostel and accommodation information is temporarily unavailable in this portal. I can help with admissions, programmes, fees, transport, campus facilities and student services.';
               if (portalServiceQuestion) return 'Sign in to the Student Dashboard on this portal to use the services enabled for your account: attendance, academic information, fee tools, leave requests, gate passes and certificates. The public guide cannot see private student records.';
               if (feeQuestion) {
                   const detail = cleanRecordText(campus.fees);
                   if (isUnavailable(detail)) return `I don’t have the current fee schedule for ${campus.name}. ${officeContact} to confirm tuition, other charges, and any scholarships.`;
                   return `${campus.name} fee information: ${detail || 'I don’t have a current fee schedule.'}${entry ? `\n\nRelated college information: ${cleanRecordText(entry.content).slice(0, 900)}` : ''}`;
-              }
-              if (hostelQuestion) {
-                  const detail = cleanRecordText(campus.hostel);
-                  if (isUnavailable(detail)) return `I don’t have confirmed hostel information for ${campus.name}. ${officeContact} to ask about availability, charges, and how to apply.`;
-                  if (campusKey === 'icet') {
-                      const points = [
-                          'Separate boys’ and girls’ hostels are available on campus.',
-                          'Boys’ hostel: two residence blocks for around 400 students, with a kitchen, dining hall, study/recreation spaces and laundry.',
-                          'Girls’ hostel: 24-hour water, RO drinking water, Wi-Fi, study hall, fitness and games facilities, and 24-hour security.'
-                      ];
-                      if (/fee|price|charge|vacan|available|apply|application|capacity/i.test(text)) points.push('Current vacancy, fee and application details are not in the portal records.');
-                      return `${campus.name} hostel\n${points.map(point => `• ${point}`).join('\n')}`;
-                  }
-                  return `${campus.name} hostel\n• ${detail}`;
               }
               if (transportQuestion) {
                   const detail = cleanRecordText(campus.transport);
@@ -2855,7 +2837,7 @@
                   return entry ? `${summary}\n• More: ${cleanRecordText(entry.content).slice(0, 420)}` : summary;
               }
               if (entry) return cleanRecordText(entry.content).slice(0, 1400);
-              return `${campus.name}: I don't have a matching detail for that question in the information currently loaded. I can answer questions about its programmes, fees, admissions, address, facilities, accommodation, or transport.`;
+              return `${campus.name}: I don't have a matching detail for that question in the information currently loaded. I can answer questions about its programmes, fees, admissions, address, facilities, or transport.`;
           }
         const i18n = {
             en: {
@@ -2863,7 +2845,7 @@
                 overviewSubText: "Designed for comprehensive technical and academic development.",
                 deptHeading: "Departments & Course Offerings",
                 deptSub: "Approved undergraduate and postgraduate streams.",
-                chatWelcome: "Hello! Ask me about courses, fees, hostel, bus routes, placements, or admissions.",
+                chatWelcome: "Hello! Ask me about courses, fees, bus routes, placements, admissions or campus facilities.",
                 feeTitle: "Pending Fee Dues",
                 feeBtn: "Pay Fees Online"
             },
@@ -4470,12 +4452,6 @@
                 };
                 if (role === 'student' && sendButton) { sendButton.disabled = true; sendButton.classList.add('opacity-60'); }
                 try {
-                    const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
-                    const activeSession = await sessionResponse.json().catch(() => ({}));
-                    if (!sessionResponse.ok || activeSession.role !== role) {
-                        showGatepassFeedback('Your campus sign-in has expired. Sign in again, then retry your gate pass.', role === 'student');
-                        return;
-                    }
                     const response = await fetch('/api/gatepasses', {
                         method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ destination, mentorName, departureDate, departureTime, returnDate, returnTime, reason: promptText })
@@ -4545,6 +4521,17 @@
         }
         let quickActionSelectedIndex = 0;
         let quickActionItems = [];
+        function updateCanteenBookingAvailability(onInstitutePage = true) {
+            const unavailableCampus = onInstitutePage && ['school', 'kmlps'].includes(currentActiveKey);
+            ['desktopCanteenBookingLink', 'mobileCanteenBookingLink', 'landingCanteenBookingLink'].forEach(id => {
+                const link = document.getElementById(id);
+                if (!link) return;
+                link.hidden = unavailableCampus;
+                link.classList.toggle('hidden', unavailableCampus);
+            });
+            if (unavailableCampus && document.getElementById('canteenBookingPanel')?.style.display === 'flex') window.closeCanteenBookingPanel?.();
+        }
+
         function quickActionCatalog() {
             const items = [
                 { label: 'Choose institute', detail: 'Browse every Ilahia institute', icon: 'fa-building-columns', run: () => toggleCollegeSwitcher(true) },
@@ -4553,6 +4540,10 @@
                 { label: 'Programs and departments', detail: 'Jump to institute programs', icon: 'fa-book-open', run: () => { if (document.getElementById('collegeContent')?.classList.contains('hidden')) toggleCollegeSwitcher(true); else document.getElementById('details')?.scrollIntoView({ behavior: 'smooth' }); } },
                 { label: 'Ask Ilahia AI', detail: 'Open the campus guide chatbot', icon: 'fa-robot', run: () => { document.getElementById('chatWindow')?.classList.remove('hidden'); document.getElementById('chatInput')?.focus(); } }
             ];
+            const institutePageOpen = !document.getElementById('collegeContent')?.classList.contains('hidden');
+            if (!(institutePageOpen && ['school', 'kmlps'].includes(currentActiveKey))) {
+                items.splice(4, 0, { label: 'MessBuzz · College Mess', detail: 'Browse menu, place an order and track pickup', icon: 'fa-utensils', run: () => openCanteenBookingPanel() });
+            }
             document.querySelectorAll('#collegeSwitcherPanel .college-tab-btn').forEach(button => {
                 const key = button.id.replace(/^btn-/, '');
                 if (!key) return;
@@ -4621,6 +4612,7 @@
             if (landing) landing.classList.remove('hidden');
             if (collegeContent) collegeContent.classList.add('hidden');
             if (nav) nav.classList.add('hidden');
+            updateCanteenBookingAvailability(false);
             const landingAdminButton = document.getElementById('landingAdminButton');
             if (landingAdminButton) landingAdminButton.hidden = false;
             const instituteToggle = document.getElementById('collegeSwitcherToggle');
@@ -4642,6 +4634,7 @@
             currentActiveKey = key; 
             const data = collegeDatabase[key]; 
             if(!data) return; 
+            updateCanteenBookingAvailability(true);
             document.getElementById('campusNewsTicker')?.classList.add('hidden');
             void loadCampusEventInbox(key);
             updateCampusChatContext(key);
@@ -5646,7 +5639,7 @@
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
                 if (session.campusKey && collegeDatabase[session.campusKey]) currentActiveKey = session.campusKey;
                 if (session.role === 'student') {
-                    customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient();
+                    customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
                     document.getElementById('portalMenuCard').classList.add('hidden');
                     document.getElementById('studentLoginCard').classList.add('hidden');
@@ -5845,7 +5838,7 @@
                 closeStudentDigitalId();
                 document.getElementById('studentUniId').value = '';
                 document.getElementById('studentPass').value = '';
-                updateStudentRequestRecipient();
+                updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                 document.getElementById('studentLoginCard').classList.add('hidden'); 
                 document.getElementById('studentDashboardCard').classList.remove('hidden'); 
                 if (currentLang !== 'en') translatePage(currentLang);
@@ -6111,7 +6104,6 @@
             await appendChatReply(text, messages, 'bg-blue-50 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[85%] border border-blue-100 text-xs sm:text-sm', aiKnowledgeEntries,
                 'Thank you for your inquiry about Ilahia Trust Institutions. Explore the programs or sign into your portal for details.', [
                     [['fee', 'tuition'], 'I don\'t have a verified fee amount in the selected college records yet.'],
-                    [['hostel', 'room'], 'Verified hostel information is not in the selected college records yet.'],
                     [['bus', 'transport', 'route'], 'Verified bus routes and schedules are not in the selected college records yet.'],
                     [['admission', 'seat'], 'I don\'t have a verified current admission date or seat count in the selected college records yet.']
                 ], pageCampusKey);
@@ -16597,5 +16589,36 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 /***/ })
 /******/ ])["default"];
 });</script>
-</body>
+<!-- Embedded MessBuzz college-mess panel: uses the portal's existing signed-in session. -->
+<div id="canteenBookingPanel" role="dialog" aria-modal="true" aria-labelledby="canteenBookingTitle" style="display:none;position:fixed;inset:0;z-index:25000;background:#0f172a;flex-direction:column">
+  <div style="height:58px;min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid #cbd5e1">
+    <strong id="canteenBookingTitle" style="font:700 15px system-ui,sans-serif;color:#0f172a">MessBuzz · College Mess</strong>
+    <button type="button" onclick="closeCanteenBookingPanel()" aria-label="Close canteen booking and return to campus website" style="border:0;border-radius:8px;padding:9px 14px;background:#1e3a8a;color:#fff;font:600 13px system-ui,sans-serif;cursor:pointer">← Back to Campus</button>
+  </div>
+  <iframe id="canteenBookingFrame" title="MessBuzz college mess" src="about:blank" style="flex:1;width:100%;height:calc(100% - 58px);border:0;background:#f7f3ed"></iframe>
+</div>
+<script>
+(function(){
+  var panel=document.getElementById('canteenBookingPanel');
+  var frame=document.getElementById('canteenBookingFrame');
+  var previousOverflow='';
+  window.openCanteenBookingPanel=function(){
+    if(!panel||!frame)return;
+    if(!document.getElementById('collegeContent')?.classList.contains('hidden')&&['school','kmlps'].includes(currentActiveKey))return;
+    if(frame.getAttribute('src')==='about:blank')frame.setAttribute('src','/canteen.html?embedded=1');
+    previousOverflow=document.body.style.overflow;
+    panel.style.display='flex';
+    document.body.style.overflow='hidden';
+    panel.querySelector('button')?.focus();
+  };
+  window.closeCanteenBookingPanel=function(){
+    if(!panel)return;
+    panel.style.display='none';
+    document.body.style.overflow=previousOverflow;
+  };
+  document.addEventListener('keydown',function(event){
+    if(event.key==='Escape'&&panel&&panel.style.display==='flex')window.closeCanteenBookingPanel();
+  });
+})();
+</script></body>
 </html>

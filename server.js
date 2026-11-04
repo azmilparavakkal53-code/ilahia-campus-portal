@@ -256,6 +256,17 @@ function requireStudent(req, res, errorMessage = 'Sign in to an eligible college
 }
 
 function safeText(value, maxLength) { return String(value || '').trim().replace(/[<>]/g, '').slice(0, maxLength); }
+const TEMPORARILY_HIDDEN_HOUSING = /\b(hostel|accommodation|boarding|dorm(?:itory)?|residence hall)\b/i;
+function removeHousingDetails(value) {
+  return String(value || '').split(/(?<=[.!?])\s+|\n+/).filter(sentence => !TEMPORARILY_HIDDEN_HOUSING.test(sentence)).join(' ').trim();
+}
+function hideHousingKnowledge(entries) {
+  return entries.filter(entry => !TEMPORARILY_HIDDEN_HOUSING.test(`${entry.title || ''} ${(entry.tags || []).join(' ')}`)).map(entry => ({
+    ...entry,
+    content: removeHousingDetails(entry.content),
+    source: TEMPORARILY_HIDDEN_HOUSING.test(entry.source || '') ? 'Institution information' : entry.source
+  }));
+}
 
 function parseCsvMatrix(text) {
   const rows = []; let row = [], cell = '', quoted = false;
@@ -395,7 +406,7 @@ const BUILTIN_INSTITUTION_KNOWLEDGE = [
   { id: 'public-portal-guide', title: 'Ilahia portal guide: navigation and digital services', category: 'portal-help', audience: 'all', source: 'Ilahia portal interface and local service descriptions', tags: ['portal', 'login', 'student dashboard', 'faculty dashboard', 'fees', 'attendance', 'leave', 'gate pass', 'certificates', 'contact'], content: 'Use the institute selector to open the relevant campus. Students can sign in to their student dashboard to access the services enabled for their account, such as attendance, academic information, fee tools, leave requests, gate passes, and certificates. Teachers can use the faculty dashboard for teaching tools, student support workflows, shared academic notes, and Skill Learner verification when available. The public assistant can explain general campus information but cannot see a person’s private records. For a missing button, rejected request, payment issue, or account problem, sign in and use the portal’s relevant request or contact the campus office; never send a password or one-time code in chat.' },
   { id: 'public-admissions-answering-guide', title: 'Public assistant: admissions and current-information guidance', category: 'portal-help', audience: 'all', source: 'Ilahia official institution pages and portal guidance', tags: ['admissions', 'eligibility', 'fees', 'current', 'official source', 'application', 'public assistant'], content: 'For institute questions, first confirm which Ilahia campus the applicant means because programmes, eligibility, contact details, and deadlines differ by institution. Share only facts present in the matching official campus record, name the official page when available, and tell applicants to confirm current intake, seats, fees, deadlines, and eligibility with that campus before applying. Do not guess a fee, deadline, scholarship award, seat count, or admission decision. For personal application status or documents, direct the applicant to the official admissions office or authenticated portal. The Ilahia institutions directory and campus profiles are seeded from the institutions’ own public pages; use the linked campus source for the latest notice.' },
   { id: 'seed-ilahia-institutions', title: 'Ilahia Trust institutions directory', category: 'institutions', audience: 'all', scope: 'trust', source: 'Ilahia College of Engineering and Technology institutions page', tags: ['Ilahia Trust', 'institutions', 'campuses', 'all colleges'], content: 'The official ICET institutions page lists Ilahia College of Engineering and Technology, Ilahia College of Arts and Science, Ilahia Polytechnic College, Ilahia Public School, Ilahia Law College, Ilahia College of Pharmacy, and Kavumkara Muslim L.P. School (KMLP). Ilahia Private ITI appears in Ilahia management information. Ask about a specific institution for its own current programmes and admission details. Sources: https://icet.ac.in/ and https://www.icas.ac.in/about/history' },
-  { id: 'seed-ilahia-law', title: 'Ilahia Law College programmes, eligibility and contact', category: 'institutions', audience: 'all', campusKey: 'law', source: 'Ilahia Law College official pages', tags: ['law', 'LLB', 'BA LLB', 'admissions', 'eligibility'], content: 'Ilahia Law College states it is affiliated with Mahatma Gandhi University and approved by the Bar Council of India. It lists a Three-Year Unitary LL.B and a Five-Year Integrated B.A. LL.B. (Hons.). Its admissions page lists 45% minimum aggregate for general-category applicants, 42% for OBC, and 40% for SC/ST; the integrated course requires recognised 10+2. Verify current rules before applying. The college describes a library, moot court hall, cyber facilities, auditoriums, hostels, sports and transport. Address: Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala 686673. Phone +91 94001 30499; ilahialaw@gmail.com. Sources: https://ilahialawcollege.com/aboutus, https://ilahialawcollege.com/courses, https://ilahialawcollege.com/admission_process, https://ilahialawcollege.com/contactpage' },
+  { id: 'seed-ilahia-law', title: 'Ilahia Law College programmes, eligibility and contact', category: 'institutions', audience: 'all', campusKey: 'law', source: 'Ilahia Law College official pages', tags: ['law', 'LLB', 'BA LLB', 'admissions', 'eligibility'], content: 'Ilahia Law College states it is affiliated with Mahatma Gandhi University and approved by the Bar Council of India. It lists a Three-Year Unitary LL.B and a Five-Year Integrated B.A. LL.B. (Hons.). Its admissions page lists 45% minimum aggregate for general-category applicants, 42% for OBC, and 40% for SC/ST; the integrated course requires recognised 10+2. Verify current rules before applying. The college describes a library, moot court hall, cyber facilities, auditoriums, sports and transport. Address: Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala 686673. Phone +91 94001 30499; ilahialaw@gmail.com. Sources: https://ilahialawcollege.com/aboutus, https://ilahialawcollege.com/courses, https://ilahialawcollege.com/admission_process, https://ilahialawcollege.com/contactpage' },
   { id: 'seed-ilahia-pharmacy', title: 'Ilahia College of Pharmacy B.Pharm and contact', category: 'institutions', audience: 'all', campusKey: 'pharmacy', source: 'Ilahia College of Pharmacy official pages', tags: ['pharmacy', 'B.Pharm', 'admissions', 'pharmaceutics', 'pharmacology'], content: 'Ilahia College of Pharmacy publishes a four-year Bachelor of Pharmacy (B.Pharm) programme. Its listed learning areas include pharmaceutics, pharmaceutical chemistry, pharmacology, pharmaceutical analysis, hospital and clinical pharmacy, and pharmacognosy. It lists careers such as hospital pharmacist, quality-control officer, medical representative, drug inspector and research assistant. Address: Near Ilahia Arts College, Pezhakkappilly P.O., Muvattupuzha, Ernakulam, Kerala 686673. Phone +91 94476 08456; ilahiapharmacy@gmail.com. Confirm current availability, intake, eligibility and regulatory approval with the college and regulator. Sources: https://ilahiacollegeofpharmacy.com/all-courses/ and https://ilahiacollegeofpharmacy.com/contact/' },
   { id: 'seed-campus-icet', title: 'Ilahia College of Engineering and Technology programmes', category: 'institution-profile', audience: 'all', campusKey: 'icet', source: 'ICET official course and admission pages', tags: ['ICET', 'engineering', 'BTech', 'MTech', 'MBA', 'MCA', 'courses'], content: 'ICET identifies itself as established in 2002, AICTE-approved and affiliated with APJ Abdul Kalam Technological University (KTU). Its official course list includes B.Tech programmes in Artificial Intelligence and Data Science, Civil, Computer Science, Computer Science (Cyber Security), Electrical and Electronics, Electronics and Communication, Mechanical, Food Technology, Agricultural Engineering and Biomedical Engineering; it also lists working-professional B.Tech options in Civil and CSE. Postgraduate listings include M.Tech in CSE and Computer-Aided Structural Engineering, MBA, MCA and Ph.D. in CSE. Intake, accreditation and current admission rules vary by programme and year; use the current official admission page. Sources: https://icet.ac.in/about-icet/, https://icet.ac.in/courses-offered/, https://icet.ac.in/under-graduate-admission/, https://icet.ac.in/post-graduate-admission/' },
   { id: 'seed-campus-arts', title: 'Ilahia College of Arts and Science programmes and admissions', category: 'institution-profile', audience: 'all', campusKey: 'arts', source: 'Ilahia College of Arts and Science official pages', tags: ['arts', 'science', 'ICAS', 'BBA', 'BCA', 'BCom', 'admissions'], content: 'Ilahia College of Arts and Science says it began in June 1995 and is affiliated with Mahatma Gandhi University. Its current homepage/admissions pages list undergraduate programmes including BBA (Hons.), BCA (Hons.), BA (Hons.) Economics and English, B.Com (Hons.) Accounting, Finance and Taxation, Logistics Management, and B.Sc. (Hons.) Psychology, Cyber Forensics and Computer Science. The admissions page advertises UG/PG admissions for 2026 and lists enquiry numbers +91 94009 25061, +91 94009 25716, 0485 2811607 and +91 96335 31607. Confirm course availability and eligibility with the college. Sources: https://www.icas.ac.in/home, https://www.icas.ac.in/admissions, https://www.icas.ac.in/about/history' },
@@ -413,7 +424,7 @@ if (missingInstitutionKnowledge.length) writeEntries([...existingKnowledge, ...m
 // Only fetch pages from these fixed official Ilahia institution sites. Unavailable or
 // robots-disallowed pages are skipped; the last successful knowledge entry is retained.
 const OFFICIAL_INSTITUTION_SOURCES = [
-  { slug: 'icet', name: 'Ilahia College of Engineering and Technology', campusKey: 'icet', urls: ['https://icet.ac.in/about-icet/', 'https://icet.ac.in/courses-offered/', 'https://icet.ac.in/under-graduate-admission/', 'https://icet.ac.in/post-graduate-admission/', 'https://icet.ac.in/hostel-facilities/', 'https://icet.ac.in/gents-hostel-2/', 'https://icet.ac.in/ladies-hostel/'] },
+  { slug: 'icet', name: 'Ilahia College of Engineering and Technology', campusKey: 'icet', urls: ['https://icet.ac.in/about-icet/', 'https://icet.ac.in/courses-offered/', 'https://icet.ac.in/under-graduate-admission/', 'https://icet.ac.in/post-graduate-admission/'] },
   { slug: 'icas', name: 'Ilahia College of Arts and Science', campusKey: 'arts', urls: ['https://www.icas.ac.in/home', 'https://www.icas.ac.in/admissions', 'https://www.icas.ac.in/about/history'] },
   { slug: 'polytechnic', name: 'Ilahia Polytechnic College', campusKey: 'poly', urls: ['https://ilahiapoly.co.in/'] },
   { slug: 'public-school', name: 'Ilahia Public School', campusKey: 'school', urls: ['https://www.ilahiapublicschool.edu.in/'] },
@@ -760,7 +771,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-wordmark.png']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-icon-v4-180.png', '/assets/icons/ilahia-ecosystem-icon-v4-192.png', '/assets/icons/ilahia-ecosystem-icon-v4-512.png', '/assets/icons/ilahia-ecosystem-wordmark.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -789,7 +800,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gatepass-logo-v3' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-messbuzz-gatepass-v4' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1949,7 +1960,6 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (pathname === '/api/ai-chat' && req.method === 'POST') {
-      if (!OPENAI_API_KEY) { sendJson(res, 503, { error: 'AI model is not configured; using the local knowledge assistant.' }); return; }
       const chatKey = getSession(req)?.userId || req.socket.remoteAddress || 'unknown';
       const now = Date.now();
       const chatBucket = aiChatBuckets.get(chatKey) || { startedAt: now, count: 0 };
@@ -1961,12 +1971,17 @@ const server = http.createServer(async (req, res) => {
       const query = safeText(body.query, 2000);
       const requestedRole = ['campus', 'student', 'teacher'].includes(body.role) ? body.role : '';
       if (!query || !requestedRole) { sendJson(res, 400, { error: 'A question and valid assistant role are required.' }); return; }
+      if (TEMPORARILY_HIDDEN_HOUSING.test(query)) {
+        sendJson(res, 200, { answer: 'Hostel and accommodation information is temporarily unavailable in this portal. I can help with admissions, programmes, fees, transport, campus facilities and student services.' });
+        return;
+      }
+      if (!OPENAI_API_KEY) { sendJson(res, 503, { error: 'AI model is not configured; using the local knowledge assistant.' }); return; }
       const session = getSession(req);
       if (requestedRole === 'student' && (!session || session.role !== 'student')) { sendJson(res, 401, { error: 'Sign in as a student to use ClassBot.' }); return; }
       if (requestedRole === 'teacher' && (!session || !['teacher', 'hod'].includes(session.role))) { sendJson(res, 401, { error: 'Sign in as teaching staff to use FacultyBot.' }); return; }
       const campusKey = session?.campusKey || (CAMPUS_KEYS.includes(body.campusKey) ? body.campusKey : 'icet');
       const words = [...new Set((query.toLowerCase().match(/[a-z0-9+#.-]{2,}/g) || []).filter(word => !['what','how','the','and','for','with','can','you','about','please','from','this','that','give','tell','explain','make','write','help'].includes(word)))];
-      const knowledge = readEntries().filter(entry => {
+      const knowledge = hideHousingKnowledge(readEntries()).filter(entry => {
         if (entry.campusKey && entry.campusKey !== campusKey) return false;
         if (requestedRole === 'campus') return entry.audience !== 'students';
         if (entry.audience !== 'students') return false;
@@ -2011,7 +2026,7 @@ const server = http.createServer(async (req, res) => {
       const visibleEntries = audience === 'students'
         ? entries.filter(entry => entry.audience === 'students')
         : entries.filter(entry => entry.audience !== 'students');
-      sendJson(res, 200, visibleEntries);
+      sendJson(res, 200, hideHousingKnowledge(visibleEntries));
       return;
     }
     if (req.method === 'POST' && pathname === '/api/ai-knowledge') {
