@@ -580,9 +580,10 @@
                     <i class="fa-solid fa-user-graduate"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Student Verification</h3>
-                <p class="text-xs text-slate-500 mt-1">College: <strong id="studentLoginCampusName">ICET</strong></p>
+                <p class="text-xs text-slate-500 mt-1">Choose the college account to sign in with.</p>
             </div>
             <div class="space-y-4 text-xs">
+                <label class="block font-semibold text-slate-700">College account<select id="studentLoginCampus" onchange="selectPortalLoginCampus(this.value)" class="mt-1 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white"></select></label>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">University ID</label>
                     <input type="text" id="studentUniId" placeholder="Your college student ID" value="ILH26CS042" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
@@ -611,9 +612,10 @@
                     <i class="fa-solid fa-chalkboard-user"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Faculty Verification</h3>
-                <p class="text-xs text-slate-500 mt-1">College: <strong id="teacherLoginCampusName">ICET</strong></p>
+                <p class="text-xs text-slate-500 mt-1">Choose the college account to sign in with.</p>
             </div>
             <div class="space-y-4 text-xs">
+                <label class="block font-semibold text-slate-700">College account<select id="teacherLoginCampus" onchange="selectPortalLoginCampus(this.value)" class="mt-1 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white"></select></label>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Staff role</label>
                     <select id="staffLoginRole" onchange="updateStaffLoginRole()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
@@ -4492,7 +4494,7 @@
             const recipient = document.getElementById(`${role}ReqRecipient`).value;
             const promptText = document.getElementById(`${role}ReqPrompt`).value.trim();
             const resultBox = document.getElementById(`${role}RequestResult`);
-            if(!promptText) {
+            if(!promptText && reqType !== 'Gate Pass Request') {
                 alert('Please enter core details or reason for your request.');
                 return;
             }
@@ -4506,10 +4508,6 @@
                 const returnTime = document.getElementById(`${prefix}GatepassReturnTime`).value;
                 const mentorRequired = role === 'student';
                 const departureAt = new Date(`${departureDate}T${departureTime}`), returnAt = new Date(`${returnDate}T${returnTime}`);
-                if (!destination || !promptText || (mentorRequired && !mentorName) || !departureDate || !departureTime || !returnDate || !returnTime || Number.isNaN(departureAt.getTime()) || Number.isNaN(returnAt.getTime()) || departureAt <= new Date() || returnAt <= departureAt) {
-                    alert(mentorRequired ? 'Enter the destination, purpose, mentor name, future departure time, and a return time later than departure.' : 'Enter the destination and purpose, then choose a future departure and later return time.');
-                    return;
-                }
                 const sendButton = document.getElementById('studentReqSubmitButton');
                 const showGatepassFeedback = (message, needsSignIn = false, success = false) => {
                     resultBox.classList.remove('hidden');
@@ -4524,6 +4522,27 @@
                         resultBox.append(signInButton);
                     }
                 };
+                const missing = [];
+                if (!destination) missing.push(['destination', `${prefix}GatepassDestination`]);
+                if (!promptText) missing.push(['purpose / reason', `${prefix}ReqPrompt`]);
+                if (mentorRequired && !mentorName) missing.push(['class mentor', 'studentGatepassMentor']);
+                if (!departureDate || !departureTime) missing.push(['departure date and time', `${prefix}GatepassDepartureDate`]);
+                if (!returnDate || !returnTime) missing.push(['expected return date and time', `${prefix}GatepassReturnDate`]);
+                if (missing.length) {
+                    showGatepassFeedback(`Complete these gate-pass fields: ${missing.map(([label]) => label).join(', ')}.`);
+                    document.getElementById(missing[0][1])?.focus();
+                    return;
+                }
+                if (Number.isNaN(departureAt.getTime()) || departureAt <= new Date()) {
+                    showGatepassFeedback('Choose a valid departure time in the future.');
+                    document.getElementById(`${prefix}GatepassDepartureDate`)?.focus();
+                    return;
+                }
+                if (Number.isNaN(returnAt.getTime()) || returnAt <= departureAt) {
+                    showGatepassFeedback('Choose an expected return time later than departure.');
+                    document.getElementById(`${prefix}GatepassReturnDate`)?.focus();
+                    return;
+                }
                 if (role === 'student' && sendButton) { sendButton.disabled = true; sendButton.classList.add('opacity-60'); }
                 try {
                     let response = await fetch('/api/gatepasses', {
@@ -5835,6 +5854,10 @@
         } 
 
         async function initializePortalCampusSelector() {
+            for (const id of ['studentLoginCampus', 'teacherLoginCampus']) {
+                const select = document.getElementById(id);
+                if (select) select.innerHTML = Object.entries(collegeDatabase).map(([key, campus]) => `<option value="${escapeHTML(key)}">${escapeHTML(campus.name)}</option>`).join('');
+            }
             const localHost = window.location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(window.location.hostname);
             if (localHost) {
                 const prefixes = { icet: 'ICET', arts: 'ARTS', poly: 'POLY', school: 'SCHOOL', iti: 'ITI', law: 'LAW', pharmacy: 'PHARM', kmlps: 'KMLPS' };
@@ -5862,6 +5885,10 @@
 
         function setPortalLoginCampus(campusKey) {
             if (!collegeDatabase[campusKey]) return;
+            for (const id of ['studentLoginCampus', 'teacherLoginCampus']) {
+                const select = document.getElementById(id);
+                if (select && select.value !== campusKey) select.value = campusKey;
+            }
             const name = collegeDatabase[campusKey].name;
             const menuName = document.getElementById('portalMenuCampusName');
             if (menuName) menuName.textContent = name;
@@ -5888,6 +5915,13 @@
             const teacherDemoPassword = document.getElementById('teacherDemoPassword');
             if (teacherDemoHint) teacherDemoHint.classList.toggle('hidden', !staffAccount?.demoPassword);
             if (teacherDemoPassword) teacherDemoPassword.textContent = staffAccount?.demoPassword || '';
+        }
+
+        function selectPortalLoginCampus(campusKey) {
+            if (!collegeDatabase[campusKey]) return;
+            switchCollegePage(campusKey);
+            setPortalLoginCampus(campusKey);
+            updateStaffLoginRole();
         }
 
         function customizeStudentPortalForCampus(campusKey) {
