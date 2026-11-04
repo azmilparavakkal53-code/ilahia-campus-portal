@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 118" role="img" aria-labelledby="title desc">
+  <title id="title">MessBuzz College Mess</title>
+  <desc id="desc">A warm gold meal bowl mark beside the MessBuzz college mess wordmark.</desc>
+  <defs><linearGradient id="mbLogo" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8aa54"/><stop offset="1" stop-color="#9a6f27"/></linearGradient></defs>
+  <g transform="translate(3 3)">
+    <rect x="2" y="2" width="108" height="108" rx="30" fill="#1a1512"/>
+    <circle cx="56" cy="56" r="43" fill="none" stroke="url(#mbLogo)" stroke-width="2.5"/>
+    <path d="M29 64h54c-2 15-12 24-27 24S31 79 29 64Z" fill="#f7f3ed"/>
+    <path d="M26 61c8-8 17-8 26 0 8-8 17-8 25 0 4-3 8-4 12-3" fill="none" stroke="#d8aa54" stroke-linecap="round" stroke-width="4.5"/>
+    <path d="M41 43c-4-6 4-7 0-13m15 13c-4-6 4-7 0-13m15 13c-4-6 4-7 0-13" fill="none" stroke="#f7f3ed" stroke-linecap="round" stroke-width="2.8"/>
+  </g>
+  <text x="130" y="65" fill="#1a1512" font-family="Georgia, 'Times New Roman', serif" font-size="43" font-weight="700">MessBuzz</text>
+  <path d="M133 77h335" stroke="#c4933a" stroke-width="1.8"/>
+  <text x="136" y="101" fill="#756c60" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="3.5">COLLEGE MESS</text>
+</svg>

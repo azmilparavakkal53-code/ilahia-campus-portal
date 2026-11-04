@@ -34,8 +34,10 @@ To deploy a demo:
 3. Select render.yaml. In Render's private environment-variable prompt, enter
    ADMIN_ID and a unique ADMIN_PASSWORD.
 4. Enter CAMPUS_ACCOUNTS_JSON as one JSON object. It must contain student,
-   teacher and hod accounts for every campus key below. Each account needs a
-   unique id and a strong password; displayName is optional.
+   teacher and hod accounts for every campus key below. Add a security account
+   for every campus under the `security` key. Each account needs a unique ID and
+   strong password; displayName is optional. Security sign-in remains disabled
+   in production for any campus without a configured account.
 5. Keep the generated GATEPASS_CODE_SECRET. Do not commit credentials or
    secret values to GitHub.
 6. Deploy and open the HTTPS URL Render provides.
@@ -82,6 +84,13 @@ categories. The backend validates orders against the schedule and verifies
 the provider payment signature before recording a receipt. Do not add test
 or guessed fee amounts to a public deployment.
 
+MessBuzz online canteen checkout uses the same RAZORPAY_KEY_ID and
+RAZORPAY_KEY_SECRET. It calculates the order amount from the server-side menu
+and adds an order to the kitchen queue only after Razorpay reports a captured,
+signature-verified payment. Pay-at-counter remains available without gateway
+credentials. Configure and verify Razorpay test-mode credentials before using
+online checkout; never put the key secret in browser code or source control.
+
 Skill Learner cash payout additionally requires Razorpay Route and verified
 provider-linked accounts. Without those approvals and mappings, users can
 coordinate terms in the private portal chat; the app must not collect card
@@ -90,11 +99,9 @@ or bank credentials in chat.
 GATEPASS SECURITY BOUNDARY
 -------------------------
 
-Gate-pass requests are routed to HOD review. Approved passes are shown in the
-requester's portal using a short-lived rotating verification code; the code
-can be checked once by the authorized gate-pass workflow. A web page cannot
-prevent screenshots. Short expiry and server-side verification reduce reuse
-of an old capture, but do not make a screen physically uncopyable.
+Gate-pass requests are routed to HOD review. Approved passes are shown in the requester's portal as a rotating QR. Campus security signs in on the assigned campus device; the HttpOnly security session is remembered for up to 30 days and can be signed out at the end of a shift. The QR rotates every 30 seconds, is accepted only by the signed-in campus security account, and a successful scan records the student, destination, purpose and travel times, then invalidates the pass. It expires after 10 hours from approval or at the approved return time, whichever comes first. A browser cannot block screenshots or sharing; short-lived codes plus one-scan server validation reduce reuse but cannot prevent someone from showing a still-current capture.
+
+Local-only demo security login: use `ICET-SEC-001` and password `security123` for the ICET demo. Other campuses use their prefix followed by `-SEC-001`. Never use these defaults in a public deployment. Production security accounts belong under `CAMPUS_ACCOUNTS_JSON.security` and must be assigned by the institution.
 
 The office can use the protected admin backup/restore workflow. Store exported
 backups privately because they contain portal records and uploaded documents.
