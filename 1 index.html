@@ -5540,8 +5540,16 @@
             academicBotMemory.teacher.length = 0;
             const studentMessages = document.getElementById('studentChatMessages');
             const teacherMessages = document.getElementById('teacherChatMessages');
-            if (studentMessages) studentMessages.innerHTML = '<div id="studentChatWelcome" class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">Hi! I’m ClassBot. Ask about syllabus topics, assignments, revision, and study questions. Never send sign-in details.</div>';
-            if (teacherMessages) teacherMessages.innerHTML = '<div id="teacherChatWelcome" class="bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs">Hi! I’m FacultyBot. Ask about lesson planning, assessments, practical activities, and shared academic material. Never send sign-in details.</div>';
+            const resetChat = (container, id, greeting) => {
+                if (!container) return;
+                const welcome = document.createElement('div');
+                welcome.id = id;
+                welcome.className = 'bg-white text-slate-900 p-2.5 rounded-xl rounded-tl-none max-w-[85%] border border-slate-200 shadow-xs';
+                welcome.textContent = greeting;
+                container.replaceChildren(welcome);
+            };
+            resetChat(studentMessages, 'studentChatWelcome', 'Hi! I’m ClassBot. Ask about syllabus topics, assignments, revision, and study questions. Never send sign-in details.');
+            resetChat(teacherMessages, 'teacherChatWelcome', 'Hi! I’m FacultyBot. Ask about lesson planning, assessments, practical activities, and shared academic material. Never send sign-in details.');
             const studentInput = document.getElementById('studentChatInput');
             const teacherInput = document.getElementById('teacherChatInput');
             if (studentInput) studentInput.value = '';
