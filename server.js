@@ -825,7 +825,8 @@ function serveStatic(req, res, pathname) {
   }
   const extension = path.extname(file).toLowerCase();
   const type = extension === '.html' ? 'text/html; charset=utf-8' : extension === '.txt' ? 'text/plain; charset=utf-8' : extension === '.js' ? 'text/javascript; charset=utf-8' : extension === '.webmanifest' ? 'application/manifest+json; charset=utf-8' : ['.jpg', '.jpeg'].includes(extension) ? 'image/jpeg' : extension === '.png' ? 'image/png' : extension === '.webp' ? 'image/webp' : extension === '.svg' ? 'image/svg+xml; charset=utf-8' : 'application/octet-stream';
-  res.writeHead(200, { 'Content-Type': type, 'X-Content-Type-Options': 'nosniff' });
+  const refreshableShell = ['/', '/1 index.html', '/index.html', '/sw.js'].includes(requested);
+  res.writeHead(200, { 'Content-Type': type, 'X-Content-Type-Options': 'nosniff', ...(refreshableShell ? { 'Cache-Control': 'no-cache, no-store, must-revalidate' } : {}) });
   fs.createReadStream(file).pipe(res);
 }
 
@@ -841,7 +842,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-campus-login-gatepass-v13' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-campus-login-gatepass-v14' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
