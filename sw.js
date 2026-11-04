@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ilahia-campus-shell-v13';
-const APP_SHELL = ['/', '/canteen.html', '/manifest.webmanifest', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/ilahia-ecosystem-logo.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg'];
+const CACHE_NAME = 'ilahia-campus-shell-v14';
+const APP_SHELL = ['/', '/canteen.html', '/manifest.webmanifest', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-180.png', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/ilahia-ecosystem-logo.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(() => undefined).then(() => self.skipWaiting()));
