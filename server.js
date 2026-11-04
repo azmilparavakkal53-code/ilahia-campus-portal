@@ -26,6 +26,7 @@ const CAMPUS_LIFE_FILE = path.join(DATA_DIR, 'campus-life.json');
 const CERTIFICATES_FILE = path.join(DATA_DIR, 'certificates.json');
 const CANTEEN_ORDERS_FILE = path.join(DATA_DIR, 'canteen-orders.json');
 const CANTEEN_PAYMENTS_FILE = path.join(DATA_DIR, 'canteen-payments.json');
+const FEEDBACK_FORMS_FILE = path.join(DATA_DIR, 'student-feedback-forms.json');
 const PORTAL_BACKUP_DIR = path.join(DATA_DIR, 'backups');
 const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'ai-knowledge.json': DB_FILE,
@@ -42,7 +43,8 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'campus-life.json': CAMPUS_LIFE_FILE,
   'certificates.json': CERTIFICATES_FILE,
   'canteen-orders.json': CANTEEN_ORDERS_FILE,
-  'canteen-payments.json': CANTEEN_PAYMENTS_FILE
+  'canteen-payments.json': CANTEEN_PAYMENTS_FILE,
+  'student-feedback-forms.json': FEEDBACK_FORMS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
@@ -122,7 +124,7 @@ if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(AI_DELETED_IDS_FILE)) fs.writeFileSync(AI_DELETED_IDS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(LEAVE_REQUESTS_FILE)) fs.writeFileSync(LEAVE_REQUESTS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(GATEPASSES_FILE)) fs.writeFileSync(GATEPASSES_FILE, '[]\n', 'utf8');
-for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE, SKILL_PAYMENTS_FILE, SKILL_VERIFICATIONS_FILE, FEE_PAYMENTS_FILE, CERTIFICATES_FILE, CANTEEN_ORDERS_FILE, CANTEEN_PAYMENTS_FILE]) {
+for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE, SKILL_PAYMENTS_FILE, SKILL_VERIFICATIONS_FILE, FEE_PAYMENTS_FILE, CERTIFICATES_FILE, CANTEEN_ORDERS_FILE, CANTEEN_PAYMENTS_FILE, FEEDBACK_FORMS_FILE]) {
   if (!fs.existsSync(file)) fs.writeFileSync(file, '[]\n', 'utf8');
 }
 if (!fs.existsSync(CAMPUS_LIFE_FILE)) fs.writeFileSync(CAMPUS_LIFE_FILE, '{"appointments":[],"lostFound":[],"maintenance":[],"events":[],"alerts":[],"rsvps":[],"eventCheckins":[],"placements":[],"applications":[],"progress":[],"counselling":[],"alumniMentors":[],"mentorshipRequests":[],"busRoutes":[],"busTracking":[]}\n', 'utf8');
@@ -693,11 +695,11 @@ function validatePortalBackup(backup) {
     throw Object.assign(new Error('This is not a supported Ilahia portal backup.'), { status: 400 });
   }
   const expectedStores = Object.keys(PORTAL_BACKUP_STORE_FILES);
-  const optionalStores = ['certificates.json', 'skill-learning-verifications.json', 'canteen-payments.json'];
+  const optionalStores = ['certificates.json', 'skill-learning-verifications.json', 'canteen-payments.json', 'student-feedback-forms.json'];
   if (expectedStores.some(name => !Object.hasOwn(backup.stores, name) && !optionalStores.includes(name)) || Object.keys(backup.stores).some(name => !expectedStores.includes(name))) {
     throw Object.assign(new Error('The backup is missing required data or contains an unsupported data file.'), { status: 400 });
   }
-  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [], 'skill-learning-verifications.json': backup.stores['skill-learning-verifications.json'] || [], 'canteen-payments.json': backup.stores['canteen-payments.json'] || [] };
+  const stores = { ...backup.stores, 'certificates.json': backup.stores['certificates.json'] || [], 'skill-learning-verifications.json': backup.stores['skill-learning-verifications.json'] || [], 'canteen-payments.json': backup.stores['canteen-payments.json'] || [], 'student-feedback-forms.json': backup.stores['student-feedback-forms.json'] || [] };
   for (const name of expectedStores) {
     const value = stores[name];
     const isArrayStore = name !== 'ai-knowledge-sync-status.json' && name !== 'campus-life.json';
@@ -746,7 +748,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-180.png', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/assets/icons/app-icon-gold-leaf.svg', '/assets/icons/app-icon-gold-leaf-180.png', '/assets/icons/app-icon-gold-leaf-192.png', '/assets/icons/app-icon-gold-leaf-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/app-icon.svg', '/assets/icons/app-icon-180.png', '/assets/icons/app-icon-192.png', '/assets/icons/app-icon-512.png', '/assets/icons/app-icon-gold-leaf.svg', '/assets/icons/app-icon-gold-leaf-180.png', '/assets/icons/app-icon-gold-leaf-192.png', '/assets/icons/app-icon-gold-leaf-512.png', '/assets/icons/ecosystem-launch-20261104.svg', '/assets/icons/ecosystem-launch-20261104-180.png', '/assets/icons/ecosystem-launch-20261104-192.png', '/assets/icons/ecosystem-launch-20261104-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -884,6 +886,67 @@ const server = http.createServer(async (req, res) => {
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
       sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
+    }
+    if (req.method === 'GET' && pathname === '/api/session') {
+      const session = getSession(req);
+      if (!session) { sendJson(res, 401, { error: 'Sign in to your campus account.' }); return; }
+      sendJson(res, 200, { ok: true, role: session.role, userId: session.userId, displayName: session.displayName, campusKey: session.campusKey || null });
+      return;
+    }
+    if (req.method === 'GET' && pathname === '/api/public/news') {
+      const campusKey = String(url.searchParams.get('campusKey') || 'all');
+      if (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
+      const data = readCampusLife(), visible = item => item.campusKey === campusKey || item.campusKey === 'all';
+      const items = [
+        ...data.alerts.filter(item => item.status === 'active' && visible(item)).map(item => ({ id: item.id, type: 'alert', title: item.title, details: item.details, location: item.location || '', createdAt: item.createdAt })),
+        ...data.events.filter(item => item.status === 'published' && visible(item) && (!item.date || item.date >= campusLocalDate())).map(item => ({ id: item.id, type: item.type || 'event', title: item.title, details: item.details, date: item.date || '', location: item.location || '', createdAt: item.createdAt }))
+      ].slice(0, 12);
+      sendJson(res, 200, { items }, { 'Cache-Control': 'public, max-age=60' });
+      return;
+    }
+    if (pathname === '/api/feedback/forms' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || !['student', 'teacher', 'hod', 'admin'].includes(session.role)) { sendJson(res, 401, { error: 'Sign in to view campus feedback forms.' }); return; }
+      const campusKey = session.role === 'admin' ? String(url.searchParams.get('campusKey') || 'icet') : session.campusKey;
+      if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
+      const forms = readJsonArray(FEEDBACK_FORMS_FILE).filter(item => item.campusKey === campusKey && item.status === 'published');
+      if (session.role === 'student') {
+        const items = forms.map(form => {
+          const response = (form.responses || []).find(item => item.studentId === session.userId);
+          const { responses, ...safeForm } = form;
+          return { ...safeForm, state: response ? 'submitted' : 'pending' };
+        });
+        sendJson(res, 200, { items }); return;
+      }
+      const visibleForms = forms.filter(form => session.role !== 'teacher' || form.teacherId === session.userId)
+        .map(form => ({ ...form, responseCount: (form.responses || []).length }));
+      sendJson(res, 200, { items: visibleForms }); return;
+    }
+    if (pathname === '/api/feedback/forms' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'teacher') { sendJson(res, 401, { error: 'Teacher sign-in is required to publish a student survey.' }); return; }
+      const body = await readJson(req), title = safeText(body.title, 120), description = safeText(body.description, 500);
+      const questions = Array.isArray(body.questions) ? body.questions.map(question => safeText(question, 240)).filter(Boolean).slice(0, 8) : [];
+      if (title.length < 3 || !questions.length) { sendJson(res, 400, { error: 'Add a survey title and at least one question.' }); return; }
+      if (!Array.isArray(body.questions) || questions.length !== body.questions.length || body.questions.length > 8) { sendJson(res, 400, { error: 'Each question must contain text, with at most eight questions.' }); return; }
+      const forms = readJsonArray(FEEDBACK_FORMS_FILE);
+      const form = { id: crypto.randomUUID(), campusKey: session.campusKey, teacherId: session.userId, teacherName: safeText(session.displayName, 60) || 'Teacher', title, description, questions, status: 'published', createdAt: new Date().toISOString(), responses: [] };
+      forms.unshift(form); writeJsonArray(FEEDBACK_FORMS_FILE, forms); sendJson(res, 201, { id: form.id, title: form.title }); return;
+    }
+    const feedbackResponseRoute = pathname.match(/^\/api\/feedback\/forms\/([a-f0-9-]+)\/responses$/i);
+    if (feedbackResponseRoute && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'student') { sendJson(res, 401, { error: 'Student sign-in is required to submit survey feedback.' }); return; }
+      const body = await readJson(req), forms = readJsonArray(FEEDBACK_FORMS_FILE), form = forms.find(item => item.id === feedbackResponseRoute[1] && item.campusKey === session.campusKey && item.status === 'published');
+      if (!form) { sendJson(res, 404, { error: 'This campus feedback form is no longer available.' }); return; }
+      if (!Array.isArray(body.answers) || body.answers.length !== form.questions.length) { sendJson(res, 400, { error: 'Please answer every survey question.' }); return; }
+      const answers = body.answers.map(answer => safeText(answer, 2000));
+      if (answers.some(answer => !answer)) { sendJson(res, 400, { error: 'Please answer every survey question.' }); return; }
+      const response = { studentId: session.userId, studentName: safeText(session.displayName, 60) || 'Student', answers, submittedAt: new Date().toISOString() };
+      const previous = (form.responses || []).findIndex(item => item.studentId === session.userId);
+      form.responses = Array.isArray(form.responses) ? form.responses : [];
+      if (previous >= 0) form.responses[previous] = response; else form.responses.push(response);
+      writeJsonArray(FEEDBACK_FORMS_FILE, forms); sendJson(res, 200, { ok: true, submittedAt: response.submittedAt }); return;
     }
     if (pathname === '/api/security/session/demo-info' && req.method === 'GET') {
       const localDemoMode = !REQUIRE_CONFIGURED_ACCOUNTS && !suppliedCampusAccounts;

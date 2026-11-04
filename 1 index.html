@@ -77,6 +77,13 @@
         #collegeSwitcherPanel .college-tab-btn { border:1px solid #29425e; border-radius:.75rem; }
         #collegeSwitcherPanel .college-tab-btn:hover { transform:translateX(2px); }
         #campusMapFrame, #crowdHeatMap { border-radius:1rem; overflow:hidden; }
+        #campusNewsTicker { background:#10243c; color:#fff; }
+        #campusNewsViewport { overflow:hidden; min-width:0; mask-image:linear-gradient(90deg,transparent,#000 2%,#000 98%,transparent); }
+        #campusNewsTrack { display:flex; width:max-content; animation:campus-news-scroll 42s linear infinite; }
+        #campusNewsTrack.paused, #campusNewsTicker:hover #campusNewsTrack, #campusNewsTicker:focus-within #campusNewsTrack { animation-play-state:paused; }
+        .campus-news-item { display:inline-flex; align-items:center; gap:.65rem; padding:0 1.8rem; white-space:nowrap; font-size:.8rem; }
+        @keyframes campus-news-scroll { to { transform:translateX(-50%); } }
+        @media (prefers-reduced-motion:reduce) { #campusNewsTrack { animation:none; width:100%; flex-wrap:wrap; } }
         @media (max-width:767px) {
             #mainNav > div { padding-left:1rem; padding-right:1rem; }
             #collegeContent > header { min-height:300px; padding-top:3rem; padding-bottom:3rem; }
@@ -102,6 +109,11 @@
             </div>
         </div>
     </header>
+    <section id="campusNewsTicker" class="flex items-center gap-3 border-b border-slate-700 px-3 py-3 sm:px-5" aria-label="Campus news and important updates">
+        <div class="flex shrink-0 items-center gap-2 rounded-md bg-rose-600 px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider"><span class="h-2 w-2 animate-pulse rounded-full bg-white"></span>Campus news</div>
+        <div id="campusNewsViewport" class="flex-1"><div id="campusNewsTrack" aria-live="polite"><span class="campus-news-item">Loading important campus updates…</span></div></div>
+        <button id="campusNewsPause" type="button" onclick="toggleCampusNewsTicker()" class="shrink-0 rounded-md border border-slate-500 px-2.5 py-2 text-[10px] font-semibold text-white hover:bg-slate-800" aria-label="Pause scrolling news">Pause</button>
+    </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
             <aside>
@@ -642,6 +654,10 @@
             </div>
             
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <section id="studentFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-clipboard-question mr-2 text-violet-700"></i>Student feedback &amp; surveys</h4><p class="mt-1 text-[11px] text-slate-500">Complete surveys released by your teachers.</p></div><button type="button" onclick="loadStudentFeedback()" class="text-xs font-semibold text-violet-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
+                    <div id="studentFeedbackList" class="space-y-3" aria-live="polite"><p class="text-slate-500">Loading surveys…</p></div>
+                </section>
                 <section id="studentLeaveInbox" class="hidden bg-white p-5 rounded-xl border border-blue-200 shadow-xs">
                     <div class="flex justify-between items-center gap-3 mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-envelope-open-text text-blue-700 mr-2"></i>My Leave Requests</h4><button onclick="loadStudentLeaveRequests()" class="text-blue-700 text-xs font-semibold"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
                     <div id="studentLeaveRequestList" class="space-y-3"><p class="text-slate-500">Sign in to see your request updates.</p></div>
@@ -760,7 +776,7 @@
                     <div class="mx-auto max-w-xl">
                         <div class="mb-4 flex items-center justify-between"><div><h4 class="text-lg font-bold text-slate-900">My Digital Student ID</h4><p class="text-xs text-slate-500">Your signed-in portal identity</p></div><button onclick="closeStudentDigitalId()" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700"><i class="fa-solid fa-arrow-left mr-1"></i>Back to portal</button></div>
                         <article class="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-xl">
-                            <div class="flex items-center justify-between gap-3 bg-gradient-to-r from-blue-950 via-blue-800 to-cyan-700 p-5 text-white"><div class="flex items-center gap-3"><img src="/assets/icons/app-icon-gold-leaf.svg" alt="Ilahia Ecosystem" class="h-11 w-11 rounded-lg bg-white p-1 object-contain" onerror="this.classList.add('hidden')"><div><p class="text-[9px] font-bold uppercase tracking-[.2em] text-blue-100">Ilahia Campus Portal</p><h5 id="digitalIdCampusName" class="mt-1 text-sm font-bold">Student Institute</h5></div></div><i class="fa-solid fa-id-card text-3xl text-cyan-100"></i></div>
+                            <div class="flex items-center justify-between gap-3 bg-gradient-to-r from-blue-950 via-blue-800 to-cyan-700 p-5 text-white"><div class="flex items-center gap-3"><img src="/assets/icons/ecosystem-launch-20261104.svg" alt="Ilahia Ecosystem" class="h-11 w-11 rounded-lg bg-white p-1 object-contain" onerror="this.classList.add('hidden')"><div><p class="text-[9px] font-bold uppercase tracking-[.2em] text-blue-100">Ilahia Campus Portal</p><h5 id="digitalIdCampusName" class="mt-1 text-sm font-bold">Student Institute</h5></div></div><i class="fa-solid fa-id-card text-3xl text-cyan-100"></i></div>
                             <div class="flex items-center gap-4 p-5"><div id="digitalIdAvatar" class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-xl font-black text-blue-900">ST</div><div class="min-w-0"><p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Student</p><h6 id="digitalIdStudentName" class="truncate text-lg font-bold text-slate-900">Student</h6><p class="mt-1 text-[10px] text-slate-500">Student login ID</p><p id="digitalIdStudentNumber" class="font-mono text-sm font-bold tracking-wide text-blue-900">—</p></div></div>
                             <div class="grid grid-cols-2 gap-3 border-t border-slate-100 bg-slate-50 p-5"><div><p class="text-[9px] font-bold uppercase tracking-wide text-slate-500">Portal status</p><p class="mt-1 text-xs font-bold text-emerald-700"><i class="fa-solid fa-circle-check mr-1"></i>Signed in</p></div><div><p class="text-[9px] font-bold uppercase tracking-wide text-slate-500">Issued for this session</p><p id="digitalIdIssuedDate" class="mt-1 text-xs font-semibold text-slate-800">—</p></div></div>
                             <p class="border-t border-amber-200 bg-amber-50 p-3 text-[10px] leading-relaxed text-amber-900"><strong>Project demo ID.</strong> This card displays your portal account details; it is not an official college identity document and cannot be used for campus access or attendance verification.</p>
@@ -951,7 +967,7 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via University Records</span>
-                <button onclick="closePortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+                <button onclick="logoutPortalSession()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED CLASSBOT WIDGET INSIDE STUDENT DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -1034,6 +1050,16 @@
                         </div>
                     </div>
                 </div>
+                <section id="teacherFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
+                    <div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-square-poll-vertical mr-2 text-violet-700"></i>Student feedback surveys</h4><p class="mt-1 text-[11px] text-slate-500">Release a survey to students at your selected campus and review submitted responses.</p></div>
+                    <form onsubmit="publishTeacherFeedback(event)" class="grid grid-cols-1 gap-3 rounded-lg bg-violet-50 p-4 sm:grid-cols-2">
+                        <label class="text-xs font-semibold">Survey title<input id="teacherFeedbackTitle" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="e.g. Course progress check-in"></label>
+                        <label class="text-xs font-semibold">Short note for students<input id="teacherFeedbackDescription" maxlength="500" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="Why you are collecting feedback"></label>
+                        <label class="text-xs font-semibold sm:col-span-2">Questions <span class="font-normal text-slate-500">(one per line, up to 8)</span><textarea id="teacherFeedbackQuestions" required maxlength="2000" rows="4" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="What topic needs more explanation?&#10;What is working well in class?"></textarea></label>
+                        <div class="sm:col-span-2"><button id="teacherFeedbackPublish" class="rounded-lg bg-violet-700 px-4 py-2 text-xs font-bold text-white hover:bg-violet-800">Publish survey</button><span id="teacherFeedbackMessage" class="ml-3 text-xs text-slate-600" aria-live="polite"></span></div>
+                    </form>
+                    <div id="teacherFeedbackList" class="mt-4 space-y-3" aria-live="polite"><p class="text-slate-500">Your surveys and responses will appear here.</p></div>
+                </section>
                 <section id="teacherSkillVerificationSection" class="hidden rounded-xl border border-blue-200 bg-white p-5 shadow-sm">
                     <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-user-check mr-2 text-blue-700"></i>Skill Learner verification requests</h4><p class="mt-1 text-[10px] text-slate-500">Review students’ evidence for skills they want to teach. You can verify requests from your institute only.</p></div><button type="button" onclick="loadTeacherSkillVerificationQueue()" class="rounded-lg border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
                     <div id="teacherSkillVerificationList" class="space-y-3"><p class="text-slate-500">Sign in as a teacher to review requests.</p></div>
@@ -1231,7 +1257,7 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via College Faculty Records</span>
-                <button onclick="closePortalModal()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
+                <button onclick="logoutPortalSession()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED FACULTYBOT WIDGET INSIDE TEACHER DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -3938,6 +3964,50 @@
             return `<article class="border border-slate-200 rounded-lg p-3 bg-white"><div class="flex flex-wrap justify-between gap-2"><div><strong>${escapeHTML(item.subject)}</strong><span class="ml-2 text-[10px] text-slate-500">${escapeHTML(item.studentId)} · ${escapeHTML(new Date(item.createdAt).toLocaleString())}</span></div><span class="px-2 py-1 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold">${escapeHTML(item.statusLabel)}</span></div><p class="mt-2 whitespace-pre-wrap text-slate-700">${escapeHTML(item.reason)}</p><ol class="mt-2 space-y-1 list-disc list-inside">${history}</ol>${action ? `<div class="mt-3">${action}</div>` : ''}</article>`;
         }
 
+        async function loadStudentFeedback() {
+            const list = document.getElementById('studentFeedbackList'); if (!list) return;
+            list.innerHTML = '<p class="text-slate-500">Loading surveys…</p>';
+            try {
+                const response = await fetch('/api/feedback/forms', { cache: 'no-store' }), data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || 'Could not load surveys.');
+                const items = data.items || [];
+                list.innerHTML = items.length ? items.map(form => `<article class="rounded-lg border ${form.state === 'pending' ? 'border-amber-200 bg-amber-50/50' : 'border-emerald-200 bg-emerald-50/40'} p-4"><div class="flex flex-wrap items-start justify-between gap-2"><div><h5 class="font-bold text-slate-900">${escapeHTML(form.title)}</h5><p class="mt-1 text-[10px] text-slate-500">From ${escapeHTML(form.teacherName || 'your teacher')} · ${escapeHTML(new Date(form.createdAt).toLocaleDateString())}</p></div><span class="rounded-full px-2.5 py-1 text-[10px] font-bold ${form.state === 'pending' ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900'}">${form.state === 'pending' ? 'Pending survey' : 'Submitted'}</span></div>${form.description ? `<p class="mt-2 text-xs text-slate-700">${escapeHTML(form.description)}</p>` : ''}${form.state === 'pending' ? `<form class="mt-3 space-y-3" onsubmit="submitStudentFeedback(event,'${form.id}')">${(form.questions || []).map((question,index) => `<label class="block text-xs font-semibold text-slate-700">${index + 1}. ${escapeHTML(question)}<textarea name="answer" required maxlength="2000" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="Your answer"></textarea></label>`).join('')}<div class="flex flex-wrap items-center gap-3"><button class="rounded-lg bg-violet-700 px-4 py-2 text-xs font-bold text-white hover:bg-violet-800">Submit feedback</button><span class="text-xs text-slate-600" aria-live="polite"></span></div></form>` : '<p class="mt-3 text-[11px] font-semibold text-emerald-800">Thanks — your feedback has been recorded.</p>'}</article>`).join('') : '<p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-600">No pending surveys from your teachers right now.</p>';
+            } catch (error) { list.innerHTML = `<p class="rounded-lg bg-rose-50 p-3 text-xs text-rose-800">${escapeHTML(error.message || 'Sign in again to view surveys.')}</p>`; }
+        }
+
+        async function submitStudentFeedback(event, formId) {
+            event.preventDefault(); const form = event.currentTarget, button = form.querySelector('button'), status = form.querySelector('[aria-live="polite"]');
+            button.disabled = true; button.textContent = 'Submitting…';
+            try {
+                const answers = [...form.querySelectorAll('textarea[name="answer"]')].map(field => field.value.trim());
+                const response = await fetch(`/api/feedback/forms/${encodeURIComponent(formId)}/responses`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers }) });
+                const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not submit feedback.');
+                await loadStudentFeedback();
+            } catch (error) { status.textContent = error.message || 'Could not submit feedback.'; status.className = 'text-xs text-rose-700'; button.disabled = false; button.textContent = 'Submit feedback'; }
+        }
+
+        async function publishTeacherFeedback(event) {
+            event.preventDefault(); const form = event.currentTarget, message = document.getElementById('teacherFeedbackMessage'), button = document.getElementById('teacherFeedbackPublish');
+            const questions = document.getElementById('teacherFeedbackQuestions').value.split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+            if (!questions.length || questions.length > 8) { message.textContent = 'Enter 1–8 questions, one on each line.'; message.className = 'ml-3 text-xs text-rose-700'; return; }
+            button.disabled = true; button.textContent = 'Publishing…';
+            try {
+                const response = await fetch('/api/feedback/forms', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: document.getElementById('teacherFeedbackTitle').value, description: document.getElementById('teacherFeedbackDescription').value, questions }) });
+                const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not publish survey.');
+                form.reset(); message.textContent = 'Survey released to students in your campus.'; message.className = 'ml-3 text-xs text-emerald-800'; await loadTeacherFeedback();
+            } catch (error) { message.textContent = error.message || 'Could not publish survey.'; message.className = 'ml-3 text-xs text-rose-700'; }
+            finally { button.disabled = false; button.textContent = 'Publish survey'; }
+        }
+
+        async function loadTeacherFeedback() {
+            const list = document.getElementById('teacherFeedbackList'); if (!list) return;
+            try {
+                const response = await fetch('/api/feedback/forms', { cache: 'no-store' }), data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || 'Could not load surveys.');
+                list.innerHTML = data.items?.length ? data.items.map(form => `<article class="rounded-lg border border-slate-200 bg-white p-4"><div class="flex flex-wrap items-start justify-between gap-2"><div><h5 class="font-bold text-slate-900">${escapeHTML(form.title)}</h5><p class="mt-1 text-[10px] text-slate-500">${(form.questions || []).length} question(s) · Published ${escapeHTML(new Date(form.createdAt).toLocaleDateString())}</p></div><span class="rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-bold text-violet-900">${Number(form.responseCount || 0)} response(s)</span></div>${form.description ? `<p class="mt-2 text-xs text-slate-700">${escapeHTML(form.description)}</p>` : ''}${form.responses?.length ? `<details class="mt-3 rounded-lg bg-slate-50 p-3"><summary class="cursor-pointer text-xs font-semibold text-violet-900">Review student responses</summary><div class="mt-3 space-y-3">${form.responses.map(item => `<div class="border-t border-slate-200 pt-2"><p class="text-xs font-bold text-slate-800">${escapeHTML(item.studentName || 'Student')}</p>${(form.questions || []).map((question,index) => `<p class="mt-1 text-[11px] text-slate-700"><strong>${index + 1}. ${escapeHTML(question)}</strong><br>${escapeHTML(item.answers?.[index] || '')}</p>`).join('')}</div>`).join('')}</div></details>` : ''}</article>`).join('') : '<p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-600">You have not published a survey yet.</p>';
+            } catch (error) { list.innerHTML = `<p class="rounded-lg bg-rose-50 p-3 text-xs text-rose-800">${escapeHTML(error.message || 'Sign in again to manage surveys.')}</p>`; }
+        }
+
         async function loadStudentLeaveRequests() {
             const list = document.getElementById('studentLeaveRequestList');
             if (!list) return;
@@ -4562,6 +4632,7 @@
             currentActiveKey = key; 
             const data = collegeDatabase[key]; 
             if(!data) return; 
+            void loadCampusNewsTicker();
             updateCampusChatContext(key);
             updateCanteenBookingAvailability(true);
             if (!document.getElementById('quickActionPalette')?.classList.contains('hidden')) renderQuickActionResults();
@@ -5531,22 +5602,68 @@
             document.getElementById('staffGatepassButton')?.classList.add('hidden');
             document.getElementById('mentorGatepassButton')?.classList.add('hidden');
             portalCampusInitPromise = initializePortalCampusSelector();
+            void restorePortalSession();
         } 
  
         function closePortalModal() { 
-            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
             closeStudentCampusHub();
             if (campusIssueStatusRefreshTimer) { clearInterval(campusIssueStatusRefreshTimer); campusIssueStatusRefreshTimer = null; }
-            currentSessionRole = null;
-            currentSessionUserId = '';
-            currentSessionCampusKey = '';
-            currentPortalDisplayName = '';
-            aiKnowledgeDatabaseReady = false;
-            aiKnowledgeLoadedForSession = '';
-            clearAcademicBotConversations();
-            void loadAIKnowledgeFromDatabase(true);
             document.getElementById('portalModal').classList.add('hidden'); 
         } 
+
+        async function logoutPortalSession() {
+            try { await fetch('/api/session/logout', { method: 'POST' }); } catch (_) {}
+            closeStudentCampusHub();
+            if (campusIssueStatusRefreshTimer) { clearInterval(campusIssueStatusRefreshTimer); campusIssueStatusRefreshTimer = null; }
+            currentSessionRole = null; currentSessionUserId = ''; currentSessionCampusKey = ''; currentPortalDisplayName = '';
+            aiKnowledgeDatabaseReady = false; aiKnowledgeLoadedForSession = ''; clearAcademicBotConversations();
+            document.getElementById('studentDashboardCard').classList.add('hidden');
+            document.getElementById('teacherDashboardCard').classList.add('hidden');
+            document.getElementById('studentLoginCard').classList.add('hidden');
+            document.getElementById('teacherLoginCard').classList.add('hidden');
+            document.getElementById('portalMenuCard').classList.remove('hidden');
+            document.getElementById('portalModal').classList.add('hidden');
+            void loadAIKnowledgeFromDatabase(true);
+        }
+
+        async function restorePortalSession() {
+            try {
+                await portalCampusInitPromise;
+                const response = await fetch('/api/session', { cache: 'no-store' });
+                if (!response.ok) return false;
+                const session = await response.json();
+                currentSessionRole = session.role; currentSessionUserId = session.userId || '';
+                currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
+                if (session.campusKey && collegeDatabase[session.campusKey]) currentActiveKey = session.campusKey;
+                if (session.role === 'student') {
+                    customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient();
+                    updateAcademicBotGreeting('student', currentPortalDisplayName);
+                    document.getElementById('portalMenuCard').classList.add('hidden');
+                    document.getElementById('studentLoginCard').classList.add('hidden');
+                    document.getElementById('studentDashboardCard').classList.remove('hidden');
+                    void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadStudentFeedback(), loadStudentLeaveRequests(), loadMyGatepasses('student'), loadStudentCertificates(), loadFeeCatalog(), loadCampusLife(), ...(!['school', 'kmlps'].includes(currentSessionCampusKey) ? [loadSkillLearner()] : [])]);
+                } else if (['teacher', 'hod'].includes(session.role)) {
+                    customizeTeacherPortalForCampus(currentSessionCampusKey); updateAcademicBotGreeting('teacher', currentPortalDisplayName);
+                    document.getElementById('staffDashboardTitle').textContent = `${collegeDatabase[currentSessionCampusKey]?.shortName || 'College'} ${session.role === 'hod' ? 'HOD' : 'Teacher'} Portal`;
+                    document.getElementById('staffDashboardWelcome').textContent = `${collegeDatabase[currentSessionCampusKey]?.name || ''} · ${session.role === 'hod' ? 'HOD' : 'Teacher / Mentor'}`;
+                    document.getElementById('portalMenuCard').classList.add('hidden');
+                    document.getElementById('teacherLoginCard').classList.add('hidden');
+                    document.getElementById('teacherDashboardCard').classList.remove('hidden');
+                    document.getElementById('staffGatepassButton')?.classList.toggle('hidden', session.role !== 'hod');
+                    document.getElementById('mentorGatepassButton')?.classList.toggle('hidden', session.role !== 'teacher');
+                    document.getElementById('teacherSkillVerificationSection')?.classList.toggle('hidden', session.role !== 'teacher');
+                    void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(session.role === 'hod' ? [loadHodGatepasses()] : [])]);
+                } else if (session.role === 'admin') {
+                    document.getElementById('portalModal').classList.add('hidden');
+                    document.getElementById('adminModal').classList.remove('hidden');
+                    document.getElementById('adminLoginCard').classList.add('hidden');
+                    document.getElementById('adminDashboardCard').classList.remove('hidden');
+                    updateAdminStats(); loadCampusMetricsIntoForm();
+                    void Promise.allSettled([loadAdminAIKnowledgeDatabase(), loadOfficeLeaveRequests(), loadOfficialSiteSyncStatus(), loadAdminCampusNotices()]);
+                }
+                return true;
+            } catch (_) { return false; }
+        }
 
         function safeGreetingName(value, fallback) {
             const cleaned = String(value || '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 60);
@@ -5722,7 +5839,7 @@
                 document.getElementById('studentLoginCard').classList.add('hidden'); 
                 document.getElementById('studentDashboardCard').classList.remove('hidden'); 
                 if (currentLang !== 'en') translatePage(currentLang);
-                const backgroundLoads = [loadAIKnowledgeFromDatabase(true), loadStudentLeaveRequests(), loadMyGatepasses('student'), loadStudentCertificates(), loadFeeCatalog(), loadCampusLife()];
+                const backgroundLoads = [loadAIKnowledgeFromDatabase(true), loadStudentFeedback(), loadStudentLeaveRequests(), loadMyGatepasses('student'), loadStudentCertificates(), loadFeeCatalog(), loadCampusLife()];
                 if (!['school', 'kmlps'].includes(currentSessionCampusKey)) { toggleSkillOfferTerms(); backgroundLoads.push(loadSkillLearner()); }
                 startCampusIssueStatusRefresh();
                 void Promise.allSettled(backgroundLoads);
@@ -5780,7 +5897,7 @@
                 document.getElementById('staffGatepassInbox')?.classList.add('hidden');
                 document.getElementById('mentorGatepassInbox')?.classList.add('hidden');
                 if (currentLang !== 'en') translatePage(currentLang);
-                void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(result.role === 'hod' ? [loadHodGatepasses()] : []), ...(result.role === 'teacher' ? [loadMentorGatepasses(), loadTeacherSkillVerificationQueue()] : [])]);
+                void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(result.role === 'hod' ? [loadHodGatepasses()] : []), ...(result.role === 'teacher' ? [loadMentorGatepasses(), loadTeacherSkillVerificationQueue()] : [])]);
                 logSystemActivity(`[PORTAL] Faculty ${cid} successfully logged in.`); 
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
@@ -5819,7 +5936,19 @@
             document.getElementById('adminModal').classList.remove('hidden'); 
             document.getElementById('adminLoginCard').classList.remove('hidden'); 
             document.getElementById('adminDashboardCard').classList.add('hidden'); 
-            void loadAdminDemoCredentials();
+            void (async () => {
+                try {
+                    const response = await fetch('/api/session', { cache: 'no-store' });
+                    if (!response.ok) { await loadAdminDemoCredentials(); return; }
+                    const session = await response.json();
+                    if (session.role !== 'admin') { await loadAdminDemoCredentials(); return; }
+                    currentSessionRole = 'admin'; currentSessionUserId = session.userId || '';
+                    document.getElementById('adminLoginCard').classList.add('hidden');
+                    document.getElementById('adminDashboardCard').classList.remove('hidden');
+                    updateAdminStats(); loadCampusMetricsIntoForm();
+                    void Promise.allSettled([loadAdminAIKnowledgeDatabase(), loadOfficeLeaveRequests(), loadOfficialSiteSyncStatus(), loadAdminCampusNotices()]);
+                } catch (_) { await loadAdminDemoCredentials(); }
+            })();
         } 
 
         async function loadAdminDemoCredentials() {
@@ -5846,13 +5975,6 @@
         }
  
         function closeAdminModal() { 
-            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
-            currentSessionRole = null;
-            currentSessionUserId = '';
-            adminAIKnowledgeEntries = [];
-            aiKnowledgeDatabaseReady = false;
-            aiKnowledgeLoadedForSession = '';
-            void loadAIKnowledgeFromDatabase(true);
             document.getElementById('adminModal').classList.add('hidden'); 
         } 
  
@@ -6321,6 +6443,25 @@
     if(event.key==='Escape'&&panel&&panel.style.display==='flex')window.closeCanteenBookingPanel();
   });
 })();
+</script>
+<script>
+        async function loadCampusNewsTicker() {
+            const track = document.getElementById('campusNewsTrack'); if (!track) return;
+            try {
+                const campusKey = typeof currentActiveKey === 'string' ? currentActiveKey : 'icet';
+                const response = await fetch(`/api/public/news?campusKey=${encodeURIComponent(campusKey)}`, { cache: 'no-store' });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || 'Could not load campus news.');
+                const items = data.items || [];
+                const content = items.length ? items.map(item => `<span class="campus-news-item"><span class="rounded bg-rose-500 px-2 py-1 text-[9px] font-extrabold uppercase">${escapeHTML(item.type === 'alert' ? 'Alert' : item.type || 'News')}</span><strong>${escapeHTML(item.title)}</strong><span class="text-blue-100">${escapeHTML(item.details || '')}</span>${item.date ? `<span class="text-amber-200">${escapeHTML(item.date)}</span>` : ''}</span>`).join('') : '<span class="campus-news-item">No active campus news at the moment — check back for official updates.</span>';
+                track.innerHTML = content + content;
+            } catch (_) { track.innerHTML = '<span class="campus-news-item">Campus updates are temporarily unavailable.</span>'; }
+        }
+        function toggleCampusNewsTicker() {
+            const track = document.getElementById('campusNewsTrack'), button = document.getElementById('campusNewsPause'); if (!track || !button) return;
+            const paused = track.classList.toggle('paused'); button.textContent = paused ? 'Resume' : 'Pause'; button.setAttribute('aria-label', paused ? 'Resume scrolling news' : 'Pause scrolling news');
+        }
+        document.addEventListener('DOMContentLoaded', loadCampusNewsTicker);
 </script>
 <script>
         (() => {
