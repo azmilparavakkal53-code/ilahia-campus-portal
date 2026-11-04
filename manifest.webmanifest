@@ -15,6 +15,12 @@
   "theme_color": "#102b4e",
   "icons": [
     {
+      "src": "/assets/icons/ilahia-ecosystem-icon-4k.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
       "src": "/assets/icons/ilahia-ecosystem-icon-v4-180.png",
       "sizes": "180x180",
       "type": "image/png",

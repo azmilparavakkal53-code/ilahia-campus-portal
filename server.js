@@ -81,6 +81,8 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
 // Production already binds to all interfaces; override HOST=127.0.0.1 to keep a local-only session.
 const HOST = process.env.HOST || '0.0.0.0';
 const REQUIRE_CONFIGURED_ACCOUNTS = process.env.NODE_ENV === 'production' || process.env.REQUIRE_CONFIGURED_ACCOUNTS === 'true';
+const PUBLIC_DEMO_LOGIN_ENABLED = process.env.PUBLIC_DEMO_LOGIN_ENABLED === 'true';
+function isExplicitDemoAccount(account) { return /(?:^|[-_])DEMO(?:[-_]|$)/i.test(String(account?.[0] || '')); }
 const TEACHER_ID = process.env.TEACHER_ID || 'FAC-CS-902';
 const TEACHER_PASSWORD = process.env.TEACHER_PASSWORD || 'teacher123';
 const HOD_ID = process.env.HOD_ID || 'FAC-HOD-001';
@@ -793,7 +795,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-icon-v4-180.png', '/assets/icons/ilahia-ecosystem-icon-v4-192.png', '/assets/icons/ilahia-ecosystem-icon-v4-512.png', '/assets/icons/ilahia-ecosystem-wordmark.png']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-icon-v4-180.png', '/assets/icons/ilahia-ecosystem-icon-v4-192.png', '/assets/icons/ilahia-ecosystem-icon-v4-512.png', '/assets/icons/ilahia-ecosystem-icon-4k.svg', '/assets/icons/ilahia-ecosystem-wordmark.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -822,7 +824,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-session-persistence-v7' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-session-persistence-v9' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -882,7 +884,8 @@ const server = http.createServer(async (req, res) => {
         : {};
       sendJson(res, 200, CAMPUS_KEYS.map(campusKey => ({ key: campusKey, name: names[campusKey], accounts: Object.fromEntries(['student', 'teacher', 'hod'].map(role => {
         const legacyPasswordEnv = { student: 'STUDENT_PASSWORD', teacher: 'TEACHER_PASSWORD', hod: 'HOD_PASSWORD' }[role];
-        const allowDemoPassword = localDemoMode && !(campusKey === 'icet' && process.env[legacyPasswordEnv]);
+        const demoPasswordMayBeShown = localDemoMode && !(campusKey === 'icet' && process.env[legacyPasswordEnv]);
+        const allowDemoPassword = demoPasswordMayBeShown || (PUBLIC_DEMO_LOGIN_ENABLED && isExplicitDemoAccount(CAMPUS_ACCOUNTS[campusKey][role]));
         return [role, { id: CAMPUS_ACCOUNTS[campusKey][role][0], ...(allowDemoPassword ? { demoPassword: CAMPUS_ACCOUNTS[campusKey][role][1] } : {}) }];
       })), ...(campusKey === 'icet' ? localAdminDemo : {}) })));
       return;
@@ -1035,8 +1038,9 @@ const server = http.createServer(async (req, res) => {
       const campusKey = String(url.searchParams.get('campusKey') || 'icet');
       if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
       const localDemoMode = !REQUIRE_CONFIGURED_ACCOUNTS && !suppliedCampusAccounts;
-      const demoAccount = localDemoMode ? CAMPUS_ACCOUNTS[campusKey]?.security : null;
-      sendJson(res, 200, localDemoMode && demoAccount?.[0] && demoAccount?.[1]
+      const demoAccount = (localDemoMode || PUBLIC_DEMO_LOGIN_ENABLED) ? CAMPUS_ACCOUNTS[campusKey]?.security : null;
+      const demoMayBeShown = localDemoMode || (PUBLIC_DEMO_LOGIN_ENABLED && isExplicitDemoAccount(demoAccount));
+      sendJson(res, 200, demoMayBeShown && demoAccount?.[0] && demoAccount?.[1]
         ? { demoEnabled: true, campusKey, id: demoAccount[0], password: demoAccount[1] }
         : { demoEnabled: false });
       return;

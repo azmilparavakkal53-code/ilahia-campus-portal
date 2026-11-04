@@ -10,6 +10,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PUBLIC_DEMO_LOGIN_ENABLED
+        value: "true"
       - key: CAMPUS_ACCOUNTS_JSON
         sync: false
       - key: ADMIN_ID

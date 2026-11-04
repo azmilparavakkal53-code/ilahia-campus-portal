@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ilahia Campus">
-    <link rel="manifest" href="/manifest.webmanifest?v=25">
+    <link rel="manifest" href="/manifest.webmanifest?v=27">
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/icons/ilahia-ecosystem-icon-4k.svg">
     <link rel="icon" type="image/png" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><link rel="shortcut icon" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-icon-v4-512.png">
     <link rel="apple-touch-icon" href="/assets/icons/ilahia-ecosystem-icon-v4-180.png">
     <script>
@@ -167,7 +168,6 @@
                     <article class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center"><div class="relative mx-auto mb-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-slate-700 text-sm font-bold text-white"><img src="assets/leadership/trust-naveed-ali.jpg" alt="Portrait of Mr. Naveed Ali" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.remove();this.parentElement.textContent='NA'"></div><p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Subcommittee Member · Ilahia College of Pharmacy</p><h3 class="mt-1 text-sm font-bold text-slate-900">Mr. Naveed Ali</h3></article>
                 </div>
                 <div class="flex flex-wrap items-center justify-center gap-2 border-t border-slate-200 bg-slate-50 px-4 py-3 text-center text-xs text-slate-600 sm:px-6">
-                    <span><i class="fa-solid fa-circle-info mr-1 text-blue-700"></i>The locally stored portraits and names are matched to the current official ICET management listing. Roles identify each member’s listed trust, institute, or committee position.</span>
                     <a href="https://icet.ac.in/icet-management/" target="_blank" rel="noopener noreferrer" class="font-semibold text-blue-800 hover:underline">ICET management and institute committees <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
                     <a href="https://ilahiacollegeofpharmacy.com/" target="_blank" rel="noopener noreferrer" class="font-semibold text-blue-800 hover:underline">Pharmacy management <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
                 </div>
@@ -594,7 +594,7 @@
                     <input type="password" id="studentPass" placeholder="Enter your student passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <div id="studentDemoCredentialHint" class="hidden p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
-                    Local demo passcode: <strong id="studentDemoPassword"></strong>
+                    Demo passcode: <strong id="studentDemoPassword"></strong>
                 </div>
                 <button onclick="verifyStudentLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -632,7 +632,7 @@
                     <input type="password" id="teacherPass" placeholder="Enter your staff passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
                 <div id="teacherDemoCredentialHint" class="hidden p-2.5 bg-slate-100 text-slate-800 rounded border border-slate-200 text-[11px]">
-                    Local demo passcode: <strong id="teacherDemoPassword"></strong>
+                    Demo passcode: <strong id="teacherDemoPassword"></strong>
                 </div>
                 <button onclick="verifyTeacherLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -4167,7 +4167,7 @@
                 if (!response.ok || !demo.demoEnabled) return;
                 window.securityDemoCredentials = demo;
                 panel.hidden = false;
-                panel.innerHTML = '<strong>Local demo sign-in · ' + escapeHTML(demo.campusKey.toUpperCase()) + '</strong><p class="mt-1">Security ID: <code>' + escapeHTML(demo.id) + '</code><br>Login code: <code>' + escapeHTML(demo.password) + '</code></p><button type="button" onclick="fillSecurityDemoCredentials()" class="mt-2 rounded-lg border border-amber-400 bg-white px-3 py-2 font-bold">Fill demo login</button>';
+                panel.innerHTML = '<strong>Demo sign-in · ' + escapeHTML(demo.campusKey.toUpperCase()) + '</strong><p class="mt-1">Security ID: <code>' + escapeHTML(demo.id) + '</code><br>Login code: <code>' + escapeHTML(demo.password) + '</code></p><button type="button" onclick="fillSecurityDemoCredentials()" class="mt-2 rounded-lg border border-amber-400 bg-white px-3 py-2 font-bold">Fill demo login</button>';
             } catch { }
         }
         function fillSecurityDemoCredentials() {
@@ -5676,9 +5676,30 @@
         } 
  
         let portalSessionRestorePromise = null;
+        let portalSessionRestoreInProgress = false;
+        const nativePortalFetch = window.fetch.bind(window);
+        window.fetch = async function(input, init = {}) {
+            let requestUrl;
+            try { requestUrl = new URL(input instanceof Request ? input.url : input, window.location.href); }
+            catch { return nativePortalFetch(input, init); }
+            const requestInit = { ...init, credentials: init.credentials || 'same-origin' };
+            const retryInput = input instanceof Request ? input.clone() : input;
+            const response = await nativePortalFetch(input, requestInit);
+            const isPortalApi = requestUrl.origin === window.location.origin && requestUrl.pathname.startsWith('/api/');
+            const isSessionManagement = /^\/api\/session(?:\/|$)/.test(requestUrl.pathname);
+            const isSecurityApi = requestUrl.pathname.startsWith('/api/security/');
+            if (response.status !== 401 || !isPortalApi || isSessionManagement || isSecurityApi || portalSessionRestoreInProgress) return response;
+            const restored = await restorePortalSessionOnce().catch(() => false);
+            if (!restored) return response;
+            return nativePortalFetch(retryInput, requestInit);
+        };
         function restorePortalSessionOnce() {
             if (portalSessionRestorePromise) return portalSessionRestorePromise;
-            portalSessionRestorePromise = restorePortalSession().finally(() => { portalSessionRestorePromise = null; });
+            portalSessionRestoreInProgress = true;
+            portalSessionRestorePromise = restorePortalSession().finally(() => {
+                portalSessionRestorePromise = null;
+                portalSessionRestoreInProgress = false;
+            });
             return portalSessionRestorePromise;
         }
 
