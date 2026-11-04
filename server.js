@@ -880,7 +880,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/security/session' && req.method === 'GET') {
       const session = getSession(req);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Campus security sign-in is required.' }); return; }
-      sendJson(res, 200, { ok: true, displayName: session.displayName, campusKey: session.campusKey, expiresAt: new Date(session.expires).toISOString() });
+      sendJson(res, 200, { ok: true, displayName: session.displayName, campusKey: session.campusKey, expiresAt: new Date(Math.min(session.expires, 8.64e15)).toISOString() });
       return;
     }
     if (pathname === '/api/security/session/login' && req.method === 'POST') {
@@ -892,7 +892,8 @@ const server = http.createServer(async (req, res) => {
       const body = await readJson(req), campusKey = String(body.campusKey || '');
       if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose the campus where you are assigned to work.' }); return; }
       const [accountId, accountPassword, displayName] = CAMPUS_ACCOUNTS[campusKey]?.security || [];
-      if (!accountId || !accountPassword || String(body.id || '').trim() !== accountId || body.password !== accountPassword) {
+      if (!accountId || !accountPassword) { sendJson(res, 503, { error: 'Security sign-in is not configured for this campus yet. Ask the campus administrator to add a security account.' }); return; }
+      if (String(body.id || '').trim().toLowerCase() !== String(accountId).toLowerCase() || String(body.password || '').trim() !== accountPassword) {
         attempts.count++; loginAttemptBuckets.set(ip, attempts); sendJson(res, 401, { error: 'The security ID or password is incorrect.' }); return;
       }
       loginAttemptBuckets.delete(ip);
@@ -1744,7 +1745,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && pathname === '/api/gatepasses/inbox') {
       const session = getSession(req);
       if (!session || session.role !== 'hod') { sendJson(res, 401, { error: 'Sign in as HOD to review campus gate-pass requests.' }); return; }
-      const requests = readGatepasses().filter(item => ['hod_pending', 'pending'].includes(item.status) && item.campusKey === session.campusKey && !(item.requesterRole === 'hod' && item.requesterId === session.userId)).map(item => ({ ...item, statusLabel: 'Waiting for HOD Approval' }));
+      const requests = readGatepasses().filter(item => ['hod_pending', 'pending'].includes(item.status) && item.campusKey === session.campusKey && !(item.requesterRole === 'hod' && item.requesterId === session.userId)).map(item => ({ ...item, statusLabel: item.mentorNote ? 'Mentor recommended · HOD review' : 'Waiting for HOD Approval' }));
       sendJson(res, 200, requests); return;
     }
     const gatepassActionMatch = pathname.match(/^\/api\/gatepasses\/([a-f0-9-]+)\/action$/i);
