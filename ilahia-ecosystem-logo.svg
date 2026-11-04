@@ -1,25 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-labelledby="title desc">
-  <title id="title">Ilahia Ecosystem</title>
-  <desc id="desc">A blue and gold academic emblem with connected leaves beside the Ilahia Ecosystem name.</desc>
-  <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#123b78"/>
-      <stop offset="1" stop-color="#071a36"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f4cf70"/>
-      <stop offset="1" stop-color="#c38a2e"/>
-    </linearGradient>
-  </defs>
-  <g transform="translate(8 8)">
-    <circle cx="62" cy="62" r="57" fill="url(#blue)"/>
-    <circle cx="62" cy="62" r="49" fill="none" stroke="url(#gold)" stroke-width="2.5"/>
-    <path d="M28 76c13-2 23-9 31-22 8 13 18 20 37 22M34 84h56" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
-    <path d="M59 54c-1-15 7-26 23-31 2 15-5 26-23 31Zm-3 8C43 60 35 52 33 38c14 1 22 8 23 24Z" fill="url(#gold)"/>
-    <path d="M61 52v31" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
-    <circle cx="38" cy="97" r="3" fill="#f4cf70"/><circle cx="86" cy="97" r="3" fill="#f4cf70"/>
-  </g>
-  <text x="140" y="77" fill="#102b52" font-family="Georgia, 'Times New Roman', serif" font-size="53" font-weight="700" letter-spacing="1">ILAHIA</text>
-  <path d="M143 91h330" stroke="#c38a2e" stroke-width="2"/>
-  <text x="145" y="119" fill="#34506f" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="6">ECOSYSTEM</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="170" viewBox="0 0 760 170" role="img" aria-labelledby="brandTitle brandDesc">
+<title id="brandTitle">Ilahia Ecosystem</title><desc id="brandDesc">Ilahia Ecosystem wordmark beside its gold E and leaf app icon.</desc>
+<svg x="2" y="5" width="160" height="160" viewBox="0 0 512 512">
+<title id="title">Ilahia Ecosystem E logo with two leaves</title><desc id="desc">A compact gold capital E with two gold leaves growing from its upper-left corner on a deep blue app tile.</desc>
+<defs>
+ <linearGradient id="tile" x1="70" y1="40" x2="444" y2="470" gradientUnits="userSpaceOnUse"><stop stop-color="#19528F"/><stop offset=".5" stop-color="#10396E"/><stop offset="1" stop-color="#071B3D"/></linearGradient>
+ <linearGradient id="gold" x1="151" y1="160" x2="326" y2="354" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0A5"/><stop offset=".42" stop-color="#FFD45E"/><stop offset="1" stop-color="#E99727"/></linearGradient>
+ <linearGradient id="goldSide" x1="315" y1="164" x2="350" y2="355" gradientUnits="userSpaceOnUse"><stop stop-color="#D98A20"/><stop offset="1" stop-color="#A95D18"/></linearGradient>
+ <linearGradient id="leafA" x1="110" y1="80" x2="160" y2="143" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0A5"/><stop offset=".48" stop-color="#FFD45E"/><stop offset="1" stop-color="#E99727"/></linearGradient>
+ <linearGradient id="leafB" x1="130" y1="73" x2="165" y2="141" gradientUnits="userSpaceOnUse"><stop stop-color="#FFE895"/><stop offset=".5" stop-color="#F6BB43"/><stop offset="1" stop-color="#D88520"/></linearGradient>
+ <radialGradient id="shine" cx="0" cy="0" r="1" gradientTransform="matrix(0 219 -219 0 218 60)" gradientUnits="userSpaceOnUse"><stop stop-color="#78B8EC" stop-opacity=".3"/><stop offset="1" stop-color="#78B8EC" stop-opacity="0"/></radialGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="155%"><feDropShadow dx="3" dy="13" stdDeviation="9" flood-color="#03122A" flood-opacity=".45"/></filter>
+</defs>
+<rect x="36" y="36" width="440" height="440" rx="88" fill="url(#tile)"/>
+<rect x="37" y="37" width="438" height="438" rx="87" fill="url(#shine)"/>
+<rect x="49" y="49" width="414" height="414" rx="77" fill="none" stroke="#A9D4F6" stroke-opacity=".19" stroke-width="2"/>
+<!-- Compact clear E: one spine, three shorter arms -->
+<g filter="url(#shadow)" stroke-linejoin="round">
+ <path d="M157 151h42v207h-42z" fill="url(#gold)"/>
+ <path d="M199 151h137l-27 34H199z" fill="url(#gold)"/>
+ <path d="M199 238h101l-26 34H199z" fill="url(#gold)"/>
+ <path d="M199 324h137l-27 34H199z" fill="url(#gold)"/>
+ <path d="M157 151h42v11h-42zM199 151h137l-10 11H199z" fill="#FFF5C7" opacity=".56"/>
+ <path d="M199 238h101l-9 11H199zM199 324h137l-10 11H199z" fill="#FFF3BD" opacity=".48"/>
+ <path d="M199 162v186" stroke="#C98221" stroke-opacity=".33" stroke-width="3"/>
+ <path d="m336 151 11 7v27l-11 1zm-36 87 11 7v27l-11 1zm36 86 11 7v27l-11 1z" fill="url(#goldSide)"/>
+</g>
+<!-- Two leaves branch from one short stem, matching the supplied reference -->
+<path d="M178 153C152 140 129 116 112 91 142 96 164 114 184 145Z" fill="url(#leafA)" stroke="#FFF0B5" stroke-width="2" stroke-linejoin="round"/>
+<path d="M180 153C190 123 214 96 244 81 245 112 224 138 184 153Z" fill="url(#leafB)" stroke="#FFE9A0" stroke-width="2" stroke-linejoin="round"/>
+<path d="M180 153 117 94M181 152 239 85M180 153v14" fill="none" stroke="#FFF9DB" stroke-width="3" stroke-linecap="round" opacity=".9"/></svg>
+<text x="184" y="82" fill="#102b4e" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="800" letter-spacing="-1">Ilahia</text>
+<text x="187" y="120" fill="#247d8b" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="6">ECOSYSTEM</text>
 </svg>
