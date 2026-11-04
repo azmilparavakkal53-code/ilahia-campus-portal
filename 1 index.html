@@ -126,14 +126,14 @@
                     </div>
                     <p class="mb-3 text-xs text-slate-600">Select a campus to open its pages, portals, and map.</p>
                 <div class="grid grid-cols-1 gap-2">
-                <button onclick="switchCollegePage('icet')" id="btn-icet" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-graduation-cap mr-2 text-blue-300"></i>Ilahia College of Engineering &amp; Technology</button>
-                <button onclick="switchCollegePage('arts')" id="btn-arts" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-book-open-reader mr-2 text-blue-300"></i>Ilahia College of Arts &amp; Science</button>
-                <button onclick="switchCollegePage('poly')" id="btn-poly" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-screwdriver-wrench mr-2 text-blue-300"></i>Ilahia Polytechnic College</button>
-                <button onclick="switchCollegePage('law')" id="btn-law" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-scale-balanced mr-2 text-blue-300"></i>Ilahia Law College</button>
-                <button onclick="switchCollegePage('pharmacy')" id="btn-pharmacy" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-prescription-bottle-medical mr-2 text-blue-300"></i>Ilahia College of Pharmacy</button>
-                <button onclick="switchCollegePage('iti')" id="btn-iti" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-bolt mr-2 text-blue-300"></i>Ilahia Private I.T.I.</button>
-                <button onclick="switchCollegePage('school')" id="btn-school" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-child-reaching mr-2 text-blue-300"></i>Ilahia Public School (CBSE)</button>
-                <button onclick="switchCollegePage('kmlps')" id="btn-kmlps" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-school mr-2 text-blue-300"></i>Kavumkara Muslim L.P. School</button>
+                <button onclick="navigateCollegePage('icet')" id="btn-icet" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-graduation-cap mr-2 text-blue-300"></i>Ilahia College of Engineering &amp; Technology</button>
+                <button onclick="navigateCollegePage('arts')" id="btn-arts" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-book-open-reader mr-2 text-blue-300"></i>Ilahia College of Arts &amp; Science</button>
+                <button onclick="navigateCollegePage('poly')" id="btn-poly" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-screwdriver-wrench mr-2 text-blue-300"></i>Ilahia Polytechnic College</button>
+                <button onclick="navigateCollegePage('law')" id="btn-law" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-scale-balanced mr-2 text-blue-300"></i>Ilahia Law College</button>
+                <button onclick="navigateCollegePage('pharmacy')" id="btn-pharmacy" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-prescription-bottle-medical mr-2 text-blue-300"></i>Ilahia College of Pharmacy</button>
+                <button onclick="navigateCollegePage('iti')" id="btn-iti" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-bolt mr-2 text-blue-300"></i>Ilahia Private I.T.I.</button>
+                <button onclick="navigateCollegePage('school')" id="btn-school" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-child-reaching mr-2 text-blue-300"></i>Ilahia Public School (CBSE)</button>
+                <button onclick="navigateCollegePage('kmlps')" id="btn-kmlps" class="college-tab-btn rounded-lg bg-slate-800 px-3 py-3 text-left text-xs sm:text-sm font-medium text-slate-100 hover:bg-blue-800 transition"><i class="fa-solid fa-school mr-2 text-blue-300"></i>Kavumkara Muslim L.P. School</button>
                 </div>
                 </div>
             </aside>
@@ -4849,6 +4849,16 @@
             if (currentLang !== 'en') translatePage(currentLang);
             updateAdminStats();
         } 
+
+        async function navigateCollegePage(key) {
+            if (!collegeDatabase[key]) return;
+            const isChangingCampus = key !== currentActiveKey;
+            const campusBoundPortalSession = ['student', 'teacher', 'hod'].includes(currentSessionRole);
+            if (isChangingCampus && campusBoundPortalSession) {
+                await logoutPortalSession();
+            }
+            switchCollegePage(key);
+        }
  
         function renderCampusNavigation() {
             const directory = document.getElementById('campusDirectory');
@@ -4977,9 +4987,9 @@
             finally { if (button) button.disabled = false; }
         }
 
-        function selectCampusMap(key) {
+        async function selectCampusMap(key) {
             if (!collegeDatabase[key] || !campusNavigationData[key]) return;
-            switchCollegePage(key);
+            await navigateCollegePage(key);
             const section = document.getElementById('campus-navigation');
             if (section?.classList.contains('campus-map-overlay-active')) {
                 section.scrollTop = 0;
@@ -5956,9 +5966,9 @@
             if (teacherDemoPassword) teacherDemoPassword.textContent = staffAccount?.demoPassword || '';
         }
 
-        function selectPortalLoginCampus(campusKey) {
+        async function selectPortalLoginCampus(campusKey) {
             if (!collegeDatabase[campusKey]) return;
-            switchCollegePage(campusKey);
+            await navigateCollegePage(campusKey);
             setPortalLoginCampus(campusKey);
             updateStaffLoginRole();
         }
