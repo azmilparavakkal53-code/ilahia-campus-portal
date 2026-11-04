@@ -91,7 +91,7 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <div class="ilahia-trust-mark" role="img" aria-label="Ilahia Ecosystem logo"><img src="ilahia-ecosystem-logo.svg" alt="Ilahia Ecosystem" fetchpriority="high"></div>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/ilahia-ecosystem-logo.svg" alt="Ilahia Ecosystem" fetchpriority="high"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -3979,7 +3979,26 @@
         function renderSecurityLogin(message = '') {
             const content = document.getElementById('securityDeskContent');
             const campuses = Object.entries(collegeDatabase).map(([key, campus]) => `<option value="${escapeHTML(key)}" ${key === (currentActiveKey || 'icet') ? 'selected' : ''}>${escapeHTML(campus.shortName || campus.name)}</option>`).join('');
-            content.innerHTML = `<div class="mx-auto max-w-md"><div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-xs text-emerald-950"><strong>Authorized campus security only.</strong><p class="mt-1">Sign in once on the secured gate device. This device remembers the security session across restarts until you tap Sign out. Sign in only on a secured campus device.</p></div>${message ? `<p class="mb-3 rounded-lg bg-rose-50 p-3 text-xs font-semibold text-rose-800">${escapeHTML(message)}</p>` : ''}<form onsubmit="securityDeskLogin(event)" class="space-y-3"><label class="block text-xs font-semibold">Assigned campus<select id="securityCampusKey" required class="mt-1 w-full rounded-lg border border-slate-300 p-3">${campuses}</select></label><label class="block text-xs font-semibold">Security ID<input id="securityUserId" autocomplete="username" required class="mt-1 w-full rounded-lg border border-slate-300 p-3" placeholder="Assigned security ID"></label><label class="block text-xs font-semibold">Password<input id="securityPassword" type="password" autocomplete="current-password" required class="mt-1 w-full rounded-lg border border-slate-300 p-3" placeholder="Security password"></label><button class="w-full rounded-lg bg-emerald-800 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-900">Sign in to Security Desk</button></form></div>`;
+            content.innerHTML = `<div class="mx-auto max-w-md"><div class="mb-4 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-xs text-emerald-950"><strong>Authorized campus security only.</strong><p class="mt-1">Sign in once on the secured gate device. This device remembers the security session across restarts until you tap Sign out. Sign in only on a secured campus device.</p></div><div id="securityDemoInfo" hidden class="mb-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-xs text-amber-950"></div>${message ? `<p class="mb-3 rounded-lg bg-rose-50 p-3 text-xs font-semibold text-rose-800">${escapeHTML(message)}</p>` : ''}<form onsubmit="securityDeskLogin(event)" class="space-y-3"><label class="block text-xs font-semibold">Assigned campus<select id="securityCampusKey" required class="mt-1 w-full rounded-lg border border-slate-300 p-3">${campuses}</select></label><label class="block text-xs font-semibold">Security ID<input id="securityUserId" autocomplete="username" required class="mt-1 w-full rounded-lg border border-slate-300 p-3" placeholder="Assigned security ID"></label><label class="block text-xs font-semibold">Password<input id="securityPassword" type="password" autocomplete="current-password" required class="mt-1 w-full rounded-lg border border-slate-300 p-3" placeholder="Security password"></label><button class="w-full rounded-lg bg-emerald-800 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-900">Sign in to Security Desk</button></form></div>`;
+            void loadSecurityDemoCredentials();
+        }
+        async function loadSecurityDemoCredentials() {
+            try {
+                const response = await fetch('/api/security/session/demo-info', { cache: 'no-store' });
+                const demo = await response.json();
+                const panel = document.getElementById('securityDemoInfo');
+                if (!response.ok || !demo.demoEnabled || !panel) return;
+                window.securityDemoCredentials = demo;
+                panel.hidden = false;
+                panel.innerHTML = `<strong>Local demo sign-in</strong><p class="mt-1">Security ID: <code>${escapeHTML(demo.id)}</code><br>Password: <code>${escapeHTML(demo.password)}</code></p><button type="button" onclick="fillSecurityDemoCredentials()" class="mt-2 rounded-lg border border-amber-400 bg-white px-3 py-2 font-bold">Fill demo login</button>`;
+            } catch { }
+        }
+        function fillSecurityDemoCredentials() {
+            const demo = window.securityDemoCredentials;
+            if (!demo) return;
+            document.getElementById('securityCampusKey').value = demo.campusKey;
+            document.getElementById('securityUserId').value = demo.id;
+            document.getElementById('securityPassword').value = demo.password;
         }
         async function securityDeskLogin(event) {
             event.preventDefault(); const button = event.submitter; if (button) button.disabled = true;

@@ -869,6 +869,14 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${secureCookie}` });
       return;
     }
+    if (pathname === '/api/security/session/demo-info' && req.method === 'GET') {
+      const localDemoMode = !REQUIRE_CONFIGURED_ACCOUNTS && !suppliedCampusAccounts;
+      const demoAccount = localDemoMode ? CAMPUS_ACCOUNTS.icet?.security : null;
+      sendJson(res, 200, localDemoMode && demoAccount?.[0] && demoAccount?.[1]
+        ? { demoEnabled: true, campusKey: 'icet', id: demoAccount[0], password: demoAccount[1] }
+        : { demoEnabled: false });
+      return;
+    }
     if (pathname === '/api/security/session' && req.method === 'GET') {
       const session = getSession(req);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Campus security sign-in is required.' }); return; }
