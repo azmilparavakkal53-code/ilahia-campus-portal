@@ -763,9 +763,9 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = url.pathname;
+  const pathname = url.pathname.replace(/\/+$/, '') || '/';
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
@@ -774,6 +774,12 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
     return;
+  }
+  if (req.method === 'OPTIONS' && pathname.startsWith('/api/security/')) {
+    let originHost = '';
+    try { originHost = req.headers.origin ? new URL(req.headers.origin).host : req.headers.host; } catch { /* malformed origin */ }
+    if (!originHost || originHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin request rejected.' }); return; }
+    res.writeHead(204, { Allow: 'GET, POST, OPTIONS' }); res.end(); return;
   }
   if (pathname.startsWith('/api/')) res.setHeader('Cache-Control', 'no-store');
   try {
@@ -883,7 +889,7 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 200, { ok: true, displayName: session.displayName, campusKey: session.campusKey, expiresAt: new Date(Math.min(session.expires, 8.64e15)).toISOString() });
       return;
     }
-    if (pathname === '/api/security/session/login' && req.method === 'POST') {
+    if (['/api/security/session/login', '/api/security/session', '/api/security/login'].includes(pathname) && req.method === 'POST') {
       const ip = req.socket.remoteAddress || 'unknown';
       let attempts = loginAttemptBuckets.get(ip);
       if (!attempts || attempts.resetAt <= Date.now()) attempts = { count: 0, resetAt: Date.now() + LOGIN_ATTEMPT_WINDOW_MS };
