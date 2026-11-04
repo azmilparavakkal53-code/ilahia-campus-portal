@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ilahia Campus">
-    <link rel="manifest" href="/manifest.webmanifest?v=24">
+    <link rel="manifest" href="/manifest.webmanifest?v=25">
     <link rel="icon" type="image/png" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><link rel="shortcut icon" href="/assets/icons/ilahia-ecosystem-icon-v4-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-icon-v4-512.png">
     <link rel="apple-touch-icon" href="/assets/icons/ilahia-ecosystem-icon-v4-180.png">
     <script>
@@ -3190,11 +3190,21 @@
             { title: 'English Grammar in Use', author: 'Raymond Murphy', subjects: 'English · communication' }
         ];
         function campusLifeApi(url, options = {}) {
-            return fetch(url, { credentials: 'same-origin', ...options, headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(options.headers || {}) } }).then(async response => {
+            const send = () => fetch(url, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(options.headers || {}) } });
+            return (async () => {
+                let response = await send();
+                if (response.status === 401 && !options._retriedAfterSessionRestore) {
+                    const restored = await restorePortalSessionOnce().catch(() => false);
+                    if (restored) response = await send();
+                }
                 const result = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(result.error || 'Campus Hub could not complete that action.');
+                if (!response.ok) {
+                    const error = new Error(result.error || 'Campus Hub could not complete that action.');
+                    error.status = response.status;
+                    throw error;
+                }
                 return result;
-            });
+            })();
         }
         function openStudentCampusHub() {
             if (currentSessionRole !== 'student') return;
@@ -4515,10 +4525,16 @@
                 };
                 if (role === 'student' && sendButton) { sendButton.disabled = true; sendButton.classList.add('opacity-60'); }
                 try {
-                    const response = await fetch('/api/gatepasses', {
+                    let response = await fetch('/api/gatepasses', {
                         method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ destination, mentorName, departureDate, departureTime, returnDate, returnTime, reason: promptText })
                     });
+                    if (response.status === 401 && role === 'student' && await restorePortalSessionOnce().catch(() => false)) {
+                        response = await fetch('/api/gatepasses', {
+                            method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ destination, mentorName, departureDate, departureTime, returnDate, returnTime, reason: promptText })
+                        });
+                    }
                     const result = await response.json().catch(() => ({}));
                     if (!response.ok) {
                         showGatepassFeedback(response.status === 401 ? 'Your campus sign-in has expired. Sign in again, then retry your gate pass.' : result.error || 'The gate pass request could not be submitted.', response.status === 401 && role === 'student');
@@ -5659,6 +5675,13 @@
             document.getElementById('systemLogsContainer').innerHTML = '<div>[SYSTEM] Log audit trail cleared by webmaster.</div>'; 
         } 
  
+        let portalSessionRestorePromise = null;
+        function restorePortalSessionOnce() {
+            if (portalSessionRestorePromise) return portalSessionRestorePromise;
+            portalSessionRestorePromise = restorePortalSession().finally(() => { portalSessionRestorePromise = null; });
+            return portalSessionRestorePromise;
+        }
+
         function openPortalModal() { 
             document.getElementById('portalModal').classList.remove('hidden'); 
             document.getElementById('portalMenuCard').classList.remove('hidden'); 
@@ -5673,7 +5696,7 @@
             document.getElementById('staffGatepassButton')?.classList.add('hidden');
             document.getElementById('mentorGatepassButton')?.classList.add('hidden');
             portalCampusInitPromise = initializePortalCampusSelector();
-            void restorePortalSession();
+            void restorePortalSessionOnce();
         } 
  
         function closePortalModal() { 
@@ -5683,7 +5706,7 @@
         } 
 
         async function logoutPortalSession() {
-            try { await fetch('/api/session/logout', { method: 'POST' }); } catch (_) {}
+            try { await fetch('/api/session/logout', { method: 'POST', credentials: 'same-origin' }); } catch (_) {}
             closeStudentCampusHub();
             if (campusIssueStatusRefreshTimer) { clearInterval(campusIssueStatusRefreshTimer); campusIssueStatusRefreshTimer = null; }
             currentSessionRole = null; currentSessionUserId = ''; currentSessionCampusKey = ''; currentPortalDisplayName = '';
@@ -5700,7 +5723,7 @@
         async function restorePortalSession() {
             try {
                 await portalCampusInitPromise;
-                const response = await fetch('/api/session', { cache: 'no-store' });
+                const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 if (!response.ok) return false;
                 const session = await response.json();
                 currentSessionRole = session.role; currentSessionUserId = session.userId || '';
@@ -5892,11 +5915,15 @@
             const pass = document.getElementById('studentPass').value.trim(); 
             try {
                 const response = await fetch('/api/session/login', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: uid, password: pass, role: 'student', campusKey: currentActiveKey })
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid student ID or passcode.');
+                const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
+                if (!sessionResponse.ok) throw new Error('Sign-in was accepted, but the browser did not retain the secure session cookie. Check that site cookies are enabled, then sign in again.');
+                const confirmedSession = await sessionResponse.json();
+                if (confirmedSession.role !== 'student' || confirmedSession.campusKey !== currentActiveKey) throw new Error('The restored session does not match this student account. Sign out and sign in again.');
                 currentSessionRole = 'student';
                 currentSessionUserId = uid;
                 currentSessionCampusKey = currentActiveKey;
@@ -5942,12 +5969,15 @@
             const role = document.getElementById('staffLoginRole').value;
             try {
                 const response = await fetch('/api/session/login', {
-                    method: 'POST',
+                    method: 'POST', credentials: 'same-origin', cache: 'no-store',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: cid, password: pass, role, campusKey: currentActiveKey })
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid staff ID or passcode.');
+                const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
+                const signedInSession = sessionResponse.ok ? await sessionResponse.json() : null;
+                if (!signedInSession || signedInSession.role !== result.role || signedInSession.campusKey !== currentActiveKey) throw new Error('Sign-in was accepted, but this browser did not keep the staff session. Check that site cookies are enabled, then sign in again.');
                 currentSessionRole = result.role;
                 currentSessionUserId = cid;
                 currentSessionCampusKey = currentActiveKey;
@@ -6055,12 +6085,15 @@
             const p = document.getElementById('adminPass').value; 
             try {
                 const response = await fetch('/api/session/login', {
-                    method: 'POST',
+                    method: 'POST', credentials: 'same-origin', cache: 'no-store',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: u, password: p, role: 'admin' })
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid administrator credentials.');
+                const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
+                const signedInSession = sessionResponse.ok ? await sessionResponse.json() : null;
+                if (signedInSession?.role !== 'admin') throw new Error('Sign-in was accepted, but this browser did not keep the administrator session. Check that site cookies are enabled, then sign in again.');
                 currentSessionRole = 'admin';
                 currentSessionUserId = u;
                 document.getElementById('adminLoginCard').classList.add('hidden'); 
@@ -6518,6 +6551,8 @@
             const paused = track.classList.toggle('paused'); button.textContent = paused ? 'Resume' : 'Pause'; button.setAttribute('aria-label', paused ? 'Resume scrolling news' : 'Pause scrolling news');
         }
         document.addEventListener('DOMContentLoaded', () => {
+            portalCampusInitPromise = initializePortalCampusSelector();
+            void restorePortalSessionOnce();
             void loadCampusNewsTicker();
             window.setInterval(() => {
                 const landing = document.getElementById('instituteLanding');

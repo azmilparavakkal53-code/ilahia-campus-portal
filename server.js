@@ -822,7 +822,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-ai-library-v6' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-session-persistence-v7' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -929,7 +929,7 @@ const server = http.createServer(async (req, res) => {
       const signature = crypto.createHmac('sha256', GATEPASS_CODE_SECRET).update(payload).digest('base64url');
       const token = `${payload}.${signature}`;
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2147483647${secureCookie}` });
+      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
     }
     if (req.method === 'GET' && pathname === '/api/session') {
@@ -1067,20 +1067,20 @@ const server = http.createServer(async (req, res) => {
       securitySessions.push({ tokenHash: crypto.createHash('sha256').update(token).digest('hex'), userId: accountId, displayName: displayName || 'Campus Security', campusKey, expires });
       writeSecuritySessions(securitySessions);
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true, displayName: displayName || 'Campus Security', campusKey }, { 'Set-Cookie': `ilahia_security_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2147483647${secureCookie}` });
+      sendJson(res, 200, { ok: true, displayName: displayName || 'Campus Security', campusKey }, { 'Set-Cookie': `ilahia_security_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
     }
     if (pathname === '/api/security/session/logout' && req.method === 'POST') {
       const token = (req.headers.cookie || '').match(/(?:^|;\s*)ilahia_security_session=([a-f0-9]{64})/)?.[1];
       if (token) { const tokenHash = crypto.createHash('sha256').update(token).digest('hex'); writeSecuritySessions(readSecuritySessions().filter(item => item.tokenHash !== tokenHash)); }
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_security_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookie}` });
+      sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_security_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}` });
       return;
     }
     if (req.method === 'POST' && pathname === '/api/session/logout') {
       const token = (req.headers.cookie || '').match(/(?:^|;\s*)ilahia_teacher_session=([a-f0-9]+)/)?.[1];
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_teacher_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookie}` });
+      sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_teacher_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}` });
       return;
     }
     if (pathname === '/api/campus-life' && req.method === 'GET') {
