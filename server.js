@@ -15,6 +15,7 @@ const AI_SYNC_STATUS_FILE = path.join(DATA_DIR, 'ai-knowledge-sync-status.json')
 const LEAVE_REQUESTS_FILE = path.join(DATA_DIR, 'leave-requests.json');
 const GATEPASSES_FILE = path.join(DATA_DIR, 'gatepasses.json');
 const SECURITY_SESSIONS_FILE = path.join(DATA_DIR, 'security-sessions.json');
+const AUTH_SESSIONS_FILE = path.join(DATA_DIR, 'auth-sessions.json');
 const GATEPASS_CODE_SECRET = process.env.GATEPASS_CODE_SECRET || crypto.randomBytes(32).toString('hex');
 const SKILL_OFFERS_FILE = path.join(DATA_DIR, 'skill-offers.json');
 const SKILL_REQUESTS_FILE = path.join(DATA_DIR, 'skill-learning-requests.json');
@@ -100,7 +101,6 @@ const CAMPUS_ACCOUNTS = Object.fromEntries(CAMPUS_KEYS.map(campusKey => {
 }));
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 const OFFICIAL_SITE_REFRESH_MS = 24 * 60 * 60 * 1000;
-const sessions = new Map();
 const uploadTickets = new Map();
 const loginAttemptBuckets = new Map();
 const aiChatBuckets = new Map();
@@ -119,6 +119,7 @@ function isInSessionCampus(record, session) { return session.role === 'admin' ||
 
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 if (!fs.existsSync(SECURITY_SESSIONS_FILE)) fs.writeFileSync(SECURITY_SESSIONS_FILE, '[]\n', 'utf8');
+if (!fs.existsSync(AUTH_SESSIONS_FILE)) fs.writeFileSync(AUTH_SESSIONS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(AI_DELETED_IDS_FILE)) fs.writeFileSync(AI_DELETED_IDS_FILE, '[]\n', 'utf8');
 if (!fs.existsSync(LEAVE_REQUESTS_FILE)) fs.writeFileSync(LEAVE_REQUESTS_FILE, '[]\n', 'utf8');
@@ -592,9 +593,10 @@ function getSession(req) {
     if (session) writeSecuritySessions(records.filter(item => item.tokenHash !== tokenHash));
   }
   const token = cookie.match(/(?:^|;\s*)ilahia_teacher_session=([a-f0-9]+)/)?.[1];
-  const session = token && sessions.get(token);
+  if (!token) return null;
+  const records = readJsonArray(AUTH_SESSIONS_FILE), session = records.find(item => item.tokenHash === crypto.createHash('sha256').update(token).digest('hex'));
   if (!session || session.expires < Date.now()) {
-    if (token) sessions.delete(token);
+    if (session) writeJsonArray(AUTH_SESSIONS_FILE, records.filter(item => item.tokenHash !== session.tokenHash));
     return null;
   }
   return session;
@@ -872,9 +874,12 @@ const server = http.createServer(async (req, res) => {
       }
       loginAttemptBuckets.delete(ip);
       const token = crypto.randomBytes(32).toString('hex');
-      sessions.set(token, { role, userId: accountId, displayName: accountDisplayName || role, campusKey: role === 'admin' ? null : campusKey, expires: Date.now() + 8 * 60 * 60 * 1000 });
+      const sessionRecord = { tokenHash: crypto.createHash('sha256').update(token).digest('hex'), role, userId: accountId, displayName: accountDisplayName || role, campusKey: role === 'admin' ? null : campusKey, expires: 8.64e15 };
+      const sessions = readJsonArray(AUTH_SESSIONS_FILE).filter(item => item.expires >= Date.now() && item.tokenHash !== sessionRecord.tokenHash);
+      sessions.push(sessionRecord);
+      writeJsonArray(AUTH_SESSIONS_FILE, sessions);
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${secureCookie}` });
+      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
     }
     if (pathname === '/api/security/session/demo-info' && req.method === 'GET') {
@@ -923,7 +928,10 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === 'POST' && pathname === '/api/session/logout') {
       const token = (req.headers.cookie || '').match(/(?:^|;\s*)ilahia_teacher_session=([a-f0-9]+)/)?.[1];
-      if (token) sessions.delete(token);
+      if (token) {
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        writeJsonArray(AUTH_SESSIONS_FILE, readJsonArray(AUTH_SESSIONS_FILE).filter(item => item.tokenHash !== tokenHash));
+      }
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
       sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_teacher_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookie}` });
       return;
