@@ -765,11 +765,13 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = url.pathname.replace(/\/+$/, '') || '/';
+  const normalizedPathname = url.pathname.replace(/\/+$/, '') || '/';
+  const apiPathOffset = normalizedPathname.toLowerCase().indexOf('/api/');
+  const pathname = apiPathOffset >= 0 ? normalizedPathname.slice(apiPathOffset).toLowerCase() : normalizedPathname;
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gatepass-mentor' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -2053,8 +2055,8 @@ const server = http.createServer(async (req, res) => {
       fs.createReadStream(file).pipe(res);
       return;
     }
-    if (req.method === 'GET' && pathname.startsWith('/api/')) { sendJson(res, 404, { error: 'API route not found.' }); return; }
-    if (req.method !== 'GET') { sendJson(res, 405, { error: 'Method not allowed.' }); return; }
+    if (req.method === 'GET' && pathname.startsWith('/api/')) { sendJson(res, 404, { error: `API route not found: ${pathname}.` }); return; }
+    if (req.method !== 'GET') { sendJson(res, 405, { error: `Method ${req.method} not allowed for ${pathname}.` }); return; }
     serveStatic(req, res, pathname);
   } catch (error) {
     console.error('[backend]', error);

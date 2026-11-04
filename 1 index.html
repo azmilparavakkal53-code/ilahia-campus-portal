@@ -844,7 +844,7 @@
                     </div>
                     <div id="studentGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-blue-100 bg-blue-50/60 p-3" style="display:none">
                         <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Destination</label><input id="studentGatepassDestination" type="text" maxlength="180" placeholder="Where are you going?" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div>
-                        <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Mentor name</label><input id="studentGatepassMentor" type="text" list="campusMentorOptions" maxlength="120" placeholder="Choose or enter your mentor’s name" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><p class="mt-1 text-[10px] text-slate-500">Your mentor reviews and can edit this request first. The HOD makes the final decision.</p></div>
+                        <div class="sm:col-span-2"><label for="studentGatepassMentor" class="block text-xs font-semibold text-slate-700 mb-1">Class mentor</label><select id="studentGatepassMentor" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><option value="">Choose your class mentor</option><option value="Class Mentor 1">Class Mentor 1</option><option value="Class Mentor 2">Class Mentor 2</option></select><p class="mt-1 text-[10px] text-slate-500">Your selected class mentor reviews and can edit this request first. The HOD makes the final decision.</p></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Departure date & time</label><div class="grid grid-cols-2 gap-2"><input id="studentGatepassDepartureDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="studentGatepassDepartureTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Expected return date & time</label><div class="grid grid-cols-2 gap-2"><input id="studentGatepassReturnDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="studentGatepassReturnTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
                     </div>
@@ -1080,7 +1080,6 @@
                     </div>
                     <div id="teacherGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3" style="display:none">
                         <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Destination</label><input id="teacherGatepassDestination" type="text" maxlength="180" placeholder="Where are you going?" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div>
-                        <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Mentor preference (optional)</label><input id="teacherGatepassMentor" type="text" list="campusMentorOptions" maxlength="120" placeholder="Choose or enter your mentor’s name" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><p class="mt-1 text-[10px] text-slate-500">The HOD remains the final approver. This preference will appear with your request.</p></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Departure date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassDepartureDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassDepartureTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Expected return date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassReturnDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassReturnTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
                     </div>
@@ -1273,7 +1272,6 @@
             </div>
             <!-- END OF FACULTYBOT WIDGET -->
         </div>
-        <datalist id="campusMentorOptions"><option value="Faculty Advisor / Mentor"></option><option value="Department Mentor"></option><option value="Class Tutor"></option></datalist>
     </div>
     <!-- Admin Authentication & EXPANDED Dashboard Modal -->
     <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
@@ -3840,7 +3838,7 @@
             if (fields) {
                 fields.classList.toggle('hidden', !isGatepass);
                 fields.style.display = isGatepass ? 'grid' : 'none';
-                fields.querySelectorAll('input').forEach(input => { input.required = isGatepass && !(role === 'teacher' && input.id.endsWith('GatepassMentor')); });
+                fields.querySelectorAll('input,select').forEach(input => { input.required = isGatepass && !(role === 'teacher' && input.id.endsWith('GatepassMentor')); });
             }
             const promptLabel = document.getElementById(`${role}ReqPromptLabel`);
             const prompt = document.getElementById(`${role}ReqPrompt`);
@@ -4339,7 +4337,7 @@
             if (reqType === 'Gate Pass Request') {
                 const prefix = role;
                 const destination = document.getElementById(`${prefix}GatepassDestination`).value.trim();
-                const mentorName = document.getElementById(`${prefix}GatepassMentor`).value.trim();
+                const mentorName = role === 'student' ? document.getElementById('studentGatepassMentor').value.trim() : '';
                 const departureDate = document.getElementById(`${prefix}GatepassDepartureDate`).value;
                 const departureTime = document.getElementById(`${prefix}GatepassDepartureTime`).value;
                 const returnDate = document.getElementById(`${prefix}GatepassReturnDate`).value;
@@ -4363,7 +4361,7 @@
                         : `Gate pass ${result.passCode} submitted to the HOD for approval. After approval, open the live virtual pass from My gate passes.`;
                     document.getElementById(`${prefix}ReqPrompt`).value = '';
                     document.getElementById(`${prefix}GatepassDestination`).value = '';
-                    document.getElementById(`${prefix}GatepassMentor`).value = '';
+                    if (role === 'student') document.getElementById('studentGatepassMentor').value = '';
                     await loadMyGatepasses(role);
                     logSystemActivity(`[GATE PASS] ${role} ${currentSessionUserId} submitted request ${result.passCode}.`);
                 } catch (error) {
