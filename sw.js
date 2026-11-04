@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ilahia-campus-shell-v15';
-const APP_SHELL = ['/', '/canteen.html', '/manifest.webmanifest', '/assets/icons/app-icon-gold-leaf.svg', '/assets/icons/app-icon-gold-leaf-180.png', '/assets/icons/app-icon-gold-leaf-192.png', '/assets/icons/app-icon-gold-leaf-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg'];
+const CACHE_NAME = 'ilahia-campus-shell-v16';
+const APP_SHELL = ['/', '/canteen.html', '/manifest.webmanifest', '/assets/icons/ecosystem-launch-20261104.svg', '/assets/icons/ecosystem-launch-20261104-180.png', '/assets/icons/ecosystem-launch-20261104-192.png', '/assets/icons/ecosystem-launch-20261104-512.png', '/assets/icons/app-icon-gold-leaf.svg', '/assets/icons/app-icon-gold-leaf-180.png', '/assets/icons/app-icon-gold-leaf-192.png', '/assets/icons/app-icon-gold-leaf-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(() => undefined).then(() => self.skipWaiting()));
