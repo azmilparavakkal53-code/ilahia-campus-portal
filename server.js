@@ -630,14 +630,17 @@ function readJson(req, limit = 1024 * 1024) {
   });
 }
 
-function getSession(req) {
+function getSession(req, securityOnly = false) {
   const cookie = req.headers.cookie || '';
+  if (securityOnly) {
   const securityToken = cookie.match(/(?:^|;\s*)ilahia_security_session=([a-f0-9]{64})/)?.[1];
   if (securityToken) {
     const tokenHash = crypto.createHash('sha256').update(securityToken).digest('hex');
     const records = readSecuritySessions(), session = records.find(item => item.tokenHash === tokenHash);
     if (session && session.expires >= Date.now()) return { ...session, role: 'security' };
     if (session) writeSecuritySessions(records.filter(item => item.tokenHash !== tokenHash));
+  }
+  return null;
   }
   const token = cookie.match(/(?:^|;\s*)ilahia_teacher_session=([^;\s]+)/)?.[1];
   if (!token) return null;
@@ -824,7 +827,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-session-persistence-v9' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-session-persistence-v10' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1046,7 +1049,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (pathname === '/api/security/session' && req.method === 'GET') {
-      const session = getSession(req);
+      const session = getSession(req, true);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Campus security sign-in is required.' }); return; }
       sendJson(res, 200, { ok: true, displayName: session.displayName, campusKey: session.campusKey, expiresAt: new Date(Math.min(session.expires, 8.64e15)).toISOString() });
       return;
@@ -1868,7 +1871,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === 'POST' && pathname === '/api/security/gatepasses/scan') {
-      const session = getSession(req);
+      const session = getSession(req, true);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Sign in to the campus security desk to scan gate passes.' }); return; }
       const body = await readJson(req, 4 * 1024), payload = String(body.payload || '');
       const match = payload.match(/^ILHGP1:([a-f0-9-]{36}):(\d{6})$/i);
@@ -1890,7 +1893,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === 'GET' && pathname === '/api/security/gatepasses/scanned') {
-      const session = getSession(req);
+      const session = getSession(req, true);
       if (!session || session.role !== 'security') { sendJson(res, 401, { error: 'Campus security sign-in is required.' }); return; }
       const recent = readGatepasses().filter(item => item.campusKey === session.campusKey && item.scannedAt).sort((a, b) => Date.parse(b.scannedAt) - Date.parse(a.scannedAt)).map(item => ({ passCode: item.passCode, requesterRole: item.requesterRole, requesterId: item.requesterId, requesterName: item.requesterName || '', campusKey: item.campusKey, destination: item.destination, reason: item.reason, departureDate: item.departureDate, departureTime: item.departureTime, returnDate: item.returnDate, returnTime: item.returnTime, scannedAt: item.scannedAt, scannedBy: item.scannedBy }));
       sendJson(res, 200, recent); return;
