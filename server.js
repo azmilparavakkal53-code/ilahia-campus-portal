@@ -748,7 +748,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/ecosystem-launch-20261104-v2.svg', '/assets/icons/ecosystem-launch-20261104-v2-180.png', '/assets/icons/ecosystem-launch-20261104-v2-192.png', '/assets/icons/ecosystem-launch-20261104-v2-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/ilahia-ecosystem-logo.svg', '/ilahia-campus-logo.svg', '/manifest.webmanifest', '/sw.js', '/assets/icons/ecosystem-launch-20261104-v2.svg', '/assets/icons/ecosystem-launch-20261104-v2-180.png', '/assets/icons/ecosystem-launch-20261104-v2-192.png', '/assets/icons/ecosystem-launch-20261104-v2-512.png', '/ilahia-ecosystem-logo-gold-leaf.svg', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg', '/assets/campuses/ilahia-public-school-hero.jpg']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
