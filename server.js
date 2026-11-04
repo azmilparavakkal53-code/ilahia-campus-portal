@@ -15,7 +15,19 @@ const AI_SYNC_STATUS_FILE = path.join(DATA_DIR, 'ai-knowledge-sync-status.json')
 const LEAVE_REQUESTS_FILE = path.join(DATA_DIR, 'leave-requests.json');
 const GATEPASSES_FILE = path.join(DATA_DIR, 'gatepasses.json');
 const SECURITY_SESSIONS_FILE = path.join(DATA_DIR, 'security-sessions.json');
-const GATEPASS_CODE_SECRET = process.env.GATEPASS_CODE_SECRET || crypto.randomBytes(32).toString('hex');
+function loadStableLocalGatepassSecret() {
+  if (process.env.NODE_ENV === 'production') throw new Error('Production requires the persistent GATEPASS_CODE_SECRET environment variable.');
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  const secretFile = path.join(DATA_DIR, '.local-gatepass-session-secret');
+  try {
+    const existing = fs.readFileSync(secretFile, 'utf8').trim();
+    if (/^[a-f0-9]{64}$/i.test(existing)) return existing;
+  } catch {}
+  const generated = crypto.randomBytes(32).toString('hex');
+  fs.writeFileSync(secretFile, generated, { mode: 0o600 });
+  return generated;
+}
+const GATEPASS_CODE_SECRET = process.env.GATEPASS_CODE_SECRET || loadStableLocalGatepassSecret();
 const SKILL_OFFERS_FILE = path.join(DATA_DIR, 'skill-offers.json');
 const SKILL_REQUESTS_FILE = path.join(DATA_DIR, 'skill-learning-requests.json');
 const SKILL_MESSAGES_FILE = path.join(DATA_DIR, 'skill-learning-messages.json');
@@ -88,7 +100,7 @@ const CAMPUS_ACCOUNTS = Object.fromEntries(CAMPUS_KEYS.map(campusKey => {
     student: campusKey === 'icet' ? [STUDENT_ID, STUDENT_PASSWORD, 'Azmil'] : [`${prefix}-STU-001`, `${campusKey}Stu26!`, 'Azmil'],
     teacher: campusKey === 'icet' ? [TEACHER_ID, TEACHER_PASSWORD, 'Demo Teacher'] : [`${prefix}-FAC-001`, `${campusKey}Fac26!`, 'Demo Teacher'],
     hod: campusKey === 'icet' ? [HOD_ID, HOD_PASSWORD, 'Demo HOD'] : [`${prefix}-HOD-001`, `${campusKey}Hod26!`, 'Demo HOD'],
-    security: REQUIRE_CONFIGURED_ACCOUNTS ? [null, null, 'Campus Security'] : [`${prefix}-SEC-001`, process.env.SECURITY_PASSWORD || 'security123', 'Campus Security']
+    security: REQUIRE_CONFIGURED_ACCOUNTS ? [null, null, 'Campus Security'] : [`${prefix}-SEC-001`, process.env[`${prefix}_SECURITY_PASSWORD`] || (campusKey === 'icet' ? process.env.ICET_SECURITY_PASSWORD || process.env.SECURITY_PASSWORD || 'ICET-SEC-26' : `${prefix}-SEC-26`), 'Campus Security']
   };
   const configured = suppliedCampusAccounts || {};
   for (const role of Object.keys(defaults)) {
@@ -748,7 +760,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/icons/messbuzz-logo.svg', '/assets/icons/messbuzz-mark.svg', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-final-logo-180.png', '/assets/icons/ilahia-ecosystem-final-logo-192.png', '/assets/icons/ilahia-ecosystem-final-logo-512.png']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-wordmark.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -777,7 +789,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gold-leaf-e' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.04-gatepass-logo-v3' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -959,10 +971,12 @@ const server = http.createServer(async (req, res) => {
       writeJsonArray(FEEDBACK_FORMS_FILE, forms); sendJson(res, 200, { ok: true, submittedAt: response.submittedAt }); return;
     }
     if (pathname === '/api/security/session/demo-info' && req.method === 'GET') {
+      const campusKey = String(url.searchParams.get('campusKey') || 'icet');
+      if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
       const localDemoMode = !REQUIRE_CONFIGURED_ACCOUNTS && !suppliedCampusAccounts;
-      const demoAccount = localDemoMode ? CAMPUS_ACCOUNTS.icet?.security : null;
+      const demoAccount = localDemoMode ? CAMPUS_ACCOUNTS[campusKey]?.security : null;
       sendJson(res, 200, localDemoMode && demoAccount?.[0] && demoAccount?.[1]
-        ? { demoEnabled: true, campusKey: 'icet', id: demoAccount[0], password: demoAccount[1] }
+        ? { demoEnabled: true, campusKey, id: demoAccount[0], password: demoAccount[1] }
         : { demoEnabled: false });
       return;
     }

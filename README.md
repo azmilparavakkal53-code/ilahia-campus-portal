@@ -1,6 +1,6 @@
 # Ilahia Ecosystem Campus Portal
 
-Ilahia Ecosystem is a multi-institute campus portal prototype. It combines public institute pages with separate student, teacher, HOD and administrator workflows, plus the MessBuzz canteen area. Skill Learner lets students share skills and request a teacher’s review before displaying a verified teaching-skill badge. Teachers review requests from their own campus.
+Ilahia Ecosystem is a multi-institute campus portal prototype. It combines public institute pages with separate student, teacher, HOD and administrator workflows. Skill Learner lets students share skills and request a teacher’s review before displaying a verified teaching-skill badge. Teachers review requests from their own campus.
 
 ## Run locally
 
