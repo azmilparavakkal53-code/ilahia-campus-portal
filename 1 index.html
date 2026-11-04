@@ -3983,15 +3983,20 @@
             void loadSecurityDemoCredentials();
         }
         async function loadSecurityDemoCredentials() {
+            const panel = document.getElementById('securityDemoInfo');
+            if (!panel) return;
+            const host = location.hostname;
+            const isPrivateAddress = host === 'localhost' || host === '::1' || /^127\./.test(host) || /^10\./.test(host) || /^192\.168\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host);
+            let demo = isPrivateAddress ? { demoEnabled: true, campusKey: 'icet', id: 'ICET-SEC-001', password: 'security123' } : null;
             try {
                 const response = await fetch('/api/security/session/demo-info', { cache: 'no-store' });
-                const demo = await response.json();
-                const panel = document.getElementById('securityDemoInfo');
-                if (!response.ok || !demo.demoEnabled || !panel) return;
-                window.securityDemoCredentials = demo;
-                panel.hidden = false;
-                panel.innerHTML = `<strong>Local demo sign-in</strong><p class="mt-1">Security ID: <code>${escapeHTML(demo.id)}</code><br>Password: <code>${escapeHTML(demo.password)}</code></p><button type="button" onclick="fillSecurityDemoCredentials()" class="mt-2 rounded-lg border border-amber-400 bg-white px-3 py-2 font-bold">Fill demo login</button>`;
+                const serverDemo = await response.json();
+                demo = serverDemo.demoEnabled ? serverDemo : null;
             } catch { }
+            if (!demo) return;
+            window.securityDemoCredentials = demo;
+            panel.hidden = false;
+            panel.innerHTML = `<strong>Local demo sign-in</strong><p class="mt-1">Security ID: <code>${escapeHTML(demo.id)}</code><br>Password: <code>${escapeHTML(demo.password)}</code></p><button type="button" onclick="fillSecurityDemoCredentials()" class="mt-2 rounded-lg border border-amber-400 bg-white px-3 py-2 font-bold">Fill demo login</button>`;
         }
         function fillSecurityDemoCredentials() {
             const demo = window.securityDemoCredentials;
