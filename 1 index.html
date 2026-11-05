@@ -7,11 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=31">
-    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-final-512.png" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png">
-    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-final-512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-final-180.png">
+    <link rel="manifest" href="/manifest.webmanifest?v=33">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png?v=33">
+    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png?v=33"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-final-180.png?v=33">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -55,14 +55,20 @@
         #trustMascotStage { position:relative; height:6.35rem; overflow:hidden; touch-action:pan-y; }
         #trustMascotMover { position:absolute; z-index:2; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100% - 1rem); cursor:grab; touch-action:none; user-select:none; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
-        .trust-mascot-character { width:4.5rem; height:4.5rem; flex:none; overflow:visible; animation:trust-mascot-bob 2.6s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:4.5rem; height:4.9rem; flex:none; overflow:visible; animation:trust-mascot-bob 2.6s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
         .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
+        .trust-mascot-gesture { transform-box:fill-box; transform-origin:80% 70%; animation:trust-mascot-gesture 2.3s ease-in-out infinite; }
+        .trust-mascot-blink { transform-box:fill-box; transform-origin:center; animation:trust-mascot-blink 4.4s ease-in-out infinite; }
+        #trustMascotMover.is-jumping .trust-mascot-character { animation:trust-mascot-jump .68s cubic-bezier(.3,.8,.35,1) both; }
         .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
         #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
         @keyframes trust-mascot-bob { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-4px) rotate(2deg); } }
         @keyframes trust-mascot-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-24deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-18deg); } }
-        @media (max-width:380px) { .trust-mascot-character { width:3.8rem; height:3.8rem; } .trust-mascot-greeting { max-width:11rem; font-size:.62rem; } }
-        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave { animation:none; } }
+        @keyframes trust-mascot-gesture { 0%,72%,100% { transform:rotate(0); } 78% { transform:rotate(-20deg); } 86% { transform:rotate(10deg); } 93% { transform:rotate(-12deg); } }
+        @keyframes trust-mascot-blink { 0%,43%,47%,100% { transform:scaleY(1); } 45% { transform:scaleY(.12); } }
+        @keyframes trust-mascot-jump { 0% { transform:translateY(0) rotate(0); } 35% { transform:translateY(-15px) rotate(-8deg); } 65% { transform:translateY(-12px) rotate(8deg); } 100% { transform:translateY(0) rotate(0); } }
+        @media (max-width:380px) { .trust-mascot-character { width:3.8rem; height:4.2rem; } .trust-mascot-greeting { max-width:11rem; font-size:.62rem; } }
+        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave, .trust-mascot-gesture, .trust-mascot-blink { animation:none; } }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -142,11 +148,11 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-final-512.png" alt="Ilahia Ecosystem mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png" alt="Ecosystem" decoding="async"></a>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=33" alt="Ecosystem" decoding="async"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="quickActionOpen" type="button" onclick="openQuickActionPalette()" aria-label="Quick search and actions" aria-keyshortcuts="Control+K Meta+K" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>Quick actions</span><kbd class="hidden rounded border border-slate-600 px-1.5 py-0.5 text-[9px] text-slate-300 sm:inline">Ctrl K</kbd></button>
+                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Lily to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Lily Guide</span></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
                 <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
@@ -159,6 +165,14 @@
         <div id="campusNewsViewport" class="flex-1"><div id="campusNewsTrack" aria-live="polite"><span class="campus-news-item">Loading important campus updates…</span></div></div>
         <button id="campusNewsPause" type="button" onclick="toggleCampusNewsTicker()" class="shrink-0 rounded-md border border-slate-500 px-2.5 py-2 text-[10px] font-semibold text-white hover:bg-slate-800" aria-label="Pause scrolling news">Pause</button>
     </section>
+    <div id="campusCelebrationOverlay" class="hidden pointer-events-none fixed inset-0 z-[30000]" role="status" aria-live="polite">
+        <canvas id="campusCelebrationCanvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+        <div class="pointer-events-auto absolute left-1/2 top-5 w-[min(92vw,520px)] -translate-x-1/2 rounded-2xl border border-amber-200 bg-slate-950/95 px-5 py-4 text-center text-white shadow-2xl">
+            <p class="text-[10px] font-extrabold uppercase tracking-[.2em] text-amber-300">Campus celebration</p>
+            <p id="campusCelebrationTitle" class="mt-1 text-base font-extrabold sm:text-lg"></p>
+            <button type="button" onclick="stopCampusCelebration()" class="mt-2 rounded-lg border border-white/30 px-3 py-1 text-[10px] font-bold text-white hover:bg-white/10">Close effect</button>
+        </div>
+    </div>
     <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
         <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
             <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Lily</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
@@ -171,8 +185,10 @@
         </div>
         <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
             <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
+            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Lily"><i class="fa-solid fa-microphone"></i></button>
             <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
         </form>
+        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Lily to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -200,15 +216,17 @@
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
                         <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the campus conversation mascot. Tap to ask about campus news and events; drag or use arrow keys to move." title="Tap Lily to chat about campus news and events, or drag her to move">
-                            <svg class="trust-mascot-character" viewBox="0 0 96 96" aria-hidden="true">
+                            <svg class="trust-mascot-character" viewBox="0 0 96 104" aria-hidden="true">
                                 <defs><linearGradient id="illyBody" x1="15" y1="10" x2="78" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563a8"/></linearGradient><linearGradient id="illyCap" x1="28" y1="5" x2="74" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0a5"/><stop offset="1" stop-color="#e9ae3d"/></linearGradient></defs>
-                                <ellipse cx="49" cy="86" rx="25" ry="5" fill="#020817" opacity=".3"/>
+                                <ellipse cx="49" cy="101" rx="25" ry="4" fill="#020817" opacity=".3"/>
                                 <path d="M25 62c-11 2-17 9-17 18 0 5 4 7 8 5l16-12M72 62c11 2 17 9 17 18 0 5-4 7-8 5L66 73" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2" stroke-linecap="round"/>
                                 <g class="trust-mascot-wave"><path d="M10 78C3 75 3 67 7 61l8-9c3-4 8-3 9 1 1 2 0 4-1 6l-7 10 5 8" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2" stroke-linejoin="round"/><path d="m10 57-2-7m8 5 1-8m5 11 4-6" stroke="#f5cf68" stroke-width="2" stroke-linecap="round"/></g>
+                                <g class="trust-mascot-gesture"><path d="M75 69c5-5 8-11 7-16-1-4-5-5-8-2l-8 10" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round"/><path d="m78 51 4-5m-1 8 6-2m-7-5 1-6" stroke="#f5cf68" stroke-width="2" stroke-linecap="round"/></g>
                                 <path d="M20 43c0-16 12-29 29-29s29 13 29 29v20c0 15-13 24-29 24S20 78 20 63V43Z" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2"/>
+                                <g class="trust-mascot-legs" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M39 80v12"/><path d="M59 80v12"/><path d="M39 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/><path d="M59 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/></g>
                                 <path d="M27 31 49 8l23 23-23-5-22 5Z" fill="url(#illyCap)" stroke="#fff0a5" stroke-width="2" stroke-linejoin="round"/><path d="M69 26v12" stroke="#f5cf68" stroke-width="2"/><circle cx="69" cy="40" r="3" fill="#fff0a5"/>
                                 <path d="M31 50c0-9 7-16 18-16s18 7 18 16v8c0 9-7 16-18 16s-18-7-18-16v-8Z" fill="#f8fbff"/>
-                                <ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/>
+                                <g class="trust-mascot-blink"><ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/></g>
                                 <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
@@ -874,7 +892,7 @@
                             <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-briefcase mr-2 text-indigo-700"></i>Placements & internships</h5><p class="my-2 text-[11px] text-slate-500">Office-reviewed openings and deadlines for your institute.</p><div id="placementBoard" class="space-y-2"></div><div id="myApplications" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-sky-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-chart-line mr-2 text-sky-700"></i>Academic progress</h5><p class="my-2 text-[11px] text-slate-500">Official marks and attendance records entered by the office. Contact your department if a record looks wrong.</p><div id="studentProgressRecords" class="space-y-2"></div><div id="progressSupportAlert" class="mt-2"></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="renderPersonalSkillMap()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
-                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><button type="button" onclick="nextInterviewQuestion()" class="self-end rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next question</button></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Prototype note: feedback is generated by an instant local coaching rubric, not a connected language model. Your answer is not sent to the backend or saved by this feature.</p></section>
+                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Lily asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Lily reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Transcripts stay in this page; review and edit them before submission. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
                             <section class="rounded-xl border border-pink-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-heart mr-2 text-pink-700"></i>Private student support</h5><p class="my-2 text-[11px] text-slate-500">Only the student-support office can read your request. Share only what you’re comfortable sharing.</p><form onsubmit="submitCounsellingRequest(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Support topic<select id="counsellingTopic" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option>Personal wellbeing</option><option>Study stress</option><option>Accessibility support</option><option>Financial guidance</option><option>Other support</option></select></label><label class="block text-[11px] font-semibold">What support would help?<textarea id="counsellingNote" required minlength="10" maxlength="1200" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Please avoid sharing passwords or unnecessary sensitive details"></textarea></label><label class="block text-[11px] font-semibold">Preferred contact time (optional)<input id="counsellingPreferred" maxlength="80" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. after 2 pm"></label><button class="rounded-lg bg-pink-700 px-4 py-2 text-xs font-bold text-white">Send private request</button></form><div id="studentCounsellingList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-tie mr-2 text-amber-700"></i>Alumni mentors</h5><p class="my-2 text-[11px] text-slate-500">Request career guidance from office-verified alumni. The office coordinates introductions; private contact details are not shown.</p><div id="alumniMentorList" class="space-y-2"></div><div id="myMentorshipRequests" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-people-group mr-2 text-amber-600"></i>College events & clubs</h5><p class="my-2 text-[11px] text-slate-500">See admin-published campus events and register your interest.</p><div id="campusEventsList" class="space-y-2"><p class="text-xs text-slate-500">No events are currently published.</p></div></section>
@@ -1753,6 +1771,10 @@
                             <label class="text-xs font-semibold">Audience<select id="adminFrontNewsCampus" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="all">All institutes</option><option value="icet">ICET</option><option value="arts">Arts &amp; Science</option><option value="poly">Polytechnic</option><option value="school">Ilahia Public School</option><option value="iti">ITI</option><option value="law">Law College</option><option value="pharmacy">Pharmacy</option><option value="kmlps">KMLPS</option></select></label>
                             <label class="text-xs font-semibold sm:col-span-2">Headline<input id="adminFrontNewsTitle" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Short headline students will see"></label>
                             <label class="text-xs font-semibold sm:col-span-2">Update<textarea id="adminFrontNewsDetails" required minlength="8" maxlength="2000" rows="3" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Write the useful details, dates, and next steps"></textarea></label>
+                            <label class="text-xs font-semibold sm:col-span-2">Poster image (optional)<input id="adminFrontNewsPoster" type="file" accept="image/png,image/jpeg,image/webp" onchange="previewAdminNewsPoster(event)" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2"><span class="mt-1 block text-[10px] font-normal text-slate-500">PNG, JPEG, or WebP · maximum 1 MB. Appears in the selected college’s campus inbox.</span></label>
+                            <div id="adminFrontNewsPosterPreview" class="hidden sm:col-span-2"></div>
+                            <label class="flex items-center gap-2 text-xs font-semibold sm:col-span-2"><input id="adminFrontNewsCelebrate" type="checkbox" onchange="toggleAdminNewsCelebration()" class="h-4 w-4 rounded border-slate-300 text-amber-700">Show a celebration effect on a chosen date (for a win or occasion)</label>
+                            <label id="adminFrontNewsCelebrationDateField" class="hidden text-xs font-semibold">Celebration date<input id="adminFrontNewsCelebrationDate" type="date" class="mt-1 w-full rounded-lg border border-slate-300 p-2"><span class="mt-1 block text-[10px] font-normal text-slate-500">Shows once when a visitor first opens that college page on this date.</span></label>
                             <label class="text-xs font-semibold">Show until (optional)<input id="adminFrontNewsExpiry" type="date" class="mt-1 w-full rounded-lg border border-slate-300 p-2"><span class="mt-1 block text-[10px] font-normal text-slate-500">The item automatically disappears after this date.</span></label>
                             <div class="flex flex-wrap items-end gap-2"><button id="adminFrontNewsSubmit" class="rounded-lg bg-blue-800 px-4 py-2.5 text-xs font-bold text-white">Publish to front page</button><button id="adminFrontNewsCancel" type="button" onclick="resetAdminFrontNewsForm()" class="hidden rounded-lg border border-slate-300 px-4 py-2.5 text-xs font-bold text-slate-700">Cancel edit</button></div>
                             <p id="adminFrontNewsFeedback" class="text-xs sm:col-span-2" aria-live="polite"></p>
@@ -1798,6 +1820,7 @@
                             <label id="campusNoticeDateField" class="text-xs font-semibold">Event date<input id="campusNoticeDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label>
                             <label id="campusNoticeLocationField" class="text-xs font-semibold">Location<input id="campusNoticeLocation" maxlength="160" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Hall / campus area"></label>
                             <label id="campusNoticeBenefitsField" class="text-xs font-semibold sm:col-span-2">Benefits for students (optional)<input id="campusNoticeBenefits" maxlength="600" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. hands-on practice, certificate, portfolio project"></label>
+                            <label id="campusNoticeCelebrateField" class="flex items-center gap-2 text-xs font-semibold sm:col-span-2"><input id="campusNoticeCelebrate" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-amber-700">Show a celebration effect on the event date</label>
                             <label id="campusNoticeCheckinField" class="text-xs font-semibold sm:col-span-2">On-site check-in code<input id="campusNoticeCheckinCode" required minlength="4" maxlength="12" pattern="[A-Za-z0-9-]{4,12}" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Set a short code to announce at the venue"><span class="mt-1 block text-[10px] font-normal text-slate-500">The code is stored as a hash and is not shown to students. Share it with attendees at the event.</span></label>
                             <label class="text-xs font-semibold sm:col-span-2">Details<textarea id="campusNoticeDetails" required minlength="8" maxlength="1000" rows="3" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Details and instructions for students"></textarea></label>
                             <div class="sm:col-span-2"><button class="rounded-lg bg-emerald-800 px-4 py-2.5 text-xs font-bold text-white">Publish to Campus Hub</button><span id="campusNoticeFeedback" class="ml-3 text-xs text-slate-600" aria-live="polite"></span></div>
@@ -3721,30 +3744,50 @@
             try {
                 const data = await campusLifeApi('/api/admin/news');
                 const items = Array.isArray(data.items) ? data.items : [];
-                list.innerHTML = items.length ? `<h5 class="font-bold text-slate-800">Published items (${items.length})</h5>${items.map(item => `<article class="flex flex-wrap items-start justify-between gap-3 rounded-lg border ${item.type === 'alert' ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-white'} p-3"><div class="min-w-0 flex-1"><strong class="text-xs">${item.type === 'alert' ? 'Alert' : 'News'} · ${escapeHTML(item.title)}</strong><p class="mt-1 text-[10px] text-slate-500">${escapeHTML(adminNewsCampusNames[item.campusKey] || item.campusKey)}${item.expiresOn ? ` · until ${escapeHTML(item.expiresOn)}` : ' · no expiry'}</p><p class="mt-1 whitespace-pre-line text-xs text-slate-700">${escapeHTML(item.details)}</p></div><div class="flex gap-2"><button type="button" onclick="editAdminFrontNews('${item.id}')" class="rounded border border-blue-200 bg-white px-3 py-1.5 text-[10px] font-bold text-blue-800">Edit</button><button type="button" onclick="deleteAdminFrontNews('${item.id}')" class="rounded border border-rose-200 bg-white px-3 py-1.5 text-[10px] font-bold text-rose-700">Remove</button></div></article>`).join('')}` : '<p class="rounded-lg border border-dashed border-slate-300 bg-white p-3 text-xs text-slate-500">No front-page news has been published yet.</p>';
+                list.innerHTML = items.length ? `<h5 class="font-bold text-slate-800">Published items (${items.length})</h5>${items.map(item => `<article class="flex flex-wrap items-start justify-between gap-3 rounded-lg border ${item.type === 'alert' ? 'border-rose-200 bg-rose-50' : 'border-slate-200 bg-white'} p-3"><div class="min-w-0 flex-1"><strong class="text-xs">${item.type === 'alert' ? 'Alert' : 'News'} · ${escapeHTML(item.title)}</strong><p class="mt-1 text-[10px] text-slate-500">${escapeHTML(adminNewsCampusNames[item.campusKey] || item.campusKey)}${item.expiresOn ? ` · until ${escapeHTML(item.expiresOn)}` : ' · no expiry'}${item.celebrationDate ? ` · celebration ${escapeHTML(item.celebrationDate)}` : ''}</p>${item.posterData ? `<img src="${escapeHTML(item.posterData)}" alt="${escapeHTML(item.title)} poster" class="mt-2 max-h-36 max-w-full rounded-lg border border-slate-200 object-contain">` : ''}<p class="mt-1 whitespace-pre-line text-xs text-slate-700">${escapeHTML(item.details)}</p></div><div class="flex gap-2"><button type="button" onclick="editAdminFrontNews('${item.id}')" class="rounded border border-blue-200 bg-white px-3 py-1.5 text-[10px] font-bold text-blue-800">Edit</button><button type="button" onclick="deleteAdminFrontNews('${item.id}')" class="rounded border border-rose-200 bg-white px-3 py-1.5 text-[10px] font-bold text-rose-700">Remove</button></div></article>`).join('')}` : '<p class="rounded-lg border border-dashed border-slate-300 bg-white p-3 text-xs text-slate-500">No front-page news has been published yet.</p>';
             } catch (error) { list.innerHTML = `<p class="text-xs text-rose-700">${escapeHTML(error.message)}</p>`; }
         }
         async function saveAdminFrontNews(event) {
             event.preventDefault();
             const feedback = document.getElementById('adminFrontNewsFeedback'), id = document.getElementById('adminFrontNewsId').value;
-            const body = { type: document.getElementById('adminFrontNewsType').value, campusKey: document.getElementById('adminFrontNewsCampus').value, title: document.getElementById('adminFrontNewsTitle').value, details: document.getElementById('adminFrontNewsDetails').value, expiresOn: document.getElementById('adminFrontNewsExpiry').value };
+            const celebrate = document.getElementById('adminFrontNewsCelebrate').checked, celebrationDate = document.getElementById('adminFrontNewsCelebrationDate').value;
+            if (celebrate && !celebrationDate) { feedback.className = 'text-xs text-rose-700 sm:col-span-2'; feedback.textContent = 'Choose the celebration date first.'; return; }
+            const body = { type: document.getElementById('adminFrontNewsType').value, campusKey: document.getElementById('adminFrontNewsCampus').value, title: document.getElementById('adminFrontNewsTitle').value, details: document.getElementById('adminFrontNewsDetails').value, expiresOn: document.getElementById('adminFrontNewsExpiry').value, celebrationDate: celebrate ? celebrationDate : '' };
             try {
+                const file = document.getElementById('adminFrontNewsPoster').files?.[0];
+                if (file) {
+                    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 1024 * 1024) throw new Error('Choose a PNG, JPEG, or WebP poster under 1 MB.');
+                    body.posterData = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || '')); reader.onerror = () => reject(new Error('Could not read the selected poster.')); reader.readAsDataURL(file); });
+                }
                 await campusLifeApi(id ? `/api/admin/news/${encodeURIComponent(id)}` : '/api/admin/news', { method: id ? 'PATCH' : 'POST', body: JSON.stringify(body) });
                 feedback.className = 'text-xs text-emerald-800 sm:col-span-2'; feedback.textContent = id ? 'News updated on the front page.' : 'News published on the front page.';
-                resetAdminFrontNewsForm(); await loadAdminFrontNews(); void loadCampusNewsTicker();
+                resetAdminFrontNewsForm(); await loadAdminFrontNews(); void loadCampusNewsTicker(); void loadCampusEventInbox(currentActiveKey);
             } catch (error) { feedback.className = 'text-xs text-rose-700 sm:col-span-2'; feedback.textContent = error.message; }
+        }
+        function previewAdminNewsPoster(event) {
+            const box = document.getElementById('adminFrontNewsPosterPreview'), file = event.target.files?.[0];
+            if (!box) return;
+            if (!file) { box.innerHTML = ''; box.classList.add('hidden'); return; }
+            if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 1024 * 1024) { event.target.value = ''; box.innerHTML = ''; box.classList.add('hidden'); document.getElementById('adminFrontNewsFeedback').textContent = 'Choose a PNG, JPEG, or WebP poster under 1 MB.'; return; }
+            const reader = new FileReader(); reader.onload = () => { box.innerHTML = `<img src="${String(reader.result).replace(/"/g, '&quot;')}" alt="Poster preview" class="max-h-40 rounded-lg border border-slate-200 object-contain">`; box.classList.remove('hidden'); }; reader.readAsDataURL(file);
+        }
+        function toggleAdminNewsCelebration() {
+            const checked = document.getElementById('adminFrontNewsCelebrate')?.checked;
+            const field = document.getElementById('adminFrontNewsCelebrationDateField'), date = document.getElementById('adminFrontNewsCelebrationDate');
+            field?.classList.toggle('hidden', !checked); if (date) date.required = Boolean(checked);
         }
         async function editAdminFrontNews(id) {
             try {
                 const data = await campusLifeApi('/api/admin/news'), item = data.items.find(entry => entry.id === id);
                 if (!item) throw new Error('This news item could not be found.');
-                document.getElementById('adminFrontNewsId').value = item.id; document.getElementById('adminFrontNewsType').value = item.type || 'news'; document.getElementById('adminFrontNewsCampus').value = item.campusKey || 'all'; document.getElementById('adminFrontNewsTitle').value = item.title || ''; document.getElementById('adminFrontNewsDetails').value = item.details || ''; document.getElementById('adminFrontNewsExpiry').value = item.expiresOn || '';
+                document.getElementById('adminFrontNewsId').value = item.id; document.getElementById('adminFrontNewsType').value = item.type || 'news'; document.getElementById('adminFrontNewsCampus').value = item.campusKey || 'all'; document.getElementById('adminFrontNewsTitle').value = item.title || ''; document.getElementById('adminFrontNewsDetails').value = item.details || ''; document.getElementById('adminFrontNewsExpiry').value = item.expiresOn || ''; document.getElementById('adminFrontNewsCelebrate').checked = Boolean(item.celebrationDate); document.getElementById('adminFrontNewsCelebrationDate').value = item.celebrationDate || ''; toggleAdminNewsCelebration();
+                const preview = document.getElementById('adminFrontNewsPosterPreview'); preview.innerHTML = item.posterData ? `<img src="${escapeHTML(item.posterData)}" alt="Current poster" class="max-h-40 rounded-lg border border-slate-200 object-contain">` : ''; preview.classList.toggle('hidden', !item.posterData);
                 document.getElementById('adminFrontNewsSubmit').textContent = 'Save news changes'; document.getElementById('adminFrontNewsCancel').classList.remove('hidden'); document.getElementById('adminFrontNewsForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (error) { alert(error.message); }
         }
         function resetAdminFrontNewsForm() {
             const form = document.getElementById('adminFrontNewsForm'); if (!form) return;
-            form.reset(); document.getElementById('adminFrontNewsId').value = ''; document.getElementById('adminFrontNewsSubmit').textContent = 'Publish to front page'; document.getElementById('adminFrontNewsCancel').classList.add('hidden');
+            form.reset(); document.getElementById('adminFrontNewsId').value = ''; document.getElementById('adminFrontNewsSubmit').textContent = 'Publish to front page'; document.getElementById('adminFrontNewsCancel').classList.add('hidden'); const preview = document.getElementById('adminFrontNewsPosterPreview'); if (preview) { preview.innerHTML = ''; preview.classList.add('hidden'); } toggleAdminNewsCelebration();
         }
         async function deleteAdminFrontNews(id) {
             if (!confirm('Remove this news item from the front page?')) return;
@@ -3754,7 +3797,7 @@
         async function publishCampusNotice(event) {
             event.preventDefault();
             const form = event.target, feedback = document.getElementById('campusNoticeFeedback');
-            const body = { type: document.getElementById('campusNoticeType').value, campusKey: document.getElementById('campusNoticeCampus').value, title: document.getElementById('campusNoticeTitle').value, date: document.getElementById('campusNoticeDate').value, location: document.getElementById('campusNoticeLocation').value, benefits: document.getElementById('campusNoticeBenefits').value, checkinCode: document.getElementById('campusNoticeCheckinCode').value, details: document.getElementById('campusNoticeDetails').value };
+            const body = { type: document.getElementById('campusNoticeType').value, campusKey: document.getElementById('campusNoticeCampus').value, title: document.getElementById('campusNoticeTitle').value, date: document.getElementById('campusNoticeDate').value, location: document.getElementById('campusNoticeLocation').value, benefits: document.getElementById('campusNoticeBenefits').value, checkinCode: document.getElementById('campusNoticeCheckinCode').value, details: document.getElementById('campusNoticeDetails').value, celebration: document.getElementById('campusNoticeCelebrate').checked };
             try { await campusLifeApi('/api/campus-life/notices', { method: 'POST', body: JSON.stringify(body) }); form.reset(); toggleCampusNoticeDate(); feedback.textContent = 'Published to the selected Campus Hub.'; void loadAdminCampusNotices(); setTimeout(() => { feedback.textContent = ''; }, 4000); }
             catch (error) { feedback.textContent = error.message; feedback.className = 'ml-3 text-xs text-rose-700'; }
         }
@@ -3764,6 +3807,7 @@
             document.getElementById('campusNoticeLocationField')?.classList.toggle('hidden', !eventNotice);
             document.getElementById('campusNoticeBenefitsField')?.classList.toggle('hidden', !eventNotice);
             document.getElementById('campusNoticeCheckinField')?.classList.toggle('hidden', !eventNotice);
+            document.getElementById('campusNoticeCelebrateField')?.classList.toggle('hidden', !eventNotice);
             const date = document.getElementById('campusNoticeDate'); if (date) date.required = eventNotice;
             const code = document.getElementById('campusNoticeCheckinCode'); if (code) code.required = eventNotice;
         }
@@ -6723,6 +6767,22 @@
         };
         let interviewPracticeQuestionIndex = 0;
 
+        async function speakInterviewQuestion() {
+            const prompt = document.getElementById('interviewQuestionText')?.textContent || '';
+            if (prompt) window.speakLilyText?.(currentLang === 'en' ? prompt : await translateText(prompt, currentLang, 'en'));
+        }
+
+        function toggleInterviewRecording() {
+            if (window.isIlahiaSpeechRecording?.('interview')) {
+                window.stopIlahiaSpeechRecognition();
+                return;
+            }
+            const answer = document.getElementById('interviewPracticeAnswer');
+            if (!answer) return;
+            answer.value = '';
+            window.startIlahiaSpeechRecognition?.('interview', answer);
+        }
+
         function renderInterviewPracticeQuestion() {
             const role = document.getElementById('interviewPracticeRole')?.value || 'general';
             const questions = interviewPracticeQuestions[role] || interviewPracticeQuestions.general;
@@ -6753,15 +6813,16 @@
             renderInterviewPracticeQuestion();
         }
 
-        function coachInterviewAnswer(event) {
+        async function coachInterviewAnswer(event) {
             event.preventDefault();
-            const answer = document.getElementById('interviewPracticeAnswer')?.value.trim() || '';
+            let answer = document.getElementById('interviewPracticeAnswer')?.value.trim() || '';
             const feedback = document.getElementById('interviewPracticeFeedback');
             if (!feedback) return;
             if (answer.length < 40) {
                 feedback.innerHTML = '<p class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">Add a little more detail so you can practise explaining your example, actions, and outcome.</p>';
                 return;
             }
+            if (currentLang !== 'en') answer = await translateText(answer, 'en', currentLang);
             const text = answer.toLowerCase();
             const checks = [
                 { label: 'Situation', found: /\b(when|during|while|in my|at the|for a)\b/.test(text), tip: 'Set the context in one sentence.' },
@@ -6831,10 +6892,54 @@
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || 'Could not load this campus inbox.');
                 const items = Array.isArray(data.items) ? data.items : [];
-                list.innerHTML = items.length ? items.map(item => '<article class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><div class="flex items-center justify-between gap-2"><span class="rounded-full bg-amber-100 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-amber-900">' + escapeHTML(item.type || 'event') + '</span>' + (item.date ? '<time class="text-[10px] font-semibold text-slate-500">' + escapeHTML(item.date) + '</time>' : '') + '</div><h3 class="mt-3 font-bold text-slate-900">' + escapeHTML(item.title) + '</h3>' + (item.details ? '<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">' + escapeHTML(item.details) + '</p>' : '') + (item.location ? '<p class="mt-3 text-xs font-semibold text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-amber-700"></i>' + escapeHTML(item.location) + '</p>' : '') + '</article>').join('') : '<p class="rounded-xl border border-dashed border-amber-300 bg-white/70 p-4 text-sm text-slate-600 sm:col-span-2 lg:col-span-3">No upcoming events have been published for this institute yet.</p>';
+                list.innerHTML = items.length ? items.map(item => '<article class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><div class="flex items-center justify-between gap-2"><span class="rounded-full bg-amber-100 px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-amber-900">' + escapeHTML(item.type || 'event') + '</span>' + (item.date ? '<time class="text-[10px] font-semibold text-slate-500">' + escapeHTML(item.date) + '</time>' : '') + '</div>' + (item.posterData ? '<img src="' + escapeHTML(item.posterData) + '" alt="' + escapeHTML(item.title) + ' poster" loading="lazy" class="mt-3 max-h-56 w-full rounded-lg bg-slate-50 object-contain">' : '') + '<h3 class="mt-3 font-bold text-slate-900">' + escapeHTML(item.title) + '</h3>' + (item.celebration ? '<p class="mt-1 text-[10px] font-bold text-amber-800">🎉 Celebration scheduled for this date</p>' : '') + (item.details ? '<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">' + escapeHTML(item.details) + '</p>' : '') + (item.location ? '<p class="mt-3 text-xs font-semibold text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-amber-700"></i>' + escapeHTML(item.location) + '</p>' : '') + '</article>').join('') : '<p class="rounded-xl border border-dashed border-amber-300 bg-white/70 p-4 text-sm text-slate-600 sm:col-span-2 lg:col-span-3">No college news, posters, or upcoming events have been published for this institute yet.</p>';
+                void maybeStartCampusCelebration(campusKey, items);
             } catch (error) {
                 list.innerHTML = '<p class="text-sm text-rose-700" role="alert">' + escapeHTML(error.message || 'Campus inbox is unavailable.') + '</p>';
             }
+        }
+        let campusCelebrationFrame = 0, campusCelebrationTimer = 0;
+        function stopCampusCelebration() {
+            if (campusCelebrationFrame) cancelAnimationFrame(campusCelebrationFrame);
+            if (campusCelebrationTimer) clearTimeout(campusCelebrationTimer);
+            campusCelebrationFrame = 0; campusCelebrationTimer = 0;
+            document.getElementById('campusCelebrationOverlay')?.classList.add('hidden');
+        }
+        function launchCampusCelebration(campusKey, title) {
+            const overlay = document.getElementById('campusCelebrationOverlay'), canvas = document.getElementById('campusCelebrationCanvas'), heading = document.getElementById('campusCelebrationTitle');
+            if (!overlay || !canvas || !heading) return;
+            stopCampusCelebration();
+            heading.textContent = title || `${collegeDatabase[campusKey]?.shortName || 'Campus'} celebration!`;
+            overlay.classList.remove('hidden');
+            const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            const context = canvas.getContext('2d');
+            if (!context || reducedMotion) { campusCelebrationTimer = setTimeout(stopCampusCelebration, 4500); return; }
+            const ratio = Math.min(window.devicePixelRatio || 1, 1.5), width = window.innerWidth, height = window.innerHeight;
+            canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio); context.setTransform(ratio, 0, 0, ratio, 0, 0);
+            const colors = ['#ffd76a', '#fff4bd', '#67d7ff', '#ff7891', '#9cf2be', '#c6a4ff'];
+            let particles = [], nextBurst = 0, startedAt = performance.now();
+            const burst = (x, y) => { for (let i = 0; i < 36; i++) { const angle = Math.PI * 2 * i / 36, speed = 1.2 + Math.random() * 3.2; particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 70 + Math.random() * 35, size: 1.5 + Math.random() * 2.5, color: colors[Math.floor(Math.random() * colors.length)] }); } };
+            const frame = now => {
+                if (overlay.classList.contains('hidden')) return;
+                context.clearRect(0, 0, width, height);
+                if (now >= nextBurst && now - startedAt < 3900) { burst(width * (.15 + Math.random() * .7), height * (.16 + Math.random() * .4)); nextBurst = now + 520 + Math.random() * 320; }
+                particles = particles.filter(p => p.life > 0);
+                particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .035; p.vx *= .994; p.life--; context.globalAlpha = Math.min(1, p.life / 22); context.fillStyle = p.color; context.fillRect(p.x, p.y, p.size, p.size); });
+                context.globalAlpha = 1;
+                if (now - startedAt < 4800) campusCelebrationFrame = requestAnimationFrame(frame);
+                else stopCampusCelebration();
+            };
+            campusCelebrationFrame = requestAnimationFrame(frame);
+            campusCelebrationTimer = setTimeout(stopCampusCelebration, 5200);
+        }
+        async function maybeStartCampusCelebration(campusKey, items) {
+            const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+            const event = (items || []).find(item => item.celebration === true && item.date === day);
+            if (!event) return;
+            const key = `ilahia-celebration:${campusKey}:${day}`;
+            try { if (localStorage.getItem(key)) return; localStorage.setItem(key, event.id || 'shown'); }
+            catch { return; }
+            launchCampusCelebration(campusKey, event.title ? `${collegeDatabase[campusKey]?.shortName || 'Campus'} · ${event.title}` : undefined);
         }
         function toggleCampusNewsTicker() {
             const track = document.getElementById('campusNewsTrack'), button = document.getElementById('campusNewsPause'); if (!track || !button) return;
@@ -17006,6 +17111,84 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   if (!panel || !messages || !input) return;
   const welcome = 'Hi, I’m Lily! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
   const plain = value => String(value || '').trim();
+  const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
+  let lilyVoiceEnabled = true;
+  let activeRecognition = null;
+  let activeRecognitionPurpose = '';
+  let activeRecognitionTarget = null;
+  function speechLocale() { return speechLocales[currentLang] || 'en-IN'; }
+  function setVoiceStatus(text, target = 'lilyVoiceStatus') {
+    const el = document.getElementById(target);
+    if (el) el.textContent = text;
+  }
+  window.speakLilyText = (text, lang = currentLang) => {
+    if (!lilyVoiceEnabled || !('speechSynthesis' in window) || !String(text || '').trim()) return false;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(String(text));
+    utterance.lang = speechLocales[lang] || 'en-IN';
+    const voices = window.speechSynthesis.getVoices();
+    const match = voices.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase()) || voices.find(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
+    if (match) utterance.voice = match;
+    window.speechSynthesis.speak(utterance);
+    return true;
+  };
+  window.toggleLilyVoice = () => {
+    lilyVoiceEnabled = !lilyVoiceEnabled;
+    const button = document.getElementById('lilyVoiceToggle');
+    if (button) button.textContent = lilyVoiceEnabled ? 'Voice: on' : 'Voice: off';
+    if (!lilyVoiceEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  };
+  window.stopIlahiaSpeechRecognition = () => {
+    if (activeRecognition) activeRecognition.stop();
+  };
+  window.isIlahiaSpeechRecording = purpose => !!activeRecognition && (!purpose || activeRecognitionPurpose === purpose);
+  window.startIlahiaSpeechRecognition = (purpose, target) => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setVoiceStatus('Voice input is not supported in this browser. You can type instead.', purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus');
+      return false;
+    }
+    if (activeRecognition) {
+      setVoiceStatus('Finish the current recording first.', purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus');
+      return false;
+    }
+    const recognition = new SpeechRecognition();
+    let recognitionHadSpeech = false;
+    activeRecognition = recognition;
+    activeRecognitionPurpose = purpose;
+    activeRecognitionTarget = target;
+    recognition.lang = speechLocale();
+    recognition.interimResults = true;
+    recognition.continuous = purpose === 'interview';
+    const statusId = purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus';
+    setVoiceStatus('Listening… speak now. Your words will appear as text.', statusId);
+    recognition.onresult = event => {
+      recognitionHadSpeech = true;
+      let transcript = '';
+      for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
+      if (activeRecognitionTarget) activeRecognitionTarget.value = transcript.trim();
+      if (purpose === 'interview') setVoiceStatus('Transcript ready. Review or edit it, then choose Review my answer.', statusId);
+    };
+    recognition.onerror = event => {
+      setVoiceStatus(event.error === 'not-allowed' ? 'Microphone permission was blocked. Allow microphone access or type instead.' : `Voice input stopped (${event.error}). You can type instead.`, statusId);
+    };
+    recognition.onend = () => {
+      if (activeRecognition === recognition) {
+        activeRecognition = null;
+        activeRecognitionPurpose = '';
+        activeRecognitionTarget = null;
+      }
+      if (purpose === 'lily' && recognitionHadSpeech && target && target.value.trim()) window.sendLilyMessage({ preventDefault() {} });
+      else if (purpose === 'interview' && target?.value.trim()) setVoiceStatus('Transcript ready. Review or edit it, then choose Review my answer.', statusId);
+      else if (document.getElementById(statusId)?.textContent === 'Listening… speak now. Your words will appear as text.') setVoiceStatus('No speech detected. Try again or type instead.', statusId);
+    };
+    try { recognition.start(); return true; }
+    catch (_) { activeRecognition = null; setVoiceStatus('Could not start the microphone. Try again or type instead.', statusId); return false; }
+  };
+  window.toggleLilyListening = () => {
+    if (activeRecognition && activeRecognitionPurpose === 'lily') { activeRecognition.stop(); return; }
+    window.startIlahiaSpeechRecognition('lily', input);
+  };
   async function localized(text) { return currentLang === 'en' ? text : await translateText(text, currentLang, 'en'); }
   function addMessage(kind, text) {
     const bubble = document.createElement('div');
@@ -17059,16 +17242,40 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   async function makeReply(question) {
     const english = currentLang === 'en' ? question : await translateText(question, 'en', currentLang);
     const query = `${english} ${question}`.toLowerCase();
+    const campusMatchers = [
+      ['law', /\b(law|legal studies)\b/], ['icet', /\b(icet|engineering college|engineering and technology)\b/],
+      ['arts', /\b(arts college|arts and science|arts & science)\b/], ['poly', /\b(polytechnic|poly college)\b/],
+      ['school', /\b(public school|ilahia school|school campus)\b/], ['iti', /\b(industrial training institute|\biti\b)\b/],
+      ['pharmacy', /\b(pharmacy college|pharmacy)\b/], ['kmlps', /\b(kmlps|k m l p s)\b/]
+    ];
+    const askedCampus = campusMatchers.find(([, pattern]) => pattern.test(query))?.[0] || null;
+    if (/\b(student portal|student login|student sign.?in|student dashboard)\b/.test(query)) {
+      if (askedCampus || !onLanding()) {
+        const campus = askedCampus || currentActiveKey;
+        const name = collegeDatabase[campus]?.name || 'this campus';
+        return { text: `Opening the student portal for ${name}.`, action: async () => {
+          if (askedCampus) switchCollegePage(campus);
+          closeLilyConversation();
+          openPortalModal();
+          await showLoginForm('student');
+        } };
+      }
+      return { text: 'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.' };
+    }
+    if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query) && askedCampus) {
+      return { text: `Taking you to ${collegeDatabase[askedCampus]?.name || 'that campus'}.`, action: async () => { switchCollegePage(askedCampus); closeLilyConversation(); } };
+    }
     if (/\b(news|headline|update|alert|breaking|announcement|new)\b|خبر|أخبار|समाचार|खबर|செய்தி|വാർത്ത|അറിയിപ്പ്/.test(query)) return latestNewsReply();
     if (/\b(event|events|workshop|activity|activities|happening|calendar)\b|حدث|فعاليات|कार्यक्रम|आयोजन|நிகழ்வு|நிகழ்ச்ச|പരിപാടി|ഇവന്റ്/.test(query)) return upcomingEventsReply();
     if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
     if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
-    return 'I can help you stay up to date with live campus news, alerts, and published events. Try asking “What’s the latest news?” or “What events are coming up?”';
+    if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
+    return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
   }
   window.openLilyConversation = async () => {
     panel.classList.remove('hidden');
     await window.refreshLilyConversationLanguage();
-    if (!messages.children.length) addMessage('bot', await localized(welcome));
+    if (!messages.children.length) { const greetingText = await localized(welcome); addMessage('bot', greetingText); window.speakLilyText(greetingText); }
     input.focus({ preventScroll: true });
   };
   window.closeLilyConversation = () => panel.classList.add('hidden');
@@ -17083,8 +17290,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     input.value = '';
     addMessage('user', question);
     const thinking = addMessage('bot', await localized('I’m checking the latest campus updates…'));
-    try { thinking.textContent = await localized(await makeReply(question)); }
-    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); }
+    try {
+      const reply = await makeReply(question);
+      const replyText = typeof reply === 'string' ? reply : reply.text;
+      thinking.textContent = await localized(replyText);
+      window.speakLilyText(thinking.textContent);
+      if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
+    }
+    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };
@@ -17092,7 +17305,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const headline = plain(item.title || 'A campus update');
     const notice = await localized(`New campus update: ${headline}. Tap me and ask for the latest news.`);
     if (greeting) greeting.textContent = notice;
-    if (!panel.classList.contains('hidden')) addMessage('bot', notice);
+    if (!panel.classList.contains('hidden')) { addMessage('bot', notice); window.speakLilyText(notice); }
   };
 })();
 </script>
@@ -17145,6 +17358,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   mascot.addEventListener('pointercancel', finishDrag);
   mascot.addEventListener('click', () => {
     if (suppressNextClick) { suppressNextClick = false; return; }
+    mascot.classList.remove('is-jumping');
+    void mascot.offsetWidth;
+    mascot.classList.add('is-jumping');
+    window.setTimeout(() => mascot.classList.remove('is-jumping'), 700);
     openMascotConversation();
   });
   mascot.addEventListener('keydown', event => {
@@ -17156,6 +17373,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
+      mascot.classList.remove('is-jumping');
+      void mascot.offsetWidth;
+      mascot.classList.add('is-jumping');
+      window.setTimeout(() => mascot.classList.remove('is-jumping'), 700);
       openMascotConversation();
     } else if (event.key === 'Home') {
       event.preventDefault();
