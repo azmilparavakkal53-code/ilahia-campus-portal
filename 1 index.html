@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
     <link rel="manifest" href="/manifest.webmanifest?v=34">
-    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-192.png">
-    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-180.png">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-180.png">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -169,7 +169,7 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=34" alt="Ecosystem" decoding="async"></a>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=34" alt="Ecosystem" decoding="async"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -17233,8 +17233,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
-    utterance.pitch = 1.65;
-    utterance.rate = 1.2;
+    utterance.pitch = 2;
+    utterance.rate = 1.16;
     let started = false;
     const speakWithAvailableVoice = () => {
       if (started || !lilyVoiceEnabled) return;
@@ -17245,8 +17245,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const voices = window.speechSynthesis.getVoices();
       const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
       const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
-      const feminineVoice = sameLanguage.find(voice => /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|google.*female/i.test(voice.name));
-      if (feminineVoice || exactLanguage || sameLanguage[0]) utterance.voice = feminineVoice || exactLanguage || sameLanguage[0];
+      const femaleVoicePattern = /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english|microsoft.*female/i;
+      const feminineVoice = sameLanguage.find(voice => femaleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
+      const otherFemaleVoice = voices.find(voice => femaleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
+      const maleVoicePattern = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex)(\W|$)/i;
+      const unmarkedVoice = sameLanguage.find(voice => !maleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
+      utterance.voice = feminineVoice || otherFemaleVoice || unmarkedVoice || exactLanguage || sameLanguage[0] || null;
       window.speechSynthesis.speak(utterance);
     };
     if (window.speechSynthesis.getVoices().length) speakWithAvailableVoice();
