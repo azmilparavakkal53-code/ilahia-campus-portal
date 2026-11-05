@@ -6011,7 +6011,6 @@
                 document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
                 setActiveSessionRole(session.role); currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
-                window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName || 'Ilahia Ecosystem');
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
@@ -17165,8 +17164,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
-    utterance.pitch = 1.46;
-    utterance.rate = 0.9;
+    utterance.pitch = 1.55;
+    utterance.rate = 0.92;
     let started = false;
     const speakWithAvailableVoice = () => {
       if (started || !lilyVoiceEnabled) return;
