@@ -176,7 +176,7 @@
     <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
         <p id="lilyLoginGreetingText" class="m-0 flex-1 text-xs font-semibold leading-relaxed"></p>
-        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Nila’s greeting">×</button>
+        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Mila’s greeting">×</button>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
         <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
@@ -209,7 +209,7 @@
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Nila to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Nila Guide</span></button>
+                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Mila to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Mila Guide</span></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
                 <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
@@ -232,8 +232,8 @@
     </div>
     <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
         <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
-            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Nila</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
-            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Nila conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
+            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Mila</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
+            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Mila conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
         </div>
         <div id="lilyConversationMessages" class="flex max-h-64 min-h-28 flex-col gap-2 overflow-y-auto bg-slate-50 p-3 text-xs" aria-live="polite" aria-relevant="additions text"></div>
         <div class="flex gap-2 border-t border-slate-200 px-3 pt-2">
@@ -242,10 +242,10 @@
         </div>
         <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
             <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
-            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Nila"><i class="fa-solid fa-microphone"></i></button>
+            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Mila"><i class="fa-solid fa-microphone"></i></button>
             <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
         </form>
-        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Nila to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
+        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Mila to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -271,9 +271,9 @@
             </aside>
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Nila the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Nila, the campus conversation mascot. Tap to chat; she stays still while her face expresses emotions." title="Nila stands here. Tap her to chat.">
-                            <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Nila, the Ilahia student mascot">
+                    <div id="trustMascotStage" aria-label="Mila the Ilahia Trust welcome mascot">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Mila, the campus conversation mascot. Tap to chat; she stays still while her face expresses emotions." title="Mila stands here. Tap her to chat.">
+                            <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Mila, the Ilahia student mascot">
   <defs>
     <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
     <linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient>
@@ -311,7 +311,7 @@
   </g>
   <g class="nila-thinking-mark"><circle cx="536" cy="156" r="27" fill="#fffaf0" stroke="#efc45d" stroke-width="5"/><circle cx="573" cy="125" r="7" fill="#fffaf0" stroke="#efc45d" stroke-width="4"/><circle cx="590" cy="106" r="4" fill="#fffaf0" stroke="#efc45d" stroke-width="3"/><circle cx="536" cy="147" r="3.5" fill="#6a527c"/><circle cx="547" cy="147" r="3.5" fill="#6a527c"/><path d="M531 162c4 4 9 4 13 0" fill="none" stroke="#6a527c" stroke-width="3" stroke-linecap="round"/></g>
 </svg>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Nila! Tap me for campus news and upcoming events.</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Mila! Tap me for campus news and upcoming events.</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -987,7 +987,7 @@
                             <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-briefcase mr-2 text-indigo-700"></i>Placements & internships</h5><p class="my-2 text-[11px] text-slate-500">Office-reviewed openings and deadlines for your institute.</p><div id="placementBoard" class="space-y-2"></div><div id="myApplications" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-sky-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-chart-line mr-2 text-sky-700"></i>Academic progress</h5><p class="my-2 text-[11px] text-slate-500">Official marks and attendance records entered by the office. Contact your department if a record looks wrong.</p><div id="studentProgressRecords" class="space-y-2"></div><div id="progressSupportAlert" class="mt-2"></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="renderPersonalSkillMap()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
-                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Nila asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Nila reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
+                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Mila asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Mila reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
                             <section class="rounded-xl border border-pink-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-heart mr-2 text-pink-700"></i>Private student support</h5><p class="my-2 text-[11px] text-slate-500">Only the student-support office can read your request. Share only what you’re comfortable sharing.</p><form onsubmit="submitCounsellingRequest(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Support topic<select id="counsellingTopic" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option>Personal wellbeing</option><option>Study stress</option><option>Accessibility support</option><option>Financial guidance</option><option>Other support</option></select></label><label class="block text-[11px] font-semibold">What support would help?<textarea id="counsellingNote" required minlength="10" maxlength="1200" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Please avoid sharing passwords or unnecessary sensitive details"></textarea></label><label class="block text-[11px] font-semibold">Preferred contact time (optional)<input id="counsellingPreferred" maxlength="80" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. after 2 pm"></label><button class="rounded-lg bg-pink-700 px-4 py-2 text-xs font-bold text-white">Send private request</button></form><div id="studentCounsellingList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-tie mr-2 text-amber-700"></i>Alumni mentors</h5><p class="my-2 text-[11px] text-slate-500">Request career guidance from office-verified alumni. The office coordinates introductions; private contact details are not shown.</p><div id="alumniMentorList" class="space-y-2"></div><div id="myMentorshipRequests" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-people-group mr-2 text-amber-600"></i>College events & clubs</h5><p class="my-2 text-[11px] text-slate-500">See admin-published campus events and register your interest.</p><div id="campusEventsList" class="space-y-2"><p class="text-xs text-slate-500">No events are currently published.</p></div></section>
@@ -17279,7 +17279,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const input = document.getElementById('lilyConversationInput');
   const greeting = document.querySelector('.trust-mascot-greeting');
   if (!panel || !messages || !input) return;
-  const welcome = 'Hi, I’m Nila! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
+  const welcome = 'Hi, I’m Mila! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
@@ -17303,7 +17303,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const button = document.getElementById('lilyMicButton');
     if (!button) return;
     button.innerHTML = recording ? '<i class="fa-solid fa-stop"></i>' : '<i class="fa-solid fa-microphone"></i>';
-    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Nila' : 'Speak to Nila');
+    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Mila' : 'Speak to Mila');
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
   window.speakLilyText = (text, lang = currentLang) => {
@@ -17387,7 +17387,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       clearTimeout(lilySpeechSendTimer);
       if (purpose !== 'lily' || lilySpeechSent || !target?.value.trim()) return false;
       lilySpeechSent = true;
-      setVoiceStatus('Sending your voice message to Nila…', 'lilyVoiceStatus');
+      setVoiceStatus('Sending your voice message to Mila…', 'lilyVoiceStatus');
       void window.sendLilyMessage({ preventDefault() {} });
       return true;
     };
@@ -17407,7 +17407,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
       if (target) target.value = transcript.trim();
       if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
-        setVoiceStatus('I heard you. Sending your question to Nila…', statusId);
+        setVoiceStatus('I heard you. Sending your question to Mila…', statusId);
         clearTimeout(lilySpeechSendTimer);
         lilySpeechSendTimer = window.setTimeout(() => { sendLilyVoiceMessage(); recognition.stop(); }, 350);
       }
@@ -17447,8 +17447,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const lilyOfflinePhrases = {
     ml: {
       'I’m checking the latest campus updates…': 'ഞാൻ പുതിയ ക്യാമ്പസ് അറിയിപ്പുകൾ പരിശോധിക്കുകയാണ്…',
-      'Hi! I’m Nila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ മീര, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
-      'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ മീരയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
+      'Hi! I’m Mila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ മീര, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
+      'I’m Mila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ മീരയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'ക്യാമ്പസ് വാർത്തകളും പരിപാടികളും പറയാനും ശരിയായ സ്ഥാപന പോർട്ടലിലേക്ക് കൊണ്ടുപോകാനും എനിക്ക് കഴിയും. “ലോ കോളേജ് സ്റ്റുഡന്റ് പോർട്ടലിലേക്ക് കൊണ്ടുപോകൂ” എന്ന് ചോദിക്കൂ.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'ആദ്യം സ്ഥാപനം തിരഞ്ഞെടുക്കൂ. ശേഷം “സ്റ്റുഡന്റ് പോർട്ടൽ തുറക്കൂ” എന്ന് പറയൂ; ആ സ്ഥാപനത്തിന്റെ ലോഗിൻ തുറക്കാം.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'ഇപ്പോൾ വരാനിരിക്കുന്ന ക്യാമ്പസ് പരിപാടികൾ പ്രസിദ്ധീകരിച്ചിട്ടില്ല. പുതിയ അറിയിപ്പുകൾക്കായി പിന്നീട് ക്യാമ്പസ് ഇൻബോക്സ് പരിശോധിക്കൂ.',
@@ -17456,8 +17456,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     hi: {
       'I’m checking the latest campus updates…': 'मैं कैंपस की नई जानकारी देख रही हूँ…',
-      'Hi! I’m Nila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं मीरा, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
-      'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं मीरा हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
+      'Hi! I’m Mila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं मीरा, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
+      'I’m Mila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं मीरा हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'मैं कैंपस की ताज़ा खबरें और कार्यक्रम बता सकती हूँ और सही संस्थान पोर्टल तक पहुँचा सकती हूँ। कहें: “मुझे लॉ कॉलेज के छात्र पोर्टल पर ले चलो।”',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'पहले संस्थान चुनें, फिर “छात्र पोर्टल खोलो” कहें। मैं उस कैंपस का लॉगिन खोल दूँगी।',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'अभी कैंपस के कोई आगामी कार्यक्रम प्रकाशित नहीं हैं। नई सूचनाओं के लिए बाद में कैंपस इनबॉक्स देखें।',
@@ -17465,8 +17465,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ta: {
       'I’m checking the latest campus updates…': 'சமீபத்திய வளாக அறிவிப்புகளைப் பார்க்கிறேன்…',
-      'Hi! I’m Nila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் லில்லி, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
-      'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் லில்லி. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
+      'Hi! I’m Mila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் லில்லி, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
+      'I’m Mila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் லில்லி. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'வளாகச் செய்திகள் மற்றும் நிகழ்வுகளைச் சொல்லவும் சரியான கல்லூரி போர்ட்டலுக்கு வழிகாட்டவும் முடியும். “என்னை சட்டக் கல்லூரி மாணவர் போர்ட்டலுக்கு அழைத்துச் செல்” என்று கேளுங்கள்.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'முதலில் கல்வி நிறுவனத்தைத் தேர்ந்தெடுத்து, “மாணவர் போர்ட்டலைத் திற” என்று சொல்லுங்கள். அந்த வளாக உள்நுழைவைத் திறக்கிறேன்.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'தற்போது வரவிருக்கும் வளாக நிகழ்வுகள் வெளியிடப்படவில்லை. புதிய அறிவிப்புகளுக்கு பின்னர் வளாக இன்பாக்ஸைப் பாருங்கள்.',
@@ -17474,8 +17474,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ar: {
       'I’m checking the latest campus updates…': 'أتحقق من آخر تحديثات الحرم…',
-      'Hi! I’m Nila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا ليلي، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
-      'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا ليلي. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
+      'Hi! I’m Mila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا ليلي، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
+      'I’m Mila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا ليلي. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'يمكنني مشاركة أخبار الحرم والفعاليات وإرشادك إلى بوابة المعهد المناسبة. قل: «خذني إلى بوابة طلاب كلية القانون».',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'اختر المعهد أولاً ثم قل «افتح بوابة الطلاب» لأفتح صفحة تسجيل الدخول الخاصة به.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'لا توجد فعاليات قادمة منشورة حالياً. تحقق من صندوق وارد الحرم لاحقاً للاطلاع على الإعلانات الجديدة.',
@@ -17542,6 +17542,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(admin(?:istrator)?(?: panel| dashboard| portal| login)?|webmaster dashboard)\b/.test(query)) {
       return 'Admin tools are reserved for authorized administrators. I can help with public campus information, news, events, and student portal destinations.';
     }
+    if (/\b(programming|coding|subject|course topic|lesson|homework|assignment)\b/i.test(query) && /\b(don.t understand|confus|help|explain|stuck|struggling)\b/i.test(query)) return 'That is okay. Let us break it into smaller steps. Which part is confusing: the basic idea, an example, or a specific question?';
     const campusMatchers = [
       ['law', /\b(law|legal studies)\b/], ['icet', /\b(icet|engineering college|engineering and technology)\b/],
       ['arts', /\b(arts college|arts and science|arts & science)\b/], ['poly', /\b(polytechnic|poly college)\b/],
@@ -17600,7 +17601,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(that.s amazing|that.s great|great news|i am happy|i\'m happy|this is wonderful|fantastic|awesome)\b/.test(query)) return 'Yay, I am happy to celebrate with you. Tell me what happened; I want to hear all about it.';
     if (/\b(thank you|thanks|thank you so much)\b/.test(query)) return 'You are very welcome. I’m glad I could be here with you. What else would you like to chat about?';
 
-    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
+    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Mila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
     return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
   }
@@ -17616,6 +17617,37 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     input.value = topic === 'events' ? 'What events are coming up?' : 'What is the latest campus news?';
     window.sendLilyMessage({ preventDefault() {} });
   };
+  const milaChatContext = { turn: 0, userMood: 'neutral', lastUser: '', lastReply: '' };
+  window.MilaChatReactions = {
+    async onVisitorMessage(message) {
+      const text = String(message || '').trim();
+      const mood = window.reactMilaToText?.(text, 'thinking') || 'thinking';
+      const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
+        : /\b(sad|failed|fail|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
+        : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment)\b/i.test(text) ? 'Let us work through it together. Which part should we start with?'
+        : /\b(hello|hi|hey|good morning|good afternoon|good evening)\b/i.test(text) ? 'It is lovely to hear from you. How can I help today?'
+        : 'I am listening. Tell me a little more.';
+      const turn = ++milaChatContext.turn; milaChatContext.userMood = mood; milaChatContext.lastUser = text; milaChatContext.lastReply = '';
+      if (greeting) { greeting.textContent = await localized(line); setTimeout(() => { if (greeting && milaChatContext.turn === turn) greeting.textContent = defaultGreeting; }, 5200); }
+      return { turn, mood, line };
+    },
+    async onAssistantReply(reply, context) {
+      if (!context || context.turn !== milaChatContext.turn) return;
+      const text = String(reply || '').trim(); if (!text || text === milaChatContext.lastReply) return;
+      milaChatContext.lastReply = text;
+      const userMood = context.mood;
+      const replyIsSupportive = /\b(listen|sorry|one step|together|you can|try|let.s|we can|help)\b/i.test(text);
+      const replyIsUseful = text.length > 80 || /\b(admission|course|attendance|event|news|library|hostel|canteen|student portal)\b/i.test(text);
+      if (userMood === 'sad') { if (replyIsSupportive) window.expressMilaEmotion?.('love', 3000); }
+      else if (userMood === 'excited' || userMood === 'happy' || userMood === 'proud') { /* Keep the visitor celebration sequence in control. */ }
+      else if (replyIsUseful) window.expressMilaEmotion?.(/\?|which|what|how/i.test(text) ? 'thinking' : 'happy', 2600);
+      if (greeting && replyIsUseful && userMood !== 'sad' && !['excited','happy','proud'].includes(userMood)) {
+        greeting.textContent = await localized(/\?|which|what|how/i.test(text) ? 'I found something helpful. Want to explore it together?' : 'I hope that helps. What would you like to know next?');
+        setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 4200);
+      }
+    },
+    onAssistantError(context) { if (context?.turn === milaChatContext.turn) window.expressMilaEmotion?.('sad', 2600); }
+  };
   window.sendLilyMessage = async event => {
     event?.preventDefault?.();
     const question = input.value.trim();
@@ -17623,18 +17655,18 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     input.value = '';
     window.resetLilyIdleMood?.();
     addMessage('user', question);
-    const incomingMood = window.reactNilaToText?.(question, 'thinking') || 'thinking';
+    const moodContext = await window.MilaChatReactions?.onVisitorMessage(question);
     const thinking = addMessage('bot', await localized('I’m checking the latest campus updates…'));
     try {
       const reply = await makeReply(question);
       const replyText = typeof reply === 'string' ? reply : reply.text;
-      if (!['happy','sad','love','proud','excited'].includes(incomingMood)) window.reactNilaToText?.(replyText, 'happy');
+      await window.MilaChatReactions?.onAssistantReply(replyText, moodContext);
       thinking.textContent = await localized(replyText);
       setVoiceStatus('Voice message sent. Tap the microphone to speak again.', 'lilyVoiceStatus');
       window.speakLilyText(thinking.textContent);
       if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
     }
-    catch (_) { window.expressNilaEmotion?.('sad', 3200); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Nila could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
+    catch (_) { window.MilaChatReactions?.onAssistantError(moodContext); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Mila could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };
@@ -17642,7 +17674,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const headline = plain(item.title || 'A campus update');
     const notice = await localized(`New campus update: ${headline}. Tap me and ask for the latest news.`);
     if (greeting) greeting.textContent = notice;
-    window.expressNilaEmotion?.('excited', 3200);
+    window.expressMilaEmotion?.('excited', 3200);
     if (!panel.classList.contains('hidden')) { addMessage('bot', notice); window.speakLilyText(notice); }
   };
 })();
@@ -17679,7 +17711,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         const [mood, message] = idleMoodFlow[idleMoodStep % idleMoodFlow.length];
         idleMoodStep += 1;
         greeting.textContent = message;
-        window.expressNilaEmotion?.(mood, 120000);
+        window.expressMilaEmotion?.(mood, 120000);
         showNextMood();
       }, 120000));
     };
@@ -17709,7 +17741,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     proud: 'You did something worth being proud of.',
     grumpy: 'I am feeling a little grumpy. I will still help when you are ready.'
   };
-  window.expressNilaEmotion = (emotion, duration = 5200) => {
+  window.expressMilaEmotion = (emotion, duration = 5200) => {
     const mood = nilaEmotionData[emotion] ? emotion : 'happy';
     Object.keys(nilaEmotionData).forEach(key => mascot.classList.remove('is-emotion-' + key));
     mascot.classList.remove('is-thinking', 'is-pouting', 'is-grumpy');
@@ -17725,36 +17757,36 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     }, Math.max(700, duration));
   };
   let nilaMoodSequenceTimers = [];
-  const stopNilaMoodSequence = () => { nilaMoodSequenceTimers.forEach(clearTimeout); nilaMoodSequenceTimers = []; };
-  const beginNilaMoodSequence = () => { stopNilaMoodSequence(); clearIdleTimers(); clearMascotMood(); };
+  const stopMilaMoodSequence = () => { nilaMoodSequenceTimers.forEach(clearTimeout); nilaMoodSequenceTimers = []; };
+  const beginMilaMoodSequence = () => { stopMilaMoodSequence(); clearIdleTimers(); clearMascotMood(); };
   window.nilaGreetEmotion = () => {
-    beginNilaMoodSequence();
-    window.expressNilaEmotion('shy', 1100);
-    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('happy', 1500), 900));
+    beginMilaMoodSequence();
+    window.expressMilaEmotion('shy', 1100);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('happy', 1500), 900));
     nilaMoodSequenceTimers.push(setTimeout(() => {
-      window.expressNilaEmotion('excited', 4200);
+      window.expressMilaEmotion('excited', 4200);
       scheduleIdleMood();
     }, 2400));
   };
   window.nilaComfortEmotion = () => {
-    beginNilaMoodSequence();
-    window.expressNilaEmotion('sad', 1900);
-    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('love', 1900), 1700));
+    beginMilaMoodSequence();
+    window.expressMilaEmotion('sad', 1900);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('love', 1900), 1700));
     nilaMoodSequenceTimers.push(setTimeout(() => {
-      window.expressNilaEmotion('proud', 4200);
+      window.expressMilaEmotion('proud', 4200);
       scheduleIdleMood();
     }, 3400));
   };
   window.nilaCelebrateEmotion = () => {
-    beginNilaMoodSequence();
-    window.expressNilaEmotion('proud', 1600);
-    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('surprised', 1500), 1400));
+    beginMilaMoodSequence();
+    window.expressMilaEmotion('proud', 1600);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('surprised', 1500), 1400));
     nilaMoodSequenceTimers.push(setTimeout(() => {
-      window.expressNilaEmotion('excited', 4200);
+      window.expressMilaEmotion('excited', 4200);
       scheduleIdleMood();
     }, 2700));
   };
-  window.reactNilaToText = (text, fallback = 'happy') => {
+  window.reactMilaToText = (text, fallback = 'happy') => {
     const value = String(text || '').toLowerCase();
     if (/\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(value)) {
       window.nilaGreetEmotion();
@@ -17776,6 +17808,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     else if (/\b(scared|afraid|fear|danger|worried|nervous)\b|പേടി|ഭയം|डर|பயம்|خائف/.test(value)) mood = 'scared';
     else if (/\b(sleep|bedtime|good night|nighty night)\b|ഉറക്കം|नींद|தூக்கம்|نعاس/.test(value)) mood = 'sleepy';
     else if (/\b(tired|exhaust|long day|no energy)\b|ക്ഷീണം|थका|சோர்வு|متعب/.test(value)) mood = 'tired';
+    else if (/\b(programming|coding|subject|lesson|homework|assignment)\b/i.test(value) && /\b(don.t understand|confus|help|explain|stuck|struggling)\b/i.test(value)) mood = 'thinking';
     else if (/\b(confus|don.t understand|unclear|what do you mean|lost)\b|ആശയക്കുഴപ്പം|उलझन|குழப்பம்|مرتبك/.test(value)) mood = 'confused';
     else if (/\b(disappoint|let down)\b|നിരാശ|निराश|ஏமாற்றம்|خيبة/.test(value)) mood = 'disappointed';
     else if (/\b(love|heart|thank|thanks|appreciate|sweet)\b|സ്നേഹം|നന്ദി|प्यार|धन्यवाद|அன்பு|நன்றி|حب|شكرا/.test(value)) { window.nilaCelebrateEmotion(); return 'love'; }
@@ -17783,10 +17816,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     else if (/\b(wow|surpris|unexpected|really\?)\b|അതിശയം|आश्चर्य|ஆச்சரியம்|مندهش/.test(value)) mood = 'surprised';
     else if (/\b(excited|amazing|awesome|great news|congrat|fantastic)\b|ആവേശം|സന്തോഷം|उत्साहित|खुश|மகிழ்ச்சி|متحمس/.test(value)) { window.nilaCelebrateEmotion(); return 'excited'; }
     else if (/\b(why|how|what|when|where|can you|could you|help|explain|tell me)\b|\?/.test(value)) mood = 'thinking';
-    window.expressNilaEmotion(mood);
+    window.expressMilaEmotion(mood);
     return mood;
   };
-  window.resetLilyIdleMood = () => { clearIdleTimers(); stopNilaMoodSequence(); clearMascotMood(); scheduleIdleMood(); };
+  window.resetLilyIdleMood = () => { clearIdleTimers(); stopMilaMoodSequence(); clearMascotMood(); scheduleIdleMood(); };
   let loginGreetingTimer = 0;
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
   window.lilyGreetVisitor = () => {
@@ -17794,11 +17827,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const hour = new Date().getHours();
     const period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     const greetings = {
-      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Nila, your campus companion. Tap me for campus news, events, or help finding a service.'},
-      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Nila, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
-      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Nila, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
-      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Nila, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
-      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Nila، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
+      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Mila, your campus companion. Tap me for campus news, events, or help finding a service.'},
+      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Mila, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
+      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Mila, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
+      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Mila, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
+      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Mila، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
     };
     defaultGreeting = greetings[language][period] + '! ' + greetings[language].line;
     greeting.textContent = defaultGreeting;
@@ -17807,11 +17840,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     mascot.classList.add('is-greeting');
     setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
     window.resetLilyIdleMood();
-    window.expressNilaEmotion('happy', 2600);
+    window.expressMilaEmotion('happy', 2600);
     return defaultGreeting;
   };
   window.lilyGreetSignedInUser = (name, campus) => {
-    window.expressNilaEmotion?.('happy', 3600);
+    window.expressMilaEmotion?.('happy', 3600);
     const safeName = String(name || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 48) || 'there';
     const hour = new Date().getHours();
     const part = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
@@ -17835,15 +17868,15 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     mascot.classList.add('is-greeting');
     setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
     window.resetLilyIdleMood();
-    window.expressNilaEmotion('happy', 2200);
+    window.expressMilaEmotion('happy', 2200);
     const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
-    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Nila says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Mila says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
     window.lilyPopIntoCampusPage = (floatOnPage = true) => {
     if (floatOnPage) {
-      window.expressNilaEmotion('thinking', 2600);
+      window.expressMilaEmotion('thinking', 2600);
       if (mascot.parentElement !== document.body) document.body.appendChild(mascot);
       Object.assign(mascot.style, { position:'fixed', left:'auto', right:'3rem', top:'7rem', bottom:'auto', translate:'none' });
     }
