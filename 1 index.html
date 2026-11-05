@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=56">
+    <link rel="manifest" href="/manifest.webmanifest?v=57">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -54,7 +54,7 @@
         button:hover > .ilahia-ai-launcher-mark { transform:rotate(-5deg) scale(1.08); }
         .trust-leadership-heading { font-family:"Palatino Linotype","Book Antiqua",Georgia,serif; letter-spacing:.035em; text-shadow:0 2px 14px #f6c95735; }
         #trustMascotStage { position:relative; height:8rem; overflow:visible; pointer-events:none; }
-        #trustMascotMover { position:fixed; z-index:17000; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:grab; touch-action:none; user-select:none; }
+        #trustMascotMover { position:absolute; z-index:17000; left:50%; bottom:0; translate:-50% 0; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:grab; touch-action:none; user-select:none; pointer-events:auto; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
@@ -17597,8 +17597,6 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const mascot = document.getElementById('trustMascotMover');
   const greeting = mascot?.querySelector('.trust-mascot-greeting');
   if (!stage || !mascot || !greeting) return;
-  document.body.appendChild(mascot);
-  mascot.style.position = 'fixed';
   mascot.style.zIndex = '17000';
   let defaultGreeting = greeting.textContent.trim();
   let idleTimers = [];
@@ -17661,27 +17659,34 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   let stored = null;
   try { stored = JSON.parse(localStorage.getItem('ilahiaTrustMascotPositionV2') || 'null'); } catch {}
   if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
+    mascot.style.position = 'fixed';
+    mascot.style.translate = 'none';
     place(stored.x * maxLeft(), stored.y * maxTop());
-  } else {
-    const trustSlot = stage.getBoundingClientRect();
-    if (trustSlot.width > 0 && trustSlot.height > 0) {
-      place(trustSlot.left + (trustSlot.width - mascot.offsetWidth) / 2, trustSlot.top + Math.max(0, (trustSlot.height - mascot.offsetHeight) / 2));
-    } else {
-      place(maxLeft(), Math.min(112, maxTop()));
-    }
   }
-  window.lilyPopIntoCampusPage = () => {
+  const ensureMascotFloating = () => {
+    if (mascot.style.position === 'fixed') return;
+    const rect = mascot.getBoundingClientRect();
+    mascot.style.position = 'fixed';
+    mascot.style.translate = 'none';
+    const visibleInViewport = rect.top >= 0 && rect.bottom <= window.innerHeight && rect.left >= 0 && rect.right <= window.innerWidth;
+    if (visibleInViewport) place(rect.left, rect.top);
+    else place(maxLeft(), Math.min(112, maxTop()));
+  };
+  window.lilyPopIntoCampusPage = (floatOnPage = true) => {
+    if (floatOnPage) ensureMascotFloating();
     mascot.classList.remove('is-popping'); void mascot.offsetWidth; mascot.classList.add('is-popping');
     window.setTimeout(() => mascot.classList.remove('is-popping'), 850);
   };
-  window.setTimeout(() => window.lilyPopIntoCampusPage(), 500);
+  window.setTimeout(() => window.lilyPopIntoCampusPage(false), 500);
   let drag = null;
   let suppressNextClick = false;
   const openMascotConversation = () => window.openLilyConversation?.();
   mascot.addEventListener('pointerdown', event => {
     if (event.button !== undefined && event.button !== 0) return;
     window.resetLilyIdleMood();
-    drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.offsetLeft, top: mascot.offsetTop, moved: false };
+    const mascotRect = mascot.getBoundingClientRect();
+    ensureMascotFloating();
+    drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.style.position === 'fixed' ? mascot.offsetLeft : mascotRect.left, top: mascot.style.position === 'fixed' ? mascot.offsetTop : mascotRect.top, moved: false };
     mascot.classList.add('is-dragging');
     mascot.setPointerCapture?.(event.pointerId);
   });
@@ -17727,11 +17732,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     }
   });
   window.addEventListener('resize', () => {
+    if (mascot.style.position !== 'fixed') return;
     try {
       const position = JSON.parse(localStorage.getItem('ilahiaTrustMascotPositionV2') || 'null');
       if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * maxLeft(), position.y * maxTop());
-      else place(mascot.offsetLeft, mascot.offsetTop);
-    } catch { place(mascot.offsetLeft, mascot.offsetTop); }
+      else place(Math.min(mascot.offsetLeft, maxLeft()), Math.min(mascot.offsetTop, maxTop()));
+    } catch { place(Math.min(mascot.offsetLeft, maxLeft()), Math.min(mascot.offsetTop, maxTop())); }
   });
 
 })();
