@@ -812,7 +812,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/canteen-admin.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-icon-v4-180.png', '/assets/icons/ilahia-ecosystem-icon-v4-192.png', '/assets/icons/ilahia-ecosystem-icon-v4-512.png', '/assets/icons/ilahia-ecosystem-icon-4k.svg', '/assets/icons/ilahia-ecosystem-wordmark.png']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/canteen-admin.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-final-logo.jpg', '/assets/icons/ilahia-ecosystem-app-icon-v5.svg', '/assets/icons/ilahia-ecosystem-icon-v3-180.png', '/assets/icons/ilahia-ecosystem-icon-v3-192.png', '/assets/icons/ilahia-ecosystem-icon-v3-512.png', '/assets/icons/ilahia-ecosystem-icon-v4-180.png', '/assets/icons/ilahia-ecosystem-icon-v4-192.png', '/assets/icons/ilahia-ecosystem-icon-v4-512.png', '/assets/icons/ilahia-ecosystem-icon-4k.svg', '/assets/icons/ilahia-ecosystem-wordmark.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -842,7 +842,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-campus-signout-v18' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-mobile-launch-logo-v20' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
