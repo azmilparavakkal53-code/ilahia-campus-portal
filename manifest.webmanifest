@@ -23,7 +23,25 @@
       "src": "/assets/icons/ilahia-ecosystem-logo-v5-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/ilahia-ecosystem-logo-v6-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/ilahia-ecosystem-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/ilahia-ecosystem-logo-v6-maskable-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

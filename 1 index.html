@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ilahia Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=28">
+    <link rel="manifest" href="/manifest.webmanifest?v=29">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-logo-v5-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-logo-v5-512.png">
@@ -44,10 +44,6 @@
         .ilahia-trust-mark { width: 56px; height: 56px; overflow: hidden; flex: 0 0 auto; border-radius: 12px; background: #061534; padding: 0; }
         .ilahia-trust-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
         .ilahia-trust-mark.compact { width: 44px; height: 44px; }
-        #appLaunchSplash { position: fixed; inset: 0; z-index: 30000; display: grid; place-items: center; background: #061534; opacity: 1; visibility: visible; transition: opacity .35s ease, visibility .35s ease; }
-        #appLaunchSplash.is-dismissed { opacity: 0; visibility: hidden; pointer-events: none; }
-        #appLaunchSplash img { display:block; width:min(62vw, 264px); height:auto; filter:drop-shadow(0 18px 35px #0008); }
-        @media (prefers-reduced-motion:reduce) { #appLaunchSplash { transition:none; } }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -100,9 +96,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
-    <div id="appLaunchSplash" role="status" aria-label="Loading Ilahia Ecosystem">
-        <img src="/assets/icons/ilahia-ecosystem-logo-v5-512.png" alt="Ilahia Ecosystem" width="512" height="512" fetchpriority="high" decoding="async">
-    </div>
     <!-- Trust identity bar; institute selection stays on the landing page -->
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
@@ -16914,19 +16907,5 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   });
 })();
 </script>
-<script>
-(() => {
-  const splash = document.getElementById('appLaunchSplash');
-  if (!splash) return;
-  let dismissed = false;
-  const dismiss = () => {
-    if (dismissed) return;
-    dismissed = true;
-    window.setTimeout(() => splash.classList.add('is-dismissed'), 420);
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', dismiss, { once: true });
-  else dismiss();
-  window.setTimeout(dismiss, 4500);
-})();
-</script></body>
+</body>
 </html>
