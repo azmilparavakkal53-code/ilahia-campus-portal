@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
     <link rel="manifest" href="/manifest.webmanifest?v=61">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-wordmark-gold-512.webp?v=35" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-180.png">
@@ -209,7 +210,7 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=34" alt="Ecosystem" decoding="async"></a>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold-512.webp?v=35" alt="Ecosystem" decoding="async" loading="eager" fetchpriority="high"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -17707,7 +17708,20 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     ['tired', 'I’m getting tired while I wait for our next chat.'],
     ['sleepy', 'I’m feeling sleepy. I’ll be here when you come back.']
   ];
-  const scheduleIdleMood = () => { clearIdleTimers(); idleMoodStep = 0; };  const nilaEmotionData = {
+  const scheduleIdleMood = () => {
+    clearIdleTimers();
+    idleMoodStep = 0;
+    const showNextMood = () => {
+      idleTimers.push(setTimeout(() => {
+        const [mood, message] = idleMoodFlow[idleMoodStep % idleMoodFlow.length];
+        idleMoodStep += 1;
+        greeting.textContent = message;
+        window.expressMilaEmotion?.(mood, 120000);
+        showNextMood();
+      }, 120000));
+    };
+    showNextMood();
+  };  const nilaEmotionData = {
     happy:{label:'Happy'}, angry:{label:'Angry'}, sad:{label:'Sad'}, surprised:{label:'Surprised'},
     thinking:{label:'Thinking'}, sleepy:{label:'Sleepy'}, shy:{label:'Shy'}, excited:{label:'Excited'},
     embarrassed:{label:'Embarrassed'}, scared:{label:'Scared'}, disappointed:{label:'Disappointed'}, love:{label:'Love'},
