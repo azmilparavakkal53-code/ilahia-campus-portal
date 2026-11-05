@@ -79,6 +79,10 @@
         #trustMascotMover.is-emotion-tired .nila-face-tired { display:block; animation:nila-face-expression-in .28s ease-out both; }
         #trustMascotMover.is-emotion-proud .nila-face-proud { display:block; animation:nila-face-expression-in .28s ease-out both; }
         #trustMascotMover.is-emotion-grumpy .nila-face-grumpy { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-excited .trust-mascot-character, #trustMascotMover.is-emotion-proud .trust-mascot-character { animation:trust-mascot-touch-dance .78s ease-in-out 4; transform-origin:50% 90%; }
+        #trustMascotMover.is-emotion-happy .trust-mascot-character { animation:trust-mascot-jump .72s ease-out 2; transform-origin:50% 90%; }
+        #trustMascotMover.is-emotion-sad .trust-mascot-character, #trustMascotMover.is-emotion-love .trust-mascot-character { animation:nila-sad-droop 1.05s ease-in-out 2; transform-origin:50% 90%; }
+        #trustMascotMover.is-emotion-thinking .trust-mascot-character { animation:nila-thinking-tilt .75s ease-in-out 2; transform-origin:50% 90%; }
 
 
         #trustMascotMover.is-thinking .nila-thinking-mark { display:block; animation:nila-think-pop .35s ease-out both; }
@@ -17597,7 +17601,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(i feel sad|i am sad|i\'m sad|bad day|lonely|overwhelmed|feeling low|down today)\b/.test(query)) return 'I am sorry today feels heavy. You do not have to solve everything at once. Want to tell me what happened? I will listen, and we can figure out one small next step together.';
     if (/\b(i am angry|i\'m angry|i feel angry|frustrated|annoyed)\b/.test(query)) return 'That sounds frustrating. I am listening. What happened? We can work through it one step at a time.';
     if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(query)) return 'I’m sorry; that result can really hurt. One exam or assignment does not define your ability or your future. Take a moment to breathe. When you are ready, tell me which subject felt hardest and we can make a small, realistic plan for your next attempt. I believe you can recover from this.';
-    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b/.test(query)) return 'That is wonderful news. Congratulations; you worked for this and deserve to enjoy the moment. I’m proud of you. What are you celebrating first?';
+    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|best day|great news|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b/.test(query)) return 'That is wonderful news. Congratulations; you worked for this and deserve to enjoy the moment. I’m proud of you. What are you celebrating first?';
     if (/\b(that.s amazing|that.s great|great news|i am happy|i\'m happy|this is wonderful|fantastic|awesome)\b/.test(query)) return 'Yay, I am happy to celebrate with you. Tell me what happened; I want to hear all about it.';
     if (/\b(thank you|thanks|thank you so much)\b/.test(query)) return 'You are very welcome. I’m glad I could be here with you. What else would you like to chat about?';
 
@@ -17621,10 +17625,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.MilaChatReactions = {
     async onVisitorMessage(message) {
       const text = String(message || '').trim();
-      const isExplicitReaction = /\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam|sad|hurt|lonely|bad day|failed|fail|exam went badly|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|thank|thanks|appreciate|love|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|surpris|unexpected|excited|amazing|awesome|great news|congrat|fantastic|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|نमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
+      const isExplicitReaction = /\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam|sad|hurt|lonely|bad day|failed|fail|lost(?: my| an?| the)? exam|exam went badly|couldn.t (?:pass|clear)|didn.t clear|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|thank|thanks|appreciate|love|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|surpris|unexpected|excited|amazing|awesome|great news|congrat|fantastic|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|نमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
       const mood = isExplicitReaction ? (window.reactMilaToText?.(text, 'thinking') || 'thinking') : 'neutral';
       const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
-        : /\b(sad|failed|fail|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
+        : /\b(sad|failed|fail|lost(?: my| an?| the)? exam|couldn.t (?:pass|clear)|didn.t clear|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
         : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment)\b/i.test(text) ? 'Let us work through it together. Which part should we start with?'
         : /\b(hello|hi|hey|good morning|good afternoon|good evening)\b/i.test(text) ? 'It is lovely to hear from you. How can I help today?'
         : 'I am listening. Tell me a little more.';
@@ -17758,11 +17762,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.nilaComfortEmotion = () => {
     beginMilaMoodSequence();
     window.expressMilaEmotion('sad', 1900);
-    nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('love', 1900), 1700));
-    nilaMoodSequenceTimers.push(setTimeout(() => {
-      window.expressMilaEmotion('proud', 4200);
-      scheduleIdleMood();
-    }, 3400));
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('love', 5200), 1700));
   };
   window.nilaCelebrateEmotion = () => {
     beginMilaMoodSequence();
