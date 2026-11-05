@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ilahia-campus-shell-v49';
-const APP_SHELL = ['/', '/canteen.html', '/canteen-admin.html', '/manifest.webmanifest', '/assets/icons/ilahia-ecosystem-appicon-final-180.png', '/assets/icons/ilahia-ecosystem-appicon-final-192.png', '/assets/icons/ilahia-ecosystem-appicon-final-512.png', '/assets/icons/ilahia-ecosystem-appicon-final-1024.png', '/assets/icons/ilahia-ecosystem-appicon-final-maskable-512.png', '/assets/icons/ilahia-ecosystem-appicon-final-192.png?v=33', '/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33', '/assets/icons/ilahia-ecosystem-appicon-final-1024.png?v=33', '/assets/icons/ilahia-ecosystem-appicon-final-maskable-512.png?v=33', '/assets/icons/ilahia-ecosystem-wordmark-gold.png', '/assets/campuses/ilahia-public-school-hero.jpg'];
+const CACHE_NAME = 'ilahia-campus-shell-v50';
+const APP_SHELL = ['/', '/canteen.html', '/canteen-admin.html', '/manifest.webmanifest', '/assets/icons/ilahia-ecosystem-appicon-i-v34-180.png', '/assets/icons/ilahia-ecosystem-appicon-i-v34-192.png', '/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png', '/assets/icons/ilahia-ecosystem-appicon-i-v34-1024.png', '/assets/icons/ilahia-ecosystem-appicon-i-v34-maskable-512.png', '/assets/icons/ilahia-ecosystem-wordmark-gold.png', '/assets/campuses/ilahia-public-school-hero.jpg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(() => undefined).then(() => self.skipWaiting()));

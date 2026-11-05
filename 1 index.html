@@ -7,11 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=33">
-    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png?v=33">
-    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png?v=33"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-final-180.png?v=33">
+    <link rel="manifest" href="/manifest.webmanifest?v=34">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-192.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-i-v34-180.png">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -55,20 +55,30 @@
         #trustMascotStage { position:relative; height:6.35rem; overflow:hidden; touch-action:pan-y; }
         #trustMascotMover { position:absolute; z-index:2; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100% - 1rem); cursor:grab; touch-action:none; user-select:none; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
-        .trust-mascot-character { width:4.5rem; height:4.9rem; flex:none; overflow:visible; animation:trust-mascot-bob 2.6s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:4.5rem; height:4.9rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
         .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
         .trust-mascot-gesture { transform-box:fill-box; transform-origin:80% 70%; animation:trust-mascot-gesture 2.3s ease-in-out infinite; }
         .trust-mascot-blink { transform-box:fill-box; transform-origin:center; animation:trust-mascot-blink 4.4s ease-in-out infinite; }
+        .trust-mascot-legs { transform-box:fill-box; transform-origin:50% 0%; }
+        .trust-mascot-leg-left,.trust-mascot-shoe-left { transform-box:fill-box; transform-origin:80% 5%; animation:trust-mascot-step-left .48s ease-in-out infinite alternate; }
+        .trust-mascot-leg-right,.trust-mascot-shoe-right { transform-box:fill-box; transform-origin:20% 5%; animation:trust-mascot-step-right .48s ease-in-out infinite alternate; }
+        .trust-mascot-mouth-sad,.trust-mascot-brows { display:none; }
+        #trustMascotMover.is-pouting .trust-mascot-mouth-smile,#trustMascotMover.is-grumpy .trust-mascot-mouth-smile { display:none; }
+        #trustMascotMover.is-pouting .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-brows { display:block; }
+        #trustMascotMover.is-greeting .trust-mascot-character { animation:trust-mascot-greeting-hop .85s ease-in-out 2; }
         #trustMascotMover.is-jumping .trust-mascot-character { animation:trust-mascot-jump .68s cubic-bezier(.3,.8,.35,1) both; }
         .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
         #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
-        @keyframes trust-mascot-bob { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-4px) rotate(2deg); } }
+        @keyframes trust-mascot-dance { 0%,100% { transform:translateY(0) rotate(-3deg) scale(1); } 22% { transform:translateY(-5px) rotate(4deg) scale(1.02); } 48% { transform:translateY(-1px) rotate(-2deg) scale(.99); } 72% { transform:translateY(-6px) rotate(3deg) scale(1.02); } }
+        @keyframes trust-mascot-step-left { from { transform:rotate(-10deg) translateY(0); } to { transform:rotate(13deg) translateY(-2px); } }
+        @keyframes trust-mascot-step-right { from { transform:rotate(12deg) translateY(-2px); } to { transform:rotate(-11deg) translateY(0); } }
+        @keyframes trust-mascot-greeting-hop { 0%,100% { transform:translateY(0) rotate(0) scale(1); } 28% { transform:translateY(-12px) rotate(-9deg) scale(1.05); } 55% { transform:translateY(-5px) rotate(8deg) scale(1.02); } 78% { transform:translateY(-9px) rotate(-5deg) scale(1.04); } }
         @keyframes trust-mascot-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-24deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-18deg); } }
         @keyframes trust-mascot-gesture { 0%,72%,100% { transform:rotate(0); } 78% { transform:rotate(-20deg); } 86% { transform:rotate(10deg); } 93% { transform:rotate(-12deg); } }
         @keyframes trust-mascot-blink { 0%,43%,47%,100% { transform:scaleY(1); } 45% { transform:scaleY(.12); } }
         @keyframes trust-mascot-jump { 0% { transform:translateY(0) rotate(0); } 35% { transform:translateY(-15px) rotate(-8deg); } 65% { transform:translateY(-12px) rotate(8deg); } 100% { transform:translateY(0) rotate(0); } }
         @media (max-width:380px) { .trust-mascot-character { width:3.8rem; height:4.2rem; } .trust-mascot-greeting { max-width:11rem; font-size:.62rem; } }
-        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave, .trust-mascot-gesture, .trust-mascot-blink { animation:none; } }
+        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave, .trust-mascot-gesture, .trust-mascot-blink, .trust-mascot-leg-left, .trust-mascot-leg-right, .trust-mascot-shoe-left, .trust-mascot-shoe-right { animation:none; } }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -121,6 +131,11 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
+    <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
+        <p id="lilyLoginGreetingText" class="m-0 flex-1 text-xs font-semibold leading-relaxed"></p>
+        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Lily’s greeting">×</button>
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
         <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
             <defs>
@@ -148,7 +163,7 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-final-512.png?v=33" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=33" alt="Ecosystem" decoding="async"></a>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-i-v34-512.png" alt="Ilahia Ecosystem I mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png?v=34" alt="Ecosystem" decoding="async"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -223,11 +238,12 @@
                                 <g class="trust-mascot-wave"><path d="M10 78C3 75 3 67 7 61l8-9c3-4 8-3 9 1 1 2 0 4-1 6l-7 10 5 8" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2" stroke-linejoin="round"/><path d="m10 57-2-7m8 5 1-8m5 11 4-6" stroke="#f5cf68" stroke-width="2" stroke-linecap="round"/></g>
                                 <g class="trust-mascot-gesture"><path d="M75 69c5-5 8-11 7-16-1-4-5-5-8-2l-8 10" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round"/><path d="m78 51 4-5m-1 8 6-2m-7-5 1-6" stroke="#f5cf68" stroke-width="2" stroke-linecap="round"/></g>
                                 <path d="M20 43c0-16 12-29 29-29s29 13 29 29v20c0 15-13 24-29 24S20 78 20 63V43Z" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2"/>
-                                <g class="trust-mascot-legs" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M39 80v12"/><path d="M59 80v12"/><path d="M39 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/><path d="M59 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/></g>
+                                <g class="trust-mascot-legs" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path class="trust-mascot-leg-left" d="M39 80v12"/><path class="trust-mascot-leg-right" d="M59 80v12"/><path class="trust-mascot-shoe-left" d="M39 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/><path class="trust-mascot-shoe-right" d="M59 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/></g>
                                 <path d="M27 31 49 8l23 23-23-5-22 5Z" fill="url(#illyCap)" stroke="#fff0a5" stroke-width="2" stroke-linejoin="round"/><path d="M69 26v12" stroke="#f5cf68" stroke-width="2"/><circle cx="69" cy="40" r="3" fill="#fff0a5"/>
                                 <path d="M31 50c0-9 7-16 18-16s18 7 18 16v8c0 9-7 16-18 16s-18-7-18-16v-8Z" fill="#f8fbff"/>
                                 <g class="trust-mascot-blink"><ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/></g>
-                                <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
+                                <g class="trust-mascot-brows" fill="none" stroke="#15345b" stroke-linecap="round" stroke-width="2"><path d="m38 46 6 2"/><path d="m54 48 6-2"/></g>
+                                <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path class="trust-mascot-mouth-smile" d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/><path class="trust-mascot-mouth-sad" d="M43 66c3-4 7-4 10 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
                         </div>
@@ -5989,6 +6005,7 @@
                 document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
                 setActiveSessionRole(session.role); currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
+                window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName || 'Ilahia Ecosystem');
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
@@ -6242,6 +6259,7 @@
                 currentSessionUserId = uid;
                 currentSessionCampusKey = currentActiveKey;
                 currentPortalDisplayName = safeGreetingName(result.displayName, 'Student');
+                window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName);
                 updateAcademicBotGreeting('student', currentPortalDisplayName);
                 customizeStudentPortalForCampus(currentSessionCampusKey);
                 closeStudentDigitalId();
@@ -6296,6 +6314,7 @@
                 currentSessionUserId = cid;
                 currentSessionCampusKey = currentActiveKey;
                 currentPortalDisplayName = safeGreetingName(result.displayName, role === 'hod' ? 'HOD' : 'Teacher');
+                window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName);
                 updateAcademicBotGreeting('teacher', currentPortalDisplayName);
                 customizeTeacherPortalForCampus(currentSessionCampusKey);
                 document.getElementById('staffDashboardTitle').textContent = `${collegeDatabase[currentSessionCampusKey]?.shortName || 'College'} ${role === 'hod' ? 'HOD' : 'Teacher'} Portal`;
@@ -6411,6 +6430,7 @@
                 if (signedInSession?.role !== 'admin') throw new Error('Sign-in was accepted, but this browser did not keep the administrator session. Check that site cookies are enabled, then sign in again.');
                 setActiveSessionRole('admin');
                 currentSessionUserId = u;
+                window.lilyGreetSignedInUser?.('Administrator', 'Ilahia Ecosystem');
                 document.getElementById('adminLoginCard').classList.add('hidden'); 
                 document.getElementById('adminDashboardCard').classList.remove('hidden'); 
                 if (currentLang !== 'en') translatePage(currentLang);
@@ -17127,8 +17147,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
     const voices = window.speechSynthesis.getVoices();
-    const match = voices.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase()) || voices.find(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
-    if (match) utterance.voice = match;
+    const languageMatches = voices.filter(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
+    const sameLanguage = languageMatches.length ? languageMatches : voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
+    const feminineVoice = sameLanguage.find(voice => /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|google us english/i.test(voice.name));
+    if (feminineVoice || sameLanguage[0]) utterance.voice = feminineVoice || sameLanguage[0];
+    utterance.pitch = 1.28;
+    utterance.rate = 0.91;
     window.speechSynthesis.speak(utterance);
     return true;
   };
@@ -17242,6 +17266,9 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   async function makeReply(question) {
     const english = currentLang === 'en' ? question : await translateText(question, 'en', currentLang);
     const query = `${english} ${question}`.toLowerCase();
+    if (/\b(admin(?:istrator)?(?: panel| dashboard| portal| login)?|webmaster dashboard)\b/.test(query)) {
+      return 'Admin tools are reserved for authorized administrators. I can help with public campus information, news, events, and student portal destinations.';
+    }
     const campusMatchers = [
       ['law', /\b(law|legal studies)\b/], ['icet', /\b(icet|engineering college|engineering and technology)\b/],
       ['arts', /\b(arts college|arts and science|arts & science)\b/], ['poly', /\b(polytechnic|poly college)\b/],
@@ -17273,6 +17300,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
   }
   window.openLilyConversation = async () => {
+    window.resetLilyIdleMood?.();
     panel.classList.remove('hidden');
     await window.refreshLilyConversationLanguage();
     if (!messages.children.length) { const greetingText = await localized(welcome); addMessage('bot', greetingText); window.speakLilyText(greetingText); }
@@ -17315,6 +17343,37 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const mascot = document.getElementById('trustMascotMover');
   const greeting = mascot?.querySelector('.trust-mascot-greeting');
   if (!stage || !mascot || !greeting) return;
+  let defaultGreeting = greeting.textContent.trim();
+  let idleTimers = [];
+  const clearIdleTimers = () => { idleTimers.forEach(clearTimeout); idleTimers = []; };
+  const clearMascotMood = (restoreGreeting = true) => {
+    mascot.classList.remove('is-pouting', 'is-grumpy');
+    if (restoreGreeting) greeting.textContent = defaultGreeting;
+  };
+  const scheduleIdleMood = () => {
+    clearIdleTimers();
+    idleTimers.push(setTimeout(() => { mascot.classList.add('is-pouting'); greeting.textContent = 'Aww, did I miss your hello? I’m right here if you need me 💛'; }, 26000));
+    idleTimers.push(setTimeout(() => { mascot.classList.remove('is-pouting'); mascot.classList.add('is-grumpy'); greeting.textContent = 'Tiny pout mode: say hi when you have a moment! 😤'; }, 35000));
+    idleTimers.push(setTimeout(() => { clearMascotMood(); scheduleIdleMood(); }, 43000));
+  };
+  window.resetLilyIdleMood = () => { clearIdleTimers(); clearMascotMood(); scheduleIdleMood(); };
+  let loginGreetingTimer = 0;
+  window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
+  window.lilyGreetSignedInUser = (name, campus) => {
+    const safeName = String(name || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 48) || 'there';
+    const greetingText = `Welcome, ${safeName}! I’m happy you’re here${campus ? ` at ${campus}` : ''}. I can help you find campus news, events, or your student portal. 💛`;
+    defaultGreeting = greetingText;
+    greeting.textContent = greetingText;
+    mascot.classList.remove('is-pouting', 'is-grumpy', 'is-greeting');
+    void mascot.offsetWidth;
+    mascot.classList.add('is-greeting');
+    setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
+    window.resetLilyIdleMood();
+    const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
+    if (toast && toastText) { toastText.textContent = `Lily says: ${greetingText}`; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    window.speakLilyText?.(greetingText);
+  };
+  scheduleIdleMood();
   const clamp = (value, max) => Math.max(0, Math.min(max, value));
   const maxLeft = () => Math.max(0, stage.clientWidth - mascot.offsetWidth);
   const maxTop = () => Math.max(0, stage.clientHeight - mascot.offsetHeight);
@@ -17334,6 +17393,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const openMascotConversation = () => window.openLilyConversation?.();
   mascot.addEventListener('pointerdown', event => {
     if (event.button !== undefined && event.button !== 0) return;
+    window.resetLilyIdleMood();
     drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.offsetLeft, top: mascot.offsetTop, moved: false };
     mascot.classList.add('is-dragging');
     mascot.setPointerCapture?.(event.pointerId);
@@ -17365,6 +17425,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     openMascotConversation();
   });
   mascot.addEventListener('keydown', event => {
+    window.resetLilyIdleMood();
     const step = event.shiftKey ? 24 : 12;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
     if (moves[event.key]) {
