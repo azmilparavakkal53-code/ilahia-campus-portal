@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=54">
+    <link rel="manifest" href="/manifest.webmanifest?v=55">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -58,7 +58,7 @@
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
-        .trust-mascot-character { width:4.65rem; height:5.55rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:5.25rem; height:7.2rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
         .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
         .trust-mascot-gesture { transform-box:fill-box; transform-origin:80% 70%; animation:trust-mascot-gesture 2.3s ease-in-out infinite; }
         .trust-mascot-blink { transform-box:fill-box; transform-origin:center; animation:trust-mascot-blink 4.4s ease-in-out infinite; }
@@ -240,36 +240,39 @@
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
                         <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the campus conversation mascot. Tap to ask about campus news and events; drag or use arrow keys to move." title="Tap Lily to chat about campus news and events, or drag her to move">
-                            <svg class="trust-mascot-character" viewBox="0 0 120 140" aria-hidden="true">
-                                <defs>
-                                    <linearGradient id="lilyHair" x1="34" y1="13" x2="83" y2="70" gradientUnits="userSpaceOnUse"><stop stop-color="#75412e"/><stop offset="1" stop-color="#3c2538"/></linearGradient>
-                                    <linearGradient id="lilySkin" x1="40" y1="22" x2="76" y2="72" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe4cc"/><stop offset="1" stop-color="#eda984"/></linearGradient>
-                                    <linearGradient id="lilyTop" x1="37" y1="64" x2="81" y2="111" gradientUnits="userSpaceOnUse"><stop stop-color="#54c6df"/><stop offset="1" stop-color="#2663a5"/></linearGradient>
-                                    <linearGradient id="lilyBag" x1="17" y1="70" x2="48" y2="111" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd55f"/><stop offset="1" stop-color="#e89a35"/></linearGradient>
-                                </defs>
-                                <ellipse cx="60" cy="135" rx="28" ry="4" fill="#020817" opacity=".25"/>
-                                <path d="M48 104v21m24-21v21" fill="none" stroke="#24345f" stroke-width="9" stroke-linecap="round"/>
-                                <g class="trust-mascot-leg-left"><path d="M48 122c-7 1-11 4-10 8h20c2-5-2-8-10-8Z" fill="#f5cf68" stroke="#17295c" stroke-width="2" stroke-linejoin="round"/></g>
-                                <g class="trust-mascot-leg-right"><path d="M72 122c-7 1-11 4-10 8h20c2-5-2-8-10-8Z" fill="#f5cf68" stroke="#17295c" stroke-width="2" stroke-linejoin="round"/></g>
-                                <path d="M32 72c-10 0-15 8-15 21v15c0 6 4 9 9 8l20-5V82c0-7-5-10-14-10Z" fill="url(#lilyBag)" stroke="#152353" stroke-width="3"/>
-                                <path d="M22 80c7-8 18-8 25 0M23 99h22" fill="none" stroke="#ffecad" stroke-width="2.5" stroke-linecap="round"/>
-                                <path d="M40 66c7-6 30-6 38 0l8 41c-14 10-40 10-54 0l8-41Z" fill="url(#lilyTop)" stroke="#152353" stroke-width="3" stroke-linejoin="round"/>
-                                <path d="m51 66 9 11 9-11-4-4H55l-4 4Z" fill="#fff8ed" stroke="#f5cf68" stroke-width="1.7" stroke-linejoin="round"/>
-                                <path d="M60 78v25" stroke="#ffd76a" stroke-width="2"/><circle cx="60" cy="85" r="2" fill="#ffeab0"/><circle cx="60" cy="95" r="2" fill="#ffeab0"/>
-                                <path d="M42 68c-8-2-11 4-17 9l-5 9c-2 4 2 7 6 4l8-6 7 4" fill="url(#lilySkin)" stroke="#152353" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <g class="trust-mascot-gesture"><path d="M76 68c8 1 12 8 13 15l-5 8-10-8" fill="none" stroke="#152353" stroke-width="11" stroke-linecap="round"/><path d="M76 68c8 1 12 8 13 15l-5 8-10-8" fill="none" stroke="#54bfdb" stroke-width="7" stroke-linecap="round"/></g>
-                                <path d="M33 42c-1-20 10-32 28-32 20 0 31 14 27 35l-4 25c-2 11-11 18-24 18S37 80 34 69l-1-27Z" fill="url(#lilyHair)"/>
-                                <path d="M39 37c0-12 8-20 21-20s21 8 21 20v22c0 14-8 22-21 22S39 73 39 59V37Z" fill="url(#lilySkin)" stroke="#fff0df" stroke-width="1.5"/>
-                                <path d="M37 43c-1-17 7-28 23-28 11 0 20 6 24 17-8-2-14-7-17-14-5 10-15 16-30 17v8Z" fill="url(#lilyHair)"/>
-                                <path d="M39 52c2-7 9-9 14-4m12 0c5-5 12-3 14 4" fill="none" stroke="#513044" stroke-width="2.2" stroke-linecap="round"/>
-                                <g class="trust-mascot-blink"><g class="trust-mascot-pupils"><ellipse cx="47" cy="55" rx="3.1" ry="4.4" fill="#263c68"/><ellipse cx="73" cy="55" rx="3.1" ry="4.4" fill="#263c68"/><circle cx="48" cy="53.5" r="1.2" fill="#fff"/><circle cx="74" cy="53.5" r="1.2" fill="#fff"/></g></g>
-                                <g class="trust-mascot-brows" fill="none" stroke="#513044" stroke-linecap="round" stroke-width="2"><path d="m42 47 9-2"/><path d="m69 45 9 2"/></g>
-                                <path d="M59 57c-1 4-3 6-2 8 2 1 4 1 6 0" fill="none" stroke="#cf876d" stroke-width="1.5" stroke-linecap="round"/>
-                                <circle class="trust-mascot-blush" cx="42" cy="66" r="3.6" fill="#f48d9c" opacity=".62"/><circle class="trust-mascot-blush" cx="78" cy="66" r="3.6" fill="#f48d9c" opacity=".62"/>
-                                <path class="trust-mascot-mouth-smile" d="M55 70c3 4 8 4 11 0" fill="none" stroke="#a95758" stroke-width="2" stroke-linecap="round"/><path class="trust-mascot-mouth-sad" d="M55 73c3-4 8-4 11 0" fill="none" stroke="#a95758" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M75 23c6-5 12-4 15 1-5 1-9 5-11 10-3-3-4-7-4-11Z" fill="#65bd80"/><circle cx="78" cy="26" r="3.5" fill="#ffd66b" stroke="#fff1b2" stroke-width="1"/>
-                                <g class="trust-mascot-wave"><path d="M79 67c9-3 13-10 15-18" fill="none" stroke="#152353" stroke-width="12" stroke-linecap="round"/><path d="M79 67c9-3 13-10 15-18" fill="none" stroke="url(#lilyTop)" stroke-width="8" stroke-linecap="round"/><path d="M91 51c-1-5 1-9 3-14l2-7c1-3 5-2 5 1l-1 6 3-7c1-3 5-1 4 2l-2 7 4-5c2-3 5 0 4 2l-5 9c-2 4-6 7-11 7-2 0-4-1-6-3Z" fill="url(#lilySkin)" stroke="#152353" stroke-width="2" stroke-linejoin="round"/><path d="m96 35 1 6m6-5-2 6m7-3-3 5" fill="none" stroke="#ca8064" stroke-width="1.2" stroke-linecap="round"/></g>
-                            </svg>
+                            <svg class="trust-mascot-character" viewBox="0 0 160 220" aria-hidden="true">
+  <defs>
+    <linearGradient id="lily2Hair" x1="42" y1="8" x2="112" y2="112" gradientUnits="userSpaceOnUse"><stop stop-color="#714333"/><stop offset="1" stop-color="#302b45"/></linearGradient>
+    <linearGradient id="lily2Skin" x1="57" y1="26" x2="105" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe2c9"/><stop offset="1" stop-color="#e9a17c"/></linearGradient>
+    <linearGradient id="lily2Jacket" x1="51" y1="107" x2="111" y2="174" gradientUnits="userSpaceOnUse"><stop stop-color="#68d4e3"/><stop offset="1" stop-color="#287ba8"/></linearGradient>
+    <linearGradient id="lily2Bag" x1="21" y1="105" x2="64" y2="171" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd36b"/><stop offset="1" stop-color="#ee8f4c"/></linearGradient>
+  </defs>
+  <ellipse cx="82" cy="210" rx="35" ry="6" fill="#09172c" opacity=".23"/>
+  <path d="M61 162 55 195m43-33 8 33" fill="none" stroke="#263c62" stroke-width="15" stroke-linecap="round"/>
+  <g class="trust-mascot-leg-left"><path d="M53 193c-8 5-12 10-10 14h30c2-7-5-12-20-14Z" fill="#fff7ed" stroke="#263c62" stroke-width="3" stroke-linejoin="round"/><path d="M47 204h23" stroke="#f2c65e" stroke-width="3" stroke-linecap="round"/></g>
+  <g class="trust-mascot-leg-right"><path d="M106 193c9 4 14 9 13 14H91c-2-7 3-12 15-14Z" fill="#fff7ed" stroke="#263c62" stroke-width="3" stroke-linejoin="round"/><path d="M95 204h22" stroke="#f2c65e" stroke-width="3" stroke-linecap="round"/></g>
+  <path d="M50 111c-16 1-25 13-25 31v26c0 7 5 11 12 9l31-11v-42c0-8-7-13-18-13Z" fill="url(#lily2Bag)" stroke="#233554" stroke-width="4"/>
+  <path d="M31 132c8-10 23-13 34-4m-35 28h36" fill="none" stroke="#fff0c1" stroke-width="3" stroke-linecap="round"/>
+  <path d="M59 105c11-9 39-9 51 0l12 64c-19 14-57 14-76 0l13-64Z" fill="url(#lily2Jacket)" stroke="#263b5c" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m72 104 15 17 14-17-7-7H78l-6 7Z" fill="#fff9ef" stroke="#f2c65e" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M87 121v45" stroke="#f2c65e" stroke-width="3"/><circle cx="87" cy="133" r="2.7" fill="#fff1bd"/><circle cx="87" cy="146" r="2.7" fill="#fff1bd"/><circle cx="87" cy="159" r="2.7" fill="#fff1bd"/>
+  <path d="M59 110c-8 0-15 8-20 17l-8 12c-3 5 2 9 7 6l11-10 8 4" fill="none" stroke="#263b5c" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M59 110c-8 0-15 8-20 17l-8 12c-3 5 2 9 7 6l11-10 8 4" fill="none" stroke="#58c6da" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M108 109c10 2 15 9 16 18l-5 10-13-8" fill="none" stroke="#263b5c" stroke-width="14" stroke-linecap="round"/>
+  <g class="trust-mascot-gesture"><path d="M108 109c10 2 15 9 16 18l-5 10-13-8" fill="none" stroke="#58c6da" stroke-width="9" stroke-linecap="round"/><path d="m119 136 10 8" fill="none" stroke="url(#lily2Skin)" stroke-width="12" stroke-linecap="round"/><path d="m119 136 10 8" fill="none" stroke="#263b5c" stroke-width="2.5" stroke-linecap="round"/></g>
+  <path d="M66 90h42v21c-9 10-32 10-42 0V90Z" fill="url(#lily2Skin)"/>
+  <path d="M42 54c-4-28 12-43 38-43 27 0 43 19 38 49l-5 34c-3 19-16 30-39 30-21 0-35-13-38-31l-2-39Z" fill="url(#lily2Hair)"/>
+  <path d="M52 48c0-17 13-29 33-29s33 12 33 29v34c0 21-13 33-33 33S52 103 52 82V48Z" fill="url(#lily2Skin)" stroke="#fff1df" stroke-width="2"/>
+  <path d="M48 58c-2-27 13-43 37-43 20 0 33 10 38 29-14-2-26-11-30-22-8 15-22 23-44 24v12Z" fill="url(#lily2Hair)"/>
+  <path d="M52 61c4-7 12-9 18-3m19 0c6-6 14-4 18 3" fill="none" stroke="#523449" stroke-width="2.8" stroke-linecap="round"/>
+  <g class="trust-mascot-blink"><g class="trust-mascot-pupils"><ellipse cx="62" cy="69" rx="4.2" ry="5.5" fill="#263c68"/><ellipse cx="96" cy="69" rx="4.2" ry="5.5" fill="#263c68"/><circle cx="63.5" cy="67" r="1.5" fill="#fff"/><circle cx="97.5" cy="67" r="1.5" fill="#fff"/></g></g>
+  <g class="trust-mascot-brows" fill="none" stroke="#523449" stroke-linecap="round" stroke-width="2.5"><path d="m55 56 11-2"/><path d="m91 54 11 2"/></g>
+  <path d="M79 72c-1 5-4 8-3 10 3 2 6 2 9 0" fill="none" stroke="#ce826b" stroke-width="2" stroke-linecap="round"/>
+  <circle class="trust-mascot-blush" cx="55" cy="84" r="5" fill="#f38d9c" opacity=".55"/><circle class="trust-mascot-blush" cx="103" cy="84" r="5" fill="#f38d9c" opacity=".55"/>
+  <path class="trust-mascot-mouth-smile" d="M73 89c4 6 12 6 16 0" fill="none" stroke="#a95758" stroke-width="2.8" stroke-linecap="round"/><path class="trust-mascot-mouth-sad" d="M73 92c4-5 12-5 16 0" fill="none" stroke="#a95758" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M105 28c8-6 17-3 19 4-7 0-12 5-14 12-4-4-6-10-5-16Z" fill="#63b982"/><circle cx="109" cy="32" r="4" fill="#ffd66b" stroke="#fff1b2" stroke-width="1.5"/>
+  <g class="trust-mascot-wave"><path d="M41 117c-11-5-17-14-20-25" fill="none" stroke="#263b5c" stroke-width="15" stroke-linecap="round"/><path d="M41 117c-11-5-17-14-20-25" fill="none" stroke="#58c6da" stroke-width="9" stroke-linecap="round"/><path d="M22 94c-2-6-2-11-1-17l-1-9c0-4 5-4 6-1l2 7 1-10c1-4 6-3 6 1v9l4-7c2-4 7-1 5 3l-5 13c-2 5-6 9-12 10-2 0-4 0-5-2Z" fill="url(#lily2Skin)" stroke="#263b5c" stroke-width="2.8" stroke-linejoin="round"/><path d="m26 72 2 7m7-6-2 7m8-3-4 6" fill="none" stroke="#c77e64" stroke-width="1.6" stroke-linecap="round"/></g>
+</svg>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
                         </div>
                     </div>
