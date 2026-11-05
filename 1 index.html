@@ -61,6 +61,24 @@
         .trust-mascot-character { width:4.75rem; height:9.88rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite, nila-space-walk 5.6s ease-in-out infinite, nila-free-hand-wave 1.5s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
         .nila-standing-legs { pointer-events:none; }
         .nila-thinking-mark { display:none; transform-box:fill-box; transform-origin:center; }
+        .nila-face-mood { display:none; pointer-events:none; }
+        .nila-mouth-cover { fill:url(#nila-face-patch); filter:url(#nila-face-soften); }
+        #trustMascotMover.is-emotion-angry .nila-face-angry { display:block; }
+        #trustMascotMover.is-emotion-sad .nila-face-sad { display:block; }
+        #trustMascotMover.is-emotion-surprised .nila-face-surprised { display:block; }
+        #trustMascotMover.is-emotion-thinking .nila-face-thinking { display:block; }
+        #trustMascotMover.is-emotion-sleepy .nila-face-sleepy { display:block; }
+        #trustMascotMover.is-emotion-shy .nila-face-shy { display:block; }
+        #trustMascotMover.is-emotion-excited .nila-face-excited { display:block; }
+        #trustMascotMover.is-emotion-embarrassed .nila-face-embarrassed { display:block; }
+        #trustMascotMover.is-emotion-scared .nila-face-scared { display:block; }
+        #trustMascotMover.is-emotion-disappointed .nila-face-disappointed { display:block; }
+        #trustMascotMover.is-emotion-love .nila-face-love { display:block; }
+        #trustMascotMover.is-emotion-confused .nila-face-confused { display:block; }
+        #trustMascotMover.is-emotion-tired .nila-face-tired { display:block; }
+        #trustMascotMover.is-emotion-proud .nila-face-proud { display:block; }
+        #trustMascotMover.is-emotion-grumpy .nila-face-grumpy { display:block; }
+
         .nila-emotion-badge { position:absolute; z-index:2; left:2.8rem; top:-.45rem; min-width:2rem; height:2rem; display:grid; place-items:center; border:2px solid #f0cc67; border-radius:999px; background:#fffaf0; box-shadow:0 3px 10px #02081730; font-size:1.15rem; line-height:1; animation:nila-badge-pop .25s cubic-bezier(.2,.9,.3,1.3) both; }
         .nila-emotion-badge[hidden] { display:none; }
         #trustMascotMover.is-thinking .nila-thinking-mark { display:block; animation:nila-think-pop .35s ease-out both; }
@@ -268,10 +286,28 @@
                         <div id="trustMascotMover" tabindex="0" role="button" aria-label="Nila, the campus conversation mascot. Tap to chat; she walks around the blank space." title="Nila walks around this space. Tap her to chat.">
                             <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Nila, the Ilahia student mascot">
   <defs>
+    <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
     <linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient>
     <linearGradient id="nila-shoe" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#344263"/><stop offset=".52" stop-color="#151a2d"/><stop offset="1" stop-color="#080b17"/></linearGradient>
   </defs>
   <image href="/assets/mascots/nila-student-source.png" x="0" y="0" width="648" height="1345" preserveAspectRatio="none"/>
+
+  <g class="nila-face-mood nila-face-angry"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M394 215 344 232m56-39 42-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/><path d="m474 244 12-14m-5 28 18-3" stroke="#dc4b56" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="nila-face-mood nila-face-sad"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M394 333Q417 308 444 329" fill="none" stroke="#763d45" stroke-width="7" stroke-linecap="round"/><path d="M293 219Q316 200 344 218m55-35Q420 165 446 179" fill="none" stroke="#59403b" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Zm112-31c-10 15-9 24 1 26 9-1 10-9-1-26Z" fill="#8ddcf1" stroke="#e5fbff" stroke-width="2"/></g>
+  <g class="nila-face-mood nila-face-surprised"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><ellipse cx="420" cy="321" rx="13" ry="20" fill="#6d2938"/><ellipse cx="420" cy="333" rx="8" ry="4" fill="#ef8290"/><path d="m292 206-8-14m177-3 11-14" stroke="#6371b8" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="nila-face-mood nila-face-thinking"><path d="M294 216Q318 205 344 220M397 183Q420 174 443 183" fill="none" stroke="#563b34" stroke-width="7" stroke-linecap="round"/><text x="468" y="205" font-size="52" font-weight="900" fill="#7657bf">?</text></g>
+  <g class="nila-face-mood nila-face-sleepy"><path d="M290 254Q323 234 357 254Q335 279 304 273Zm105-38Q424 201 452 219Q429 241 402 238Z" fill="#f4b79d"/><path d="M292 255Q323 241 353 256m46-39Q421 209 448 220" fill="none" stroke="#5b332d" stroke-width="7" stroke-linecap="round"/><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><ellipse cx="420" cy="321" rx="9" ry="15" fill="#773444"/></g>
+  <g class="nila-face-mood nila-face-shy"><path d="M286 302q20-12 39 0m66-34q20-12 40 0" fill="none" stroke="#f1849a" stroke-width="11" stroke-linecap="round" opacity=".72"/><path d="m480 195 6-7 6 7-6 7Z" fill="#f27ca0"/></g>
+  <g class="nila-face-mood nila-face-excited"><path d="M309 248 313 260l13 1-10 8 3 13-10-7-11 7 4-13-10-8 13-1Zm101-38 4 11 12 1-9 7 3 12-10-6-10 6 4-12-9-7 12-1Z" fill="#ffd75f" stroke="#fff8d9" stroke-width="2"/><path d="M474 269 481 252m11 26 7-16" stroke="#ffc94d" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="nila-face-mood nila-face-embarrassed"><path d="M286 302q20-12 39 0m66-34q20-12 40 0" fill="none" stroke="#f1849a" stroke-width="13" stroke-linecap="round" opacity=".8"/><path d="M479 220c-9 12-8 19 1 20 8-1 8-8-1-20Z" fill="#89d9ef"/></g>
+  <g class="nila-face-mood nila-face-scared"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><ellipse cx="420" cy="321" rx="13" ry="20" fill="#6d2938"/><path d="M292 216Q310 191 344 209m53-36Q422 157 447 173" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Zm112-31c-10 15-9 24 1 26 9-1 10-9-1-26Z" fill="#8ddcf1"/></g>
+  <g class="nila-face-mood nila-face-disappointed"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M394 333Q417 308 444 329" fill="none" stroke="#763d45" stroke-width="7" stroke-linecap="round"/><path d="M293 229Q317 212 344 226m55-37Q420 181 446 190" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Z" fill="#8ddcf1"/></g>
+  <g class="nila-face-mood nila-face-love"><path d="M308 248c-8-13-27 0 0 20 27-20 8-33 0-20Zm104-38c-8-13-27 0 0 20 27-20 8-33 0-20Z" fill="#ff7294" stroke="#fff2f4" stroke-width="2"/></g>
+  <g class="nila-face-mood nila-face-confused"><path class="nila-mouth-cover" d="M394 304Q418 293 446 304Q445 329 429 337Q407 340 395 328Z"/><path d="M404 321q13 9 27-2" fill="none" stroke="#763d45" stroke-width="6" stroke-linecap="round"/><path d="M291 216Q320 204 345 221m54-37Q422 176 447 187" fill="none" stroke="#563b34" stroke-width="7" stroke-linecap="round"/><text x="475" y="205" font-size="48" font-weight="900" fill="#7657bf">?</text></g>
+  <g class="nila-face-mood nila-face-tired"><path d="M290 253Q323 233 357 253Q335 276 304 272Zm105-38Q424 200 452 217Q429 238 402 236Z" fill="#f4b79d"/><path d="M292 254Q323 239 353 255m46-38Q421 208 448 218" fill="none" stroke="#5b332d" stroke-width="7" stroke-linecap="round"/><text x="474" y="184" font-size="27" font-weight="800" fill="#625baa">z</text></g>
+  <g class="nila-face-mood nila-face-proud"><path d="M293 257Q323 274 350 255m49-38Q423 232 447 215" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="m474 183 7-15 7 15 16 2-12 11 3 16-14-8-13 8 3-16-12-11Z" fill="#ffd35e" stroke="#fff1b5" stroke-width="2"/></g>
+  <g class="nila-face-mood nila-face-grumpy"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M294 211 345 231m54-39 45-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/></g>
+
   <ellipse cx="342" cy="1336" rx="89" ry="7" fill="#09172c" opacity=".2"/>
   <g class="nila-standing-legs" stroke-linejoin="round">
     <path d="M289 966c-2 52 3 112 10 164l7 83c2 28 22 43 42 36 18-6 21-24 11-48l-13-79c-7-59 7-110 19-156Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="3"/>
@@ -3294,6 +3330,7 @@
             }
             logSystemActivity(`[LANGUAGE] Active interface language switched to ${currentLang.toUpperCase()}`);
             if (typeof window.refreshLilyConversationLanguage === 'function') void window.refreshLilyConversationLanguage();
+            if (!currentSessionRole && typeof window.lilyGreetVisitor === 'function') window.lilyGreetVisitor();
         }
         let activeSkillChatRequestId = null;
         function toggleSkillOfferTerms() {
@@ -17674,6 +17711,27 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.resetLilyIdleMood = () => { clearIdleTimers(); clearMascotMood(); scheduleIdleMood(); };
   let loginGreetingTimer = 0;
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
+  window.lilyGreetVisitor = () => {
+    const language = ['en','ml','hi','ta','ar'].includes(currentLang) ? currentLang : 'en';
+    const hour = new Date().getHours();
+    const period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+    const greetings = {
+      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Nila, your campus companion. Tap me for campus news, events, or help finding a service.'},
+      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Nila, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
+      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Nila, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
+      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Nila, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
+      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Nila، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
+    };
+    defaultGreeting = greetings[language][period] + '! ' + greetings[language].line + ' 💛';
+    greeting.textContent = defaultGreeting;
+    mascot.classList.remove('is-pouting','is-grumpy','is-greeting');
+    void mascot.offsetWidth;
+    mascot.classList.add('is-greeting');
+    setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
+    window.resetLilyIdleMood();
+    window.expressNilaEmotion('happy', 2600);
+    return defaultGreeting;
+  };
   window.lilyGreetSignedInUser = (name, campus) => {
     window.expressNilaEmotion?.('happy', 3600);
     const safeName = String(name || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 48) || 'there';
@@ -17720,10 +17778,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     mascot.classList.remove('is-popping'); void mascot.offsetWidth; mascot.classList.add('is-popping');
     window.setTimeout(() => mascot.classList.remove('is-popping'), 850);
   };
-  window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.expressNilaEmotion('thinking', 2600); }, 500);
+  window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.lilyGreetVisitor?.(); }, 500);
   mascot.addEventListener('click', () => {
     window.resetLilyIdleMood();
     window.expressNilaEmotion('excited', 1800);
+    window.speakLilyText?.(greeting.textContent, currentLang);
     playTouchDance();
     window.openLilyConversation?.();
   });
