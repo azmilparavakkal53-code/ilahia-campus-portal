@@ -580,6 +580,14 @@
                         Proceed to Teacher Login
                     </button>
                 </div>
+                <section class="rounded-xl border border-amber-300 bg-amber-50 p-4" aria-labelledby="portalDemoSignInTitle">
+                    <h4 id="portalDemoSignInTitle" class="flex items-center gap-2 text-sm font-bold text-amber-950"><i class="fa-solid fa-flask text-amber-700" aria-hidden="true"></i>Temporary demo sign-in</h4>
+                    <p class="mt-1 text-xs text-amber-900">Quickly open a demo account for the selected institute. Demo IDs and passwords will be filled automatically.</p>
+                    <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <button type="button" onclick="openDemoPortalLogin('student')" class="min-h-11 rounded-lg bg-blue-700 px-3 py-2.5 text-xs font-bold text-white hover:bg-blue-800"><i class="fa-solid fa-user-graduate mr-1.5" aria-hidden="true"></i>Student demo login</button>
+                        <button type="button" onclick="openDemoPortalLogin('teacher')" class="min-h-11 rounded-lg bg-slate-900 px-3 py-2.5 text-xs font-bold text-white hover:bg-slate-800"><i class="fa-solid fa-chalkboard-user mr-1.5" aria-hidden="true"></i>Staff demo login</button>
+                    </div>
+                </section>
             </div>
         </div>
         <!-- View 2: Student Login Form -->
@@ -5944,6 +5952,20 @@
                 document.getElementById('teacherLoginCard').classList.remove('hidden'); 
             } 
         } 
+
+        async function openDemoPortalLogin(role) {
+            if (!['student', 'teacher'].includes(role)) return;
+            if (!portalCampusInitPromise) portalCampusInitPromise = initializePortalCampusSelector();
+            await showLoginForm(role);
+            const accountRole = role === 'teacher' ? (document.getElementById('staffLoginRole')?.value || 'teacher') : 'student';
+            const account = portalCampusAccounts[currentActiveKey]?.[accountRole];
+            if (!account?.demoPassword) {
+                alert(`A demo ${accountRole} login is not configured for ${collegeDatabase[currentActiveKey]?.name || 'this institute'}.`);
+                return;
+            }
+            if (role === 'student') fillStudentDemoCredentials();
+            else fillTeacherDemoCredentials();
+        }
 
         async function initializePortalCampusSelector() {
             for (const id of ['studentLoginCampus', 'teacherLoginCampus']) {
