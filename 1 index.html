@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=46">
+    <link rel="manifest" href="/manifest.webmanifest?v=47">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -253,11 +253,14 @@
                                 <path d="m41 59 7 9 7-9-2-2H43l-2 2Z" fill="#fff8ea" stroke="#f5cf68" stroke-width="1.4" stroke-linejoin="round"/>
                                 <path d="M48 68v18" stroke="#f5cf68" stroke-width="1.5"/><circle cx="48" cy="74" r="1.8" fill="#ffe99e"/><circle cx="48" cy="82" r="1.8" fill="#ffe99e"/>
                                 <path d="M22 43c-3-16 7-29 25-30 19-1 29 12 27 29l-1 15c-1 9-5 15-12 19l-5-12H37l-7 12c-5-5-8-11-8-19V43Z" fill="url(#lilyHair)"/>
+                                <path d="M30 40c-5-2-7 1-6 6 1 4 3 6 7 7m31-13c5-2 7 1 6 6-1 4-3 6-7 7" fill="url(#lilySkin)" stroke="#d99571" stroke-width="1.2"/>
                                 <path d="M30 39c0-10 7-17 18-17s18 7 18 17v14c0 11-8 17-18 17s-18-6-18-17V39Z" fill="url(#lilySkin)" stroke="#fff0df" stroke-width="1.5"/>
+                                <path d="M46 53c-.5 3-2 5-2 7 1.5 1.2 3.5 1.2 5 0" fill="none" stroke="#cf8a70" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M43 64c2.5 1.8 6.5 1.8 9 0" fill="none" stroke="#bd7767" stroke-width="1.25" stroke-linecap="round"/>
                                 <path d="M29 42c0-14 8-22 20-22 8 0 14 4 18 12-6-2-11-6-13-11-4 8-13 12-25 13v8Z" fill="url(#lilyHair)"/>
                                 <path d="M33 43c3-2 6-2 9 0m10 0c3-2 6-2 9 0" fill="none" stroke="#914d37" stroke-width="1.5" stroke-linecap="round"/>
-                                <g class="trust-mascot-blink"><g class="trust-mascot-pupils"><ellipse cx="39" cy="49" rx="2.5" ry="4" fill="#23416c"/><ellipse cx="57" cy="49" rx="2.5" ry="4" fill="#23416c"/><circle cx="39.7" cy="48" r="1" fill="#fff"/><circle cx="57.7" cy="48" r="1" fill="#fff"/></g></g>
-                                <g class="trust-mascot-brows" fill="none" stroke="#914d37" stroke-linecap="round" stroke-width="1.8"><path d="m36 42 6 1.5"/><path d="m54 43.5 6-1.5"/></g>
+                                <g class="trust-mascot-blink"><path d="M33 49c2-4 8-4 11 0-2 4-8 5-11 0Zm14 0c2-4 8-4 11 0-2 4-8 5-11 0Z" fill="#fffdf8" stroke="#a9624d" stroke-width=".85"/><g class="trust-mascot-pupils"><ellipse cx="39" cy="49" rx="2.1" ry="3" fill="#426754"/><ellipse cx="53" cy="49" rx="2.1" ry="3" fill="#426754"/><circle cx="39.7" cy="48" r=".9" fill="#fff"/><circle cx="53.7" cy="48" r=".9" fill="#fff"/></g><path d="m34 45-1-2m4 1v-2m12 3-1-2m4 1v-2" fill="none" stroke="#914d3b" stroke-width=".9" stroke-linecap="round"/></g>
+                                <g class="trust-mascot-brows" fill="none" stroke="#914d37" stroke-linecap="round" stroke-width="1.5"><path d="m35 44 7-1"/><path d="m52 43 7 1"/></g>
                                 <circle class="trust-mascot-blush" cx="33" cy="57" r="3" fill="#f48b9d" opacity=".65"/><circle class="trust-mascot-blush" cx="63" cy="57" r="3" fill="#f48b9d" opacity=".65"/>
                                 <path class="trust-mascot-mouth-smile" d="M44 59c2.5 3.5 6 3.5 8 0" fill="none" stroke="#a8584d" stroke-linecap="round" stroke-width="2"/><path class="trust-mascot-mouth-sad" d="M43 61c3-4 7-4 10 0" fill="none" stroke="#a8584d" stroke-linecap="round" stroke-width="2"/>
                                 <path d="M70 26c4-4 8-3 10 0-4 1-6 4-7 8-2-2-3-5-3-8Z" fill="#63bd83"/><path d="M70 28c-3-5-7-5-9-2 4 1 6 3 7 7" fill="#8ad49b"/><circle cx="70" cy="29" r="3.5" fill="#ffd874" stroke="#fff1b2" stroke-width="1"/>
@@ -3194,7 +3197,7 @@
             const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
                 acceptNode(node) {
                     const parent = node.parentElement;
-                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast')) return NodeFilter.FILTER_REJECT;
+                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast,#leadership')) return NodeFilter.FILTER_REJECT;
                     return NodeFilter.FILTER_ACCEPT;
                 }
             });
@@ -3224,7 +3227,7 @@
                 if (run === translationRun && currentLang === lang) node.textContent = translated;
             });
             document.querySelectorAll('input,textarea,button,[aria-label],[title]').forEach(element => {
-                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden')) return;
+                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden,#leadership')) return;
                 translatableAttributes.forEach(name => {
                     if (!element.hasAttribute(name)) return;
                     let saved = originalAttributes.get(element);
@@ -17603,7 +17606,21 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
   window.lilyGreetSignedInUser = (name, campus) => {
     const safeName = String(name || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 48) || 'there';
-    const greetingText = `Welcome, ${safeName}! I’m happy you’re here${campus ? ` at ${campus}` : ''}. I can help you find campus news, events, or your student portal. 💛`;
+    const hour = new Date().getHours();
+    const part = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+    const language = ['en', 'ml', 'hi', 'ta', 'ar'].includes(currentLang) ? currentLang : 'en';
+    const greetings = {
+      en: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening', welcome: 'Welcome', tip: 'Ask me about campus news, events, or your student portal.' },
+      ml: { morning: 'സുപ്രഭാതം', afternoon: 'ശുഭ ഉച്ചതിരിഞ്ഞ്', evening: 'ശുഭ സായാഹ്നം', welcome: 'സ്വാഗതം', tip: 'ക്യാമ്പസ് വാർത്തകൾ, പരിപാടികൾ, അല്ലെങ്കിൽ സ്റ്റുഡന്റ് പോർട്ടൽ എന്നിവയെക്കുറിച്ച് എന്നോട് ചോദിക്കൂ.' },
+      hi: { morning: 'सुप्रभात', afternoon: 'नमस्कार', evening: 'शुभ संध्या', welcome: 'स्वागत है', tip: 'कैंपस की खबरों, कार्यक्रमों या छात्र पोर्टल के बारे में मुझसे पूछें।' },
+      ta: { morning: 'காலை வணக்கம்', afternoon: 'மதிய வணக்கம்', evening: 'மாலை வணக்கம்', welcome: 'வரவேற்கிறேன்', tip: 'வளாகச் செய்திகள், நிகழ்வுகள் அல்லது மாணவர் போர்ட்டல் பற்றி என்னிடம் கேளுங்கள்.' },
+      ar: { morning: 'صباح الخير', afternoon: 'مساء الخير', evening: 'مساء الخير', welcome: 'أهلاً بك', tip: 'اسألني عن أخبار الحرم والفعاليات أو بوابة الطلاب.' }
+    };
+    const words = greetings[language];
+    const place = campus ? (language === 'ml' ? ' · ' + campus + 'യിലേക്ക് ' + words.welcome : language === 'hi' ? ' · ' + campus + ' में आपका स्वागत है' : language === 'ta' ? ' · ' + campus + ' வளாகத்திற்கு வரவேற்கிறேன்' : language === 'ar' ? ' · أهلاً بك في ' + campus : ' at ' + campus) : '';
+    const greetingText = language === 'en'
+      ? words[part] + ', ' + safeName + '! ' + (campus ? 'Welcome to ' + campus + '. ' : '') + words.tip + ' 💛'
+      : words[part] + '، ' + safeName + '! ' + place + '. ' + words.tip + ' 💛';
     defaultGreeting = greetingText;
     greeting.textContent = greetingText;
     mascot.classList.remove('is-pouting', 'is-grumpy', 'is-greeting');
@@ -17612,8 +17629,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
     window.resetLilyIdleMood();
     const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
-    if (toast && toastText) { toastText.textContent = `Lily says: ${greetingText}`; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
-    window.speakLilyText?.(greetingText);
+    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Lily says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
   const clamp = (value, max) => Math.max(0, Math.min(max, value));
