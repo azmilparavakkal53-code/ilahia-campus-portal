@@ -287,16 +287,16 @@ function requireStudent(req, res, errorMessage = 'Sign in to an eligible college
 function safeText(value, maxLength) { return String(value || '').trim().replace(/[<>]/g, '').slice(0, maxLength); }
 function campusPosterData(value) {
   if (!value) return '';
-  if (typeof value !== 'string' || value.length > 1_450_000) throw Object.assign(new Error('Poster images must be PNG, JPEG, or WebP and smaller than 1 MB.'), { status: 413 });
+  if (typeof value !== 'string' || value.length > 28 * 1024 * 1024) throw Object.assign(new Error('Poster images must be PNG, JPEG, or WebP and smaller than 20 MB.'), { status: 413 });
   const match = value.match(/^data:image\/(png|jpeg|webp);base64,([a-z0-9+/]+={0,2})$/i);
   if (!match) throw Object.assign(new Error('Choose a PNG, JPEG, or WebP poster image.'), { status: 400 });
   const bytes = Buffer.from(match[2], 'base64'), mime = match[1].toLowerCase();
-  const valid = bytes.length > 16 && bytes.length <= 1024 * 1024 && (
+  const valid = bytes.length > 16 && bytes.length <= 20 * 1024 * 1024 && (
     (mime === 'png' && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) ||
     (mime === 'jpeg' && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) ||
     (mime === 'webp' && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP')
   );
-  if (!valid) throw Object.assign(new Error('Poster file is invalid or larger than 1 MB.'), { status: 400 });
+  if (!valid) throw Object.assign(new Error('Poster file is invalid or larger than 20 MB.'), { status: 400 });
   return value;
 }
 function validCelebrationDate(value) {
@@ -871,7 +871,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-campus-posters-v32' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-campus-posters-v33' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1024,7 +1024,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/admin/news' && req.method === 'POST') {
       const session = getSession(req);
       if (!session || session.role !== 'admin') { sendJson(res, 401, { error: 'Administrator sign-in is required to publish front-page news.' }); return; }
-      const body = await readJson(req, 2 * 1024 * 1024), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || ''), celebrationDate = String(body.celebrationDate || ''), posterData = campusPosterData(body.posterData || '');
+      const body = await readJson(req, 32 * 1024 * 1024), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || ''), celebrationDate = String(body.celebrationDate || ''), posterData = campusPosterData(body.posterData || '');
       if (!type || title.length < 3 || details.length < 8 || (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey))) { sendJson(res, 400, { error: 'Choose a type and campus, and enter a title and details.' }); return; }
       if (expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn) || !Number.isFinite(new Date(`${expiresOn}T12:00:00`).getTime()) || expiresOn < campusLocalDate())) { sendJson(res, 400, { error: 'Choose a valid expiry date today or later, or leave it empty.' }); return; }
       if (!validCelebrationDate(celebrationDate)) { sendJson(res, 400, { error: 'Choose a valid celebration date today or later.' }); return; }
@@ -1038,7 +1038,7 @@ const server = http.createServer(async (req, res) => {
       const items = readJsonArray(CAMPUS_NEWS_FILE), index = items.findIndex(item => item.id === adminNewsAction[1]);
       if (index < 0) { sendJson(res, 404, { error: 'News item was not found.' }); return; }
       if (req.method === 'DELETE') { items.splice(index, 1); writeJsonArray(CAMPUS_NEWS_FILE, items); sendJson(res, 200, { ok: true }); return; }
-      const body = await readJson(req, 2 * 1024 * 1024), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || ''), celebrationDate = String(body.celebrationDate || ''), posterData = body.posterData === undefined ? items[index].posterData || '' : campusPosterData(body.posterData);
+      const body = await readJson(req, 32 * 1024 * 1024), campusKey = body.campusKey === 'all' ? 'all' : String(body.campusKey || ''), type = ['news', 'alert'].includes(body.type) ? body.type : '', title = safeText(body.title, 120), details = safeText(body.details, 2000), expiresOn = String(body.expiresOn || ''), celebrationDate = String(body.celebrationDate || ''), posterData = body.posterData === undefined ? items[index].posterData || '' : campusPosterData(body.posterData);
       if (!type || title.length < 3 || details.length < 8 || (campusKey !== 'all' && !CAMPUS_KEYS.includes(campusKey))) { sendJson(res, 400, { error: 'Choose a type and campus, and enter a title and details.' }); return; }
       if (expiresOn && (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn) || !Number.isFinite(new Date(`${expiresOn}T12:00:00`).getTime()) || expiresOn < campusLocalDate())) { sendJson(res, 400, { error: 'Choose a valid expiry date today or later, or leave it empty.' }); return; }
       if (!validCelebrationDate(celebrationDate)) { sendJson(res, 400, { error: 'Choose a valid celebration date today or later.' }); return; }
