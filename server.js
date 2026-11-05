@@ -655,18 +655,30 @@ function getSession(req, securityOnly = false) {
   }
   return null;
   }
-  const token = cookie.match(/(?:^|;\s*)ilahia_teacher_session=([^;\s]+)/)?.[1];
-  if (!token) return null;
-  const parts = token.split('.');
-  if (parts.length !== 2) return null;
-  const [payload, signature] = parts;
-  const expected = crypto.createHmac('sha256', GATEPASS_CODE_SECRET).update(payload).digest('base64url');
-  const providedBytes = Buffer.from(signature), expectedBytes = Buffer.from(expected);
-  if (providedBytes.length !== expectedBytes.length || !crypto.timingSafeEqual(providedBytes, expectedBytes)) return null;
-  try {
-    const session = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return session.expires >= Date.now() && ['student', 'teacher', 'hod', 'admin'].includes(session.role) ? session : null;
-  } catch { return null; }
+  const cookies = Object.fromEntries(cookie.split(';').map(part => {
+    const splitAt = part.indexOf('=');
+    return splitAt < 0 ? ['', ''] : [part.slice(0, splitAt).trim(), part.slice(splitAt + 1).trim()];
+  }).filter(([name]) => name));
+  const selectedRole = String(req.headers['x-ilahia-session-role'] || '').toLowerCase();
+  const validRoles = ['student', 'teacher', 'hod', 'admin'];
+  const candidateNames = validRoles.includes(selectedRole)
+    ? [`ilahia_${selectedRole}_session`, 'ilahia_teacher_session']
+    : ['ilahia_teacher_session'];
+  for (const cookieName of candidateNames) {
+    const token = cookies[cookieName];
+    if (!token) continue;
+    const parts = token.split('.');
+    if (parts.length !== 2) continue;
+    const [payload, signature] = parts;
+    const expected = crypto.createHmac('sha256', GATEPASS_CODE_SECRET).update(payload).digest('base64url');
+    const providedBytes = Buffer.from(signature), expectedBytes = Buffer.from(expected);
+    if (providedBytes.length !== expectedBytes.length || !crypto.timingSafeEqual(providedBytes, expectedBytes)) continue;
+    try {
+      const session = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+      if (session.expires >= Date.now() && validRoles.includes(session.role) && (!validRoles.includes(selectedRole) || session.role === selectedRole)) return session;
+    } catch {}
+  }
+  return null;
 }
 
 function requireStaff(req, res, allowedRoles = ['teacher', 'hod', 'admin']) {
@@ -841,7 +853,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-mobile-demo-access-v24' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-session-isolation-v25' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -949,7 +961,7 @@ const server = http.createServer(async (req, res) => {
       const signature = crypto.createHmac('sha256', GATEPASS_CODE_SECRET).update(payload).digest('base64url');
       const token = `${payload}.${signature}`;
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_teacher_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2147483647${secureCookie}` });
+      sendJson(res, 200, { ok: true, role, displayName: accountDisplayName || 'User' }, { 'Set-Cookie': `ilahia_${role}_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2147483647${secureCookie}` });
       return;
     }
     if (req.method === 'GET' && pathname === '/api/session') {
@@ -1099,9 +1111,24 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === 'POST' && pathname === '/api/session/logout') {
-      const token = (req.headers.cookie || '').match(/(?:^|;\s*)ilahia_teacher_session=([a-f0-9]+)/)?.[1];
+      const requestedRole = String(req.headers['x-ilahia-session-role'] || '').toLowerCase();
+      const role = ['student', 'teacher', 'hod', 'admin'].includes(requestedRole) ? requestedRole : 'teacher';
       const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
-      sendJson(res, 200, { ok: true }, { 'Set-Cookie': `ilahia_teacher_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}` });
+      const clearCookies = [`ilahia_${role}_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}`];
+      if (role === 'teacher') clearCookies.push(`ilahia_teacher_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}`);
+      const legacyToken = (req.headers.cookie || '').match(/(?:^|;\s*)ilahia_teacher_session=([^;\s]+)/)?.[1];
+      if (legacyToken && legacyToken.includes('.')) {
+        const [payload, signature] = legacyToken.split('.');
+        const expected = crypto.createHmac('sha256', GATEPASS_CODE_SECRET).update(payload).digest('base64url');
+        const actualBytes = Buffer.from(signature || ''), expectedBytes = Buffer.from(expected);
+        if (actualBytes.length === expectedBytes.length && crypto.timingSafeEqual(actualBytes, expectedBytes)) {
+          try {
+            const legacySession = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+            if (legacySession.role === role) clearCookies.push(`ilahia_teacher_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}`);
+          } catch {}
+        }
+      }
+      sendJson(res, 200, { ok: true }, { 'Set-Cookie': clearCookies });
       return;
     }
     if (pathname === '/api/campus-life' && req.method === 'GET') {

@@ -1441,7 +1441,7 @@
                             <div class="text-slate-500 text-xs">System Status</div>
                             <div class="text-sm font-bold text-emerald-600 flex items-center space-x-1.5 mt-2">
                                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                                <span>Demo environment</span>
+                                <span id="adminSystemStatusLabel" aria-live="polite">Checking portal service…</span>
                             </div>
                         </div>
                     </div>
@@ -2445,6 +2445,30 @@
         let currentPortalDisplayName = '';
         let pendingPortalCampusSession = null;
         let localAdminDemoCredentials = null;
+        function setActiveSessionRole(role) {
+            currentSessionRole = ['student', 'teacher', 'hod', 'admin'].includes(role) ? role : null;
+            try {
+                if (currentSessionRole) localStorage.setItem('ilahiaActiveSessionRole', currentSessionRole);
+                else localStorage.removeItem('ilahiaActiveSessionRole');
+                if (['student', 'teacher', 'hod'].includes(currentSessionRole)) localStorage.setItem('ilahiaPortalSessionRole', currentSessionRole);
+            } catch { /* Cookie-backed sessions still work when browser storage is disabled. */ }
+        }
+        async function refreshAdminSystemStatus() {
+            const label = document.getElementById('adminSystemStatusLabel');
+            if (!label) return;
+            const indicator = label.previousElementSibling;
+            try {
+                const response = await fetch('/api/health', { cache: 'no-store' });
+                if (!response.ok) throw new Error('Service unavailable');
+                label.textContent = 'Portal service online';
+                label.className = 'text-emerald-700';
+                if (indicator) indicator.className = 'h-2.5 w-2.5 rounded-full bg-emerald-500';
+            } catch {
+                label.textContent = 'Portal service offline';
+                label.className = 'text-rose-700';
+                if (indicator) indicator.className = 'h-2.5 w-2.5 rounded-full bg-rose-500';
+            }
+        }
 
         function openCampusMapPage() {
             const section = document.getElementById('campus-navigation');
@@ -4887,27 +4911,6 @@
 
         async function navigateCollegePage(key) {
             if (!collegeDatabase[key]) return;
-            const isChangingCampus = key !== currentActiveKey;
-            let activeRole = currentSessionRole;
-            let activeCampusKey = currentSessionCampusKey;
-            if (isChangingCampus && !['student', 'teacher', 'hod', 'admin'].includes(activeRole)) {
-                try {
-                    const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
-                    if (response.ok) {
-                        const session = await response.json();
-                        activeRole = session.role;
-                        activeCampusKey = session.campusKey || '';
-                    }
-                } catch (_) {}
-            }
-            const campusBoundPortalSession = ['student', 'teacher', 'hod'].includes(activeRole);
-            if (isChangingCampus && campusBoundPortalSession) {
-                if (!currentSessionRole) {
-                    currentSessionRole = activeRole;
-                    currentSessionCampusKey = activeCampusKey;
-                }
-                await logoutPortalSession();
-            }
             switchCollegePage(key);
         }
  
@@ -5774,7 +5777,13 @@
             let requestUrl;
             try { requestUrl = new URL(input instanceof Request ? input.url : input, window.location.href); }
             catch { return nativePortalFetch(input, init); }
-            const requestInit = { ...init, credentials: init.credentials || 'same-origin' };
+            const requestHeaders = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+            let requestRole = currentSessionRole;
+            if (!requestRole) { try { requestRole = localStorage.getItem('ilahiaActiveSessionRole'); } catch {} }
+            if (requestUrl.origin === window.location.origin && requestUrl.pathname.startsWith('/api/') && !requestUrl.pathname.startsWith('/api/security/') && ['student', 'teacher', 'hod', 'admin'].includes(requestRole)) {
+                requestHeaders.set('X-Ilahia-Session-Role', requestRole);
+            }
+            const requestInit = { ...init, headers: requestHeaders, credentials: init.credentials || 'same-origin' };
             const retryInput = input instanceof Request ? input.clone() : input;
             const response = await nativePortalFetch(input, requestInit);
             const isPortalApi = requestUrl.origin === window.location.origin && requestUrl.pathname.startsWith('/api/');
@@ -5810,7 +5819,6 @@
             document.getElementById('staffGatepassButton')?.classList.add('hidden');
             document.getElementById('mentorGatepassButton')?.classList.add('hidden');
             portalCampusInitPromise = initializePortalCampusSelector();
-            void restorePortalSessionOnce();
         } 
  
         function closePortalModal() { 
@@ -5820,10 +5828,12 @@
         } 
 
         async function logoutPortalSession() {
-            try { await fetch('/api/session/logout', { method: 'POST', credentials: 'same-origin' }); } catch (_) {}
+            const endedRole = currentSessionRole || (() => { try { return localStorage.getItem('ilahiaActiveSessionRole'); } catch { return null; } })();
+            try { await fetch('/api/session/logout', { method: 'POST', credentials: 'same-origin', headers: { 'X-Ilahia-Session-Role': endedRole || 'student' } }); } catch (_) {}
             closeStudentCampusHub();
             if (campusIssueStatusRefreshTimer) { clearInterval(campusIssueStatusRefreshTimer); campusIssueStatusRefreshTimer = null; }
-            currentSessionRole = null; currentSessionUserId = ''; currentSessionCampusKey = ''; currentPortalDisplayName = '';
+            setActiveSessionRole(null); currentSessionUserId = ''; currentSessionCampusKey = ''; currentPortalDisplayName = '';
+            try { if (['student', 'teacher', 'hod'].includes(endedRole)) localStorage.removeItem('ilahiaPortalSessionRole'); } catch {}
             pendingPortalCampusSession = null;
             aiKnowledgeDatabaseReady = false; aiKnowledgeLoadedForSession = ''; clearAcademicBotConversations();
             document.getElementById('studentDashboardCard').classList.add('hidden');
@@ -5853,22 +5863,9 @@
                 const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 if (!response.ok) return false;
                 const session = await response.json();
-                if (session.role !== 'admin' && session.campusKey && collegeDatabase[session.campusKey] && session.campusKey !== currentActiveKey) {
-                    pendingPortalCampusSession = session;
-                    const campusName = collegeDatabase[session.campusKey]?.name || session.campusKey;
-                    const selectedName = collegeDatabase[currentActiveKey]?.name || currentActiveKey;
-                    const roleName = session.role === 'hod' ? 'HOD' : session.role === 'teacher' ? 'teacher' : 'student';
-                    const notice = document.getElementById('portalCampusMismatchMessage');
-                    if (notice) notice.textContent = `This browser is still signed in as a ${roleName} at ${campusName}, while ${selectedName} is selected. Sign out to use the selected campus, or continue with the saved ${campusName} account.`;
-                    document.getElementById('portalMenuCard').classList.add('hidden');
-                    document.getElementById('studentLoginCard').classList.add('hidden');
-                    document.getElementById('teacherLoginCard').classList.add('hidden');
-                    document.getElementById('portalCampusMismatchCard')?.classList.remove('hidden');
-                    return true;
-                }
                 pendingPortalCampusSession = null;
                 document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
-                currentSessionRole = session.role; currentSessionUserId = session.userId || '';
+                setActiveSessionRole(session.role); currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
@@ -5944,6 +5941,12 @@
  
         async function showLoginForm(role) {
             if (portalCampusInitPromise) await portalCampusInitPromise;
+            const targetRole = role === 'student' ? 'student' : (document.getElementById('staffLoginRole')?.value || 'teacher');
+            setActiveSessionRole(targetRole);
+            const restored = await restorePortalSessionOnce();
+            const existingDashboard = targetRole === 'student' ? document.getElementById('studentDashboardCard') : document.getElementById('teacherDashboardCard');
+            if (restored && currentSessionRole === targetRole && existingDashboard && !existingDashboard.classList.contains('hidden')) return;
+            setActiveSessionRole(targetRole);
             setPortalLoginCampus(currentActiveKey);
             document.getElementById('portalMenuCard').classList.add('hidden'); 
             if(role === 'student') { 
@@ -6223,6 +6226,7 @@
         } 
  
         function openAdminModal() { 
+            setActiveSessionRole('admin');
             document.getElementById('adminModal').classList.remove('hidden'); 
             document.getElementById('adminLoginCard').classList.remove('hidden'); 
             document.getElementById('adminDashboardCard').classList.add('hidden'); 
@@ -6232,7 +6236,7 @@
                     if (!response.ok) { await loadAdminDemoCredentials(); return; }
                     const session = await response.json();
                     if (session.role !== 'admin') { await loadAdminDemoCredentials(); return; }
-                    currentSessionRole = 'admin'; currentSessionUserId = session.userId || '';
+                    setActiveSessionRole('admin'); currentSessionUserId = session.userId || '';
                     document.getElementById('adminLoginCard').classList.add('hidden');
                     document.getElementById('adminDashboardCard').classList.remove('hidden');
                     updateAdminStats(); loadCampusMetricsIntoForm();
@@ -6283,7 +6287,7 @@
                 const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 const signedInSession = sessionResponse.ok ? await sessionResponse.json() : null;
                 if (signedInSession?.role !== 'admin') throw new Error('Sign-in was accepted, but this browser did not keep the administrator session. Check that site cookies are enabled, then sign in again.');
-                currentSessionRole = 'admin';
+                setActiveSessionRole('admin');
                 currentSessionUserId = u;
                 document.getElementById('adminLoginCard').classList.add('hidden'); 
                 document.getElementById('adminDashboardCard').classList.remove('hidden'); 
@@ -6299,8 +6303,8 @@
         } 
  
         function logoutAdmin() { 
-            fetch('/api/session/logout', { method: 'POST' }).catch(() => {});
-            currentSessionRole = null;
+            fetch('/api/session/logout', { method: 'POST', headers: { 'X-Ilahia-Session-Role': 'admin' } }).catch(() => {});
+            setActiveSessionRole(null);
             currentSessionUserId = '';
             globalMaintenanceReports = [];
             renderAdminComplaintsTable(globalMaintenanceReports);
@@ -6747,6 +6751,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             portalCampusInitPromise = initializePortalCampusSelector();
             void restorePortalSessionOnce();
+            void refreshAdminSystemStatus();
+            window.setInterval(refreshAdminSystemStatus, 30000);
             void loadCampusNewsTicker();
             window.setInterval(() => {
                 const landing = document.getElementById('instituteLanding');
