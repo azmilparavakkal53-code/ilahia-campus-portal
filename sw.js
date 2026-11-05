@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ilahia-campus-shell-v73';
-const APP_SHELL = ['/', '/canteen.html', '/canteen-admin.html', '/manifest.webmanifest', '/assets/icons/ilahia-ecosystem-appicon-i-v35-180.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-1024.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-maskable-512.png', '/assets/icons/ilahia-ecosystem-wordmark-gold.png', '/assets/campuses/ilahia-public-school-hero.jpg'];
+const CACHE_NAME = 'ilahia-campus-shell-v74';
+const APP_SHELL = ['/', '/canteen.html', '/canteen-admin.html', '/manifest.webmanifest', '/assets/icons/ilahia-ecosystem-appicon-i-v35-180.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-1024.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-maskable-512.png', '/assets/icons/ilahia-ecosystem-wordmark-gold.png', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/mascots/mira-student-source.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).catch(() => undefined).then(() => self.skipWaiting()));

@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=58">
+    <link rel="manifest" href="/manifest.webmanifest?v=60">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -53,12 +53,17 @@
         .ilahia-ai-launcher-mark { width:2.5rem; height:2.5rem; transition:transform .2s ease; }
         button:hover > .ilahia-ai-launcher-mark { transform:rotate(-5deg) scale(1.08); }
         .trust-leadership-heading { font-family:"Palatino Linotype","Book Antiqua",Georgia,serif; letter-spacing:.035em; text-shadow:0 2px 14px #f6c95735; }
-        #trustMascotStage { position:relative; height:8rem; overflow:visible; pointer-events:none; }
-        #trustMascotMover { position:absolute; z-index:17000; left:50%; bottom:0; translate:-50% 0; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:grab; touch-action:none; user-select:none; pointer-events:auto; }
+        #trustMascotStage { position:relative; height:11rem; overflow:visible; pointer-events:none; }
+        #trustMascotMover { position:absolute; z-index:17000; left:calc(50% - 2.4rem); bottom:.25rem; translate:none; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:pointer; touch-action:manipulation; user-select:none; pointer-events:auto; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
-        .trust-mascot-character { width:5.25rem; height:7.2rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:4.75rem; height:9.88rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite, mira-space-walk 5.6s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .mira-arm-wave { transform-box:fill-box; transform-origin:50% 8%; animation:mira-hand-wave 1.25s ease-in-out infinite; }
+        .mira-mood-sad,.mira-mood-angry { display:none; }
+        #trustMascotMover.is-pouting .mira-mood-sad,#trustMascotMover.is-grumpy .mira-mood-angry { display:block; }
+        @keyframes mira-hand-wave { 0%,100% { transform:rotate(0); } 24% { transform:rotate(-11deg); } 48% { transform:rotate(8deg); } 72% { transform:rotate(-9deg); } }
+        @keyframes mira-space-walk { 0%,100% { translate:-28px 0; } 50% { translate:28px 0; } }
         .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
         .trust-mascot-gesture { transform-box:fill-box; transform-origin:80% 70%; animation:trust-mascot-gesture 2.3s ease-in-out infinite; }
         .trust-mascot-blink { transform-box:fill-box; transform-origin:center; animation:trust-mascot-blink 4.4s ease-in-out infinite; }
@@ -74,7 +79,8 @@
         #trustMascotMover.is-dancing .trust-mascot-blush { animation:trust-mascot-blush 1.68s ease-in-out 1; }
         #trustMascotMover.is-jumping .trust-mascot-character { animation:trust-mascot-jump .68s cubic-bezier(.3,.8,.35,1) both; }
         .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
-        #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
+        @media (max-width:520px) { #trustMascotStage #trustMascotMover { left:50%; transform:translateX(-50%); } #trustMascotStage .trust-mascot-greeting { max-width:12.5rem; } }
+                #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
         @keyframes trust-mascot-dance { 0%,100% { transform:translateY(0) rotate(-3deg) scale(1); } 22% { transform:translateY(-5px) rotate(4deg) scale(1.02); } 48% { transform:translateY(-1px) rotate(-2deg) scale(.99); } 72% { transform:translateY(-6px) rotate(3deg) scale(1.02); } }
         @keyframes trust-mascot-step-left { from { transform:rotate(-10deg) translateY(0); } to { transform:rotate(13deg) translateY(-2px); } }
         @keyframes trust-mascot-step-right { from { transform:rotate(12deg) translateY(-2px); } to { transform:rotate(-11deg) translateY(0); } }
@@ -143,7 +149,7 @@
     <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
         <p id="lilyLoginGreetingText" class="m-0 flex-1 text-xs font-semibold leading-relaxed"></p>
-        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Lily’s greeting">×</button>
+        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Mira’s greeting">×</button>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
         <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
@@ -176,7 +182,7 @@
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Lily to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Lily Guide</span></button>
+                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Mira to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Mira Guide</span></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
                 <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
@@ -199,8 +205,8 @@
     </div>
     <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
         <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
-            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Lily</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
-            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Lily conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
+            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Mira</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
+            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Mira conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
         </div>
         <div id="lilyConversationMessages" class="flex max-h-64 min-h-28 flex-col gap-2 overflow-y-auto bg-slate-50 p-3 text-xs" aria-live="polite" aria-relevant="additions text"></div>
         <div class="flex gap-2 border-t border-slate-200 px-3 pt-2">
@@ -209,10 +215,10 @@
         </div>
         <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
             <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
-            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Lily"><i class="fa-solid fa-microphone"></i></button>
+            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Mira"><i class="fa-solid fa-microphone"></i></button>
             <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
         </form>
-        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Lily to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
+        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Mira to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -238,42 +244,30 @@
             </aside>
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the campus conversation mascot. Tap to ask about campus news and events; drag or use arrow keys to move." title="Tap Lily to chat about campus news and events, or drag her to move">
-                            <svg class="trust-mascot-character" viewBox="0 0 160 220" aria-hidden="true">
+                    <div id="trustMascotStage" aria-label="Mira the Ilahia Trust welcome mascot">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Mira, the campus conversation mascot. Tap to chat; she walks around the blank space." title="Mira walks around this space. Tap her to chat.">
+                            <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Mira, the Ilahia student mascot">
   <defs>
-    <linearGradient id="lily2Hair" x1="42" y1="8" x2="112" y2="112" gradientUnits="userSpaceOnUse"><stop stop-color="#714333"/><stop offset="1" stop-color="#302b45"/></linearGradient>
-    <linearGradient id="lily2Skin" x1="57" y1="26" x2="105" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe2c9"/><stop offset="1" stop-color="#e9a17c"/></linearGradient>
-    <linearGradient id="lily2Jacket" x1="51" y1="107" x2="111" y2="174" gradientUnits="userSpaceOnUse"><stop stop-color="#68d4e3"/><stop offset="1" stop-color="#287ba8"/></linearGradient>
-    <linearGradient id="lily2Bag" x1="21" y1="105" x2="64" y2="171" gradientUnits="userSpaceOnUse"><stop stop-color="#ffd36b"/><stop offset="1" stop-color="#ee8f4c"/></linearGradient>
+    <linearGradient id="mira-uniform" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#15172a"/><stop offset=".55" stop-color="#20223b"/><stop offset="1" stop-color="#111426"/></linearGradient>
+    <linearGradient id="mira-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient>
+    <linearGradient id="mira-sleeve" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffdf9"/><stop offset="1" stop-color="#e8e4ef"/></linearGradient>
   </defs>
-  <ellipse cx="82" cy="210" rx="35" ry="6" fill="#09172c" opacity=".23"/>
-  <path d="M61 162 55 195m43-33 8 33" fill="none" stroke="#263c62" stroke-width="15" stroke-linecap="round"/>
-  <g class="trust-mascot-leg-left"><path d="M53 193c-8 5-12 10-10 14h30c2-7-5-12-20-14Z" fill="#fff7ed" stroke="#263c62" stroke-width="3" stroke-linejoin="round"/><path d="M47 204h23" stroke="#f2c65e" stroke-width="3" stroke-linecap="round"/></g>
-  <g class="trust-mascot-leg-right"><path d="M106 193c9 4 14 9 13 14H91c-2-7 3-12 15-14Z" fill="#fff7ed" stroke="#263c62" stroke-width="3" stroke-linejoin="round"/><path d="M95 204h22" stroke="#f2c65e" stroke-width="3" stroke-linecap="round"/></g>
-  <path d="M50 111c-16 1-25 13-25 31v26c0 7 5 11 12 9l31-11v-42c0-8-7-13-18-13Z" fill="url(#lily2Bag)" stroke="#233554" stroke-width="4"/>
-  <path d="M31 132c8-10 23-13 34-4m-35 28h36" fill="none" stroke="#fff0c1" stroke-width="3" stroke-linecap="round"/>
-  <path d="M59 105c11-9 39-9 51 0l12 64c-19 14-57 14-76 0l13-64Z" fill="url(#lily2Jacket)" stroke="#263b5c" stroke-width="4" stroke-linejoin="round"/>
-  <path d="m72 104 15 17 14-17-7-7H78l-6 7Z" fill="#fff9ef" stroke="#f2c65e" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M87 121v45" stroke="#f2c65e" stroke-width="3"/><circle cx="87" cy="133" r="2.7" fill="#fff1bd"/><circle cx="87" cy="146" r="2.7" fill="#fff1bd"/><circle cx="87" cy="159" r="2.7" fill="#fff1bd"/>
-  <path d="M59 110c-8 0-15 8-20 17l-8 12c-3 5 2 9 7 6l11-10 8 4" fill="none" stroke="#263b5c" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M59 110c-8 0-15 8-20 17l-8 12c-3 5 2 9 7 6l11-10 8 4" fill="none" stroke="#58c6da" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M108 109c10 2 15 9 16 18l-5 10-13-8" fill="none" stroke="#263b5c" stroke-width="14" stroke-linecap="round"/>
-  <g class="trust-mascot-gesture"><path d="M108 109c10 2 15 9 16 18l-5 10-13-8" fill="none" stroke="#58c6da" stroke-width="9" stroke-linecap="round"/><path d="M119 137c3-2 5 0 6 3l1-9c0-4 5-4 5 1v8l2-6c1-3 5-2 5 2l-2 7 3-3c2-2 5 0 4 3l-5 9c-3 5-8 6-13 4l-7-5-5-6c-2-3 1-6 4-4l4 3-4-5c-2-3 0-5 2-5Z" fill="url(#lily2Skin)" stroke="#263b5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="m124 140 1 5m6-2-1 4m7-2-2 4" fill="none" stroke="#c77e64" stroke-width="1.4" stroke-linecap="round"/></g>
-  <path d="M66 90h42v21c-9 10-32 10-42 0V90Z" fill="url(#lily2Skin)"/>
-  <path d="M42 54c-4-28 12-43 38-43 27 0 43 19 38 49l-5 34c-3 19-16 30-39 30-21 0-35-13-38-31l-2-39Z" fill="url(#lily2Hair)"/>
-  <path d="M52 48c0-17 13-29 33-29s33 12 33 29v34c0 21-13 33-33 33S52 103 52 82V48Z" fill="url(#lily2Skin)" stroke="#fff1df" stroke-width="2"/>
-  <path d="M48 58c-2-27 13-43 37-43 20 0 33 10 38 29-14-2-26-11-30-22-8 15-22 23-44 24v12Z" fill="url(#lily2Hair)"/>
-  <path d="M52 61c4-7 12-9 18-3m19 0c6-6 14-4 18 3" fill="none" stroke="#523449" stroke-width="2.8" stroke-linecap="round"/>
-  <g class="trust-mascot-blink"><g class="trust-mascot-pupils"><ellipse cx="62" cy="69" rx="4.2" ry="5.5" fill="#263c68"/><ellipse cx="96" cy="69" rx="4.2" ry="5.5" fill="#263c68"/><circle cx="63.5" cy="67" r="1.5" fill="#fff"/><circle cx="97.5" cy="67" r="1.5" fill="#fff"/></g></g>
-  <g class="trust-mascot-brows" fill="none" stroke="#523449" stroke-linecap="round" stroke-width="2.5"><path d="m55 56 11-2"/><path d="m91 54 11 2"/></g>
-  <path d="M79 72c-1 5-4 8-3 10 3 2 6 2 9 0" fill="none" stroke="#ce826b" stroke-width="2" stroke-linecap="round"/>
-  <circle class="trust-mascot-blush" cx="55" cy="84" r="5" fill="#f38d9c" opacity=".55"/><circle class="trust-mascot-blush" cx="103" cy="84" r="5" fill="#f38d9c" opacity=".55"/>
-  <path class="trust-mascot-mouth-smile" d="M73 89c4 6 12 6 16 0" fill="none" stroke="#a95758" stroke-width="2.8" stroke-linecap="round"/><path class="trust-mascot-mouth-sad" d="M73 92c4-5 12-5 16 0" fill="none" stroke="#a95758" stroke-width="2.8" stroke-linecap="round"/>
-  <path d="M105 28c8-6 17-3 19 4-7 0-12 5-14 12-4-4-6-10-5-16Z" fill="#63b982"/><circle cx="109" cy="32" r="4" fill="#ffd66b" stroke="#fff1b2" stroke-width="1.5"/>
-  <g class="trust-mascot-wave"><path d="M41 117c-11-5-17-14-20-25" fill="none" stroke="#263b5c" stroke-width="15" stroke-linecap="round"/><path d="M41 117c-11-5-17-14-20-25" fill="none" stroke="#58c6da" stroke-width="9" stroke-linecap="round"/><path d="M22 94c-2-6-2-11-1-17l-1-9c0-4 5-4 6-1l2 7 1-10c1-4 6-3 6 1v9l4-7c2-4 7-1 5 3l-5 13c-2 5-6 9-12 10-2 0-4 0-5-2Z" fill="url(#lily2Skin)" stroke="#263b5c" stroke-width="2.8" stroke-linejoin="round"/><path d="m26 72 2 7m7-6-2 7m8-3-4 6" fill="none" stroke="#c77e64" stroke-width="1.6" stroke-linecap="round"/></g>
+  <image href="/assets/mascots/mira-student-source.png" x="0" y="0" width="648" height="1345" preserveAspectRatio="none"/>
+  <!-- Cover the books and holding hand with a continuation of her navy uniform. -->
+  <path d="M462 449c31-18 77-13 111 1 25 10 43 28 56 53l9 139c3 39-17 74-54 99-39-10-85-14-127-31-10-67-9-197 5-261Z" fill="url(#mira-uniform)"/>
+  <path d="M477 486c7 59 3 126-2 192m48-218c-3 73 2 150 12 216m37-196c9 60 14 121 12 171" fill="none" stroke="#3b3c57" stroke-width="5" opacity=".42" stroke-linecap="round"/>
+  <path d="M475 477c39 11 83 12 125 1" fill="none" stroke="#373950" stroke-width="4" opacity=".6"/>
+  <g class="mira-arm-wave">
+    <path d="M523 407c30-15 65 0 81 25l24 49c-17 19-40 20-59 2l-39-33Z" fill="url(#mira-sleeve)" stroke="#293151" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M602 471c20 3 32 25 31 48l-8 48c-1 15-14 26-27 22-14-5-11-18-7-34l6-35c-12-15-18-28-13-40Z" fill="url(#mira-skin)" stroke="#293151" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M594 574c-6-10 4-17 11-8l7 10-1-22c0-10 12-12 15-2l3 22 4-18c2-9 14-8 14 2l-1 21 7-12c5-8 15-2 11 7l-12 30c-7 17-25 22-39 12l-19-13c-10-7-3-19 8-14l9 5Z" fill="url(#mira-skin)" stroke="#293151" stroke-width="4" stroke-linejoin="round"/>
+    <path d="m605 584 5 10m16-9 2 10m14-4-2 9" fill="none" stroke="#ce806a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g class="mira-mood-sad"><path d="M466 284c-4 10-12 19-11 27 1 8 12 11 18 5 8-8-1-20-7-32Z" fill="#80c9ef" stroke="#fff" stroke-width="3"/><path d="M369 334c9 7 22 7 31 0" fill="none" stroke="#9e4c58" stroke-width="5" stroke-linecap="round"/></g>
+  <g class="mira-mood-angry" fill="none" stroke="#db765b" stroke-width="8" stroke-linecap="round"><path d="m295 166 27-13"/><path d="m431 151 27 13"/><path d="m484 214 15-13"/></g>
+  <circle class="trust-mascot-blush" cx="306" cy="326" r="16" fill="#f38d9c" opacity=".6"/><circle class="trust-mascot-blush" cx="476" cy="323" r="16" fill="#f38d9c" opacity=".6"/>
 </svg>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Mira! Tap me for campus news and upcoming events ✨</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -949,7 +943,7 @@
                             <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-briefcase mr-2 text-indigo-700"></i>Placements & internships</h5><p class="my-2 text-[11px] text-slate-500">Office-reviewed openings and deadlines for your institute.</p><div id="placementBoard" class="space-y-2"></div><div id="myApplications" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-sky-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-chart-line mr-2 text-sky-700"></i>Academic progress</h5><p class="my-2 text-[11px] text-slate-500">Official marks and attendance records entered by the office. Contact your department if a record looks wrong.</p><div id="studentProgressRecords" class="space-y-2"></div><div id="progressSupportAlert" class="mt-2"></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="renderPersonalSkillMap()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
-                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Lily asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Lily reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
+                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Mira asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Mira reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
                             <section class="rounded-xl border border-pink-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-heart mr-2 text-pink-700"></i>Private student support</h5><p class="my-2 text-[11px] text-slate-500">Only the student-support office can read your request. Share only what you’re comfortable sharing.</p><form onsubmit="submitCounsellingRequest(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Support topic<select id="counsellingTopic" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option>Personal wellbeing</option><option>Study stress</option><option>Accessibility support</option><option>Financial guidance</option><option>Other support</option></select></label><label class="block text-[11px] font-semibold">What support would help?<textarea id="counsellingNote" required minlength="10" maxlength="1200" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Please avoid sharing passwords or unnecessary sensitive details"></textarea></label><label class="block text-[11px] font-semibold">Preferred contact time (optional)<input id="counsellingPreferred" maxlength="80" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. after 2 pm"></label><button class="rounded-lg bg-pink-700 px-4 py-2 text-xs font-bold text-white">Send private request</button></form><div id="studentCounsellingList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-tie mr-2 text-amber-700"></i>Alumni mentors</h5><p class="my-2 text-[11px] text-slate-500">Request career guidance from office-verified alumni. The office coordinates introductions; private contact details are not shown.</p><div id="alumniMentorList" class="space-y-2"></div><div id="myMentorshipRequests" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-people-group mr-2 text-amber-600"></i>College events & clubs</h5><p class="my-2 text-[11px] text-slate-500">See admin-published campus events and register your interest.</p><div id="campusEventsList" class="space-y-2"><p class="text-xs text-slate-500">No events are currently published.</p></div></section>
@@ -17240,7 +17234,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const input = document.getElementById('lilyConversationInput');
   const greeting = document.querySelector('.trust-mascot-greeting');
   if (!panel || !messages || !input) return;
-  const welcome = 'Hi, I’m Lily! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
+  const welcome = 'Hi, I’m Mira! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
@@ -17264,7 +17258,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const button = document.getElementById('lilyMicButton');
     if (!button) return;
     button.innerHTML = recording ? '<i class="fa-solid fa-stop"></i>' : '<i class="fa-solid fa-microphone"></i>';
-    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Lily' : 'Speak to Lily');
+    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Mira' : 'Speak to Mira');
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
   window.speakLilyText = (text, lang = currentLang) => {
@@ -17348,7 +17342,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       clearTimeout(lilySpeechSendTimer);
       if (purpose !== 'lily' || lilySpeechSent || !target?.value.trim()) return false;
       lilySpeechSent = true;
-      setVoiceStatus('Sending your voice message to Lily…', 'lilyVoiceStatus');
+      setVoiceStatus('Sending your voice message to Mira…', 'lilyVoiceStatus');
       void window.sendLilyMessage({ preventDefault() {} });
       return true;
     };
@@ -17368,7 +17362,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
       if (target) target.value = transcript.trim();
       if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
-        setVoiceStatus('I heard you. Sending your question to Lily…', statusId);
+        setVoiceStatus('I heard you. Sending your question to Mira…', statusId);
         clearTimeout(lilySpeechSendTimer);
         lilySpeechSendTimer = window.setTimeout(() => { sendLilyVoiceMessage(); recognition.stop(); }, 350);
       }
@@ -17408,8 +17402,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const lilyOfflinePhrases = {
     ml: {
       'I’m checking the latest campus updates…': 'ഞാൻ പുതിയ ക്യാമ്പസ് അറിയിപ്പുകൾ പരിശോധിക്കുകയാണ്…',
-      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ ലില്ലി, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
-      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ ലില്ലിയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
+      'Hi! I’m Mira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ മീര, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
+      'I’m Mira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ മീരയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'ക്യാമ്പസ് വാർത്തകളും പരിപാടികളും പറയാനും ശരിയായ സ്ഥാപന പോർട്ടലിലേക്ക് കൊണ്ടുപോകാനും എനിക്ക് കഴിയും. “ലോ കോളേജ് സ്റ്റുഡന്റ് പോർട്ടലിലേക്ക് കൊണ്ടുപോകൂ” എന്ന് ചോദിക്കൂ.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'ആദ്യം സ്ഥാപനം തിരഞ്ഞെടുക്കൂ. ശേഷം “സ്റ്റുഡന്റ് പോർട്ടൽ തുറക്കൂ” എന്ന് പറയൂ; ആ സ്ഥാപനത്തിന്റെ ലോഗിൻ തുറക്കാം.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'ഇപ്പോൾ വരാനിരിക്കുന്ന ക്യാമ്പസ് പരിപാടികൾ പ്രസിദ്ധീകരിച്ചിട്ടില്ല. പുതിയ അറിയിപ്പുകൾക്കായി പിന്നീട് ക്യാമ്പസ് ഇൻബോക്സ് പരിശോധിക്കൂ.',
@@ -17417,8 +17411,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     hi: {
       'I’m checking the latest campus updates…': 'मैं कैंपस की नई जानकारी देख रही हूँ…',
-      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं लिली, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
-      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं लिली हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
+      'Hi! I’m Mira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं मीरा, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
+      'I’m Mira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं मीरा हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'मैं कैंपस की ताज़ा खबरें और कार्यक्रम बता सकती हूँ और सही संस्थान पोर्टल तक पहुँचा सकती हूँ। कहें: “मुझे लॉ कॉलेज के छात्र पोर्टल पर ले चलो।”',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'पहले संस्थान चुनें, फिर “छात्र पोर्टल खोलो” कहें। मैं उस कैंपस का लॉगिन खोल दूँगी।',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'अभी कैंपस के कोई आगामी कार्यक्रम प्रकाशित नहीं हैं। नई सूचनाओं के लिए बाद में कैंपस इनबॉक्स देखें।',
@@ -17426,8 +17420,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ta: {
       'I’m checking the latest campus updates…': 'சமீபத்திய வளாக அறிவிப்புகளைப் பார்க்கிறேன்…',
-      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் லில்லி, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
-      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் லில்லி. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
+      'Hi! I’m Mira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் லில்லி, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
+      'I’m Mira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் லில்லி. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'வளாகச் செய்திகள் மற்றும் நிகழ்வுகளைச் சொல்லவும் சரியான கல்லூரி போர்ட்டலுக்கு வழிகாட்டவும் முடியும். “என்னை சட்டக் கல்லூரி மாணவர் போர்ட்டலுக்கு அழைத்துச் செல்” என்று கேளுங்கள்.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'முதலில் கல்வி நிறுவனத்தைத் தேர்ந்தெடுத்து, “மாணவர் போர்ட்டலைத் திற” என்று சொல்லுங்கள். அந்த வளாக உள்நுழைவைத் திறக்கிறேன்.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'தற்போது வரவிருக்கும் வளாக நிகழ்வுகள் வெளியிடப்படவில்லை. புதிய அறிவிப்புகளுக்கு பின்னர் வளாக இன்பாக்ஸைப் பாருங்கள்.',
@@ -17435,8 +17429,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ar: {
       'I’m checking the latest campus updates…': 'أتحقق من آخر تحديثات الحرم…',
-      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا ليلي، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
-      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا ليلي. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
+      'Hi! I’m Mira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا ليلي، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
+      'I’m Mira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا ليلي. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'يمكنني مشاركة أخبار الحرم والفعاليات وإرشادك إلى بوابة المعهد المناسبة. قل: «خذني إلى بوابة طلاب كلية القانون».',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'اختر المعهد أولاً ثم قل «افتح بوابة الطلاب» لأفتح صفحة تسجيل الدخول الخاصة به.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'لا توجد فعاليات قادمة منشورة حالياً. تحقق من صندوق وارد الحرم لاحقاً للاطلاع على الإعلانات الجديدة.',
@@ -17547,8 +17541,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(mess|canteen|food|meal|menu|order food)\b|مقصف|भोजनालय|உணவகம்|കാന്റീൻ/.test(query)) return 'Open the Mess Buzz or Canteen section on your college page to see the current menu and place a food booking. Payment choices are shown at checkout when available.';
     if (/\b(news|headline|update|alert|breaking|announcement|new)\b|خبر|أخبار|समाचार|खबर|செய்தி|വാർത്ത|അറിയിപ്പ്/.test(query)) return latestNewsReply();
     if (/\b(event|events|workshop|activity|activities|happening|calendar)\b|حدث|فعاليات|कार्यक्रम|आयोजन|நிகழ்வு|நிகழ்ச்ச|പരിപാടി|ഇവന്റ്/.test(query)) return upcomingEventsReply();
-    if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
-    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
+    if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Mira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
+    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Mira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
     return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
   }
@@ -17579,7 +17573,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       window.speakLilyText(thinking.textContent);
       if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
     }
-    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Lily could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
+    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Mira could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };
@@ -17639,107 +17633,44 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     setTimeout(() => mascot.classList.remove('is-greeting'), 1800);
     window.resetLilyIdleMood();
     const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
-    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Lily says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Mira says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
-  const clamp = (value, max) => Math.max(0, Math.min(max, value));
-  const maxLeft = () => Math.max(0, window.innerWidth - mascot.offsetWidth - 8);
-  const maxTop = () => Math.max(0, window.innerHeight - mascot.offsetHeight - 8);
-  const playTouchDance = () => {
+    const playTouchDance = () => {
     mascot.classList.remove('is-jumping', 'is-dancing', 'is-pouting', 'is-grumpy');
     void mascot.offsetWidth;
     mascot.classList.add('is-dancing');
     window.setTimeout(() => mascot.classList.remove('is-dancing'), 1750);
   };
-  const place = (left, top) => {
-    mascot.style.left = `${clamp(left, maxLeft())}px`;
-    mascot.style.top = `${clamp(top, maxTop())}px`;
-  };
-  let stored = null;
-  try { stored = JSON.parse(localStorage.getItem('ilahiaTrustMascotPositionV2') || 'null'); } catch {}
-  if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
-    mascot.style.position = 'fixed';
-    mascot.style.translate = 'none';
-    place(stored.x * maxLeft(), stored.y * maxTop());
-  }
-  const ensureMascotFloating = () => {
-    if (mascot.style.position === 'fixed') return;
-    const rect = mascot.getBoundingClientRect();
-    mascot.style.position = 'fixed';
-    mascot.style.translate = 'none';
-    const visibleInViewport = rect.top >= 0 && rect.bottom <= window.innerHeight && rect.left >= 0 && rect.right <= window.innerWidth;
-    if (visibleInViewport) place(rect.left, rect.top);
-    else place(maxLeft(), Math.min(112, maxTop()));
-  };
   window.lilyPopIntoCampusPage = (floatOnPage = true) => {
-    if (floatOnPage) ensureMascotFloating();
+    if (floatOnPage) {
+      if (mascot.parentElement !== document.body) document.body.appendChild(mascot);
+      Object.assign(mascot.style, { position:'fixed', left:'auto', right:'3rem', top:'7rem', bottom:'auto', translate:'none' });
+    }
     mascot.classList.remove('is-popping'); void mascot.offsetWidth; mascot.classList.add('is-popping');
     window.setTimeout(() => mascot.classList.remove('is-popping'), 850);
   };
   window.setTimeout(() => window.lilyPopIntoCampusPage(false), 500);
-  let drag = null;
-  let suppressNextClick = false;
-  const openMascotConversation = () => window.openLilyConversation?.();
-  mascot.addEventListener('pointerdown', event => {
-    if (event.button !== undefined && event.button !== 0) return;
-    window.resetLilyIdleMood();
-    const mascotRect = mascot.getBoundingClientRect();
-    ensureMascotFloating();
-    drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.style.position === 'fixed' ? mascot.offsetLeft : mascotRect.left, top: mascot.style.position === 'fixed' ? mascot.offsetTop : mascotRect.top, moved: false };
-    mascot.classList.add('is-dragging');
-    mascot.setPointerCapture?.(event.pointerId);
-  });
-  mascot.addEventListener('pointermove', event => {
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
-    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
-    if (drag.moved) place(drag.left + dx, drag.top + dy);
-  });
-  const finishDrag = event => {
-    if (!drag || (event?.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
-    mascot.classList.remove('is-dragging');
-    if (drag.moved) {
-      suppressNextClick = true;
-      window.setTimeout(() => { suppressNextClick = false; }, 350);
-      try { localStorage.setItem('ilahiaTrustMascotPositionV2', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
-    }
-    drag = null;
-  };
-  mascot.addEventListener('pointerup', finishDrag);
-  mascot.addEventListener('pointercancel', finishDrag);
   mascot.addEventListener('click', () => {
-    if (suppressNextClick) { suppressNextClick = false; return; }
+    window.resetLilyIdleMood();
     playTouchDance();
-    openMascotConversation();
+    window.openLilyConversation?.();
   });
   mascot.addEventListener('keydown', event => {
     window.resetLilyIdleMood();
-    const step = event.shiftKey ? 24 : 12;
-    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
-    if (moves[event.key]) {
+    if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) {
       event.preventDefault();
-      place(mascot.offsetLeft + moves[event.key][0], mascot.offsetTop + moves[event.key][1]);
-      try { localStorage.setItem('ilahiaTrustMascotPositionV2', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
+      mascot.classList.remove('is-dancing');
+      void mascot.offsetWidth;
+      mascot.classList.add('is-dancing');
+      window.setTimeout(() => mascot.classList.remove('is-dancing'), 900);
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       playTouchDance();
-      openMascotConversation();
-    } else if (event.key === 'Home') {
-      event.preventDefault();
-      place(maxLeft(), Math.min(112, maxTop()));
-      try { localStorage.removeItem('ilahiaTrustMascotPositionV2'); } catch {}
+      window.openLilyConversation?.();
     }
   });
-  window.addEventListener('resize', () => {
-    if (mascot.style.position !== 'fixed') return;
-    try {
-      const position = JSON.parse(localStorage.getItem('ilahiaTrustMascotPositionV2') || 'null');
-      if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * maxLeft(), position.y * maxTop());
-      else place(Math.min(mascot.offsetLeft, maxLeft()), Math.min(mascot.offsetTop, maxTop()));
-    } catch { place(Math.min(mascot.offsetLeft, maxLeft()), Math.min(mascot.offsetTop, maxTop())); }
-  });
-
 })();
 </script>
 <!-- Embedded MessBuzz college-mess panel: uses the portal's existing signed-in session. -->
