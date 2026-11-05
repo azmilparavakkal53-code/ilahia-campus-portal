@@ -58,7 +58,7 @@
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
-        .trust-mascot-character { width:4.75rem; height:9.88rem; flex:none; overflow:visible; animation:trust-mascot-dance 2.8s ease-in-out infinite, nila-space-walk 5.6s ease-in-out infinite, nila-free-hand-wave 1.5s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:4.75rem; height:9.88rem; flex:none; overflow:visible; animation:none; filter:drop-shadow(0 5px 8px #02081770); }
         .nila-standing-legs { pointer-events:none; }
         .nila-thinking-mark { display:none; transform-box:fill-box; transform-origin:center; }
         .nila-face-mood { display:none; pointer-events:none; }
@@ -82,15 +82,7 @@
         .nila-emotion-badge { position:absolute; z-index:2; left:2.8rem; top:-.45rem; min-width:2rem; height:2rem; display:grid; place-items:center; border:2px solid #f0cc67; border-radius:999px; background:#fffaf0; box-shadow:0 3px 10px #02081730; font-size:1.15rem; line-height:1; animation:nila-badge-pop .25s cubic-bezier(.2,.9,.3,1.3) both; }
         .nila-emotion-badge[hidden] { display:none; }
         #trustMascotMover.is-thinking .nila-thinking-mark { display:block; animation:nila-think-pop .35s ease-out both; }
-        #trustMascotMover.is-thinking .trust-mascot-character { animation:nila-thinking-tilt 2.6s ease-in-out both; }
-        #trustMascotMover.is-emotion-angry .trust-mascot-character,#trustMascotMover.is-emotion-grumpy .trust-mascot-character { animation:nila-angry-shake .38s ease-in-out 3; }
-        #trustMascotMover.is-emotion-sad .trust-mascot-character,#trustMascotMover.is-emotion-disappointed .trust-mascot-character { animation:nila-sad-droop 1.2s ease-in-out 1; }
-        #trustMascotMover.is-emotion-surprised .trust-mascot-character,#trustMascotMover.is-emotion-scared .trust-mascot-character { animation:nila-surprise-hop .52s ease-in-out 2; }
-        #trustMascotMover.is-emotion-excited .trust-mascot-character,#trustMascotMover.is-emotion-proud .trust-mascot-character { animation:trust-mascot-greeting-hop .72s ease-in-out 2; }
-        #trustMascotMover.is-emotion-shy .trust-mascot-character,#trustMascotMover.is-emotion-embarrassed .trust-mascot-character,#trustMascotMover.is-emotion-love .trust-mascot-character { animation:nila-shy-sway 1.1s ease-in-out 2; }
-        #trustMascotMover.is-emotion-sleepy .trust-mascot-character,#trustMascotMover.is-emotion-tired .trust-mascot-character { animation:nila-sleepy-bob 1.6s ease-in-out 1; }
-        #trustMascotMover.is-emotion-thinking .trust-mascot-character,#trustMascotMover.is-emotion-confused .trust-mascot-character { animation:nila-thinking-tilt 1.5s ease-in-out 1; }
-        @keyframes nila-badge-pop { from { transform:scale(.45) rotate(-12deg); opacity:0; } to { transform:scale(1) rotate(0); opacity:1; } }
+                                                                        @keyframes nila-badge-pop { from { transform:scale(.45) rotate(-12deg); opacity:0; } to { transform:scale(1) rotate(0); opacity:1; } }
         @keyframes nila-think-pop { from { opacity:0; transform:scale(.5) translateY(6px); } to { opacity:1; transform:scale(1) translateY(0); } }
         @keyframes nila-thinking-tilt { 0%,100% { rotate:0deg; } 30%,72% { rotate:-4deg; } }
         @keyframes nila-angry-shake { 0%,100% { translate:0 0; rotate:0deg; } 25% { translate:-5px 0; rotate:-3deg; } 75% { translate:5px 0; rotate:3deg; } }
@@ -112,11 +104,8 @@
         .trust-mascot-mouth-sad,.trust-mascot-brows { display:none; }
         #trustMascotMover.is-pouting .trust-mascot-mouth-smile,#trustMascotMover.is-grumpy .trust-mascot-mouth-smile { display:none; }
         #trustMascotMover.is-pouting .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-brows { display:block; }
-        #trustMascotMover.is-greeting .trust-mascot-character { animation:trust-mascot-greeting-hop .85s ease-in-out 2; }
-        #trustMascotMover.is-dancing .trust-mascot-character { animation:trust-mascot-touch-dance .42s cubic-bezier(.35,.05,.55,.95) 4; }
-        #trustMascotMover.is-dancing .trust-mascot-blush { animation:trust-mascot-blush 1.68s ease-in-out 1; }
-        #trustMascotMover.is-jumping .trust-mascot-character { animation:trust-mascot-jump .68s cubic-bezier(.3,.8,.35,1) both; }
-        .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
+                        #trustMascotMover.is-dancing .trust-mascot-blush { animation:trust-mascot-blush 1.68s ease-in-out 1; }
+                .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
         @media (max-width:520px) { #trustMascotStage #trustMascotMover { left:50%; transform:translateX(-50%); } #trustMascotStage .trust-mascot-greeting { max-width:12.5rem; } }
                 #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
         @keyframes trust-mascot-dance { 0%,100% { transform:translateY(0) rotate(-3deg) scale(1); } 22% { transform:translateY(-5px) rotate(4deg) scale(1.02); } 48% { transform:translateY(-1px) rotate(-2deg) scale(.99); } 72% { transform:translateY(-6px) rotate(3deg) scale(1.02); } }
@@ -17672,7 +17661,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     confused:{emoji:'😕',label:'Confused'}, tired:{emoji:'😪',label:'Tired'}, proud:{emoji:'😌',label:'Proud'}, grumpy:{emoji:'😤',label:'Grumpy'}
   };
   let nilaEmotionTimer = 0;
-  window.expressNilaEmotion = (emotion, duration = 2600) => {
+  window.expressNilaEmotion = (emotion, duration = 5200) => {
     const mood = nilaEmotionData[emotion] ? emotion : 'happy';
     Object.keys(nilaEmotionData).forEach(key => mascot.classList.remove('is-emotion-' + key));
     mascot.classList.remove('is-thinking', 'is-pouting', 'is-grumpy');
@@ -17692,7 +17681,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const value = String(text || '').toLowerCase();
     let mood = fallback;
     if (/\b(angry|mad|frustrat|annoy|furious|grumpy|leave me alone|upset)\b|ദേഷ്യം|കോപം|गुस्सा|கோபம்|غاضب/.test(value)) mood = 'angry';
-    else if (/\b(sad|hurt|lonely|bad day|fail|miss you|cry|unhappy)\b|സങ്കടം|ദുഃഖം|दुखी|दुख|சோகம்|حزين/.test(value)) mood = 'sad';
+    else if (/\b(sad|hurt|lonely|bad day|fail|miss you|cry|unhappy|sorry|upset)\b|സങ്കടം|ദുഃഖം|दुखी|दुख|சோகம்|حزين/.test(value)) mood = 'sad';
     else if (/\b(embarrass|awkward|oops|my mistake)\b|നാണം|शर्मिंदा|வெட்கம்/.test(value)) mood = 'embarrassed';
     else if (/\b(shy|blush)\b|ലജ്ജ|संकोच|கூச்சம்/.test(value)) mood = 'shy';
     else if (/\b(scared|afraid|fear|danger|worried|nervous)\b|പേടി|ഭയം|डर|பயம்|خائف/.test(value)) mood = 'scared';
@@ -17763,40 +17752,25 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
-    const playTouchDance = () => {
-    mascot.classList.remove('is-jumping', 'is-dancing', 'is-pouting', 'is-grumpy');
-    void mascot.offsetWidth;
-    mascot.classList.add('is-dancing');
-    window.setTimeout(() => mascot.classList.remove('is-dancing'), 1750);
-  };
-  window.lilyPopIntoCampusPage = (floatOnPage = true) => {
+    window.lilyPopIntoCampusPage = (floatOnPage = true) => {
     if (floatOnPage) {
       window.expressNilaEmotion('thinking', 2600);
       if (mascot.parentElement !== document.body) document.body.appendChild(mascot);
       Object.assign(mascot.style, { position:'fixed', left:'auto', right:'3rem', top:'7rem', bottom:'auto', translate:'none' });
     }
-    mascot.classList.remove('is-popping'); void mascot.offsetWidth; mascot.classList.add('is-popping');
-    window.setTimeout(() => mascot.classList.remove('is-popping'), 850);
   };
   window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.lilyGreetVisitor?.(); }, 500);
   mascot.addEventListener('click', () => {
     window.resetLilyIdleMood();
-    window.expressNilaEmotion('excited', 1800);
+    window.expressNilaEmotion('excited', 4200);
     window.speakLilyText?.(greeting.textContent, currentLang);
-    playTouchDance();
     window.openLilyConversation?.();
   });
   mascot.addEventListener('keydown', event => {
-    window.resetLilyIdleMood();
-    if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      mascot.classList.remove('is-dancing');
-      void mascot.offsetWidth;
-      mascot.classList.add('is-dancing');
-      window.setTimeout(() => mascot.classList.remove('is-dancing'), 900);
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      playTouchDance();
+      window.resetLilyIdleMood();
+      window.expressNilaEmotion('excited', 4200);
       window.openLilyConversation?.();
     }
   });
