@@ -80,11 +80,6 @@
         #trustMascotMover.is-emotion-tired .nila-face-tired { display:block; animation:nila-face-expression-in .28s ease-out both; }
         #trustMascotMover.is-emotion-proud .nila-face-proud { display:block; animation:nila-face-expression-in .28s ease-out both; }
         #trustMascotMover.is-emotion-grumpy .nila-face-grumpy { display:block; animation:nila-face-expression-in .28s ease-out both; }
-        #trustMascotMover.is-emotion-excited .trust-mascot-character, #trustMascotMover.is-emotion-proud .trust-mascot-character { animation:trust-mascot-touch-dance .78s ease-in-out 4; transform-origin:50% 90%; }
-        #trustMascotMover.is-emotion-happy .trust-mascot-character { animation:trust-mascot-jump .72s ease-out 2; transform-origin:50% 90%; }
-        #trustMascotMover.is-emotion-sad .trust-mascot-character, #trustMascotMover.is-emotion-love .trust-mascot-character { animation:nila-sad-droop 1.05s ease-in-out 2; transform-origin:50% 90%; }
-        #trustMascotMover.is-emotion-thinking .trust-mascot-character { animation:nila-thinking-tilt .75s ease-in-out 2; transform-origin:50% 90%; }
-
 
         #trustMascotMover.is-thinking .nila-thinking-mark { display:block; animation:nila-think-pop .35s ease-out both; }
                                                                         @keyframes nila-badge-pop { from { transform:scale(.45) rotate(-12deg); opacity:0; } to { transform:scale(1) rotate(0); opacity:1; } }
@@ -175,8 +170,46 @@
             #studentDashboardCard > div:first-child, #teacherDashboardCard > div:first-child { flex-wrap:wrap; }
             #studentDashboardCard .overflow-y-auto, #teacherDashboardCard .overflow-y-auto, #adminDashboardCard .overflow-y-auto { padding:1rem; }
         }
-    </style>
-</head>
+    /* Mila is built from separate SVG body parts so her movements stay connected. */
+        .mila-rig { transform-box:view-box; transform-origin:50% 100%; }
+        .mila-head { transform-box:view-box; transform-origin:57% 29%; }
+        .mila-mood-overlay { transform-box:view-box; transform-origin:57% 29%; }
+        .mila-hair-front,.mila-bow,.mila-eyes,.mila-torso,.mila-arm,.mila-leg { transform-box:view-box; }
+        .mila-arm-left { transform-origin:43.5% 35.4%; }
+        .mila-arm-right { transform-origin:74.2% 35.2%; }
+        .mila-leg-left { transform-origin:50.9% 70.3%; }
+        .mila-leg-right { transform-origin:62% 70.3%; }
+        #trustMascotMover.is-dancing .mila-rig { animation:mila-dance-rig 7.6s cubic-bezier(.45,0,.55,1) both; }
+        #trustMascotMover.is-dancing .mila-arm-left { animation:mila-dance-left-arm 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing .mila-arm-right { animation:mila-dance-right-arm 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing .mila-leg-left { animation:mila-dance-left-leg 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing .mila-leg-right { animation:mila-dance-right-leg 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing .mila-hair-front { animation:mila-dance-hair 7.6s ease-in-out both; transform-origin:57% 19%; }
+        #trustMascotMover.is-dancing .mila-bow { animation:mila-dance-bow 7.6s ease-in-out both; transform-origin:43% 14%; }
+
+        #trustMascotMover.is-emotion-thinking .mila-mood-overlay { animation:mila-think-head .75s ease-in-out 2; }
+        #trustMascotMover.is-emotion-sad .mila-mood-overlay { animation:mila-sad-head 1.1s ease-in-out 2; }
+        #trustMascotMover.is-emotion-happy .mila-mood-overlay { animation:mila-happy-head .55s ease-in-out 2; }
+        #trustMascotMover.is-dancing .mila-book { animation:mila-dance-right-arm 7.6s ease-in-out both; transform-origin:74.2% 35.2%; }
+        #trustMascotMover.is-dancing .mila-arm-right { animation:mila-dance-right-arm 7.6s ease-in-out both; }
+        #trustMascotMover.is-emotion-thinking .mila-head { animation:mila-think-head .75s ease-in-out 2; }
+        #trustMascotMover.is-emotion-sad .mila-head { animation:mila-sad-head 1.1s ease-in-out 2; }
+        #trustMascotMover.is-emotion-happy .mila-head { animation:mila-happy-head .55s ease-in-out 2; }
+        @keyframes mila-dance-rig { 0%,100%{transform:translateX(0) rotate(0) rotateY(0)} 10%{transform:translateX(-5px) rotate(-2deg) rotateY(0)} 22%{transform:translateX(5px) rotate(2deg) rotateY(0)} 34%{transform:translateX(-5px) rotate(-2deg) rotateY(0)} 46%{transform:translateX(5px) rotate(2deg) rotateY(0)} 60%{transform:translateX(-4px) rotate(-2deg) rotateY(0)} 72%{transform:translateX(4px) rotate(2deg) rotateY(0)} 78%{transform:translateX(0) rotate(0) rotateY(0)} 84%{transform:translateX(0) rotate(0) rotateY(180deg)} 91%{transform:translateX(0) rotate(0) rotateY(360deg)} 100%{transform:translateX(0) rotate(0) rotateY(360deg)} }
+        @keyframes mila-dance-torso { 0%,100%{transform:translateX(0) rotate(0)} 10%{transform:translateX(-6px) rotate(-3deg)} 22%{transform:translateX(6px) rotate(3deg)} 34%{transform:translateX(-5px) rotate(-3deg)} 46%{transform:translateX(6px) rotate(3deg)} 60%{transform:translateX(-4px) rotate(-2deg)} 72%{transform:translateX(4px) rotate(2deg)} 84%{transform:translateX(0) rotate(0)} 92%{transform:translateY(-2px) rotate(-2deg)} }
+        @keyframes mila-dance-left-arm { 0%,100%{transform:rotate(-8deg)} 10%{transform:rotate(-28deg)} 22%{transform:rotate(24deg)} 34%{transform:rotate(-26deg)} 46%{transform:rotate(22deg)} 58%{transform:rotate(-30deg)} 70%{transform:rotate(18deg)} 82%{transform:rotate(-8deg)} 92%{transform:rotate(-42deg)} }
+        @keyframes mila-dance-right-arm { 0%,100%{transform:rotate(6deg)} 10%{transform:rotate(22deg)} 22%{transform:rotate(-18deg)} 34%{transform:rotate(24deg)} 46%{transform:rotate(-20deg)} 58%{transform:rotate(25deg)} 70%{transform:rotate(-18deg)} 82%{transform:rotate(6deg)} 92%{transform:rotate(38deg)} }
+        @keyframes mila-dance-left-leg { 0%,100%{transform:rotate(0)} 10%{transform:rotate(-7deg)} 22%{transform:rotate(9deg) translateY(-7px)} 34%{transform:rotate(-8deg)} 46%{transform:rotate(10deg) translateY(-9px)} 58%{transform:rotate(-8deg)} 70%{transform:rotate(7deg) translateY(-6px)} 82%{transform:rotate(0)} 92%{transform:rotate(-5deg)} }
+        @keyframes mila-dance-right-leg { 0%,100%{transform:rotate(0)} 10%{transform:rotate(8deg) translateY(-6px)} 22%{transform:rotate(-8deg)} 34%{transform:rotate(9deg) translateY(-8px)} 46%{transform:rotate(-9deg)} 58%{transform:rotate(8deg) translateY(-7px)} 70%{transform:rotate(-8deg)} 82%{transform:rotate(0)} 92%{transform:rotate(5deg)} }
+        @keyframes mila-dance-hair { 0%,100%{transform:rotate(0)} 12%{transform:rotate(-3deg)} 24%{transform:rotate(3deg)} 36%{transform:rotate(-3deg)} 48%{transform:rotate(3deg)} 64%{transform:rotate(-2deg)} 78%{transform:rotate(2deg)} 92%{transform:rotate(0)} }
+        @keyframes mila-dance-bow { 0%,100%{transform:rotate(0)} 15%{transform:rotate(-8deg)} 29%{transform:rotate(7deg)} 43%{transform:rotate(-8deg)} 57%{transform:rotate(7deg)} 72%{transform:rotate(-5deg)} 90%{transform:rotate(0)} }
+        @keyframes mila-think-head { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-5deg)} }
+        @keyframes mila-sad-head { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(5px) rotate(3deg)} }
+        @keyframes mila-happy-head { 0%,100%{transform:rotate(0)} 50%{transform:rotate(3deg)} }
+        @media (prefers-reduced-motion:reduce) { #trustMascotMover.is-dancing .mila-rig,#trustMascotMover.is-dancing .mila-torso,#trustMascotMover.is-dancing .mila-arm-left,#trustMascotMover.is-dancing .mila-arm-right,#trustMascotMover.is-dancing .mila-leg-left,#trustMascotMover.is-dancing .mila-leg-right,#trustMascotMover.is-dancing .mila-hair-front,#trustMascotMover.is-dancing .mila-bow { animation:none; } }
+</style>
+
+        </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
     <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
@@ -277,16 +310,58 @@
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Mila the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Mila, the campus conversation mascot. Tap to chat; she stays still while her face expresses emotions." title="Mila stands here. Tap her to chat.">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Mila, the campus conversation mascot. She expresses emotions and dances during celebrations. Tap to chat." title="Mila is here. Tap her to chat; she dances when celebrating.">
                             <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Mila, the Ilahia student mascot">
   <defs>
     <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
     <linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient>
     <linearGradient id="nila-shoe" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#344263"/><stop offset=".52" stop-color="#151a2d"/><stop offset="1" stop-color="#080b17"/></linearGradient>
   </defs>
-  <image href="/assets/mascots/nila-student-source.png" x="0" y="0" width="648" height="1345" preserveAspectRatio="none"/>
+<g class="mila-rig">
+  <ellipse cx="342" cy="1336" rx="89" ry="7" fill="#09172c" opacity=".18"/>
+  <g class="mila-hair mila-hair-back">
+    <path d="M257 315C224 218 236 102 337 77 424 54 493 117 492 230c0 98 20 209 36 294l-31 91-57-52-169 20-62-54 25-103c-24-38-33-75-18-111Z" fill="#39201d" stroke="#2a1719" stroke-width="10"/>
+    <g fill="#4c2a24" stroke="#2a1719" stroke-width="7"><circle cx="272" cy="188" r="57"/><circle cx="302" cy="119" r="51"/><circle cx="375" cy="91" r="53"/><circle cx="440" cy="124" r="52"/><circle cx="477" cy="191" r="49"/><circle cx="249" cy="266" r="48"/><circle cx="477" cy="267" r="47"/><circle cx="260" cy="343" r="52"/><circle cx="474" cy="343" r="55"/><circle cx="246" cy="421" r="48"/><circle cx="466" cy="421" r="52"/><circle cx="259" cy="497" r="48"/><circle cx="446" cy="491" r="55"/></g>
+    <g fill="none" stroke="#8b5844" stroke-width="8" stroke-linecap="round" opacity=".8"><path d="M258 176q18-38 47-43M354 91q31-21 56 0M434 112q34 19 34 48M235 253q-20 30-3 49M489 287q18 23 2 44M246 389q-17 29 1 50M450 458q27-15 35 9"/></g>
+  </g>
+  <g class="mila-backpack"><path d="M220 473Q184 482 177 532L165 747Q168 798 221 811L276 793 291 517Z" fill="#ec77ad" stroke="#b84f85" stroke-width="9"/><path d="M190 575Q224 548 253 574L248 661Q215 682 185 661Z" fill="#f5a2c9" stroke="#d46e9f" stroke-width="6"/><path d="M211 495Q246 477 278 504L301 604" fill="none" stroke="#f49ac5" stroke-width="18" stroke-linecap="round"/></g>
+  <g class="mila-legs"><g class="mila-leg mila-leg-left"><path d="M292 933Q282 1010 297 1094L308 1196Q322 1220 350 1200L344 1087Q359 1007 371 944Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="5"/><path d="M302 1178Q327 1193 354 1179L361 1230Q337 1247 307 1231Z" fill="#fffaf4" stroke="#d8d7e1" stroke-width="4"/><path d="M303 1226Q331 1240 362 1227Q382 1256 382 1317Q342 1341 277 1324Q282 1263 303 1226Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="7"/><path d="M298 1311q38 13 81 1" fill="none" stroke="#8b93a8" stroke-width="5" stroke-linecap="round"/></g><g class="mila-leg mila-leg-right"><path d="M365 942Q380 1012 370 1094L369 1196Q382 1220 410 1200L417 1086Q433 1011 438 945Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="5"/><path d="M370 1179Q394 1193 421 1179L430 1230Q405 1247 375 1231Z" fill="#fffaf4" stroke="#d8d7e1" stroke-width="4"/><path d="M373 1226Q402 1240 431 1227Q452 1256 452 1317Q412 1341 347 1324Q352 1263 373 1226Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="7"/><path d="M368 1311q38 13 81 1" fill="none" stroke="#8b93a8" stroke-width="5" stroke-linecap="round"/></g></g>
+  <g class="mila-torso">
+    <path d="M284 446Q319 419 365 427L424 425Q472 435 493 468L525 657 492 960Q401 1003 278 960L251 655Z" fill="#172340" stroke="#101a32" stroke-width="9"/>
+    <path d="M283 453Q313 429 348 432L367 481 397 482 422 431Q464 431 490 463L458 554 486 648Q400 679 277 647L307 548Z" fill="#fffaf4" stroke="#ded9d3" stroke-width="6"/>
+    <path d="M352 441L391 457 427 438 411 499 390 516 365 496Z" fill="#24375f"/>
+    <path d="M274 623Q392 655 506 621L529 794Q507 916 495 960Q396 990 278 959L250 792Z" fill="#202d50" stroke="#121d38" stroke-width="8"/>
+    <path d="M281 651Q387 679 504 648M273 758Q390 787 515 756M265 864Q388 889 504 860" fill="none" stroke="#35466e" stroke-width="7" opacity=".8"/>
+    <path d="M332 650L356 960M409 659L399 964" fill="none" stroke="#111d3c" stroke-width="6" opacity=".8"/>
+  </g>
+  <g class="mila-arm mila-arm-left" transform="rotate(-8 282 476)">
+    <path d="M282 469Q251 461 237 488L211 554Q203 578 221 590L241 594Q256 583 264 557L293 518Z" fill="#fffaf4" stroke="#ddd7d1" stroke-width="6"/>
+    <path d="M226 575Q206 556 193 530L168 480Q158 462 171 447 185 434 199 452L222 482 194 421Q187 400 204 392 220 385 231 405L252 449 241 393Q239 371 258 370 277 370 279 394L283 447 291 403Q295 382 313 388 330 395 322 416L305 473Q299 513 275 570Z" fill="url(#nila-skin)" stroke="#c9806b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M204 475l27 34m22-49 6 40m27-25-4 34" fill="none" stroke="#e8a58d" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g class="mila-arm mila-arm-right" transform="rotate(6 481 474)">
+    <path d="M464 465Q494 450 511 476L532 551Q539 577 517 591L492 586Q480 571 478 547L450 510Z" fill="#fffaf4" stroke="#ddd7d1" stroke-width="6"/>
+    <path d="M503 567Q525 551 540 563L573 584Q590 599 578 619 568 634 548 620L527 609 546 643Q554 661 536 671 519 678 508 659L486 628Q471 607 481 586Z" fill="url(#nila-skin)" stroke="#c9806b" stroke-width="5" stroke-linejoin="round"/>
+  </g>
+  <g class="mila-book"><path d="M455 532Q474 510 505 521L543 548 519 710Q482 727 454 706Z" fill="#f48fbd" stroke="#be5e91" stroke-width="8"/><path d="M471 534Q490 522 510 530L541 548 520 687Q494 698 464 692Z" fill="#fff2df" stroke="#d9a8a4" stroke-width="5"/><path d="M487 548Q504 536 523 543L550 557 530 699Q506 708 479 697Z" fill="#a990e9" stroke="#7766c3" stroke-width="6"/><path d="m504 583 12 10 14-8-5 17 12 10-17 1-7 15-5-16-17-4 14-9Z" fill="#fff0f5"/></g>
+  <g class="mila-head">
+  <g class="mila-neck"><path d="M341 379Q375 401 412 378L422 444Q382 470 335 440Z" fill="url(#nila-skin)"/></g>
+  <g class="mila-face-base">
+    <ellipse cx="374" cy="272" rx="132" ry="161" fill="url(#nila-skin)" stroke="#d48e78" stroke-width="6"/>
+    <ellipse cx="262" cy="292" rx="23" ry="34" fill="#f0b296" stroke="#d48e78" stroke-width="5"/><ellipse cx="487" cy="278" rx="22" ry="33" fill="#efad91" stroke="#d48e78" stroke-width="5"/>
+    <path d="M277 230Q309 205 345 226M394 210Q424 184 458 202" fill="none" stroke="#56352c" stroke-width="12" stroke-linecap="round"/>
+    <g class="mila-eyes"><ellipse cx="326" cy="270" rx="31" ry="39" fill="#fffdf7"/><ellipse cx="419" cy="250" rx="30" ry="37" fill="#fffdf7"/><ellipse cx="333" cy="271" rx="21" ry="30" fill="#563527"/><ellipse cx="423" cy="252" rx="20" ry="29" fill="#563527"/><ellipse cx="335" cy="276" rx="11" ry="20" fill="#120e14"/><ellipse cx="426" cy="257" rx="11" ry="19" fill="#120e14"/><circle cx="341" cy="260" r="8" fill="white"/><circle cx="432" cy="242" r="8" fill="white"/><path d="M295 248l-8-13m18 9-4-15m115 7 4-14m16 13 9-12" stroke="#30202a" stroke-width="4" stroke-linecap="round"/></g>
+    <ellipse cx="291" cy="326" rx="25" ry="11" fill="#ef8e98" opacity=".34"/><ellipse cx="457" cy="313" rx="24" ry="11" fill="#ef8e98" opacity=".34"/>
+    <path d="M386 316Q417 298 450 313Q445 351 417 354Q390 349 386 316Z" fill="#7c2f42" stroke="#8e384b" stroke-width="4"/><path d="M394 336Q418 344 442 332Q433 351 416 352Q402 350 394 336Z" fill="#f38b9a"/>
+  </g>
+  <g class="mila-hair mila-hair-front"><path d="M247 272Q222 159 284 93 335 37 418 73 488 104 497 203 458 167 425 154 382 204 313 207L282 298Z" fill="#39201d" stroke="#2a1719" stroke-width="9"/><path d="M276 164Q294 95 358 79M358 91Q411 74 449 122M282 205q53-32 78-80" fill="none" stroke="#8b5844" stroke-width="9" stroke-linecap="round"/></g>
+  <g class="mila-bow"><path d="M269 140Q221 82 213 137 212 180 266 190 228 227 255 246 279 253 298 195Z" fill="#f18aba" stroke="#c95991" stroke-width="7"/><path d="M282 155Q326 97 339 130 350 168 294 191 332 205 314 233 296 249 276 194Z" fill="#ffabd1" stroke="#c95991" stroke-width="7"/><circle cx="278" cy="185" r="15" fill="#ffd5e8" stroke="#c95991" stroke-width="5"/></g>
+</g>
+  </g>
 
-  <g class="nila-face-mood nila-face-angry"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M394 215 344 232m56-39 42-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/><path d="m474 244 12-14m-5 28 18-3" stroke="#dc4b56" stroke-width="5" stroke-linecap="round"/></g>
+
+  <g class="mila-mood-overlay">
+  <g class="nila-face-mood nila-face-angry"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M394 215 344 232m56-39 42-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/><path d="m474 244 12-14m-5 28 18-3" stroke="#dc4b56" stroke-width="5" stroke-linecap="round"/>
   <g class="nila-face-mood nila-face-sad"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M394 333Q417 308 444 329" fill="none" stroke="#763d45" stroke-width="7" stroke-linecap="round"/><path d="M293 219Q316 200 344 218m55-35Q420 165 446 179" fill="none" stroke="#59403b" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Zm112-31c-10 15-9 24 1 26 9-1 10-9-1-26Z" fill="#8ddcf1" stroke="#e5fbff" stroke-width="2"/></g>
   <g class="nila-face-mood nila-face-surprised"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><ellipse cx="420" cy="321" rx="13" ry="20" fill="#6d2938"/><ellipse cx="420" cy="333" rx="8" ry="4" fill="#ef8290"/><path d="m292 206-8-14m177-3 11-14" stroke="#6371b8" stroke-width="5" stroke-linecap="round"/></g>
   <g class="nila-face-mood nila-face-thinking"><path d="M294 216Q318 205 344 220M397 183Q420 174 443 183" fill="none" stroke="#563b34" stroke-width="7" stroke-linecap="round"/><text x="468" y="205" font-size="52" font-weight="900" fill="#7657bf">?</text></g>
@@ -302,19 +377,9 @@
   <g class="nila-face-mood nila-face-proud"><path d="M293 257Q323 274 350 255m49-38Q423 232 447 215" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="m474 183 7-15 7 15 16 2-12 11 3 16-14-8-13 8 3-16-12-11Z" fill="#ffd35e" stroke="#fff1b5" stroke-width="2"/></g>
   <g class="nila-face-mood nila-face-grumpy"><path class="nila-mouth-cover" d="M385 298Q402 287 422 291Q443 287 455 301Q449 328 431 341Q408 345 393 331Q382 317 385 298Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M294 211 345 231m54-39 45-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/></g>
 
-  <ellipse cx="342" cy="1336" rx="89" ry="7" fill="#09172c" opacity=".2"/>
-  <g class="nila-standing-legs" stroke-linejoin="round">
-    <path d="M289 966c-2 52 3 112 10 164l7 83c2 28 22 43 42 36 18-6 21-24 11-48l-13-79c-7-59 7-110 19-156Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="3"/>
-    <path d="M365 966c8 52 10 111 9 164l-1 81c0 28 18 45 39 39 19-5 24-22 14-47l-10-78c-5-61 11-112 24-158Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="3"/>
-    <path d="M302 1193c10 5 36 6 50 0l8 51c-13 13-43 14-60 1Z" fill="#fffaf4" stroke="#d9d8e4" stroke-width="3"/>
-    <path d="M374 1194c13 5 36 5 49-1l8 51c-12 13-42 14-59 1Z" fill="#fffaf4" stroke="#d9d8e4" stroke-width="3"/>
-    <path d="M301 1241c17 11 43 10 62-1 14 15 23 47 23 82-26 15-79 15-108 0 2-33 9-64 23-81Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="5"/>
-    <path d="M372 1241c17 11 44 10 62-1 15 15 23 47 23 82-27 15-80 15-108 0 2-33 9-64 23-81Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="5"/>
-    <path d="M293 1319c31 10 66 10 98 1m-27-1c31 10 65 10 96 1" fill="none" stroke="#7e88a2" stroke-width="4" stroke-linecap="round"/>
-    <path d="M315 1268h38m40 0h38" stroke="#f7e7c8" stroke-width="5" stroke-linecap="round"/>
-    <path d="m328 1258-7 10 9 8 10-9-5-9m42 0-7 10 9 8 10-9-5-9" fill="#293b70" stroke="#17254b" stroke-width="2"/>
-  </g>
   <g class="nila-thinking-mark"><circle cx="536" cy="156" r="27" fill="#fffaf0" stroke="#efc45d" stroke-width="5"/><circle cx="573" cy="125" r="7" fill="#fffaf0" stroke="#efc45d" stroke-width="4"/><circle cx="590" cy="106" r="4" fill="#fffaf0" stroke="#efc45d" stroke-width="3"/><circle cx="536" cy="147" r="3.5" fill="#6a527c"/><circle cx="547" cy="147" r="3.5" fill="#6a527c"/><path d="M531 162c4 4 9 4 13 0" fill="none" stroke="#6a527c" stroke-width="3" stroke-linecap="round"/></g>
+</g>
+</g>
 </svg>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Mila! Tap me for campus news and upcoming events.</span>
                         </div>
@@ -17763,7 +17828,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   };
   let nilaMoodSequenceTimers = [];
   const stopMilaMoodSequence = () => { nilaMoodSequenceTimers.forEach(clearTimeout); nilaMoodSequenceTimers = []; };
-  const beginMilaMoodSequence = () => { stopMilaMoodSequence(); clearIdleTimers(); clearMascotMood(); };
+  const beginMilaMoodSequence = () => {
+    stopMilaMoodSequence(); clearIdleTimers(); clearMascotMood();
+    clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing');
+  };
   window.nilaGreetEmotion = () => {
     beginMilaMoodSequence();
     window.expressMilaEmotion('shy', 1100);
@@ -17780,6 +17848,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   };
   window.nilaCelebrateEmotion = () => {
     beginMilaMoodSequence();
+    const dancer = document.getElementById('trustMascotMover');
+    clearTimeout(window.milaDanceTimer);
+    dancer?.classList.remove('is-dancing');
+    if (dancer) { void dancer.getBoundingClientRect(); dancer.classList.add('is-dancing'); }
+    window.milaDanceTimer = setTimeout(() => dancer?.classList.remove('is-dancing'), 7900);
     window.expressMilaEmotion('proud', 1600);
     nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('surprised', 1500), 1400));
     nilaMoodSequenceTimers.push(setTimeout(() => {
@@ -17820,7 +17893,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.expressMilaEmotion(mood);
     return mood;
   };
-  window.resetLilyIdleMood = () => { clearIdleTimers(); stopMilaMoodSequence(); clearMascotMood(); scheduleIdleMood(); };
+  window.resetLilyIdleMood = () => { clearIdleTimers(); stopMilaMoodSequence(); clearMascotMood(); clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing'); scheduleIdleMood(); };
   let loginGreetingTimer = 0;
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
   window.lilyGreetVisitor = () => {
