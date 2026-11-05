@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#061534">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Ilahia Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=29">
-    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-logo-v5-512.png" fetchpriority="high">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png">
-    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-logo-v5-512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-logo-v5-180.png">
+    <meta name="apple-mobile-web-app-title" content="Ecosystem">
+    <link rel="manifest" href="/manifest.webmanifest?v=30">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-final-512.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-final-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-appicon-final-180.png">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -41,8 +41,8 @@
         #translationToast { z-index: 9500; }
         #quickActionPalette { z-index: 12000; }
         #quickActionResults button[aria-selected="true"] { background:#eff6ff; outline:2px solid #60a5fa; }
-        .ilahia-trust-mark { width: 56px; height: 56px; overflow: hidden; flex: 0 0 auto; border-radius: 12px; background: #061534; padding: 0; }
-        .ilahia-trust-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+        .ilahia-trust-mark { display:flex; flex-direction:column; align-items:center; flex:0 0 auto; width:64px; overflow:visible; text-decoration:none; }
+        .ilahia-trust-mark img { display:block; width:56px; height:56px; object-fit:contain; border-radius:12px; } .ilahia-trust-mark-label { margin-top:2px; color:#fff; font-size:10px; line-height:1.1; font-weight:700; letter-spacing:.04em; }
         .ilahia-trust-mark.compact { width: 44px; height: 44px; }
         .ilahia-ai-mark { display:inline-block; width:2.25rem; height:2.25rem; flex:0 0 auto; filter:drop-shadow(0 3px 5px #02081755); }
         .ilahia-ai-mark-small { width:1.85rem; height:1.85rem; }
@@ -139,7 +139,7 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/assets/icons/ilahia-ecosystem-logo-v5-512.png" alt="Ilahia Ecosystem" fetchpriority="high" decoding="async"></a><span class="text-sm font-bold tracking-wide text-white">Ilahia Ecosystem</span>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/assets/icons/ilahia-ecosystem-appicon-final-512.png" alt="Ilahia Ecosystem mark" fetchpriority="high" decoding="async"><span class="ilahia-trust-mark-label">Ecosystem</span></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -179,8 +179,8 @@
             </aside>
             <section class="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Illy the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Illy, the Ilahia Trust mascot. Drag or use arrow keys to move. Press Enter to hear a greeting." title="Drag me, or use arrow keys to move me">
+                    <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the Ilahia Trust mascot. Drag or use arrow keys to move. Press Enter to hear a greeting." title="Drag me, or use arrow keys to move me">
                             <svg class="trust-mascot-character" viewBox="0 0 96 96" aria-hidden="true">
                                 <defs><linearGradient id="illyBody" x1="15" y1="10" x2="78" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563a8"/></linearGradient><linearGradient id="illyCap" x1="28" y1="5" x2="74" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0a5"/><stop offset="1" stop-color="#e9ae3d"/></linearGradient></defs>
                                 <ellipse cx="49" cy="86" rx="25" ry="5" fill="#020817" opacity=".3"/>
@@ -192,7 +192,7 @@
                                 <ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/>
                                 <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Illy! Tap me to chat about Ilahia Trust ✨</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me to chat about Ilahia Trust ✨</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
