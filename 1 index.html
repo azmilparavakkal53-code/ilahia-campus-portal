@@ -408,6 +408,18 @@
             <div id="campusEventInboxList" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"><p class="text-sm text-slate-500">Select an institute to view its event updates.</p></div>
         </div>
     </section>
+    <section id="campusRequestBoard" class="border-b border-indigo-200 bg-indigo-50 px-4 py-7 sm:py-9" aria-labelledby="campusRequestBoardTitle">
+        <div class="mx-auto max-w-7xl">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-[.18em] text-indigo-800">Student voice · this college only</p><h2 id="campusRequestBoardTitle" class="mt-1 text-xl font-extrabold text-slate-900"><i class="fa-regular fa-lightbulb mr-2 text-indigo-700"></i><span id="campusRequestBoardName">College needs board</span></h2><p class="mt-1 text-sm text-slate-600">Share what would improve your college. Similar requests are grouped; a weekly summary goes to the administrator.</p></div><button type="button" onclick="loadCampusRequestBoard()" class="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-xs font-bold text-indigo-900 hover:bg-indigo-100"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
+            <form id="campusRequestForm" onsubmit="submitCampusRequest(event)" class="hidden mb-4 grid gap-3 rounded-xl border border-indigo-200 bg-white p-4 sm:grid-cols-2">
+                <label class="text-xs font-semibold text-slate-700">What should be improved?<input id="campusRequestTitle" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 p-2.5" placeholder="e.g. More shaded seating near the library"></label>
+                <label class="text-xs font-semibold text-slate-700">Add a little detail<textarea id="campusRequestDetails" required minlength="8" maxlength="500" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2.5" placeholder="Tell the college what students need"></textarea></label>
+                <label class="flex items-start gap-2 text-[11px] text-slate-600 sm:col-span-2"><input id="campusRequestShowName" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300"><span>Allow my name to appear with this request in the weekly admin summary. Leave unchecked to stay anonymous.</span></label>
+                <div class="flex flex-wrap items-center gap-3 sm:col-span-2"><button class="rounded-lg bg-indigo-800 px-4 py-2.5 text-xs font-bold text-white hover:bg-indigo-900">Send college request</button><span id="campusRequestFeedback" class="text-xs text-slate-600" aria-live="polite"></span></div>
+            </form>
+            <div id="campusRequestBoardList" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"><p class="text-sm text-slate-500">Select an institute to view its requests.</p></div>
+        </div>
+    </section>
     <section id="leadership" class="bg-slate-50 px-4 py-10 border-b border-slate-200 md:py-12">
         <div class="mx-auto max-w-7xl">
             <div class="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -1849,6 +1861,7 @@
                         </form>
                         <div id="adminCampusNoticeList" class="mt-5 space-y-2 border-t border-slate-200 pt-4"><p class="text-xs text-slate-500">Loading published events and active alerts…</p></div>
                     </div>
+                    <section class="rounded-xl border border-indigo-200 bg-indigo-50/60 p-5 shadow-sm"><div class="flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-lightbulb mr-2 text-indigo-700"></i>Weekly college requests</h4><p class="mt-1 text-xs text-slate-600">At the week boundary, student suggestions are grouped by college and similar topics. Opt-in names are shown; anonymous submissions stay anonymous.</p></div><button type="button" onclick="loadAdminCampusRequestReports()" class="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-xs font-bold text-indigo-900">Refresh reports</button></div><div id="adminCampusRequestReports" class="mt-4 space-y-3" aria-live="polite"><p class="text-xs text-slate-500">Load weekly request reports…</p></div></section>
                     <section class="space-y-4 rounded-xl border border-teal-200 bg-teal-50/50 p-5">
                         <div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-bus mr-2 text-teal-700"></i>Campus bus routes & dispatcher updates</h4><p class="mt-1 text-xs text-slate-600">Publish each institute’s route and schedule, then post the bus’s current stop, next stop, ETA, delay, cancellation, or completion. Updates are manual and timestamped; connect a GPS provider for automatic live tracking.</p></div>
                         <form onsubmit="publishBusRoute(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-white p-3 sm:grid-cols-2"><strong class="text-xs sm:col-span-2">Publish a route</strong><input id="busRouteName" required maxlength="100" class="rounded border p-2 text-xs" placeholder="Route name"><input id="busRouteCode" maxlength="24" class="rounded border p-2 text-xs" placeholder="Route / bus number (optional)"><select id="busRouteCampus" class="rounded border bg-white p-2 text-xs"><option value="icet">ICET</option><option value="arts">Arts &amp; Science</option><option value="poly">Polytechnic</option><option value="school">Ilahia Public School</option><option value="iti">ITI</option><option value="law">Law College</option><option value="pharmacy">Pharmacy</option><option value="kmlps">KMLPS</option></select><input id="busRouteSchedule" required maxlength="300" class="rounded border p-2 text-xs" placeholder="Service days & schedule, e.g. Mon–Sat · 7:30 AM / 4:00 PM"><textarea id="busRouteStops" required minlength="5" maxlength="3000" rows="4" class="rounded border p-2 text-xs sm:col-span-2" placeholder="Stops in route order, one per line"></textarea><button class="rounded bg-teal-800 px-3 py-2 text-xs font-bold text-white sm:col-span-2">Publish route</button><span id="busRouteFeedback" class="text-xs sm:col-span-2" aria-live="polite"></span></form>
@@ -4950,6 +4963,7 @@
             updateCanteenBookingAvailability(true);
             document.getElementById('campusNewsTicker')?.classList.add('hidden');
             void loadCampusEventInbox(key);
+            void loadCampusRequestBoard(key);
             updateCampusChatContext(key);
             if (!document.getElementById('quickActionPalette')?.classList.contains('hidden')) renderQuickActionResults();
             renderCampusLeadership(key);
@@ -5764,7 +5778,7 @@
             toggle?.setAttribute('aria-expanded', 'false');
             chevron?.classList.remove('rotate-180');
             if (tabId === 'ai-knowledge' && currentSessionRole === 'admin') void loadAdminAIKnowledgeDatabase();
-            if (tabId === 'broadcast' && currentSessionRole === 'admin') { toggleCampusNoticeDate(); void loadAdminCampusNotices(); void loadAdminFrontNews(); const expiry = document.getElementById('adminFrontNewsExpiry'); if (expiry && !expiry.min) expiry.min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+            if (tabId === 'broadcast' && currentSessionRole === 'admin') { toggleCampusNoticeDate(); void loadAdminCampusNotices(); void loadAdminFrontNews(); void loadAdminCampusRequestReports(); const expiry = document.getElementById('adminFrontNewsExpiry'); if (expiry && !expiry.min) expiry.min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
         } 
 
         function openAdminEventManager() {
@@ -6011,6 +6025,7 @@
                 document.getElementById('portalCampusMismatchCard')?.classList.add('hidden');
                 setActiveSessionRole(session.role); currentSessionUserId = session.userId || '';
                 currentSessionCampusKey = session.campusKey || ''; currentPortalDisplayName = safeGreetingName(session.displayName, session.role);
+                if (session.role === 'student') void loadCampusRequestBoard(currentSessionCampusKey);
                 if (session.role === 'student') {
                     customizeStudentPortalForCampus(currentSessionCampusKey); updateStudentRequestRecipient(); handlePersonalRequestTypeChange('student');
                     updateAcademicBotGreeting('student', currentPortalDisplayName);
@@ -6263,6 +6278,7 @@
                 currentSessionUserId = uid;
                 currentSessionCampusKey = currentActiveKey;
                 currentPortalDisplayName = safeGreetingName(result.displayName, 'Student');
+                void loadCampusRequestBoard(currentSessionCampusKey);
                 window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName);
                 updateAcademicBotGreeting('student', currentPortalDisplayName);
                 customizeStudentPortalForCampus(currentSessionCampusKey);
@@ -6318,6 +6334,7 @@
                 currentSessionUserId = cid;
                 currentSessionCampusKey = currentActiveKey;
                 currentPortalDisplayName = safeGreetingName(result.displayName, role === 'hod' ? 'HOD' : 'Teacher');
+                void loadCampusRequestBoard(currentSessionCampusKey);
                 window.lilyGreetSignedInUser?.(currentPortalDisplayName, collegeDatabase[currentSessionCampusKey]?.shortName);
                 updateAcademicBotGreeting('teacher', currentPortalDisplayName);
                 customizeTeacherPortalForCampus(currentSessionCampusKey);
@@ -6930,6 +6947,45 @@
             } catch (error) {
                 list.innerHTML = '<p class="text-sm text-rose-700" role="alert">' + escapeHTML(error.message || 'Campus inbox is unavailable.') + '</p>';
             }
+        }
+        async function loadCampusRequestBoard(campusKey = currentActiveKey) {
+            const list = document.getElementById('campusRequestBoardList'), form = document.getElementById('campusRequestForm'), label = document.getElementById('campusRequestBoardName');
+            if (!list) return;
+            const campus = collegeDatabase[campusKey];
+            if (label) label.textContent = campus ? `${campus.shortName} college needs board` : 'College needs board';
+            if (!campus) { list.innerHTML = '<p class="text-sm text-slate-500">Choose an institute to view its requests.</p>'; if (form) form.classList.add('hidden'); return; }
+            const canPost = currentSessionRole === 'student' && currentSessionCampusKey === campusKey;
+            if (form) form.classList.toggle('hidden', !canPost);
+            list.innerHTML = '<p class="text-sm text-slate-500">Loading this college’s requests…</p>';
+            try {
+                const data = await campusLifeApi('/api/campus-requests?campusKey=' + encodeURIComponent(campusKey));
+                const date = `${data.weekStart || ''} – ${data.weekEnd || ''}`;
+                const groups = Array.isArray(data.groups) ? data.groups : [];
+                list.innerHTML = `<div class="sm:col-span-2 lg:col-span-3 mb-1 text-[10px] font-semibold text-indigo-800">Requests for this week (${escapeHTML(date)}). Similar suggestions are combined.</div>` + (groups.length ? groups.map(group => `<article class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><div class="flex items-start justify-between gap-2"><h3 class="font-bold text-slate-900">${escapeHTML(group.title)}</h3><span class="shrink-0 rounded-full bg-indigo-100 px-2 py-1 text-[10px] font-extrabold text-indigo-900">${Number(group.requestCount) || 0} ${Number(group.requestCount) === 1 ? 'request' : 'requests'}</span></div><p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">${escapeHTML(group.summary || '')}</p>${group.people?.length ? `<p class="mt-3 border-t border-slate-100 pt-2 text-[10px] text-slate-500"><strong>Shared their name:</strong> ${group.people.map(escapeHTML).join(', ')}</p>` : '<p class="mt-3 border-t border-slate-100 pt-2 text-[10px] text-slate-500">Names hidden for anonymous requests.</p>'}</article>`).join('') : '<p class="rounded-xl border border-dashed border-indigo-300 bg-white/70 p-4 text-sm text-slate-600 sm:col-span-2 lg:col-span-3">No suggestions yet this week. Students can add the first request after signing in to this college portal.</p>');
+                if (!canPost) list.insertAdjacentHTML('afterbegin', '<p class="sm:col-span-2 lg:col-span-3 text-xs text-slate-500">Sign in to this college’s student portal to submit a request.</p>');
+            } catch (error) { list.innerHTML = `<p class="text-sm text-rose-700" role="alert">${escapeHTML(error.message || 'Could not load requests.')}</p>`; }
+        }
+        async function submitCampusRequest(event) {
+            event.preventDefault();
+            const feedback = document.getElementById('campusRequestFeedback'), button = event.currentTarget.querySelector('button[type="submit"],button:not([type])');
+            if (feedback) feedback.textContent = 'Sending…';
+            if (button) button.disabled = true;
+            try {
+                await campusLifeApi('/api/campus-requests', { method: 'POST', body: JSON.stringify({ title: document.getElementById('campusRequestTitle').value, details: document.getElementById('campusRequestDetails').value, showName: document.getElementById('campusRequestShowName').checked }) });
+                event.currentTarget.reset(); if (feedback) feedback.textContent = 'Your request was saved for this college and will be included in its weekly summary.';
+                await loadCampusRequestBoard(currentActiveKey);
+            } catch (error) { if (feedback) feedback.textContent = error.message; }
+            finally { if (button) button.disabled = false; }
+        }
+        async function loadAdminCampusRequestReports() {
+            const container = document.getElementById('adminCampusRequestReports'); if (!container) return;
+            container.innerHTML = '<p class="text-xs text-slate-500">Loading weekly summaries…</p>';
+            try {
+                const data = await campusLifeApi('/api/admin/campus-request-reports');
+                const names = { icet: 'ICET', arts: 'Arts & Science', poly: 'Polytechnic', school: 'Ilahia Public School', iti: 'ITI', law: 'Law College', pharmacy: 'Pharmacy', kmlps: 'KMLPS' };
+                const reports = Array.isArray(data.reports) ? data.reports : [];
+                container.innerHTML = reports.length ? reports.map(report => `<article class="rounded-lg border border-indigo-200 bg-white p-4"><div class="flex flex-wrap items-baseline justify-between gap-2"><h5 class="text-sm font-extrabold text-slate-900">${escapeHTML(names[report.campusKey] || report.campusKey)} · week ${escapeHTML(report.weekStart)} to ${escapeHTML(report.weekEnd)}</h5><span class="text-[10px] font-semibold text-indigo-800">${Number(report.totalRequests) || 0} student requests</span></div><p class="mt-1 text-[10px] text-slate-500">${escapeHTML(report.analysis || 'Grouped weekly request summary')}</p><div class="mt-3 space-y-2">${(report.groups || []).map(group => `<div class="rounded-md bg-indigo-50 p-3"><div class="flex flex-wrap justify-between gap-2"><strong class="text-xs text-slate-900">${escapeHTML(group.title)}</strong><span class="text-[10px] font-bold text-indigo-800">${Number(group.requestCount) || 0} similar requests</span></div><p class="mt-1 whitespace-pre-line text-xs text-slate-700">${escapeHTML(group.summary || '')}</p>${group.people?.length ? `<p class="mt-1 text-[10px] text-slate-500">Names shared by students: ${group.people.map(escapeHTML).join(', ')}</p>` : '<p class="mt-1 text-[10px] text-slate-500">All student names are hidden.</p>'}</div>`).join('')}</div></article>`).join('') : '<p class="rounded-lg border border-dashed border-indigo-300 bg-white p-4 text-xs text-slate-600">No completed weekly reports yet. Requests are collected during the week; the first summary appears after the next weekly rollover.</p>';
+            } catch (error) { container.innerHTML = `<p class="text-xs text-rose-700">${escapeHTML(error.message || 'Weekly reports could not be loaded.')}</p>`; }
         }
         let campusCelebrationFrame = 0, campusCelebrationTimer = 0;
         function stopCampusCelebration() {
@@ -17162,6 +17218,13 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     button.innerHTML = recording ? '<i class="fa-solid fa-stop mr-1"></i>Stop & analyze' : '<i class="fa-solid fa-microphone mr-1"></i>Record answer';
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
+  function setLilyMicButton(recording) {
+    const button = document.getElementById('lilyMicButton');
+    if (!button) return;
+    button.innerHTML = recording ? '<i class="fa-solid fa-stop"></i>' : '<i class="fa-solid fa-microphone"></i>';
+    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Lily' : 'Speak to Lily');
+    button.setAttribute('aria-pressed', recording ? 'true' : 'false');
+  }
   window.speakLilyText = (text, lang = currentLang) => {
     if (!lilyVoiceEnabled || !('speechSynthesis' in window) || !String(text || '').trim()) return false;
     window.speechSynthesis.cancel();
@@ -17170,8 +17233,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
-    utterance.pitch = 1.72;
-    utterance.rate = 0.98;
+    utterance.pitch = 1.65;
+    utterance.rate = 1.2;
     let started = false;
     const speakWithAvailableVoice = () => {
       if (started || !lilyVoiceEnabled) return;
@@ -17216,6 +17279,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       if (purpose === 'interview') setInterviewRecordingButton(false);
+      if (purpose === 'lily') setLilyMicButton(false);
       setVoiceStatus('Voice input is not supported in this browser. You can type instead.', purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus');
       return false;
     }
@@ -17225,6 +17289,16 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     }
     const recognition = new SpeechRecognition();
     let recognitionHadSpeech = false;
+    let lilySpeechSent = false;
+    let lilySpeechSendTimer = 0;
+    const sendLilyVoiceMessage = () => {
+      clearTimeout(lilySpeechSendTimer);
+      if (purpose !== 'lily' || lilySpeechSent || !target?.value.trim()) return false;
+      lilySpeechSent = true;
+      setVoiceStatus('Sending your voice message to Lily…', 'lilyVoiceStatus');
+      void window.sendLilyMessage({ preventDefault() {} });
+      return true;
+    };
     activeRecognition = recognition;
     activeRecognitionPurpose = purpose;
     activeRecognitionTarget = target;
@@ -17233,13 +17307,19 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     recognition.continuous = purpose === 'interview';
     const statusId = purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus';
     if (purpose === 'interview') setInterviewRecordingButton(true);
+    if (purpose === 'lily') setLilyMicButton(true);
     setVoiceStatus('Listening… speak now. Your words will appear as text.', statusId);
     recognition.onresult = event => {
       recognitionHadSpeech = true;
       let transcript = '';
       for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
-      if (activeRecognitionTarget) activeRecognitionTarget.value = transcript.trim();
-      if (purpose === 'interview') setVoiceStatus('Transcript ready. Review or edit it, then choose Review my answer.', statusId);
+      if (target) target.value = transcript.trim();
+      if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
+        setVoiceStatus('I heard you. Sending your question to Lily…', statusId);
+        clearTimeout(lilySpeechSendTimer);
+        lilySpeechSendTimer = window.setTimeout(() => { sendLilyVoiceMessage(); recognition.stop(); }, 350);
+      }
+      if (purpose === 'interview') setVoiceStatus('Transcript ready. Stop recording when finished; feedback will appear automatically.', statusId);
     };
     recognition.onerror = event => {
       setVoiceStatus(event.error === 'not-allowed' ? 'Microphone permission was blocked. Allow microphone access or type instead.' : `Voice input stopped (${event.error}). You can type instead.`, statusId);
@@ -17251,7 +17331,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         activeRecognitionTarget = null;
       }
       if (purpose === 'interview') setInterviewRecordingButton(false);
-      if (purpose === 'lily' && recognitionHadSpeech && target && target.value.trim()) window.sendLilyMessage({ preventDefault() {} });
+      if (purpose === 'lily') {
+        setLilyMicButton(false);
+        if (recognitionHadSpeech && target?.value.trim()) sendLilyVoiceMessage();
+        else if (!lilySpeechSent) setVoiceStatus('No speech detected. Try again or type instead.', statusId);
+      }
       else if (purpose === 'interview' && target?.value.trim()) {
         setVoiceStatus('Recording stopped. Analyzing your transcript…', statusId);
         window.setTimeout(() => {
@@ -17262,7 +17346,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       else if (document.getElementById(statusId)?.textContent === 'Listening… speak now. Your words will appear as text.') setVoiceStatus('No speech detected. Try again or type instead.', statusId);
     };
     try { recognition.start(); return true; }
-    catch (_) { activeRecognition = null; if (purpose === 'interview') setInterviewRecordingButton(false); setVoiceStatus('Could not start the microphone. Try again or type instead.', statusId); return false; }
+    catch (_) { activeRecognition = null; if (purpose === 'interview') setInterviewRecordingButton(false); if (purpose === 'lily') setLilyMicButton(false); setVoiceStatus('Could not start the microphone. Try again or type instead.', statusId); return false; }
   };
   window.toggleLilyListening = () => {
     if (activeRecognition && activeRecognitionPurpose === 'lily') { activeRecognition.stop(); return; }
@@ -17377,10 +17461,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const reply = await makeReply(question);
       const replyText = typeof reply === 'string' ? reply : reply.text;
       thinking.textContent = await localized(replyText);
+      setVoiceStatus('Voice message sent. Tap the microphone to speak again.', 'lilyVoiceStatus');
       window.speakLilyText(thinking.textContent);
       if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
     }
-    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); window.speakLilyText(thinking.textContent); }
+    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Lily could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };

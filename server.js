@@ -41,6 +41,8 @@ const CANTEEN_PAYMENTS_FILE = path.join(DATA_DIR, 'canteen-payments.json');
 const CANTEEN_MENU_FILE = path.join(DATA_DIR, 'canteen-menu.json');
 const FEEDBACK_FORMS_FILE = path.join(DATA_DIR, 'student-feedback-forms.json');
 const CAMPUS_NEWS_FILE = path.join(DATA_DIR, 'campus-news.json');
+const CAMPUS_REQUESTS_FILE = path.join(DATA_DIR, 'campus-requests.json');
+const CAMPUS_REQUEST_REPORTS_FILE = path.join(DATA_DIR, 'campus-request-weekly-reports.json');
 const PORTAL_BACKUP_DIR = path.join(DATA_DIR, 'backups');
 const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'ai-knowledge.json': DB_FILE,
@@ -59,7 +61,9 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'canteen-orders.json': CANTEEN_ORDERS_FILE,
   'canteen-payments.json': CANTEEN_PAYMENTS_FILE,
   'student-feedback-forms.json': FEEDBACK_FORMS_FILE,
-  'campus-news.json': CAMPUS_NEWS_FILE
+  'campus-news.json': CAMPUS_NEWS_FILE,
+  'campus-requests.json': CAMPUS_REQUESTS_FILE,
+  'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
@@ -145,6 +149,8 @@ for (const file of [SKILL_OFFERS_FILE, SKILL_REQUESTS_FILE, SKILL_MESSAGES_FILE,
 }
 if (!fs.existsSync(CAMPUS_LIFE_FILE)) fs.writeFileSync(CAMPUS_LIFE_FILE, '{"appointments":[],"lostFound":[],"maintenance":[],"events":[],"alerts":[],"rsvps":[],"eventCheckins":[],"placements":[],"applications":[],"progress":[],"counselling":[],"alumniMentors":[],"mentorshipRequests":[],"busRoutes":[],"busTracking":[]}\n', 'utf8');
 if (!fs.existsSync(CAMPUS_NEWS_FILE)) fs.writeFileSync(CAMPUS_NEWS_FILE, '[]\n', 'utf8');
+if (!fs.existsSync(CAMPUS_REQUESTS_FILE)) fs.writeFileSync(CAMPUS_REQUESTS_FILE, '[]\n', 'utf8');
+if (!fs.existsSync(CAMPUS_REQUEST_REPORTS_FILE)) fs.writeFileSync(CAMPUS_REQUEST_REPORTS_FILE, '[]\n', 'utf8');
 
 function readJsonArray(file) {
   try { const value = JSON.parse(fs.readFileSync(file, 'utf8')); return Array.isArray(value) ? value : []; }
@@ -328,6 +334,85 @@ function parseCsvMatrix(text) {
 }
 function normalizeSkillName(value) { return safeText(value, 100).toLocaleLowerCase().replace(/\s+/g, ' '); }
 function campusLocalDate() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
+
+function campusWeekStart(dateText) {
+  const date = new Date(`${dateText}T12:00:00+05:30`);
+  const day = date.getDay();
+  date.setDate(date.getDate() - ((day + 6) % 7));
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+}
+function campusRequestTokens(text) {
+  const stop = new Set(['the','and','for','with','from','that','this','need','want','please','college','campus','students','student','would','should','can','could','our','more','some','have','has','are','was','were','into','about','make','provide']);
+  return new Set(String(text || '').toLocaleLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(word => word.length > 2 && !stop.has(word)));
+}
+function mergeCampusRequestGroups(requests) {
+  const groups = [];
+  for (const request of requests) {
+    const tokens = campusRequestTokens(`${request.title} ${request.details}`);
+    let best = null, bestScore = 0;
+    for (const group of groups) {
+      const union = new Set([...tokens, ...group.tokens]);
+      const overlap = [...tokens].filter(token => group.tokens.has(token)).length / Math.max(1, union.size);
+      if (overlap > bestScore) { best = group; bestScore = overlap; }
+    }
+    if (best && bestScore >= 0.34) {
+      best.requests.push(request);
+      for (const token of tokens) best.tokens.add(token);
+    } else groups.push({ tokens, requests: [request] });
+  }
+  return groups.map(group => {
+    const first = group.requests[0];
+    const names = [...new Set(group.requests.filter(item => item.showName && item.studentName).map(item => item.studentName))].sort();
+    return { title: first.title, summary: first.details || first.title, requestCount: new Set(group.requests.map(item => item.userId)).size, people: names, sampleDetails: [...new Set(group.requests.map(item => item.details).filter(Boolean))].slice(0, 3) };
+  }).sort((a, b) => b.requestCount - a.requestCount || a.title.localeCompare(b.title));
+}
+async function analyzeCampusRequestsWithAI(entries) {
+  if (!OPENAI_API_KEY || !entries.length || entries.length > 120) return null;
+  try {
+    const input = JSON.stringify(entries.map((item, index) => ({ requestIndex: index + 1, title: item.title, details: item.details })));
+    const response = await fetch('https://api.openai.com/v1/responses', { method: 'POST', headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: OPENAI_MODEL, instructions: 'Analyze these anonymous suggestions for one college for one week. Group requests that ask for the same or a closely related improvement. Do not merge different needs. Sort groups by number of distinct requesters (you may use request count as a proxy). Return JSON only: {"groups":[{"title":"short representative title","summary":"accurate combined explanation","requestIndexes":[1,2]}]}. Include every request index exactly once. Do not invent facts, decisions, or promises.', input, max_output_tokens: 1800 }), signal: AbortSignal.timeout(25000) });
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const text = payload.output?.flatMap(item => item.content || []).find(item => item.type === 'output_text')?.text || '';
+    const parsed = JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g, ''));
+    if (!Array.isArray(parsed.groups)) return null;
+    const used = new Set(), groups = [];
+    for (const group of parsed.groups) {
+      const selected = [...new Set((Array.isArray(group.requestIndexes) ? group.requestIndexes : []).map(Number).filter(index => Number.isInteger(index) && index >= 1 && index <= entries.length && !used.has(index)))];
+      if (!selected.length) continue;
+      selected.forEach(index => used.add(index));
+      const source = selected.map(index => entries[index - 1]);
+      groups.push({ title: safeText(group.title, 140) || source[0].title, summary: safeText(group.summary, 600) || source[0].details || source[0].title, requestCount: new Set(source.map(item => item.userId)).size, people: [...new Set(source.filter(item => item.showName && item.studentName).map(item => item.studentName))].sort(), sampleDetails: source.map(item => item.details).filter(Boolean).slice(0, 3) });
+    }
+    for (let index = 0; index < entries.length; index++) if (!used.has(index + 1)) {
+      const item = entries[index];
+      groups.push({ title: item.title, summary: item.details || item.title, requestCount: 1, people: item.showName && item.studentName ? [item.studentName] : [], sampleDetails: item.details ? [item.details] : [] });
+    }
+    return groups.sort((a, b) => b.requestCount - a.requestCount || a.title.localeCompare(b.title));
+  } catch (error) { console.warn('[Campus requests] AI analysis unavailable; using text similarity:', error.message); return null; }
+}
+let campusRequestDigestRunning = false;
+async function archiveCompletedCampusRequestWeeks() {
+  if (campusRequestDigestRunning) return;
+  campusRequestDigestRunning = true;
+  try {
+    const currentWeek = campusWeekStart(campusLocalDate());
+    const requests = readJsonArray(CAMPUS_REQUESTS_FILE), reports = readJsonArray(CAMPUS_REQUEST_REPORTS_FILE);
+    const weeks = [...new Set(requests.map(item => item.weekStart).filter(week => week && week < currentWeek))].sort();
+    let changed = false;
+    for (const weekStart of weeks) for (const campusKey of CAMPUS_KEYS) {
+      if (reports.some(item => item.weekStart === weekStart && item.campusKey === campusKey)) continue;
+      const entries = requests.filter(item => item.weekStart === weekStart && item.campusKey === campusKey);
+      if (!entries.length) continue;
+      const aiGroups = await analyzeCampusRequestsWithAI(entries), groups = aiGroups || mergeCampusRequestGroups(entries);
+      const weekEndDate = new Date(`${weekStart}T12:00:00+05:30`); weekEndDate.setDate(weekEndDate.getDate() + 6);
+      const weekEnd = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(weekEndDate);
+      reports.push({ id: crypto.randomUUID(), campusKey, weekStart, weekEnd, totalRequests: entries.length, groups, analysis: aiGroups ? 'AI grouped and summarized anonymous request text' : 'Similar requests grouped by text similarity; configure OPENAI_API_KEY for AI analysis', createdAt: new Date().toISOString() });
+      changed = true;
+    }
+    if (changed) writeJsonArray(CAMPUS_REQUEST_REPORTS_FILE, reports);
+  } finally { campusRequestDigestRunning = false; }
+}
 
 function razorpayConfigured() { return Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET); }
 
@@ -871,7 +956,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-interview-voice-v38' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-weekly-campus-requests-v39' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1002,6 +1087,36 @@ const server = http.createServer(async (req, res) => {
       const alerts = campusLife.alerts.filter(item => item.status === 'active' && (item.campusKey === campusKey || item.campusKey === 'all')).map(item => ({ id: item.id, type: 'alert', title: item.title, details: item.details, date: '', location: item.location || '', createdAt: item.createdAt }));
       const items = [...news, ...alerts, ...events].sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || ''))).slice(0, 24);
       sendJson(res, 200, { campusKey, items }, { 'Cache-Control': 'no-store' });
+      return;
+    }
+    if (pathname === '/api/campus-requests' && req.method === 'GET') {
+      const campusKey = String(url.searchParams.get('campusKey') || '');
+      if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
+      const weekStart = campusWeekStart(campusLocalDate());
+      const entries = readJsonArray(CAMPUS_REQUESTS_FILE).filter(item => item.campusKey === campusKey && item.weekStart === weekStart);
+      const groups = mergeCampusRequestGroups(entries).map(group => ({ title: group.title, summary: group.summary, requestCount: group.requestCount, people: group.people }));
+      sendJson(res, 200, { campusKey, weekStart, weekEnd: (() => { const date = new Date(`${weekStart}T12:00:00+05:30`); date.setDate(date.getDate() + 6); return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date); })(), groups }, { 'Cache-Control': 'no-store' });
+      return;
+    }
+    if (pathname === '/api/campus-requests' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'student' || !CAMPUS_KEYS.includes(session.campusKey)) { sendJson(res, 401, { error: 'Sign in to your student portal for this college to share a request.' }); return; }
+      const body = await readJson(req), title = safeText(body.title, 120), details = safeText(body.details, 500);
+      if (title.length < 4 || details.length < 8) { sendJson(res, 400, { error: 'Add a short title and at least 8 characters describing the need.' }); return; }
+      const requests = readJsonArray(CAMPUS_REQUESTS_FILE), weekStart = campusWeekStart(campusLocalDate());
+      if (requests.filter(item => item.campusKey === session.campusKey && item.weekStart === weekStart && item.userId === session.userId).length >= 10) { sendJson(res, 429, { error: 'You have reached the 10 requests per week limit.' }); return; }
+      const request = { id: crypto.randomUUID(), campusKey: session.campusKey, weekStart, userId: session.userId, title, details, showName: body.showName === true, studentName: body.showName === true ? safeText(session.displayName, 60) || 'Student' : '', createdAt: new Date().toISOString() };
+      requests.push(request); writeJsonArray(CAMPUS_REQUESTS_FILE, requests);
+      await archiveCompletedCampusRequestWeeks();
+      sendJson(res, 201, { ok: true, id: request.id });
+      return;
+    }
+    if (pathname === '/api/admin/campus-request-reports' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || session.role !== 'admin') { sendJson(res, 401, { error: 'Administrator sign-in is required to view weekly campus requests.' }); return; }
+      await archiveCompletedCampusRequestWeeks();
+      const reports = readJsonArray(CAMPUS_REQUEST_REPORTS_FILE).sort((a, b) => String(b.weekStart).localeCompare(String(a.weekStart)) || String(a.campusKey).localeCompare(String(b.campusKey)));
+      sendJson(res, 200, { reports }, { 'Cache-Control': 'no-store' });
       return;
     }
     if (req.method === 'GET' && pathname === '/api/public/news') {
@@ -2336,6 +2451,8 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, HOST, () => {
   console.log(`Ilahia portal listening on ${HOST}:${PORT}`);
   console.log(`Teacher account ID: ${TEACHER_ID}`);
+  void archiveCompletedCampusRequestWeeks();
+  setInterval(() => void archiveCompletedCampusRequestWeeks(), 15 * 60 * 1000).unref();
   if (process.env.SKIP_OFFICIAL_SITE_SYNC !== 'true') {
     setTimeout(() => syncOfficialCollegeKnowledge().catch(error => console.error('[AI knowledge] Initial refresh failed:', error)), 3000);
   }

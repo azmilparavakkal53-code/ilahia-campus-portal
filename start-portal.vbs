@@ -14,7 +14,7 @@ health.Send
 If Err.Number = 0 Then
     If health.Status = 200 Then
         healthText = health.ResponseText
-        If InStr(healthText, "2026.11.05-interview-voice-v38") > 0 Then WScript.Quit 0
+        If InStr(healthText, "2026.11.05-weekly-campus-requests-v39") > 0 Then WScript.Quit 0
 
         ' A healthy but older portal is still stale. Stop only Node processes
         ' launched from this exact project folder before starting the new code.
