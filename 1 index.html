@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ilahia Ecosystem">
     <link rel="manifest" href="/manifest.webmanifest?v=28">
-    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-app-icon-v5.svg" fetchpriority="high">
-    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/icons/ilahia-ecosystem-app-icon-v5.svg">
-    <link rel="shortcut icon" type="image/svg+xml" href="/assets/icons/ilahia-ecosystem-app-icon-v5.svg"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-app-icon-v5.svg">
-    <link rel="apple-touch-icon" href="/assets/icons/ilahia-ecosystem-app-icon-v5.svg">
+    <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-logo-v5-512.png" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-logo-v5-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-logo-v5-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/ilahia-ecosystem-logo-v5-180.png">
     <script>
         // The portals and detailed maps require the same-origin Node backend.
         // If this file is opened directly, switch to the local app before its scripts run.
@@ -101,13 +101,13 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
     <div id="appLaunchSplash" role="status" aria-label="Loading Ilahia Ecosystem">
-        <img src="/assets/icons/ilahia-ecosystem-app-icon-v5.svg" alt="Ilahia Ecosystem" width="4096" height="4096" fetchpriority="high" decoding="async">
+        <img src="/assets/icons/ilahia-ecosystem-logo-v5-512.png" alt="Ilahia Ecosystem" width="512" height="512" fetchpriority="high" decoding="async">
     </div>
     <!-- Trust identity bar; institute selection stays on the landing page -->
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/assets/icons/ilahia-ecosystem-app-icon-v5.svg" alt="Ilahia Ecosystem" fetchpriority="high" decoding="async"></a><span class="text-sm font-bold tracking-wide text-white">Ilahia Ecosystem</span>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/assets/icons/ilahia-ecosystem-logo-v5-512.png" alt="Ilahia Ecosystem" fetchpriority="high" decoding="async"></a><span class="text-sm font-bold tracking-wide text-white">Ilahia Ecosystem</span>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -205,6 +205,7 @@
                 <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
                 <a href="#details" class="hover:text-blue-700 transition">Programs</a>
                 <button type="button" onclick="openCampusMapPage()" class="hover:text-blue-700 transition">Campus Map</button>
+                <button type="button" onclick="openCampusEventInbox()" class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100"><i class="fa-regular fa-bell mr-1"></i>Campus inbox</button>
                 <a id="desktopCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="hover:text-blue-700 transition">MessBuzz · College Mess</a>
                 
                 <!-- Multi-language Selector -->
@@ -233,6 +234,7 @@
             <div id="mobileNavActions" class="md:hidden grid grid-cols-3 items-stretch gap-2">
                 <button type="button" onclick="returnToInstituteLanding()" class="min-h-9 rounded-lg bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-800">Institute</button>
                 <button type="button" onclick="openCampusMapPage()" class="min-h-9 rounded-lg bg-blue-700 px-2 py-2 text-xs font-semibold text-white">Map</button>
+                <button type="button" onclick="openCampusEventInbox()" class="min-h-9 rounded-lg bg-amber-100 px-2 py-2 text-xs font-semibold text-amber-900"><i class="fa-regular fa-bell mr-1"></i>Inbox</button>
                 <a id="mobileCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="flex min-h-9 items-center justify-center rounded-lg bg-amber-500 px-2 py-2 text-xs font-semibold text-white">Mess</a>
                 <select id="mobileLangSelect" onchange="changeLanguage(this.value)" class="bg-slate-100 border border-slate-200 rounded p-1 text-[11px] font-semibold">
                     <option value="en">EN</option>
@@ -611,8 +613,11 @@
                     <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
                     <input type="password" id="studentPass" placeholder="Enter your student passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
-                <div id="studentDemoCredentialHint" class="hidden p-2.5 bg-blue-50 text-blue-800 rounded border border-blue-100 text-[11px]">
-                    Demo passcode: <strong id="studentDemoPassword"></strong>
+                <div id="studentDemoCredentialHint" class="hidden p-3 bg-blue-50 text-blue-900 rounded-lg border border-blue-200 text-[11px]" aria-live="polite">
+                    <p class="font-bold">Demo student login</p>
+                    <p class="mt-1">ID: <strong id="studentDemoId" class="break-all"></strong></p>
+                    <p class="mt-1">Password: <strong id="studentDemoPassword" class="break-all"></strong></p>
+                    <button type="button" onclick="fillStudentDemoCredentials()" class="mt-2 rounded-md bg-blue-700 px-3 py-2 font-semibold text-white hover:bg-blue-800">Fill demo login</button>
                 </div>
                 <button onclick="verifyStudentLogin()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -650,8 +655,11 @@
                     <label class="block font-semibold text-slate-700 mb-1">Passcode</label>
                     <input type="password" id="teacherPass" placeholder="Enter your staff passcode" autocomplete="current-password" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600">
                 </div>
-                <div id="teacherDemoCredentialHint" class="hidden p-2.5 bg-slate-100 text-slate-800 rounded border border-slate-200 text-[11px]">
-                    Demo passcode: <strong id="teacherDemoPassword"></strong>
+                <div id="teacherDemoCredentialHint" class="hidden p-3 bg-slate-100 text-slate-900 rounded-lg border border-slate-200 text-[11px]" aria-live="polite">
+                    <p class="font-bold">Demo staff login</p>
+                    <p class="mt-1">ID: <strong id="teacherDemoId" class="break-all"></strong></p>
+                    <p class="mt-1">Password: <strong id="teacherDemoPassword" class="break-all"></strong></p>
+                    <button type="button" onclick="fillTeacherDemoCredentials()" class="mt-2 rounded-md bg-slate-900 px-3 py-2 font-semibold text-white hover:bg-slate-800">Fill demo login</button>
                 </div>
                 <button onclick="verifyTeacherLogin()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Authenticate & Open Dashboard
@@ -682,6 +690,10 @@
             </div>
             
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
+                    <span class="text-xs font-medium text-slate-600">Student portal session · stays signed in until you sign out.</span>
+                    <button type="button" onclick="logoutPortalSession()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"><i class="fa-solid fa-right-from-bracket mr-1"></i>Sign out</button>
+                </div>
                 <section id="studentFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
                     <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-clipboard-question mr-2 text-violet-700"></i>Student feedback &amp; surveys</h4><p class="mt-1 text-[11px] text-slate-500">Complete surveys released by your teachers.</p></div><button type="button" onclick="loadStudentFeedback()" class="text-xs font-semibold text-violet-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
                     <div id="studentFeedbackList" class="space-y-3" aria-live="polite"><p class="text-slate-500">Loading surveys…</p></div>
@@ -995,7 +1007,6 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via University Records</span>
-                <button onclick="logoutPortalSession()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED CLASSBOT WIDGET INSIDE STUDENT DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -1055,12 +1066,15 @@
                     </button>
                     <button id="staffGatepassButton" onclick="toggleStaffGatepassInbox()" class="hidden relative text-slate-300 hover:text-white text-lg" title="HOD gate-pass inbox" aria-label="Open HOD gate-pass inbox"><i class="fa-solid fa-ticket"></i><span id="hodGatepassBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-violet-400 text-slate-950 text-[9px] font-bold"></span></button>
                     <button id="mentorGatepassButton" onclick="toggleMentorGatepassInbox()" class="hidden relative text-slate-300 hover:text-white text-lg" title="Mentor gate-pass inbox" aria-label="Open mentor gate-pass inbox"><i class="fa-solid fa-ticket-simple"></i><span id="mentorGatepassBadge" class="hidden absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-full bg-amber-400 text-slate-950 text-[9px] font-bold"></span></button>
-                    <button onclick="logoutPortalSession()" class="rounded-lg border border-slate-500 px-2.5 py-1.5 text-[10px] font-semibold text-slate-100 hover:bg-white/10" title="Sign out before switching to another campus account">Sign out / switch campus</button>
                     <button onclick="closePortalModal()" class="text-slate-400 hover:text-white text-xl" aria-label="Close staff portal"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-50 text-xs sm:text-sm">
+                <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
+                    <span class="text-xs font-medium text-slate-600">Faculty portal session · stays signed in until you sign out.</span>
+                    <button type="button" onclick="logoutPortalSession()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"><i class="fa-solid fa-right-from-bracket mr-1"></i>Sign out</button>
+                </div>
                 <!-- Faculty Stats Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
@@ -1121,10 +1135,12 @@
                                 <option value="Syllabus Revision Submission">Syllabus Revision Submission</option>
                                 <option value="Gate Pass Request">Gate Pass Request</option>
                             </select>
+                            <button type="button" onclick="selectTeacherGatepassRequest()" class="mt-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-100"><i class="fa-solid fa-ticket mr-1"></i>Open gate-pass form</button>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Addressed To</label>
                             <select id="teacherReqRecipient" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white">
+                                <option value="Department HOD">Department HOD</option>
                                 <option value="Trust Principal / Director">Trust Principal / Director</option>
                                 <option value="Academic Dean">Academic Dean</option>
                                 <option value="Purchase & Finance Committee">Purchase & Finance Committee</option>
@@ -1133,7 +1149,7 @@
                             </select>
                         </div>
                     </div>
-                    <div id="teacherGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3" style="display:none">
+                    <div id="teacherGatepassFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
                         <div class="sm:col-span-2"><label class="block text-xs font-semibold text-slate-700 mb-1">Destination</label><input id="teacherGatepassDestination" type="text" maxlength="180" placeholder="Where are you going?" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Departure date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassDepartureDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassDepartureTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
                         <div><label class="block text-xs font-semibold text-slate-700 mb-1">Expected return date & time</label><div class="grid grid-cols-2 gap-2"><input id="teacherGatepassReturnDate" type="date" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"><input id="teacherGatepassReturnTime" type="time" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white"></div></div>
@@ -1286,7 +1302,6 @@
             
             <div class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
                 <span>Authenticated via College Faculty Records</span>
-                <button onclick="logoutPortalSession()" class="text-blue-700 font-semibold hover:underline">Log Out</button>
             </div>
             <!-- INTEGRATED FACULTYBOT WIDGET INSIDE TEACHER DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
@@ -3965,6 +3980,14 @@
             recipient.classList.toggle('bg-slate-100', isLeave);
         }
 
+        function selectTeacherGatepassRequest() {
+            const requestType = document.getElementById('teacherReqType');
+            if (!requestType) return;
+            requestType.value = 'Gate Pass Request';
+            handlePersonalRequestTypeChange('teacher');
+            document.getElementById('teacherGatepassFields')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
         function handlePersonalRequestTypeChange(role) {
             const requestType = document.getElementById(`${role}ReqType`)?.value;
             const isGatepass = requestType === 'Gate Pass Request';
@@ -4445,30 +4468,33 @@
             } catch (error) { alert(error.message || 'The request could not be updated.'); }
         }
 
+        function togglePortalInbox(inboxId, loader, relatedIds) {
+            const inbox = document.getElementById(inboxId);
+            if (!inbox) return;
+            const shouldOpen = inbox.classList.contains('hidden');
+            if (shouldOpen) (relatedIds || []).forEach(id => { if (id !== inboxId) document.getElementById(id)?.classList.add('hidden'); });
+            inbox.classList.toggle('hidden', !shouldOpen);
+            if (!shouldOpen) return;
+            if (loader) void loader();
+            requestAnimationFrame(() => inbox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+        }
+
         function toggleStudentLeaveInbox() {
-            const inbox = document.getElementById('studentLeaveInbox');
-            inbox.classList.toggle('hidden');
-            if (!inbox.classList.contains('hidden')) loadStudentLeaveRequests();
+            togglePortalInbox('studentLeaveInbox', loadStudentLeaveRequests, ['studentLeaveInbox']);
         }
 
         function toggleStaffLeaveInbox() {
-            const inbox = document.getElementById('staffLeaveInbox');
-            inbox.classList.toggle('hidden');
-            if (!inbox.classList.contains('hidden')) loadStaffLeaveRequests();
+            togglePortalInbox('staffLeaveInbox', loadStaffLeaveRequests, ['staffLeaveInbox', 'mentorGatepassInbox', 'staffGatepassInbox']);
         }
 
         function toggleStaffGatepassInbox() {
             if (currentSessionRole !== 'hod') return;
-            const inbox = document.getElementById('staffGatepassInbox');
-            inbox?.classList.toggle('hidden');
-            if (inbox && !inbox.classList.contains('hidden')) void loadHodGatepasses();
+            togglePortalInbox('staffGatepassInbox', loadHodGatepasses, ['staffLeaveInbox', 'mentorGatepassInbox', 'staffGatepassInbox']);
         }
 
         function toggleMentorGatepassInbox() {
             if (currentSessionRole !== 'teacher') return;
-            const inbox = document.getElementById('mentorGatepassInbox');
-            inbox?.classList.toggle('hidden');
-            if (inbox && !inbox.classList.contains('hidden')) void loadMentorGatepasses();
+            togglePortalInbox('mentorGatepassInbox', loadMentorGatepasses, ['staffLeaveInbox', 'mentorGatepassInbox', 'staffGatepassInbox']);
         }
 
         async function loadMentorGatepasses() {
@@ -5947,7 +5973,7 @@
             }
             setPortalLoginCampus(currentActiveKey);
             try {
-                const response = await fetch('/api/campuses');
+                const response = await fetch('/api/campuses', { cache: 'no-store' });
                 if (response.ok) {
                     const rows = await response.json();
                     portalCampusAccounts = Object.fromEntries(rows.filter(row => collegeDatabase[row.key]).map(row => [row.key, row.accounts]));
@@ -5979,15 +6005,34 @@
             if (studentId && studentAccount?.id) studentId.value = studentAccount.id;
             if (studentPass) studentPass.value = studentAccount?.demoPassword || '';
             const studentDemoHint = document.getElementById('studentDemoCredentialHint');
+            const studentDemoId = document.getElementById('studentDemoId');
             const studentDemoPassword = document.getElementById('studentDemoPassword');
             if (studentDemoHint) studentDemoHint.classList.toggle('hidden', !studentAccount?.demoPassword);
+            if (studentDemoId) studentDemoId.textContent = studentAccount?.id || '';
             if (studentDemoPassword) studentDemoPassword.textContent = studentAccount?.demoPassword || '';
             if (staffId && staffAccount?.id) staffId.value = staffAccount.id;
             if (staffPass) staffPass.value = staffAccount?.demoPassword || '';
             const teacherDemoHint = document.getElementById('teacherDemoCredentialHint');
+            const teacherDemoId = document.getElementById('teacherDemoId');
             const teacherDemoPassword = document.getElementById('teacherDemoPassword');
             if (teacherDemoHint) teacherDemoHint.classList.toggle('hidden', !staffAccount?.demoPassword);
+            if (teacherDemoId) teacherDemoId.textContent = staffAccount?.id || '';
             if (teacherDemoPassword) teacherDemoPassword.textContent = staffAccount?.demoPassword || '';
+        }
+
+        function fillStudentDemoCredentials() {
+            const account = portalCampusAccounts[currentActiveKey]?.student;
+            if (!account?.demoPassword) return;
+            document.getElementById('studentUniId').value = account.id;
+            document.getElementById('studentPass').value = account.demoPassword;
+        }
+
+        function fillTeacherDemoCredentials() {
+            const role = document.getElementById('staffLoginRole')?.value || 'teacher';
+            const account = portalCampusAccounts[currentActiveKey]?.[role];
+            if (!account?.demoPassword) return;
+            document.getElementById('teacherCollegeId').value = account.id;
+            document.getElementById('teacherPass').value = account.demoPassword;
         }
 
         async function selectPortalLoginCampus(campusKey) {
@@ -6657,6 +6702,11 @@
                 track.innerHTML = content + content;
             } catch (_) { track.innerHTML = '<span class="campus-news-item">Campus updates are temporarily unavailable.</span>'; }
         }
+        function openCampusEventInbox() {
+            void loadCampusEventInbox(currentActiveKey);
+            document.getElementById('campusEventInbox')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         async function loadCampusEventInbox(campusKey = currentActiveKey) {
             const list = document.getElementById('campusEventInboxList');
             const label = document.getElementById('campusEventInboxName');
