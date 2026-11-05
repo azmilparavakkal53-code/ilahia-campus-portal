@@ -17621,7 +17621,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.MilaChatReactions = {
     async onVisitorMessage(message) {
       const text = String(message || '').trim();
-      const mood = window.reactMilaToText?.(text, 'thinking') || 'thinking';
+      const isExplicitReaction = /\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam|sad|hurt|lonely|bad day|failed|fail|exam went badly|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|thank|thanks|appreciate|love|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|surpris|unexpected|excited|amazing|awesome|great news|congrat|fantastic|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|نमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
+      const mood = isExplicitReaction ? (window.reactMilaToText?.(text, 'thinking') || 'thinking') : 'neutral';
       const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
         : /\b(sad|failed|fail|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
         : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment)\b/i.test(text) ? 'Let us work through it together. Which part should we start with?'
@@ -17640,7 +17641,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const replyIsUseful = text.length > 80 || /\b(admission|course|attendance|event|news|library|hostel|canteen|student portal)\b/i.test(text);
       if (userMood === 'sad') { if (replyIsSupportive) window.expressMilaEmotion?.('love', 3000); }
       else if (userMood === 'excited' || userMood === 'happy' || userMood === 'proud') { /* Keep the visitor celebration sequence in control. */ }
-      else if (replyIsUseful) window.expressMilaEmotion?.(/\?|which|what|how/i.test(text) ? 'thinking' : 'happy', 2600);
+      else if (userMood !== 'neutral' && replyIsUseful) window.expressMilaEmotion?.(/\?|which|what|how/i.test(text) ? 'thinking' : 'happy', 2600);
       if (greeting && replyIsUseful && userMood !== 'sad' && !['excited','happy','proud'].includes(userMood)) {
         greeting.textContent = await localized(/\?|which|what|how/i.test(text) ? 'I found something helpful. Want to explore it together?' : 'I hope that helps. What would you like to know next?');
         setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 4200);
@@ -17674,7 +17675,6 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const headline = plain(item.title || 'A campus update');
     const notice = await localized(`New campus update: ${headline}. Tap me and ask for the latest news.`);
     if (greeting) greeting.textContent = notice;
-    window.expressMilaEmotion?.('excited', 3200);
     if (!panel.classList.contains('hidden')) { addMessage('bot', notice); window.speakLilyText(notice); }
   };
 })();
@@ -17703,20 +17703,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     ['tired', 'I’m getting tired while I wait for our next chat.'],
     ['sleepy', 'I’m feeling sleepy. I’ll be here when you come back.']
   ];
-  const scheduleIdleMood = () => {
-    clearIdleTimers();
-    idleMoodStep = 0;
-    const showNextMood = () => {
-      idleTimers.push(setTimeout(() => {
-        const [mood, message] = idleMoodFlow[idleMoodStep % idleMoodFlow.length];
-        idleMoodStep += 1;
-        greeting.textContent = message;
-        window.expressMilaEmotion?.(mood, 120000);
-        showNextMood();
-      }, 120000));
-    };
-    showNextMood();
-  };  const nilaEmotionData = {
+  const scheduleIdleMood = () => { clearIdleTimers(); idleMoodStep = 0; };  const nilaEmotionData = {
     happy:{label:'Happy'}, angry:{label:'Angry'}, sad:{label:'Sad'}, surprised:{label:'Surprised'},
     thinking:{label:'Thinking'}, sleepy:{label:'Sleepy'}, shy:{label:'Shy'}, excited:{label:'Excited'},
     embarrassed:{label:'Embarrassed'}, scared:{label:'Scared'}, disappointed:{label:'Disappointed'}, love:{label:'Love'},
