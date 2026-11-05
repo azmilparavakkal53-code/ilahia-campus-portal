@@ -192,7 +192,7 @@
                                 <ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/>
                                 <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
-                            <span class="trust-mascot-greeting">Hi, I’m Illy! Welcome to Ilahia Trust ✨</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Illy! Tap me to chat about Ilahia Trust ✨</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -16981,12 +16981,18 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     place((stage.clientWidth - mascot.offsetWidth) / 2, 7);
   }
   let drag = null;
+  let suppressNextClick = false;
+  const openMascotConversation = () => {
+    greeting.textContent = 'Opening the Ilahia AI campus guide for you… ✨';
+    const chat = document.getElementById('chatWindow');
+    chat?.classList.remove('hidden');
+    window.setTimeout(() => document.getElementById('chatInput')?.focus({ preventScroll: true }), 80);
+  };
   mascot.addEventListener('pointerdown', event => {
     if (event.button !== undefined && event.button !== 0) return;
     drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.offsetLeft, top: mascot.offsetTop, moved: false };
     mascot.classList.add('is-dragging');
     mascot.setPointerCapture?.(event.pointerId);
-    event.preventDefault();
   });
   mascot.addEventListener('pointermove', event => {
     if (!drag || drag.pointerId !== event.pointerId) return;
@@ -16998,12 +17004,18 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (!drag || (event?.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
     mascot.classList.remove('is-dragging');
     if (drag.moved) {
+      suppressNextClick = true;
+      window.setTimeout(() => { suppressNextClick = false; }, 350);
       try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
     }
     drag = null;
   };
   mascot.addEventListener('pointerup', finishDrag);
   mascot.addEventListener('pointercancel', finishDrag);
+  mascot.addEventListener('click', () => {
+    if (suppressNextClick) { suppressNextClick = false; return; }
+    openMascotConversation();
+  });
   mascot.addEventListener('keydown', event => {
     const step = event.shiftKey ? 24 : 12;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
@@ -17013,8 +17025,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      greeting.textContent = 'Need a hand? I can help you explore Ilahia Trust and its campuses! ✨';
-      window.setTimeout(() => { greeting.textContent = 'Hi, I’m Illy! Welcome to Ilahia Trust ✨'; }, 4000);
+      openMascotConversation();
     } else if (event.key === 'Home') {
       event.preventDefault();
       place((stage.clientWidth - mascot.offsetWidth) / 2, 7);
