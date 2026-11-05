@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=47">
+    <link rel="manifest" href="/manifest.webmanifest?v=50">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -435,7 +435,7 @@
             <div id="campusRequestBoardList" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite"><p class="text-sm text-slate-500">Select an institute to view its requests.</p></div>
         </div>
     </section>
-    <section id="leadership" class="bg-slate-50 px-4 py-10 border-b border-slate-200 md:py-12">
+    <section id="leadership" translate="no" class="notranslate bg-slate-50 px-4 py-10 border-b border-slate-200 md:py-12">
         <div class="mx-auto max-w-7xl">
             <div class="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
@@ -3197,7 +3197,7 @@
             const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
                 acceptNode(node) {
                     const parent = node.parentElement;
-                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast,#leadership')) return NodeFilter.FILTER_REJECT;
+                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast,#leadership,[translate="no"],.notranslate')) return NodeFilter.FILTER_REJECT;
                     return NodeFilter.FILTER_ACCEPT;
                 }
             });
@@ -3227,7 +3227,7 @@
                 if (run === translationRun && currentLang === lang) node.textContent = translated;
             });
             document.querySelectorAll('input,textarea,button,[aria-label],[title]').forEach(element => {
-                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden,#leadership')) return;
+                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden,#leadership,[translate="no"],.notranslate')) return;
                 translatableAttributes.forEach(name => {
                     if (!element.hasAttribute(name)) return;
                     let saved = originalAttributes.get(element);
@@ -17704,7 +17704,16 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       try { localStorage.removeItem('ilahiaTrustMascotPosition'); } catch {}
     }
   });
-  window.addEventListener('resize', () => place(mascot.offsetLeft, mascot.offsetTop));
+  window.addEventListener('resize', () => {
+    try {
+      const position = JSON.parse(localStorage.getItem('ilahiaTrustMascotPosition') || 'null');
+      if (position && Number.isFinite(position.x) && Number.isFinite(position.y)) place(position.x * maxLeft(), position.y * maxTop());
+      else place(mascot.offsetLeft, mascot.offsetTop);
+    } catch { place(mascot.offsetLeft, mascot.offsetTop); }
+  });
+  const revealLilyOnOpen = () => window.setTimeout(() => stage.scrollIntoView({ behavior: 'smooth', block: 'center' }), 650);
+  if (document.readyState === 'complete') revealLilyOnOpen();
+  else window.addEventListener('load', revealLilyOnOpen, { once: true });
 })();
 </script>
 <!-- Embedded MessBuzz college-mess panel: uses the portal's existing signed-in session. -->
