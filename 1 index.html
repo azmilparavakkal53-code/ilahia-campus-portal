@@ -53,34 +53,34 @@
         .ilahia-ai-launcher-mark { width:2.5rem; height:2.5rem; transition:transform .2s ease; }
         button:hover > .ilahia-ai-launcher-mark { transform:rotate(-5deg) scale(1.08); }
         .trust-leadership-heading { font-family:"Palatino Linotype","Book Antiqua",Georgia,serif; letter-spacing:.035em; text-shadow:0 2px 14px #f6c95735; }
-        #trustMascotStage { position:relative; height:11rem; overflow:visible; pointer-events:none; }
+        #trustMascotStage { position:relative; height:12.25rem; overflow:visible; pointer-events:none; }
         #trustMascotMover { position:absolute; z-index:17000; left:calc(50% - 2.4rem); bottom:.25rem; translate:none; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:pointer; touch-action:manipulation; user-select:none; pointer-events:auto; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
-        .trust-mascot-character { width:4.75rem; height:9.88rem; flex:none; overflow:visible; animation:none; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { width:5.5rem; height:11.4rem; flex:none; overflow:visible; animation:none; filter:drop-shadow(0 5px 8px #02081770); }
         .nila-standing-legs { pointer-events:none; }
         .nila-thinking-mark { display:none; transform-box:fill-box; transform-origin:center; }
-        .nila-face-mood { display:none; pointer-events:none; }
+        .nila-face-mood { display:none; pointer-events:none; transform-box:view-box; transform-origin:59.4% 20.8%; transform:scale(1.35); }
         .nila-mouth-cover { fill:url(#nila-face-patch); filter:url(#nila-face-soften); }
-        #trustMascotMover.is-emotion-angry .nila-face-angry { display:block; }
-        #trustMascotMover.is-emotion-sad .nila-face-sad { display:block; }
-        #trustMascotMover.is-emotion-surprised .nila-face-surprised { display:block; }
-        #trustMascotMover.is-emotion-thinking .nila-face-thinking { display:block; }
-        #trustMascotMover.is-emotion-sleepy .nila-face-sleepy { display:block; }
-        #trustMascotMover.is-emotion-shy .nila-face-shy { display:block; }
-        #trustMascotMover.is-emotion-excited .nila-face-excited { display:block; }
-        #trustMascotMover.is-emotion-embarrassed .nila-face-embarrassed { display:block; }
-        #trustMascotMover.is-emotion-scared .nila-face-scared { display:block; }
-        #trustMascotMover.is-emotion-disappointed .nila-face-disappointed { display:block; }
-        #trustMascotMover.is-emotion-love .nila-face-love { display:block; }
-        #trustMascotMover.is-emotion-confused .nila-face-confused { display:block; }
-        #trustMascotMover.is-emotion-tired .nila-face-tired { display:block; }
-        #trustMascotMover.is-emotion-proud .nila-face-proud { display:block; }
-        #trustMascotMover.is-emotion-grumpy .nila-face-grumpy { display:block; }
+        @keyframes nila-face-expression-in { from { opacity:.15; } to { opacity:1; } }
+        #trustMascotMover.is-emotion-angry .nila-face-angry { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-sad .nila-face-sad { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-surprised .nila-face-surprised { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-thinking .nila-face-thinking { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-sleepy .nila-face-sleepy { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-shy .nila-face-shy { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-excited .nila-face-excited { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-embarrassed .nila-face-embarrassed { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-scared .nila-face-scared { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-disappointed .nila-face-disappointed { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-love .nila-face-love { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-confused .nila-face-confused { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-tired .nila-face-tired { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-proud .nila-face-proud { display:block; animation:nila-face-expression-in .28s ease-out both; }
+        #trustMascotMover.is-emotion-grumpy .nila-face-grumpy { display:block; animation:nila-face-expression-in .28s ease-out both; }
 
-        .nila-emotion-badge { position:absolute; z-index:2; left:2.8rem; top:-.45rem; min-width:2rem; height:2rem; display:grid; place-items:center; border:2px solid #f0cc67; border-radius:999px; background:#fffaf0; box-shadow:0 3px 10px #02081730; font-size:1.15rem; line-height:1; animation:nila-badge-pop .25s cubic-bezier(.2,.9,.3,1.3) both; }
-        .nila-emotion-badge[hidden] { display:none; }
+
         #trustMascotMover.is-thinking .nila-thinking-mark { display:block; animation:nila-think-pop .35s ease-out both; }
                                                                         @keyframes nila-badge-pop { from { transform:scale(.45) rotate(-12deg); opacity:0; } to { transform:scale(1) rotate(0); opacity:1; } }
         @keyframes nila-think-pop { from { opacity:0; transform:scale(.5) translateY(6px); } to { opacity:1; transform:scale(1) translateY(0); } }
@@ -272,7 +272,7 @@
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Nila the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Nila, the campus conversation mascot. Tap to chat; she walks around the blank space." title="Nila walks around this space. Tap her to chat.">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Nila, the campus conversation mascot. Tap to chat; she stays still while her face expresses emotions." title="Nila stands here. Tap her to chat.">
                             <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Nila, the Ilahia student mascot">
   <defs>
     <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
@@ -311,8 +311,7 @@
   </g>
   <g class="nila-thinking-mark"><circle cx="536" cy="156" r="27" fill="#fffaf0" stroke="#efc45d" stroke-width="5"/><circle cx="573" cy="125" r="7" fill="#fffaf0" stroke="#efc45d" stroke-width="4"/><circle cx="590" cy="106" r="4" fill="#fffaf0" stroke="#efc45d" stroke-width="3"/><circle cx="536" cy="147" r="3.5" fill="#6a527c"/><circle cx="547" cy="147" r="3.5" fill="#6a527c"/><path d="M531 162c4 4 9 4 13 0" fill="none" stroke="#6a527c" stroke-width="3" stroke-linecap="round"/></g>
 </svg>
-                            <span id="nilaEmotionBadge" class="nila-emotion-badge" aria-live="polite" aria-label="Nila’s current expression" hidden>😊</span>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Nila! Tap me for campus news and upcoming events ✨</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Nila! Tap me for campus news and upcoming events.</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -17587,7 +17586,20 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(mess|canteen|food|meal|menu|order food)\b|مقصف|भोजनालय|உணவகம்|കാന്റീൻ/.test(query)) return 'Open the Mess Buzz or Canteen section on your college page to see the current menu and place a food booking. Payment choices are shown at checkout when available.';
     if (/\b(news|headline|update|alert|breaking|announcement|new)\b|خبر|أخبار|समाचार|खबर|செய்தி|വാർത്ത|അറിയിപ്പ്/.test(query)) return latestNewsReply();
     if (/\b(event|events|workshop|activity|activities|happening|calendar)\b|حدث|فعاليات|कार्यक्रम|आयोजन|நிகழ்வு|நிகழ்ச்ச|പരിപാടി|ഇവന്റ്/.test(query)) return upcomingEventsReply();
-    if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Nila, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
+    const greetingOnly = /^(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam)(?: nila| bro| there)?[!,. ]*$/i.test(english.trim());
+    if (greetingOnly) {
+      const hour = new Date().getHours();
+      const timeGreeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+      return timeGreeting + '! It is lovely to hear from you. I’m here to chat, share campus news and events, or help you find a college service. What would you like to talk about?';
+    }
+    if (/\b(how are you|how are things|how is it going)\b/.test(query)) return 'I’m doing well and happy to chat with you. How are you feeling today? I can also help with campus news, events, college information, or finding a service.';
+    if (/\b(i feel sad|i am sad|i\'m sad|bad day|lonely|overwhelmed|feeling low|down today)\b/.test(query)) return 'I am sorry today feels heavy. You do not have to solve everything at once. Want to tell me what happened? I will listen, and we can figure out one small next step together.';
+    if (/\b(i am angry|i\'m angry|i feel angry|frustrated|annoyed)\b/.test(query)) return 'That sounds frustrating. I am listening. What happened? We can work through it one step at a time.';
+    if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(query)) return 'I’m sorry; that result can really hurt. One exam or assignment does not define your ability or your future. Take a moment to breathe. When you are ready, tell me which subject felt hardest and we can make a small, realistic plan for your next attempt. I believe you can recover from this.';
+    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b/.test(query)) return 'That is wonderful news. Congratulations; you worked for this and deserve to enjoy the moment. I’m proud of you. What are you celebrating first?';
+    if (/\b(that.s amazing|that.s great|great news|i am happy|i\'m happy|this is wonderful|fantastic|awesome)\b/.test(query)) return 'Yay, I am happy to celebrate with you. Tell me what happened; I want to hear all about it.';
+    if (/\b(thank you|thanks|thank you so much)\b/.test(query)) return 'You are very welcome. I’m glad I could be here with you. What else would you like to chat about?';
+
     if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Nila. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
     return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
@@ -17609,13 +17621,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const question = input.value.trim();
     if (!question) return;
     input.value = '';
+    window.resetLilyIdleMood?.();
     addMessage('user', question);
-    window.reactNilaToText?.(question, 'thinking');
+    const incomingMood = window.reactNilaToText?.(question, 'thinking') || 'thinking';
     const thinking = addMessage('bot', await localized('I’m checking the latest campus updates…'));
     try {
       const reply = await makeReply(question);
       const replyText = typeof reply === 'string' ? reply : reply.text;
-      window.reactNilaToText?.(replyText, 'happy');
+      if (!['happy','sad','love','proud','excited'].includes(incomingMood)) window.reactNilaToText?.(replyText, 'happy');
       thinking.textContent = await localized(replyText);
       setVoiceStatus('Voice message sent. Tap the microphone to speak again.', 'lilyVoiceStatus');
       window.speakLilyText(thinking.textContent);
@@ -17646,21 +17659,56 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const clearIdleTimers = () => { idleTimers.forEach(clearTimeout); idleTimers = []; };
   const clearMascotMood = (restoreGreeting = true) => {
     mascot.classList.remove('is-pouting', 'is-grumpy');
-    if (restoreGreeting) greeting.textContent = defaultGreeting;
+    if (typeof nilaEmotionData !== 'undefined') Object.keys(nilaEmotionData).forEach(key => mascot.classList.remove('is-emotion-' + key));
+    if (typeof nilaEmotionTimer !== 'undefined') clearTimeout(nilaEmotionTimer);
+
   };
+  let idleMoodStep = 0;
+  const idleMoodFlow = [
+    ['sad', 'A little sad you have been away. I’m here whenever you need me.'],
+    ['disappointed', 'I miss our chats. Come say hello when you are ready.'],
+    ['grumpy', 'I’m feeling a little grumpy after waiting so long.'],
+    ['tired', 'I’m getting tired while I wait for our next chat.'],
+    ['sleepy', 'I’m feeling sleepy. I’ll be here when you come back.']
+  ];
   const scheduleIdleMood = () => {
     clearIdleTimers();
-    idleTimers.push(setTimeout(() => { mascot.classList.add('is-pouting'); window.expressNilaEmotion?.('sad', 7000); greeting.textContent = 'Aww, did I miss your hello? I’m right here if you need me 💛'; }, 26000));
-    idleTimers.push(setTimeout(() => { mascot.classList.remove('is-pouting'); mascot.classList.add('is-grumpy'); window.expressNilaEmotion?.('grumpy', 7000); greeting.textContent = 'Tiny pout mode: say hi when you have a moment! 😤'; }, 35000));
-    idleTimers.push(setTimeout(() => { clearMascotMood(); scheduleIdleMood(); }, 43000));
-  };
-  const nilaEmotionData = {
-    happy:{emoji:'😊',label:'Happy'}, angry:{emoji:'😠',label:'Angry'}, sad:{emoji:'😢',label:'Sad'}, surprised:{emoji:'😲',label:'Surprised'},
-    thinking:{emoji:'🤔',label:'Thinking'}, sleepy:{emoji:'😴',label:'Sleepy'}, shy:{emoji:'🥰',label:'Shy'}, excited:{emoji:'🤩',label:'Excited'},
-    embarrassed:{emoji:'😳',label:'Embarrassed'}, scared:{emoji:'😨',label:'Scared'}, disappointed:{emoji:'😞',label:'Disappointed'}, love:{emoji:'💗',label:'Love'},
-    confused:{emoji:'😕',label:'Confused'}, tired:{emoji:'😪',label:'Tired'}, proud:{emoji:'😌',label:'Proud'}, grumpy:{emoji:'😤',label:'Grumpy'}
+    idleMoodStep = 0;
+    const showNextMood = () => {
+      idleTimers.push(setTimeout(() => {
+        const [mood, message] = idleMoodFlow[idleMoodStep % idleMoodFlow.length];
+        idleMoodStep += 1;
+        greeting.textContent = message;
+        window.expressNilaEmotion?.(mood, 120000);
+        showNextMood();
+      }, 120000));
+    };
+    showNextMood();
+  };  const nilaEmotionData = {
+    happy:{label:'Happy'}, angry:{label:'Angry'}, sad:{label:'Sad'}, surprised:{label:'Surprised'},
+    thinking:{label:'Thinking'}, sleepy:{label:'Sleepy'}, shy:{label:'Shy'}, excited:{label:'Excited'},
+    embarrassed:{label:'Embarrassed'}, scared:{label:'Scared'}, disappointed:{label:'Disappointed'}, love:{label:'Love'},
+    confused:{label:'Confused'}, tired:{label:'Tired'}, proud:{label:'Proud'}, grumpy:{label:'Grumpy'}
   };
   let nilaEmotionTimer = 0;
+  const nilaBubbleLines = {
+    happy: 'It is good to see you. What would you like to chat about?',
+    angry: 'I can tell that felt frustrating. I am listening.',
+    sad: 'I am sorry this feels hard. Let us take it one step at a time.',
+    surprised: 'Oh, I did not expect that!',
+    thinking: 'Hmm, let me think that through.',
+    sleepy: 'I am feeling sleepy. I will be here when you return.',
+    shy: 'That is sweet of you to say.',
+    excited: 'That is wonderful. I am celebrating with you!',
+    embarrassed: 'No worries. Everyone has awkward moments.',
+    scared: 'That sounds worrying. Let us slow down and look at it together.',
+    disappointed: 'I know this did not go how you hoped. We can regroup.',
+    love: 'That means a lot. Thank you for telling me.',
+    confused: 'I am not quite following yet. Could you say a little more?',
+    tired: 'A long day can be a lot. Let us keep it simple.',
+    proud: 'You did something worth being proud of.',
+    grumpy: 'I am feeling a little grumpy. I will still help when you are ready.'
+  };
   window.expressNilaEmotion = (emotion, duration = 5200) => {
     const mood = nilaEmotionData[emotion] ? emotion : 'happy';
     Object.keys(nilaEmotionData).forEach(key => mascot.classList.remove('is-emotion-' + key));
@@ -17670,18 +17718,59 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (mood === 'thinking' || mood === 'confused') mascot.classList.add('is-thinking');
     if (mood === 'grumpy' || mood === 'angry') mascot.classList.add('is-grumpy');
     if (mood === 'sad' || mood === 'disappointed') mascot.classList.add('is-pouting');
-    const badge = document.getElementById('nilaEmotionBadge');
-    if (badge) { badge.textContent = nilaEmotionData[mood].emoji; badge.setAttribute('aria-label', nilaEmotionData[mood].label); badge.hidden = false; }
+    if (greeting) greeting.textContent = mood === 'happy' ? defaultGreeting : nilaBubbleLines[mood];
     nilaEmotionTimer = window.setTimeout(() => {
       mascot.classList.remove('is-emotion-' + mood, 'is-thinking', 'is-grumpy', 'is-pouting');
-      if (badge) badge.hidden = true;
+      if (greeting) greeting.textContent = defaultGreeting;
     }, Math.max(700, duration));
+  };
+  let nilaMoodSequenceTimers = [];
+  const stopNilaMoodSequence = () => { nilaMoodSequenceTimers.forEach(clearTimeout); nilaMoodSequenceTimers = []; };
+  const beginNilaMoodSequence = () => { stopNilaMoodSequence(); clearIdleTimers(); clearMascotMood(); };
+  window.nilaGreetEmotion = () => {
+    beginNilaMoodSequence();
+    window.expressNilaEmotion('shy', 1100);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('happy', 1500), 900));
+    nilaMoodSequenceTimers.push(setTimeout(() => {
+      window.expressNilaEmotion('excited', 4200);
+      scheduleIdleMood();
+    }, 2400));
+  };
+  window.nilaComfortEmotion = () => {
+    beginNilaMoodSequence();
+    window.expressNilaEmotion('sad', 1900);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('love', 1900), 1700));
+    nilaMoodSequenceTimers.push(setTimeout(() => {
+      window.expressNilaEmotion('proud', 4200);
+      scheduleIdleMood();
+    }, 3400));
+  };
+  window.nilaCelebrateEmotion = () => {
+    beginNilaMoodSequence();
+    window.expressNilaEmotion('proud', 1600);
+    nilaMoodSequenceTimers.push(setTimeout(() => window.expressNilaEmotion('surprised', 1500), 1400));
+    nilaMoodSequenceTimers.push(setTimeout(() => {
+      window.expressNilaEmotion('excited', 4200);
+      scheduleIdleMood();
+    }, 2700));
   };
   window.reactNilaToText = (text, fallback = 'happy') => {
     const value = String(text || '').toLowerCase();
+    if (/\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(value)) {
+      window.nilaGreetEmotion();
+      return 'happy';
+    }
+    if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(value)) {
+      window.nilaComfortEmotion();
+      return 'sad';
+    }
+    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b|അഭിമാനം|गर्व|வெற்றி/.test(value)) {
+      window.nilaCelebrateEmotion();
+      return 'excited';
+    }
     let mood = fallback;
     if (/\b(angry|mad|frustrat|annoy|furious|grumpy|leave me alone|upset)\b|ദേഷ്യം|കോപം|गुस्सा|கோபம்|غاضب/.test(value)) mood = 'angry';
-    else if (/\b(sad|hurt|lonely|bad day|fail|miss you|cry|unhappy|sorry|upset)\b|സങ്കടം|ദുഃഖം|दुखी|दुख|சோகம்|حزين/.test(value)) mood = 'sad';
+    else if (/\b(sad|hurt|lonely|bad day|fail|miss you|cry|unhappy|sorry|down|low)\b|സങ്കടം|ദുഃഖം|दुखी|दुख|சோகம்|حزين/.test(value)) { window.nilaComfortEmotion(); return 'sad'; }
     else if (/\b(embarrass|awkward|oops|my mistake)\b|നാണം|शर्मिंदा|வெட்கம்/.test(value)) mood = 'embarrassed';
     else if (/\b(shy|blush)\b|ലജ്ജ|संकोच|கூச்சம்/.test(value)) mood = 'shy';
     else if (/\b(scared|afraid|fear|danger|worried|nervous)\b|പേടി|ഭയം|डर|பயம்|خائف/.test(value)) mood = 'scared';
@@ -17689,15 +17778,15 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     else if (/\b(tired|exhaust|long day|no energy)\b|ക്ഷീണം|थका|சோர்வு|متعب/.test(value)) mood = 'tired';
     else if (/\b(confus|don.t understand|unclear|what do you mean|lost)\b|ആശയക്കുഴപ്പം|उलझन|குழப்பம்|مرتبك/.test(value)) mood = 'confused';
     else if (/\b(disappoint|let down)\b|നിരാശ|निराश|ஏமாற்றம்|خيبة/.test(value)) mood = 'disappointed';
-    else if (/\b(love|heart|thank|thanks|appreciate|sweet)\b|സ്നേഹം|നന്ദി|प्यार|धन्यवाद|அன்பு|நன்றி|حب|شكرا/.test(value)) mood = 'love';
-    else if (/\b(proud|achieved|accomplish|won|winner|success)\b|അഭിമാനം|गर्व|பெருமை|فخور/.test(value)) mood = 'proud';
+    else if (/\b(love|heart|thank|thanks|appreciate|sweet)\b|സ്നേഹം|നന്ദി|प्यार|धन्यवाद|அன்பு|நன்றி|حب|شكرا/.test(value)) { window.nilaCelebrateEmotion(); return 'love'; }
+    else if (/\b(proud|achieved|accomplish|won|winner|success)\b|അഭിമാനം|गर्व|பெருமை|فخور/.test(value)) { window.nilaCelebrateEmotion(); return 'proud'; }
     else if (/\b(wow|surpris|unexpected|really\?)\b|അതിശയം|आश्चर्य|ஆச்சரியம்|مندهش/.test(value)) mood = 'surprised';
-    else if (/\b(excited|amazing|awesome|great news|congrat|fantastic)\b|ആവേശം|സന്തോഷം|उत्साहित|खुश|மகிழ்ச்சி|متحمس/.test(value)) mood = 'excited';
+    else if (/\b(excited|amazing|awesome|great news|congrat|fantastic)\b|ആവേശം|സന്തോഷം|उत्साहित|खुश|மகிழ்ச்சி|متحمس/.test(value)) { window.nilaCelebrateEmotion(); return 'excited'; }
     else if (/\b(why|how|what|when|where|can you|could you|help|explain|tell me)\b|\?/.test(value)) mood = 'thinking';
     window.expressNilaEmotion(mood);
     return mood;
   };
-  window.resetLilyIdleMood = () => { clearIdleTimers(); clearMascotMood(); scheduleIdleMood(); };
+  window.resetLilyIdleMood = () => { clearIdleTimers(); stopNilaMoodSequence(); clearMascotMood(); scheduleIdleMood(); };
   let loginGreetingTimer = 0;
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
   window.lilyGreetVisitor = () => {
@@ -17711,7 +17800,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Nila, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
       ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Nila، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
     };
-    defaultGreeting = greetings[language][period] + '! ' + greetings[language].line + ' 💛';
+    defaultGreeting = greetings[language][period] + '! ' + greetings[language].line;
     greeting.textContent = defaultGreeting;
     mascot.classList.remove('is-pouting','is-grumpy','is-greeting');
     void mascot.offsetWidth;
@@ -17737,8 +17826,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const words = greetings[language];
     const place = campus ? (language === 'ml' ? ' · ' + campus + 'യിലേക്ക് ' + words.welcome : language === 'hi' ? ' · ' + campus + ' में आपका स्वागत है' : language === 'ta' ? ' · ' + campus + ' வளாகத்திற்கு வரவேற்கிறேன்' : language === 'ar' ? ' · أهلاً بك في ' + campus : ' at ' + campus) : '';
     const greetingText = language === 'en'
-      ? words[part] + ', ' + safeName + '! ' + (campus ? 'Welcome to ' + campus + '. ' : '') + words.tip + ' 💛'
-      : words[part] + '، ' + safeName + '! ' + place + '. ' + words.tip + ' 💛';
+      ? words[part] + ', ' + safeName + '! ' + (campus ? 'Welcome to ' + campus + '. ' : '') + words.tip
+      : words[part] + '، ' + safeName + '! ' + place + '. ' + words.tip;
     defaultGreeting = greetingText;
     greeting.textContent = greetingText;
     mascot.classList.remove('is-pouting', 'is-grumpy', 'is-greeting');
@@ -17761,16 +17850,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   };
   window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.lilyGreetVisitor?.(); }, 500);
   mascot.addEventListener('click', () => {
-    window.resetLilyIdleMood();
-    window.expressNilaEmotion('excited', 4200);
+    window.nilaGreetEmotion();
     window.speakLilyText?.(greeting.textContent, currentLang);
     window.openLilyConversation?.();
   });
   mascot.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      window.resetLilyIdleMood();
-      window.expressNilaEmotion('excited', 4200);
+      window.nilaGreetEmotion();
       window.openLilyConversation?.();
     }
   });
