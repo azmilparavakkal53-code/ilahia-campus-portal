@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=34">
+    <link rel="manifest" href="/manifest.webmanifest?v=41">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
+        select option { color: #0f172a !important; background-color: #ffffff !important; }
         .leaflet-tooltip.campus-building-label { background: #fff; border: 2px solid #1d4ed8; border-radius: 6px; box-shadow: 0 2px 8px #0f172a40; color: #0f172a; font-size: 12px; font-weight: 700; min-width: 230px; padding: 5px 8px; text-align: center; white-space: nowrap; }
         .leaflet-tooltip.campus-building-label::before { border-top-color: #1d4ed8; }
         #portalModal, #adminModal { z-index: 10000 !important; }
@@ -414,6 +415,7 @@
             <form id="campusRequestForm" onsubmit="submitCampusRequest(event)" class="hidden mb-4 grid gap-3 rounded-xl border border-indigo-200 bg-white p-4 sm:grid-cols-2">
                 <label class="text-xs font-semibold text-slate-700">What should be improved?<input id="campusRequestTitle" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 p-2.5" placeholder="e.g. More shaded seating near the library"></label>
                 <label class="text-xs font-semibold text-slate-700">Add a little detail<textarea id="campusRequestDetails" required minlength="8" maxlength="500" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2.5" placeholder="Tell the college what students need"></textarea></label>
+                <p id="campusRequestAccessHint" class="text-xs text-slate-600 sm:col-span-2" aria-live="polite"></p>
                 <label class="flex items-start gap-2 text-[11px] text-slate-600 sm:col-span-2"><input id="campusRequestShowName" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300"><span>Allow my name to appear with this request in the weekly admin summary. Leave unchecked to stay anonymous.</span></label>
                 <div class="flex flex-wrap items-center gap-3 sm:col-span-2"><button class="rounded-lg bg-indigo-800 px-4 py-2.5 text-xs font-bold text-white hover:bg-indigo-900">Send college request</button><span id="campusRequestFeedback" class="text-xs text-slate-600" aria-live="polite"></span></div>
             </form>
@@ -6955,7 +6957,11 @@
             if (label) label.textContent = campus ? `${campus.shortName} college needs board` : 'College needs board';
             if (!campus) { list.innerHTML = '<p class="text-sm text-slate-500">Choose an institute to view its requests.</p>'; if (form) form.classList.add('hidden'); return; }
             const canPost = currentSessionRole === 'student' && currentSessionCampusKey === campusKey;
-            if (form) form.classList.toggle('hidden', !canPost);
+            if (form) form.classList.remove('hidden');
+            const accessHint = document.getElementById('campusRequestAccessHint'), submitButton = form?.querySelector('button[type="submit"],button:not([type])');
+            if (accessHint) accessHint.textContent = canPost ? 'You are signed in for this college. Your request will be grouped into this week’s campus summary.' : `You can write your idea now. To send it, sign in as a student for ${campus.shortName}. Your draft will be kept on this device.`;
+            if (submitButton) submitButton.textContent = canPost ? 'Send college request' : 'Sign in to send request';
+            if (canPost) { try { const draft = JSON.parse(sessionStorage.getItem('ilahiaCampusRequestDraft') || 'null'); if (draft?.campusKey === campusKey) { const title = document.getElementById('campusRequestTitle'), details = document.getElementById('campusRequestDetails'), showName = document.getElementById('campusRequestShowName'); if (title && !title.value) title.value = draft.title || ''; if (details && !details.value) details.value = draft.details || ''; if (showName) showName.checked = draft.showName === true; if (accessHint) accessHint.textContent = 'Draft restored. Send it when you are ready.'; } } catch {} }
             list.innerHTML = '<p class="text-sm text-slate-500">Loading this college’s requests…</p>';
             try {
                 const data = await campusLifeApi('/api/campus-requests?campusKey=' + encodeURIComponent(campusKey));
@@ -6965,16 +6971,28 @@
                 if (!canPost) list.insertAdjacentHTML('afterbegin', '<p class="sm:col-span-2 lg:col-span-3 text-xs text-slate-500">Sign in to this college’s student portal to submit a request.</p>');
             } catch (error) { list.innerHTML = `<p class="text-sm text-rose-700" role="alert">${escapeHTML(error.message || 'Could not load requests.')}</p>`; }
         }
+        async function openCampusRequestSignIn() {
+            try {
+                const draft = { campusKey: currentActiveKey, title: document.getElementById('campusRequestTitle')?.value || '', details: document.getElementById('campusRequestDetails')?.value || '', showName: document.getElementById('campusRequestShowName')?.checked === true };
+                sessionStorage.setItem('ilahiaCampusRequestDraft', JSON.stringify(draft));
+            } catch {}
+            openPortalModal(); await showLoginForm('student');
+        }
         async function submitCampusRequest(event) {
             event.preventDefault();
+            if (currentSessionRole !== 'student' || currentSessionCampusKey !== currentActiveKey) {
+                try { sessionStorage.setItem('ilahiaCampusRequestDraft', JSON.stringify({ campusKey: currentActiveKey, title: document.getElementById('campusRequestTitle')?.value || '', details: document.getElementById('campusRequestDetails')?.value || '', showName: document.getElementById('campusRequestShowName')?.checked === true })); } catch {}
+                const feedback = document.getElementById('campusRequestFeedback'); if (feedback) feedback.textContent = 'Your draft is saved on this device. Sign in as a student for this college, then send it.';
+                await openCampusRequestSignIn(); return;
+            }
             const feedback = document.getElementById('campusRequestFeedback'), button = event.currentTarget.querySelector('button[type="submit"],button:not([type])');
             if (feedback) feedback.textContent = 'Sending…';
             if (button) button.disabled = true;
             try {
                 await campusLifeApi('/api/campus-requests', { method: 'POST', body: JSON.stringify({ title: document.getElementById('campusRequestTitle').value, details: document.getElementById('campusRequestDetails').value, showName: document.getElementById('campusRequestShowName').checked }) });
-                event.currentTarget.reset(); if (feedback) feedback.textContent = 'Your request was saved for this college and will be included in its weekly summary.';
+                event.currentTarget.reset(); try { sessionStorage.removeItem('ilahiaCampusRequestDraft'); } catch {} if (feedback) feedback.textContent = 'Your request was saved for this college and will be included in its weekly summary.';
                 await loadCampusRequestBoard(currentActiveKey);
-            } catch (error) { if (feedback) feedback.textContent = error.message; }
+            } catch (error) { if (feedback) feedback.textContent = error.status === 404 ? 'The local portal server is out of date. Restart the portal app, then send your saved draft.' : error.message; }
             finally { if (button) button.disabled = false; }
         }
         async function loadAdminCampusRequestReports() {
@@ -17356,7 +17374,49 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (activeRecognition && activeRecognitionPurpose === 'lily') { activeRecognition.stop(); return; }
     window.startIlahiaSpeechRecognition('lily', input);
   };
-  async function localized(text) { return currentLang === 'en' ? text : await translateText(text, currentLang, 'en'); }
+  const lilyOfflinePhrases = {
+    ml: {
+      'I’m checking the latest campus updates…': 'ഞാൻ പുതിയ ക്യാമ്പസ് അറിയിപ്പുകൾ പരിശോധിക്കുകയാണ്…',
+      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ ലില്ലി, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
+      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ ലില്ലിയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
+      'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'ക്യാമ്പസ് വാർത്തകളും പരിപാടികളും പറയാനും ശരിയായ സ്ഥാപന പോർട്ടലിലേക്ക് കൊണ്ടുപോകാനും എനിക്ക് കഴിയും. “ലോ കോളേജ് സ്റ്റുഡന്റ് പോർട്ടലിലേക്ക് കൊണ്ടുപോകൂ” എന്ന് ചോദിക്കൂ.',
+      'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'ആദ്യം സ്ഥാപനം തിരഞ്ഞെടുക്കൂ. ശേഷം “സ്റ്റുഡന്റ് പോർട്ടൽ തുറക്കൂ” എന്ന് പറയൂ; ആ സ്ഥാപനത്തിന്റെ ലോഗിൻ തുറക്കാം.',
+      'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'ഇപ്പോൾ വരാനിരിക്കുന്ന ക്യാമ്പസ് പരിപാടികൾ പ്രസിദ്ധീകരിച്ചിട്ടില്ല. പുതിയ അറിയിപ്പുകൾക്കായി പിന്നീട് ക്യാമ്പസ് ഇൻബോക്സ് പരിശോധിക്കൂ.',
+      'I checked the live campus news feed, and there are no active updates published right now. I’ll let you know when a new update appears.': 'ക്യാമ്പസ് വാർത്തകൾ പരിശോധിച്ചു. ഇപ്പോൾ പുതിയ അറിയിപ്പുകളില്ല. പുതിയ അപ്‌ഡേറ്റ് വരുമ്പോൾ അറിയിക്കാം.'
+    },
+    hi: {
+      'I’m checking the latest campus updates…': 'मैं कैंपस की नई जानकारी देख रही हूँ…',
+      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं लिली, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
+      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं लिली हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
+      'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'मैं कैंपस की ताज़ा खबरें और कार्यक्रम बता सकती हूँ और सही संस्थान पोर्टल तक पहुँचा सकती हूँ। कहें: “मुझे लॉ कॉलेज के छात्र पोर्टल पर ले चलो।”',
+      'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'पहले संस्थान चुनें, फिर “छात्र पोर्टल खोलो” कहें। मैं उस कैंपस का लॉगिन खोल दूँगी।',
+      'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'अभी कैंपस के कोई आगामी कार्यक्रम प्रकाशित नहीं हैं। नई सूचनाओं के लिए बाद में कैंपस इनबॉक्स देखें।',
+      'I checked the live campus news feed, and there are no active updates published right now. I’ll let you know when a new update appears.': 'मैंने कैंपस समाचार देखे। अभी कोई नया अपडेट नहीं है। नया अपडेट आने पर मैं बताऊँगी।'
+    },
+    ta: {
+      'I’m checking the latest campus updates…': 'சமீபத்திய வளாக அறிவிப்புகளைப் பார்க்கிறேன்…',
+      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் லில்லி, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
+      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் லில்லி. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
+      'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'வளாகச் செய்திகள் மற்றும் நிகழ்வுகளைச் சொல்லவும் சரியான கல்லூரி போர்ட்டலுக்கு வழிகாட்டவும் முடியும். “என்னை சட்டக் கல்லூரி மாணவர் போர்ட்டலுக்கு அழைத்துச் செல்” என்று கேளுங்கள்.',
+      'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'முதலில் கல்வி நிறுவனத்தைத் தேர்ந்தெடுத்து, “மாணவர் போர்ட்டலைத் திற” என்று சொல்லுங்கள். அந்த வளாக உள்நுழைவைத் திறக்கிறேன்.',
+      'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'தற்போது வரவிருக்கும் வளாக நிகழ்வுகள் வெளியிடப்படவில்லை. புதிய அறிவிப்புகளுக்கு பின்னர் வளாக இன்பாக்ஸைப் பாருங்கள்.',
+      'I checked the live campus news feed, and there are no active updates published right now. I’ll let you know when a new update appears.': 'வளாகச் செய்திகளைப் பார்த்தேன். இப்போது புதிய அறிவிப்புகள் இல்லை. புதுப்பிப்பு வந்ததும் தெரிவிக்கிறேன்.'
+    },
+    ar: {
+      'I’m checking the latest campus updates…': 'أتحقق من آخر تحديثات الحرم…',
+      'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا ليلي، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
+      'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا ليلي. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
+      'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'يمكنني مشاركة أخبار الحرم والفعاليات وإرشادك إلى بوابة المعهد المناسبة. قل: «خذني إلى بوابة طلاب كلية القانون».',
+      'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'اختر المعهد أولاً ثم قل «افتح بوابة الطلاب» لأفتح صفحة تسجيل الدخول الخاصة به.',
+      'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'لا توجد فعاليات قادمة منشورة حالياً. تحقق من صندوق وارد الحرم لاحقاً للاطلاع على الإعلانات الجديدة.',
+      'I checked the live campus news feed, and there are no active updates published right now. I’ll let you know when a new update appears.': 'تحققت من أخبار الحرم المباشرة، ولا توجد تحديثات منشورة حالياً. سأخبرك عند نشر تحديث جديد.'
+    }
+  };
+  async function localized(text) {
+    if (currentLang === 'en') return text;
+    try { const translated = await translateText(text, currentLang, 'en'); if (translated && translated !== text) return translated; } catch {}
+    return lilyOfflinePhrases[currentLang]?.[text] || text;
+  }
   function addMessage(kind, text) {
     const bubble = document.createElement('div');
     bubble.className = kind === 'user' ? 'ml-auto max-w-[88%] whitespace-pre-line rounded-2xl rounded-br-sm bg-blue-800 px-3 py-2 text-white' : 'mr-auto max-w-[92%] whitespace-pre-line rounded-2xl rounded-bl-sm border border-amber-100 bg-white px-3 py-2 text-slate-800 shadow-sm';
@@ -17419,6 +17479,20 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       ['pharmacy', /\b(pharmacy college|pharmacy)\b/], ['kmlps', /\b(kmlps|k m l p s)\b/]
     ];
     const askedCampus = campusMatchers.find(([, pattern]) => pattern.test(query))?.[0] || null;
+    const infoCampusKey = askedCampus || (!onLanding() ? currentActiveKey : null);
+    const infoCampus = infoCampusKey ? collegeDatabase[infoCampusKey] : null;
+    const campusInfoTopics = [
+      { pattern: /\b(admission|admissions|apply|application|course|courses|program|programmes|programme|degree|eligib|keam)\b|പ്രവേശനം|प्रवेश|சேர்க்கை|القبول/, value: 'admissionSummary', label: 'admission and courses' },
+      { pattern: /\b(facilit|facility|facilities|library|lab|laborator|sports|gym|cafeteria|canteen|campus life)\b|സൗകര്യം|सुविधा|வசதி|مرافق/, value: 'facilitiesSummary', label: 'campus facilities' },
+      { pattern: /\b(contact|address|phone|telephone|email|location)\b|ബന്ധപ്പെടുക|വിലാസം|संपर्क|पता|தொடர்பு|முகவரி|اتصال|عنوان|هاتف/, value: 'contact', label: 'contact information' },
+      { pattern: /\b(about|tell me about|college details|institute details|overview|profile)\b|കോളേജിനെക്കുറിച്ച്|कॉलेज के बारे में|கல்லூரி பற்றி|عن الكلية/, value: 'profileSummary', label: 'college overview' }
+    ];
+    const infoTopic = campusInfoTopics.find(topic => topic.pattern.test(query));
+    if (infoTopic) {
+      if (!infoCampus) return 'Choose a college page or name the college, and I can show its admissions, facilities, contact details, or overview.';
+      if (infoTopic.value === 'contact') return infoCampus.name + '\nAddress: ' + (infoCampus.address || infoCampus.sub || 'Not listed') + '\nPhone: ' + (infoCampus.phone || 'Not listed') + '\nEmail: ' + (infoCampus.email || 'Not listed');
+      return infoCampus[infoTopic.value] || infoCampus.desc || ('I don’t have ' + infoTopic.label + ' recorded for ' + infoCampus.name + ' yet.');
+    }
     if (/\b(student portal|student login|student sign.?in|student dashboard)\b/.test(query)) {
       if (askedCampus || !onLanding()) {
         const campus = askedCampus || currentActiveKey;
@@ -17435,6 +17509,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query) && askedCampus) {
       return { text: `Taking you to ${collegeDatabase[askedCampus]?.name || 'that campus'}.`, action: async () => { switchCollegePage(askedCampus); closeLilyConversation(); } };
     }
+    if (/\b(attendance|absent|present|class attendance)\b|حضور|उपस्थिति|வருகை|ഹാജർ/.test(query)) return 'For attendance, open the matching college student portal and choose Attendance. The portal can show attendance after the college or teacher has uploaded the record.';
+    if (/\b(gate.?pass|leave pass|permission to leave|exit pass)\b|بوابة خروج|गेट पास|வெளியே செல்ல அனுமதி|ഗേറ്റ് പാസ്/.test(query)) return 'To request a gate pass, open Applications in your college student portal and choose Gate Pass. Add your destination, purpose, departure and return times, then send it to your class mentor for review. Approved passes can be checked at the security desk.';
+    if (/\b(fee|fees|tuition|pay college)\b|رسوم|शुल्क|கட்டணம்|ഫീസ്/.test(query)) return 'For fee information, open Fees in your college student portal. Current amounts and payment options depend on your college and account; use the details shown there.';
+    if (/\b(certificate|certificates|transcript)\b|شهادة|प्रमाणपत्र|சான்றிதழ்|സർട്ടിഫിക്കറ്റ്/.test(query)) return 'Open Certificate Locker in your college student portal to view certificate services available to your account. If a document is missing, contact your college office.';
+    if (/\b(mess|canteen|food|meal|menu|order food)\b|مقصف|भोजनालय|உணவகம்|കാന്റീൻ/.test(query)) return 'Open the Mess Buzz or Canteen section on your college page to see the current menu and place a food booking. Payment choices are shown at checkout when available.';
     if (/\b(news|headline|update|alert|breaking|announcement|new)\b|خبر|أخبار|समाचार|खबर|செய்தி|വാർത്ത|അറിയിപ്പ്/.test(query)) return latestNewsReply();
     if (/\b(event|events|workshop|activity|activities|happening|calendar)\b|حدث|فعاليات|कार्यक्रम|आयोजन|நிகழ்வு|நிகழ்ச்ச|പരിപാടി|ഇവന്റ്/.test(query)) return upcomingEventsReply();
     if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
