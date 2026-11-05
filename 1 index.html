@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=50">
+    <link rel="manifest" href="/manifest.webmanifest?v=51">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -234,7 +234,7 @@
                 </div>
                 </div>
             </aside>
-            <section class="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
                         <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the campus conversation mascot. Tap to ask about campus news and events; drag or use arrow keys to move." title="Tap Lily to chat about campus news and events, or drag her to move">
@@ -3197,7 +3197,7 @@
             const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
                 acceptNode(node) {
                     const parent = node.parentElement;
-                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast,#leadership,[translate="no"],.notranslate')) return NodeFilter.FILTER_REJECT;
+                    if (!parent || !node.textContent.trim() || parent.closest('script,style,noscript,code,pre,option,[hidden],[aria-hidden="true"],[inert],.hidden,#translationToast,#leadership,#trustLeadershipPanel,[translate="no"],.notranslate')) return NodeFilter.FILTER_REJECT;
                     return NodeFilter.FILTER_ACCEPT;
                 }
             });
@@ -3227,7 +3227,7 @@
                 if (run === translationRun && currentLang === lang) node.textContent = translated;
             });
             document.querySelectorAll('input,textarea,button,[aria-label],[title]').forEach(element => {
-                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden,#leadership,[translate="no"],.notranslate')) return;
+                if (element.closest('[hidden],[aria-hidden="true"],[inert],.hidden,#leadership,#trustLeadershipPanel,[translate="no"],.notranslate')) return;
                 translatableAttributes.forEach(name => {
                     if (!element.hasAttribute(name)) return;
                     let saved = originalAttributes.get(element);
