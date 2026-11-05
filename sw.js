@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ilahia-campus-shell-v41';
+const CACHE_NAME = 'ilahia-campus-shell-v43';
 const APP_SHELL = ['/', '/canteen.html', '/canteen-admin.html', '/manifest.webmanifest', '/assets/icons/ilahia-ecosystem-logo-v5-180.png', '/assets/icons/ilahia-ecosystem-logo-v5-192.png', '/assets/icons/ilahia-ecosystem-logo-v5-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-1024.png', '/assets/icons/ilahia-ecosystem-maskable-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-maskable-1024.png', '/assets/campuses/ilahia-public-school-hero.jpg'];
 
 self.addEventListener('install', event => {

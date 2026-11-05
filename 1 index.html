@@ -44,6 +44,22 @@
         .ilahia-trust-mark { width: 56px; height: 56px; overflow: hidden; flex: 0 0 auto; border-radius: 12px; background: #061534; padding: 0; }
         .ilahia-trust-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
         .ilahia-trust-mark.compact { width: 44px; height: 44px; }
+        .ilahia-ai-mark { display:inline-block; width:2.25rem; height:2.25rem; flex:0 0 auto; filter:drop-shadow(0 3px 5px #02081755); }
+        .ilahia-ai-mark-small { width:1.85rem; height:1.85rem; }
+        .ilahia-ai-launcher-mark { width:2.5rem; height:2.5rem; transition:transform .2s ease; }
+        button:hover > .ilahia-ai-launcher-mark { transform:rotate(-5deg) scale(1.08); }
+        .trust-leadership-heading { font-family:"Palatino Linotype","Book Antiqua",Georgia,serif; letter-spacing:.035em; text-shadow:0 2px 14px #f6c95735; }
+        #trustMascotStage { position:relative; height:6.35rem; overflow:hidden; touch-action:pan-y; }
+        #trustMascotMover { position:absolute; z-index:2; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100% - 1rem); cursor:grab; touch-action:none; user-select:none; }
+        #trustMascotMover.is-dragging { cursor:grabbing; }
+        .trust-mascot-character { width:4.5rem; height:4.5rem; flex:none; overflow:visible; animation:trust-mascot-bob 2.6s ease-in-out infinite; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
+        .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
+        #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
+        @keyframes trust-mascot-bob { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-4px) rotate(2deg); } }
+        @keyframes trust-mascot-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-24deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-18deg); } }
+        @media (max-width:380px) { .trust-mascot-character { width:3.8rem; height:3.8rem; } .trust-mascot-greeting { max-width:11rem; font-size:.62rem; } }
+        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave { animation:none; } }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -96,6 +112,29 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased">
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
+        <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
+            <defs>
+                <linearGradient id="aiOrb" x1="18" y1="10" x2="108" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#2563a8"/><stop offset=".54" stop-color="#102b54"/><stop offset="1" stop-color="#06152f"/></linearGradient>
+                <linearGradient id="aiGold" x1="37" y1="25" x2="91" y2="91" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0a5"/><stop offset=".55" stop-color="#f6c957"/><stop offset="1" stop-color="#dc962b"/></linearGradient>
+            </defs>
+            <circle cx="64" cy="64" r="61" fill="url(#aiOrb)" stroke="url(#aiGold)" stroke-width="3"/>
+            <circle cx="64" cy="64" r="53" fill="none" stroke="#7dd3fc" stroke-opacity=".24" stroke-width="1.5"/>
+            <path d="M21 52c5-17 19-29 36-34M107 76c-5 17-19 29-36 34" fill="none" stroke="url(#aiGold)" stroke-linecap="round" stroke-width="2.4" opacity=".8"/>
+            <path d="m30 34 2.5 5.5L38 42l-5.5 2.5L30 50l-2.5-5.5L22 42l5.5-2.5L30 34Z" fill="#fff0a5"/>
+            <path d="m99 82 2 4.5 4.5 2-4.5 2-2 4.5-2-4.5-4.5-2 4.5-2 2-4.5Z" fill="#7dd3fc"/>
+            <path d="M64 20v12" stroke="url(#aiGold)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="64" cy="18" r="6" fill="url(#aiGold)"/>
+            <path d="M50 41c0-10 6-16 14-16s14 6 14 16" fill="url(#aiGold)"/>
+            <rect x="34" y="39" width="60" height="56" rx="20" fill="#f8fbff" stroke="url(#aiGold)" stroke-width="3"/>
+            <path d="M34 57h-5a7 7 0 0 0 0 14h5M94 57h5a7 7 0 0 1 0 14h-5" fill="#38bdf8" stroke="#bae6fd" stroke-width="2"/>
+            <ellipse cx="51" cy="63" rx="4.5" ry="6" fill="#12325d"/>
+            <ellipse cx="77" cy="63" rx="4.5" ry="6" fill="#12325d"/>
+            <circle cx="52.5" cy="61" r="1.5" fill="#fff"/><circle cx="78.5" cy="61" r="1.5" fill="#fff"/>
+            <path d="M51 78c3.5 5 8 7.5 13 7.5s9.5-2.5 13-7.5" fill="none" stroke="#e7ad3a" stroke-linecap="round" stroke-width="3.5"/>
+            <path d="M47 99h34" stroke="#7dd3fc" stroke-linecap="round" stroke-width="3" opacity=".9"/>
+        </symbol>
+    </svg>
     <!-- Trust identity bar; institute selection stays on the landing page -->
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
@@ -139,9 +178,24 @@
                 </div>
             </aside>
             <section class="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div class="border-b border-slate-200 bg-gradient-to-r from-slate-950 to-blue-950 px-5 py-5 text-white sm:px-7">
-                    
-                    <h2 class="mt-1 text-center text-xl font-extrabold sm:text-2xl">Ilahia Trust Leadership</h2>
+                <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
+                    <div id="trustMascotStage" aria-label="Illy the Ilahia Trust welcome mascot">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Illy, the Ilahia Trust mascot. Drag or use arrow keys to move. Press Enter to hear a greeting." title="Drag me, or use arrow keys to move me">
+                            <svg class="trust-mascot-character" viewBox="0 0 96 96" aria-hidden="true">
+                                <defs><linearGradient id="illyBody" x1="15" y1="10" x2="78" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563a8"/></linearGradient><linearGradient id="illyCap" x1="28" y1="5" x2="74" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0a5"/><stop offset="1" stop-color="#e9ae3d"/></linearGradient></defs>
+                                <ellipse cx="49" cy="86" rx="25" ry="5" fill="#020817" opacity=".3"/>
+                                <path d="M25 62c-11 2-17 9-17 18 0 5 4 7 8 5l16-12M72 62c11 2 17 9 17 18 0 5-4 7-8 5L66 73" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2" stroke-linecap="round"/>
+                                <g class="trust-mascot-wave"><path d="M10 78C3 75 3 67 7 61l8-9c3-4 8-3 9 1 1 2 0 4-1 6l-7 10 5 8" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2" stroke-linejoin="round"/><path d="m10 57-2-7m8 5 1-8m5 11 4-6" stroke="#f5cf68" stroke-width="2" stroke-linecap="round"/></g>
+                                <path d="M20 43c0-16 12-29 29-29s29 13 29 29v20c0 15-13 24-29 24S20 78 20 63V43Z" fill="url(#illyBody)" stroke="#c8ecff" stroke-width="2"/>
+                                <path d="M27 31 49 8l23 23-23-5-22 5Z" fill="url(#illyCap)" stroke="#fff0a5" stroke-width="2" stroke-linejoin="round"/><path d="M69 26v12" stroke="#f5cf68" stroke-width="2"/><circle cx="69" cy="40" r="3" fill="#fff0a5"/>
+                                <path d="M31 50c0-9 7-16 18-16s18 7 18 16v8c0 9-7 16-18 16s-18-7-18-16v-8Z" fill="#f8fbff"/>
+                                <ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/>
+                                <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
+                            </svg>
+                            <span class="trust-mascot-greeting">Hi, I’m Illy! Welcome to Ilahia Trust ✨</span>
+                        </div>
+                    </div>
+                    <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
                 </div>
                 <div class="grid grid-cols-1 gap-3 bg-white p-4 sm:grid-cols-2 lg:grid-cols-3 sm:p-6">
                     <article class="rounded-xl border border-blue-200 bg-blue-50 p-4 text-center sm:col-span-2 lg:col-span-1">
@@ -505,13 +559,14 @@
     </div><!-- End selected college page content -->
     <!-- Floating AI Chat Assistant Widget -->
     <div class="fixed bottom-5 right-5 z-50">
-        <button onclick="toggleChat()" class="bg-blue-700 hover:bg-blue-800 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-105">
-            <i class="fa-solid fa-robot"></i>
+        <button type="button" onclick="toggleChat()" aria-label="Open Ilahia AI campus guide" class="bg-blue-950 hover:bg-blue-900 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition transform hover:scale-105 ring-2 ring-amber-300/80">
+            <svg class="ilahia-ai-mark ilahia-ai-launcher-mark" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
         </button>
         <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden flex flex-col">
             <div class="bg-slate-900 text-white p-3.5 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <div class="w-2.5 h-2.5 bg-blue-400 rounded-full animate-pulse"></div>
+                    <svg class="ilahia-ai-mark" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                     <div>
                         <span id="chatBotTitle" class="font-bold text-xs block">Campus Virtual Assistant</span>
                         <span id="chatLangIndicator" class="text-[9px] text-slate-300">Language: English</span>
@@ -923,7 +978,7 @@
                 <!-- AI Complaint Registration Section -->
                 <div class="bg-white p-5 rounded-xl border border-blue-200 shadow-xs bg-gradient-to-br from-white to-blue-50/30">
                     <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
-                        <i class="fa-solid fa-robot text-blue-700"></i>
+                        <svg class="ilahia-ai-mark ilahia-ai-mark-small" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
                         <span>Department & classroom issue reports</span>
                     </h4>
                     <p class="text-xs text-slate-500 mb-4">Report a classroom, lab, or campus issue. Matching active reports from your institute are grouped into one request, with the number of people affected shown to staff.</p>
@@ -1012,12 +1067,13 @@
             <!-- INTEGRATED CLASSBOT WIDGET INSIDE STUDENT DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
                 <button onclick="toggleStudentChat()" class="bg-blue-900 hover:bg-blue-800 text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center text-lg transition transform hover:scale-105 border-2 border-blue-400" title="Open ClassBot">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                    <svg class="ilahia-ai-mark ilahia-ai-launcher-mark" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
                 </button>
                 <div id="studentChatWindow" class="hidden absolute bottom-14 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-sans">
                     <div class="bg-blue-900 text-white p-3.5 flex justify-between items-center border-b border-blue-800">
                         <div class="flex items-center space-x-2">
-                            <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <svg class="ilahia-ai-mark ilahia-ai-mark-small" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
+                            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                             <div>
                                 <span class="font-bold text-xs block">ClassBot: Academic Assistant</span>
                                 <span class="text-[9px] text-blue-200">Syllabus and study support · multilingual</span>
@@ -1224,7 +1280,7 @@
                 <!-- AI Faculty Complaint Registration Section -->
                 <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs bg-gradient-to-br from-white to-slate-50">
                     <h4 class="font-bold text-slate-900 mb-1 flex items-center space-x-2">
-                        <i class="fa-solid fa-robot text-slate-800"></i>
+                        <svg class="ilahia-ai-mark ilahia-ai-mark-small" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
                         <span>Faculty & staff issue reports</span>
                     </h4>
                     <p class="text-xs text-slate-500 mb-4">Report a faculty room or department issue. Matching open reports at this institute are grouped into one request.</p>
@@ -1307,12 +1363,13 @@
             <!-- INTEGRATED FACULTYBOT WIDGET INSIDE TEACHER DASHBOARD -->
             <div class="absolute bottom-4 right-4 z-50">
                 <button onclick="toggleTeacherChat()" class="bg-slate-900 hover:bg-slate-800 text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center text-lg transition transform hover:scale-105 border-2 border-slate-600" title="Open FacultyBot">
-                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <svg class="ilahia-ai-mark ilahia-ai-launcher-mark" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
                 </button>
                 <div id="teacherChatWindow" class="hidden absolute bottom-14 right-0 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-sans">
                     <div class="bg-slate-900 text-white p-3.5 flex justify-between items-center border-b border-slate-800">
                         <div class="flex items-center space-x-2">
-                            <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <svg class="ilahia-ai-mark ilahia-ai-mark-small" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
+                            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                             <div>
                                 <span class="font-bold text-xs block">FacultyBot: Assistant</span>
                                 <span class="text-[9px] text-slate-300">Lesson planning and teaching support · multilingual</span>
@@ -16903,6 +16960,70 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 /***/ })
 /******/ ])["default"];
 });</script>
+<script>
+(() => {
+  const stage = document.getElementById('trustMascotStage');
+  const mascot = document.getElementById('trustMascotMover');
+  const greeting = mascot?.querySelector('.trust-mascot-greeting');
+  if (!stage || !mascot || !greeting) return;
+  const clamp = (value, max) => Math.max(0, Math.min(max, value));
+  const maxLeft = () => Math.max(0, stage.clientWidth - mascot.offsetWidth);
+  const maxTop = () => Math.max(0, stage.clientHeight - mascot.offsetHeight);
+  const place = (left, top) => {
+    mascot.style.left = `${clamp(left, maxLeft())}px`;
+    mascot.style.top = `${clamp(top, maxTop())}px`;
+  };
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem('ilahiaTrustMascotPosition') || 'null'); } catch {}
+  if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
+    place(stored.x * maxLeft(), stored.y * maxTop());
+  } else {
+    place((stage.clientWidth - mascot.offsetWidth) / 2, 7);
+  }
+  let drag = null;
+  mascot.addEventListener('pointerdown', event => {
+    if (event.button !== undefined && event.button !== 0) return;
+    drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.offsetLeft, top: mascot.offsetTop, moved: false };
+    mascot.classList.add('is-dragging');
+    mascot.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+  });
+  mascot.addEventListener('pointermove', event => {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+    if (drag.moved) place(drag.left + dx, drag.top + dy);
+  });
+  const finishDrag = event => {
+    if (!drag || (event?.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
+    mascot.classList.remove('is-dragging');
+    if (drag.moved) {
+      try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
+    }
+    drag = null;
+  };
+  mascot.addEventListener('pointerup', finishDrag);
+  mascot.addEventListener('pointercancel', finishDrag);
+  mascot.addEventListener('keydown', event => {
+    const step = event.shiftKey ? 24 : 12;
+    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+    if (moves[event.key]) {
+      event.preventDefault();
+      place(mascot.offsetLeft + moves[event.key][0], mascot.offsetTop + moves[event.key][1]);
+      try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      greeting.textContent = 'Need a hand? I can help you explore Ilahia Trust and its campuses! ✨';
+      window.setTimeout(() => { greeting.textContent = 'Hi, I’m Illy! Welcome to Ilahia Trust ✨'; }, 4000);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      place((stage.clientWidth - mascot.offsetWidth) / 2, 7);
+      try { localStorage.removeItem('ilahiaTrustMascotPosition'); } catch {}
+    }
+  });
+  window.addEventListener('resize', () => place(mascot.offsetLeft, mascot.offsetTop));
+})();
+</script>
 <!-- Embedded MessBuzz college-mess panel: uses the portal's existing signed-in session. -->
 <div id="canteenBookingPanel" role="dialog" aria-modal="true" aria-labelledby="canteenBookingTitle" style="display:none;position:fixed;inset:0;z-index:25000;background:#0f172a;flex-direction:column">
   <div style="height:58px;min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid #cbd5e1">
