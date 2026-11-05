@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=41">
+    <link rel="manifest" href="/manifest.webmanifest?v=42">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -6980,17 +6980,19 @@
         }
         async function submitCampusRequest(event) {
             event.preventDefault();
+            const form = event.currentTarget;
+            if (!form) return;
             if (currentSessionRole !== 'student' || currentSessionCampusKey !== currentActiveKey) {
                 try { sessionStorage.setItem('ilahiaCampusRequestDraft', JSON.stringify({ campusKey: currentActiveKey, title: document.getElementById('campusRequestTitle')?.value || '', details: document.getElementById('campusRequestDetails')?.value || '', showName: document.getElementById('campusRequestShowName')?.checked === true })); } catch {}
                 const feedback = document.getElementById('campusRequestFeedback'); if (feedback) feedback.textContent = 'Your draft is saved on this device. Sign in as a student for this college, then send it.';
                 await openCampusRequestSignIn(); return;
             }
-            const feedback = document.getElementById('campusRequestFeedback'), button = event.currentTarget.querySelector('button[type="submit"],button:not([type])');
+            const feedback = document.getElementById('campusRequestFeedback'), button = form.querySelector('button[type="submit"],button:not([type])');
             if (feedback) feedback.textContent = 'Sending…';
             if (button) button.disabled = true;
             try {
                 await campusLifeApi('/api/campus-requests', { method: 'POST', body: JSON.stringify({ title: document.getElementById('campusRequestTitle').value, details: document.getElementById('campusRequestDetails').value, showName: document.getElementById('campusRequestShowName').checked }) });
-                event.currentTarget.reset(); try { sessionStorage.removeItem('ilahiaCampusRequestDraft'); } catch {} if (feedback) feedback.textContent = 'Your request was saved for this college and will be included in its weekly summary.';
+                form.reset(); try { sessionStorage.removeItem('ilahiaCampusRequestDraft'); } catch {} if (feedback) feedback.textContent = 'Your request was saved for this college and will be included in its weekly summary.';
                 await loadCampusRequestBoard(currentActiveKey);
             } catch (error) { if (feedback) feedback.textContent = error.status === 404 ? 'The local portal server is out of date. Restart the portal app, then send your saved draft.' : error.message; }
             finally { if (button) button.disabled = false; }
@@ -17268,7 +17270,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const otherFemaleVoice = voices.find(voice => femaleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
       const maleVoicePattern = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex)(\W|$)/i;
       const unmarkedVoice = sameLanguage.find(voice => !maleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
-      utterance.voice = feminineVoice || otherFemaleVoice || unmarkedVoice || exactLanguage || sameLanguage[0] || null;
+      utterance.voice = feminineVoice || unmarkedVoice || exactLanguage || sameLanguage[0] || null;
       window.speechSynthesis.speak(utterance);
     };
     if (window.speechSynthesis.getVoices().length) speakWithAvailableVoice();
