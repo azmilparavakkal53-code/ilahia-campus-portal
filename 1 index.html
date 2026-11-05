@@ -59,6 +59,7 @@
         .trust-mascot-wave { transform-box:fill-box; transform-origin:18% 70%; animation:trust-mascot-wave 1.25s ease-in-out infinite; }
         .trust-mascot-gesture { transform-box:fill-box; transform-origin:80% 70%; animation:trust-mascot-gesture 2.3s ease-in-out infinite; }
         .trust-mascot-blink { transform-box:fill-box; transform-origin:center; animation:trust-mascot-blink 4.4s ease-in-out infinite; }
+        .trust-mascot-pupils { transform-box:fill-box; transform-origin:center; animation:trust-mascot-glance 6.2s ease-in-out infinite; }
         .trust-mascot-legs { transform-box:fill-box; transform-origin:50% 0%; }
         .trust-mascot-leg-left,.trust-mascot-shoe-left { transform-box:fill-box; transform-origin:80% 5%; animation:trust-mascot-step-left .48s ease-in-out infinite alternate; }
         .trust-mascot-leg-right,.trust-mascot-shoe-right { transform-box:fill-box; transform-origin:20% 5%; animation:trust-mascot-step-right .48s ease-in-out infinite alternate; }
@@ -66,6 +67,8 @@
         #trustMascotMover.is-pouting .trust-mascot-mouth-smile,#trustMascotMover.is-grumpy .trust-mascot-mouth-smile { display:none; }
         #trustMascotMover.is-pouting .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-mouth-sad,#trustMascotMover.is-grumpy .trust-mascot-brows { display:block; }
         #trustMascotMover.is-greeting .trust-mascot-character { animation:trust-mascot-greeting-hop .85s ease-in-out 2; }
+        #trustMascotMover.is-dancing .trust-mascot-character { animation:trust-mascot-touch-dance .42s cubic-bezier(.35,.05,.55,.95) 4; }
+        #trustMascotMover.is-dancing .trust-mascot-blush { animation:trust-mascot-blush 1.68s ease-in-out 1; }
         #trustMascotMover.is-jumping .trust-mascot-character { animation:trust-mascot-jump .68s cubic-bezier(.3,.8,.35,1) both; }
         .trust-mascot-greeting { max-width:13.5rem; border:1px solid #f5d87e; border-radius:1rem 1rem 1rem .25rem; background:#fffaf0; color:#17304e; padding:.48rem .72rem; font-size:.68rem; font-weight:700; line-height:1.35; box-shadow:0 4px 14px #02081725; }
         #trustMascotMover:focus-visible { outline:3px solid #fff0a5; outline-offset:4px; border-radius:1rem; }
@@ -76,9 +79,12 @@
         @keyframes trust-mascot-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-24deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-18deg); } }
         @keyframes trust-mascot-gesture { 0%,72%,100% { transform:rotate(0); } 78% { transform:rotate(-20deg); } 86% { transform:rotate(10deg); } 93% { transform:rotate(-12deg); } }
         @keyframes trust-mascot-blink { 0%,43%,47%,100% { transform:scaleY(1); } 45% { transform:scaleY(.12); } }
+        @keyframes trust-mascot-glance { 0%,14%,100% { transform:translateX(0); } 22%,34% { transform:translateX(2.8px); } 42% { transform:translateX(0); } 68%,80% { transform:translateX(-2.4px); } 90% { transform:translateX(0); } }
+        @keyframes trust-mascot-touch-dance { 0%,100% { transform:translateY(0) rotate(0) scale(1); } 25% { transform:translateY(-13px) rotate(-10deg) scale(1.08); } 50% { transform:translateY(-4px) rotate(9deg) scale(1.03); } 75% { transform:translateY(-11px) rotate(-7deg) scale(1.07); } }
+        @keyframes trust-mascot-blush { 0%,100% { opacity:.72; transform:scale(1); } 40%,65% { opacity:1; transform:scale(1.35); } }
         @keyframes trust-mascot-jump { 0% { transform:translateY(0) rotate(0); } 35% { transform:translateY(-15px) rotate(-8deg); } 65% { transform:translateY(-12px) rotate(8deg); } 100% { transform:translateY(0) rotate(0); } }
         @media (max-width:380px) { .trust-mascot-character { width:3.8rem; height:4.2rem; } .trust-mascot-greeting { max-width:11rem; font-size:.62rem; } }
-        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave, .trust-mascot-gesture, .trust-mascot-blink, .trust-mascot-leg-left, .trust-mascot-leg-right, .trust-mascot-shoe-left, .trust-mascot-shoe-right { animation:none; } }
+        @media (prefers-reduced-motion:reduce) { .trust-mascot-character, .trust-mascot-wave, .trust-mascot-gesture, .trust-mascot-blink, .trust-mascot-pupils, .trust-mascot-leg-left, .trust-mascot-leg-right, .trust-mascot-shoe-left, .trust-mascot-shoe-right, .trust-mascot-blush { animation:none; } }
         @media (max-width: 767px) {
             #mainNav > div { align-items: stretch; }
             #mainNav #mobileNavActions { width: 100%; }
@@ -241,9 +247,9 @@
                                 <g class="trust-mascot-legs" fill="none" stroke="#c8ecff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path class="trust-mascot-leg-left" d="M39 80v12"/><path class="trust-mascot-leg-right" d="M59 80v12"/><path class="trust-mascot-shoe-left" d="M39 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/><path class="trust-mascot-shoe-right" d="M59 92c-5 0-7 3-5 5h11c2-2 0-5-6-5Z" fill="#f5cf68" stroke="#f5cf68"/></g>
                                 <path d="M27 31 49 8l23 23-23-5-22 5Z" fill="url(#illyCap)" stroke="#fff0a5" stroke-width="2" stroke-linejoin="round"/><path d="M69 26v12" stroke="#f5cf68" stroke-width="2"/><circle cx="69" cy="40" r="3" fill="#fff0a5"/>
                                 <path d="M31 50c0-9 7-16 18-16s18 7 18 16v8c0 9-7 16-18 16s-18-7-18-16v-8Z" fill="#f8fbff"/>
-                                <g class="trust-mascot-blink"><ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/></g>
+                                <g class="trust-mascot-blink"><g class="trust-mascot-pupils"><ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/></g></g>
                                 <g class="trust-mascot-brows" fill="none" stroke="#15345b" stroke-linecap="round" stroke-width="2"><path d="m38 46 6 2"/><path d="m54 48 6-2"/></g>
-                                <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path class="trust-mascot-mouth-smile" d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/><path class="trust-mascot-mouth-sad" d="M43 66c3-4 7-4 10 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
+                                <circle class="trust-mascot-blush" cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle class="trust-mascot-blush" cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path class="trust-mascot-mouth-smile" d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/><path class="trust-mascot-mouth-sad" d="M43 66c3-4 7-4 10 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
                         </div>
@@ -17159,7 +17165,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
-    utterance.pitch = 1.38;
+    utterance.pitch = 1.46;
     utterance.rate = 0.9;
     let started = false;
     const speakWithAvailableVoice = () => {
@@ -17412,6 +17418,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const clamp = (value, max) => Math.max(0, Math.min(max, value));
   const maxLeft = () => Math.max(0, stage.clientWidth - mascot.offsetWidth);
   const maxTop = () => Math.max(0, stage.clientHeight - mascot.offsetHeight);
+  const playTouchDance = () => {
+    mascot.classList.remove('is-jumping', 'is-dancing', 'is-pouting', 'is-grumpy');
+    void mascot.offsetWidth;
+    mascot.classList.add('is-dancing');
+    window.setTimeout(() => mascot.classList.remove('is-dancing'), 1750);
+  };
   const place = (left, top) => {
     mascot.style.left = `${clamp(left, maxLeft())}px`;
     mascot.style.top = `${clamp(top, maxTop())}px`;
@@ -17453,10 +17465,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   mascot.addEventListener('pointercancel', finishDrag);
   mascot.addEventListener('click', () => {
     if (suppressNextClick) { suppressNextClick = false; return; }
-    mascot.classList.remove('is-jumping');
-    void mascot.offsetWidth;
-    mascot.classList.add('is-jumping');
-    window.setTimeout(() => mascot.classList.remove('is-jumping'), 700);
+    playTouchDance();
     openMascotConversation();
   });
   mascot.addEventListener('keydown', event => {
@@ -17469,10 +17478,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       try { localStorage.setItem('ilahiaTrustMascotPosition', JSON.stringify({ x: maxLeft() ? mascot.offsetLeft / maxLeft() : 0.5, y: maxTop() ? mascot.offsetTop / maxTop() : 0 })); } catch {}
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      mascot.classList.remove('is-jumping');
-      void mascot.offsetWidth;
-      mascot.classList.add('is-jumping');
-      window.setTimeout(() => mascot.classList.remove('is-jumping'), 700);
+      playTouchDance();
       openMascotConversation();
     } else if (event.key === 'Home') {
       event.preventDefault();
