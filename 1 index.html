@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=30">
+    <link rel="manifest" href="/manifest.webmanifest?v=31">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-final-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-final-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-final-512.png">
@@ -41,8 +41,11 @@
         #translationToast { z-index: 9500; }
         #quickActionPalette { z-index: 12000; }
         #quickActionResults button[aria-selected="true"] { background:#eff6ff; outline:2px solid #60a5fa; }
-        .ilahia-trust-mark { display:flex; flex-direction:column; align-items:center; flex:0 0 auto; width:64px; overflow:visible; text-decoration:none; }
-        .ilahia-trust-mark img { display:block; width:56px; height:56px; object-fit:contain; border-radius:12px; } .ilahia-trust-mark-label { margin-top:2px; color:#fff; font-size:10px; line-height:1.1; font-weight:700; letter-spacing:.04em; }
+        .ilahia-trust-mark { display:flex; flex-direction:column; align-items:center; flex:0 0 auto; width:82px; overflow:visible; text-decoration:none; }
+        .ilahia-trust-icon { display:block; width:56px; height:56px; object-fit:contain; border-radius:12px; }
+        .ilahia-trust-wordmark { display:block; width:78px; height:auto; margin-top:2px; object-fit:contain; }
+        #lilyConversation { z-index:18000; }
+        #lilyConversationMessages { scrollbar-width:thin; }
         .ilahia-trust-mark.compact { width: 44px; height: 44px; }
         .ilahia-ai-mark { display:inline-block; width:2.25rem; height:2.25rem; flex:0 0 auto; filter:drop-shadow(0 3px 5px #02081755); }
         .ilahia-ai-mark-small { width:1.85rem; height:1.85rem; }
@@ -139,13 +142,14 @@
     <header class="bg-slate-950 text-slate-300 text-xs sm:text-sm border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col items-start gap-2 py-3 px-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex flex-wrap items-center gap-2 sm:mr-auto">
-                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img src="/assets/icons/ilahia-ecosystem-appicon-final-512.png" alt="Ilahia Ecosystem mark" fetchpriority="high" decoding="async"><span class="ilahia-trust-mark-label">Ecosystem</span></a>
+                <a href="/" class="ilahia-trust-mark" aria-label="Ilahia Ecosystem home"><img class="ilahia-trust-icon" src="/assets/icons/ilahia-ecosystem-appicon-final-512.png" alt="Ilahia Ecosystem mark" fetchpriority="high" decoding="async"><img class="ilahia-trust-wordmark" src="/assets/icons/ilahia-ecosystem-wordmark-gold.png" alt="Ecosystem" decoding="async"></a>
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <button id="quickActionOpen" type="button" onclick="openQuickActionPalette()" aria-label="Quick search and actions" aria-keyshortcuts="Control+K Meta+K" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>Quick actions</span><kbd class="hidden rounded border border-slate-600 px-1.5 py-0.5 text-[9px] text-slate-300 sm:inline">Ctrl K</kbd></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
+                <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
                 <button id="landingAdminButton" type="button" onclick="openAdminModal()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-blue-800 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950" aria-label="Open administrator sign-in"><i class="fa-solid fa-user-shield" aria-hidden="true"></i><span>Admin Dashboard</span></button>
             </div>
         </div>
@@ -154,6 +158,21 @@
         <div class="flex shrink-0 items-center gap-2 rounded-md bg-rose-600 px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider"><span class="h-2 w-2 animate-pulse rounded-full bg-white"></span>Breaking &amp; campus news</div>
         <div id="campusNewsViewport" class="flex-1"><div id="campusNewsTrack" aria-live="polite"><span class="campus-news-item">Loading important campus updates…</span></div></div>
         <button id="campusNewsPause" type="button" onclick="toggleCampusNewsTicker()" class="shrink-0 rounded-md border border-slate-500 px-2.5 py-2 text-[10px] font-semibold text-white hover:bg-slate-800" aria-label="Pause scrolling news">Pause</button>
+    </section>
+    <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
+        <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
+            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Lily</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
+            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Lily conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
+        </div>
+        <div id="lilyConversationMessages" class="flex max-h-64 min-h-28 flex-col gap-2 overflow-y-auto bg-slate-50 p-3 text-xs" aria-live="polite" aria-relevant="additions text"></div>
+        <div class="flex gap-2 border-t border-slate-200 px-3 pt-2">
+            <button type="button" onclick="lilyAskTopic('news')" data-lily-en="Latest news" class="rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-[10px] font-bold text-amber-900">Latest news</button>
+            <button type="button" onclick="lilyAskTopic('events')" data-lily-en="Upcoming events" class="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-[10px] font-bold text-blue-900">Upcoming events</button>
+        </div>
+        <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
+            <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
+            <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
+        </form>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -180,7 +199,7 @@
             <section class="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
                     <div id="trustMascotStage" aria-label="Lily the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the Ilahia Trust mascot. Drag or use arrow keys to move. Press Enter to hear a greeting." title="Drag me, or use arrow keys to move me">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Lily, the campus conversation mascot. Tap to ask about campus news and events; drag or use arrow keys to move." title="Tap Lily to chat about campus news and events, or drag her to move">
                             <svg class="trust-mascot-character" viewBox="0 0 96 96" aria-hidden="true">
                                 <defs><linearGradient id="illyBody" x1="15" y1="10" x2="78" y2="92" gradientUnits="userSpaceOnUse"><stop stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563a8"/></linearGradient><linearGradient id="illyCap" x1="28" y1="5" x2="74" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0a5"/><stop offset="1" stop-color="#e9ae3d"/></linearGradient></defs>
                                 <ellipse cx="49" cy="86" rx="25" ry="5" fill="#020817" opacity=".3"/>
@@ -192,7 +211,7 @@
                                 <ellipse cx="42" cy="53" rx="2.6" ry="4" fill="#15345b"/><ellipse cx="56" cy="53" rx="2.6" ry="4" fill="#15345b"/><circle cx="42.7" cy="52" r="1" fill="#fff"/><circle cx="56.7" cy="52" r="1" fill="#fff"/>
                                 <circle cx="35" cy="62" r="3" fill="#f59a9a" opacity=".72"/><circle cx="63" cy="62" r="3" fill="#f59a9a" opacity=".72"/><path d="M44 63c2 3 6 3 8 0" fill="none" stroke="#d69731" stroke-linecap="round" stroke-width="2"/>
                             </svg>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me to chat about Ilahia Trust ✨</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Lily! Tap me for campus news and upcoming events ✨</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -2586,7 +2605,7 @@
         let currentSessionCampusKey = '';
         let portalCampusAccounts = {};
         let portalCampusInitPromise = null;
-         let currentLang = 'en';
+        let currentLang = (() => { try { const saved = localStorage.getItem('ilahia_preferred_language'); return ['en', 'ml', 'ar', 'hi', 'ta'].includes(saved) ? saved : 'en'; } catch (_) { return 'en'; } })();
          let campusChatContextRevision = 0;
          const AI_KNOWLEDGE_STORAGE_KEY = 'ilahia_ai_knowledge';
          let aiKnowledgeEntries = loadAIKnowledgeEntries();
@@ -3155,7 +3174,8 @@
         let translationToastTimer = null;
         async function changeLanguage(lang) {
             currentLang = translationLanguages[lang] ? lang : 'en';
-            ['globalLangSelect', 'mobileLangSelect'].forEach(id => {
+            try { localStorage.setItem('ilahia_preferred_language', currentLang); } catch (_) {}
+            ['landingLangSelect', 'globalLangSelect', 'mobileLangSelect'].forEach(id => {
                 const selector = document.getElementById(id);
                 if (selector) selector.value = currentLang;
             });
@@ -3178,6 +3198,7 @@
                 translationToastTimer = setTimeout(() => toast.classList.add('hidden'), 1400);
             }
             logSystemActivity(`[LANGUAGE] Active interface language switched to ${currentLang.toUpperCase()}`);
+            if (typeof window.refreshLilyConversationLanguage === 'function') void window.refreshLilyConversationLanguage();
         }
         let activeSkillChatRequestId = null;
         function toggleSkillOfferTerms() {
@@ -6774,9 +6795,23 @@
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || 'Could not load campus news.');
                 const items = data.items || [];
-                const content = items.length ? items.map(item => `<span class="campus-news-item"><span class="rounded bg-rose-500 px-2 py-1 text-[9px] font-extrabold uppercase">${escapeHTML(item.type === 'alert' ? 'Alert' : item.type || 'News')}</span><span class="text-amber-200">${escapeHTML(collegeDatabase[item.campusKey]?.shortName || "All institutes")}</span><strong>${escapeHTML(item.title)}</strong><span class="text-blue-100">${escapeHTML(item.details || '')}</span>${item.date ? `<span class="text-amber-200">${escapeHTML(item.date)}</span>` : ''}</span>`).join('') : '<span class="campus-news-item">No active campus news at the moment — check back for official updates.</span>';
+                const ids = items.map(item => String(item.id || item.title || '')).filter(Boolean);
+                const previousIds = window.lilyLastNewsIds;
+                window.lilyLatestNews = items;
+                if (Array.isArray(previousIds)) {
+                    const fresh = items.filter(item => !previousIds.includes(String(item.id || item.title || '')));
+                    if (fresh.length && typeof window.lilyShowLiveUpdate === 'function') void window.lilyShowLiveUpdate(fresh[0]);
+                }
+                window.lilyLastNewsIds = ids;
+                const activeLanguage = currentLang;
+                const content = items.length ? (await Promise.all(items.map(async item => {
+                    const title = activeLanguage === 'en' ? item.title : await translateText(item.title || '', activeLanguage, 'en');
+                    const details = activeLanguage === 'en' ? (item.details || '') : await translateText(item.details || '', activeLanguage, 'en');
+                    const type = item.type === 'alert' ? 'Alert' : item.type || 'News';
+                    return `<span class="campus-news-item"><span class="rounded bg-rose-500 px-2 py-1 text-[9px] font-extrabold uppercase">${escapeHTML(type)}</span><span class="text-amber-200">${escapeHTML(collegeDatabase[item.campusKey]?.shortName || "All institutes")}</span><strong>${escapeHTML(title)}</strong><span class="text-blue-100">${escapeHTML(details)}</span>${item.date ? `<span class="text-amber-200">${escapeHTML(item.date)}</span>` : ''}</span>`;
+                }))).join('') : `<span class="campus-news-item">${escapeHTML(activeLanguage === 'en' ? 'No active campus news at the moment — check back for official updates.' : await translateText('No active campus news at the moment — check back for official updates.', activeLanguage, 'en'))}</span>`;
                 track.innerHTML = content + content;
-            } catch (_) { track.innerHTML = '<span class="campus-news-item">Campus updates are temporarily unavailable.</span>'; }
+            } catch (_) { track.innerHTML = `<span class="campus-news-item">${escapeHTML(currentLang === 'en' ? 'Campus updates are temporarily unavailable.' : await translateText('Campus updates are temporarily unavailable.', currentLang, 'en'))}</span>`; }
         }
         function openCampusEventInbox() {
             void loadCampusEventInbox(currentActiveKey);
@@ -6809,6 +6844,8 @@
             portalCampusInitPromise = initializePortalCampusSelector();
             void restorePortalSessionOnce();
             void refreshAdminSystemStatus();
+            ['landingLangSelect', 'globalLangSelect', 'mobileLangSelect'].forEach(id => { const select = document.getElementById(id); if (select) select.value = currentLang; });
+            if (currentLang !== 'en') { document.documentElement.lang = currentLang; document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr'; void translatePage(currentLang); }
             window.setInterval(refreshAdminSystemStatus, 30000);
             void loadCampusNewsTicker();
             window.setInterval(() => {
@@ -16962,6 +16999,105 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });</script>
 <script>
 (() => {
+  const panel = document.getElementById('lilyConversation');
+  const messages = document.getElementById('lilyConversationMessages');
+  const input = document.getElementById('lilyConversationInput');
+  const greeting = document.querySelector('.trust-mascot-greeting');
+  if (!panel || !messages || !input) return;
+  const welcome = 'Hi, I’m Lily! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
+  const plain = value => String(value || '').trim();
+  async function localized(text) { return currentLang === 'en' ? text : await translateText(text, currentLang, 'en'); }
+  function addMessage(kind, text) {
+    const bubble = document.createElement('div');
+    bubble.className = kind === 'user' ? 'ml-auto max-w-[88%] whitespace-pre-line rounded-2xl rounded-br-sm bg-blue-800 px-3 py-2 text-white' : 'mr-auto max-w-[92%] whitespace-pre-line rounded-2xl rounded-bl-sm border border-amber-100 bg-white px-3 py-2 text-slate-800 shadow-sm';
+    bubble.textContent = text;
+    messages.appendChild(bubble);
+    while (messages.children.length > 40) messages.firstElementChild.remove();
+    messages.scrollTop = messages.scrollHeight;
+    return bubble;
+  }
+  window.refreshLilyConversationLanguage = async () => {
+    const language = currentLang;
+    const labels = [...panel.querySelectorAll('[data-lily-en]')];
+    await Promise.all(labels.map(async element => {
+      const translated = language === 'en' ? element.dataset.lilyEn : await translateText(element.dataset.lilyEn, language, 'en');
+      if (currentLang === language) element.textContent = translated;
+    }));
+    const placeholder = input.dataset.lilyPlaceholder;
+    input.placeholder = language === 'en' ? placeholder : await translateText(placeholder, language, 'en');
+  };
+  function onLanding() {
+    const landing = document.getElementById('instituteLanding');
+    return !!landing && !landing.classList.contains('hidden');
+  }
+  async function latestNewsReply() {
+    const campusKey = onLanding() ? 'all' : currentActiveKey;
+    const response = await fetch('/api/public/news?campusKey=' + encodeURIComponent(campusKey), { cache: 'no-store' });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Campus news is unavailable.');
+    const items = (Array.isArray(data.items) ? data.items : []).slice(0, 5);
+    window.lilyLatestNews = data.items || [];
+    if (!items.length) return 'I checked the live campus news feed, and there are no active updates published right now. I’ll let you know when a new update appears.';
+    const lines = items.map(item => {
+      const campus = collegeDatabase[item.campusKey]?.shortName || 'All institutes';
+      return `• ${item.title}${item.date ? ` — ${item.date}` : ''} (${campus})${item.details ? `\n  ${plain(item.details)}` : ''}`;
+    });
+    return `Here are the latest published campus updates:\n${lines.join('\n')}`;
+  }
+  async function upcomingEventsReply() {
+    const keys = onLanding() ? Object.keys(collegeDatabase) : [currentActiveKey];
+    const results = await Promise.allSettled(keys.map(async campusKey => {
+      const response = await fetch('/api/public/campus-events?campusKey=' + encodeURIComponent(campusKey), { cache: 'no-store' });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Event feed unavailable');
+      return (Array.isArray(data.items) ? data.items : []).map(item => ({ ...item, campusKey }));
+    }));
+    const events = results.flatMap(result => result.status === 'fulfilled' ? result.value : []).sort((a, b) => String(a.date || '').localeCompare(String(b.date || ''))).slice(0, 6);
+    if (!events.length) return 'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.';
+    return `Here are the upcoming published events:\n${events.map(item => `• ${item.title}${item.date ? ` — ${item.date}` : ''} (${collegeDatabase[item.campusKey]?.shortName || 'Campus'})${item.location ? ` · ${item.location}` : ''}${item.details ? `\n  ${plain(item.details)}` : ''}`).join('\n')}`;
+  }
+  async function makeReply(question) {
+    const english = currentLang === 'en' ? question : await translateText(question, 'en', currentLang);
+    const query = `${english} ${question}`.toLowerCase();
+    if (/\b(news|headline|update|alert|breaking|announcement|new)\b|خبر|أخبار|समाचार|खबर|செய்தி|വാർത്ത|അറിയിപ്പ്/.test(query)) return latestNewsReply();
+    if (/\b(event|events|workshop|activity|activities|happening|calendar)\b|حدث|فعاليات|कार्यक्रम|आयोजन|நிகழ்வு|நிகழ்ச்ச|പരിപാടി|ഇവന്റ്/.test(query)) return upcomingEventsReply();
+    if (/\b(hi|hello|hey|good morning|good evening)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(query)) return 'Hi! I’m Lily, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?';
+    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Lily. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
+    return 'I can help you stay up to date with live campus news, alerts, and published events. Try asking “What’s the latest news?” or “What events are coming up?”';
+  }
+  window.openLilyConversation = async () => {
+    panel.classList.remove('hidden');
+    await window.refreshLilyConversationLanguage();
+    if (!messages.children.length) addMessage('bot', await localized(welcome));
+    input.focus({ preventScroll: true });
+  };
+  window.closeLilyConversation = () => panel.classList.add('hidden');
+  window.lilyAskTopic = topic => {
+    input.value = topic === 'events' ? 'What events are coming up?' : 'What is the latest campus news?';
+    window.sendLilyMessage({ preventDefault() {} });
+  };
+  window.sendLilyMessage = async event => {
+    event?.preventDefault?.();
+    const question = input.value.trim();
+    if (!question) return;
+    input.value = '';
+    addMessage('user', question);
+    const thinking = addMessage('bot', await localized('I’m checking the latest campus updates…'));
+    try { thinking.textContent = await localized(await makeReply(question)); }
+    catch (_) { thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); }
+    messages.scrollTop = messages.scrollHeight;
+    input.focus({ preventScroll: true });
+  };
+  window.lilyShowLiveUpdate = async item => {
+    const headline = plain(item.title || 'A campus update');
+    const notice = await localized(`New campus update: ${headline}. Tap me and ask for the latest news.`);
+    if (greeting) greeting.textContent = notice;
+    if (!panel.classList.contains('hidden')) addMessage('bot', notice);
+  };
+})();
+</script>
+<script>
+(() => {
   const stage = document.getElementById('trustMascotStage');
   const mascot = document.getElementById('trustMascotMover');
   const greeting = mascot?.querySelector('.trust-mascot-greeting');
@@ -16982,12 +17118,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   }
   let drag = null;
   let suppressNextClick = false;
-  const openMascotConversation = () => {
-    greeting.textContent = 'Opening the Ilahia AI campus guide for you… ✨';
-    const chat = document.getElementById('chatWindow');
-    chat?.classList.remove('hidden');
-    window.setTimeout(() => document.getElementById('chatInput')?.focus({ preventScroll: true }), 80);
-  };
+  const openMascotConversation = () => window.openLilyConversation?.();
   mascot.addEventListener('pointerdown', event => {
     if (event.button !== undefined && event.button !== 0) return;
     drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: mascot.offsetLeft, top: mascot.offsetTop, moved: false };

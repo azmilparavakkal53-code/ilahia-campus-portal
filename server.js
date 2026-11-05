@@ -823,7 +823,7 @@ function applyPortalBackup(backup) {
 
 function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/1 index.html' : decodeURIComponent(pathname);
-  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/canteen-admin.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-logo-v5-180.png', '/assets/icons/ilahia-ecosystem-logo-v5-192.png', '/assets/icons/ilahia-ecosystem-logo-v5-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-1024.png', '/assets/icons/ilahia-ecosystem-maskable-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-maskable-1024.png', '/assets/icons/ilahia-ecosystem-final-transparent-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-180.png', '/assets/icons/ilahia-ecosystem-appicon-final-192.png', '/assets/icons/ilahia-ecosystem-appicon-final-512.png', '/assets/icons/ilahia-ecosystem-appicon-final-1024.png', '/assets/icons/ilahia-ecosystem-appicon-final-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-maskable-512.png']);
+  const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/canteen-admin.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-logo-v5-180.png', '/assets/icons/ilahia-ecosystem-logo-v5-192.png', '/assets/icons/ilahia-ecosystem-logo-v5-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-1024.png', '/assets/icons/ilahia-ecosystem-maskable-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-maskable-1024.png', '/assets/icons/ilahia-ecosystem-final-transparent-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-180.png', '/assets/icons/ilahia-ecosystem-appicon-final-192.png', '/assets/icons/ilahia-ecosystem-appicon-final-512.png', '/assets/icons/ilahia-ecosystem-appicon-final-1024.png', '/assets/icons/ilahia-ecosystem-appicon-final-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-maskable-512.png', '/assets/icons/ilahia-ecosystem-wordmark-gold.png']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage) {
     sendJson(res, 404, { error: 'Not found.' });
@@ -853,7 +853,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-mark-only-app-v29' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.05-lily-conversation-v30' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
