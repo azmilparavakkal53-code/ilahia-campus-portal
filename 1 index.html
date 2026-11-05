@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ecosystem">
-    <link rel="manifest" href="/manifest.webmanifest?v=42">
+    <link rel="manifest" href="/manifest.webmanifest?v=43">
     <link rel="preload" as="image" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png">
     <link rel="shortcut icon" type="image/png" href="/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png"><meta name="msapplication-TileColor" content="#061534"><meta name="msapplication-TileImage" content="/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png">
@@ -17265,11 +17265,18 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const voices = window.speechSynthesis.getVoices();
       const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
       const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
-      const femaleVoicePattern = /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english|microsoft.*female/i;
-      const feminineVoice = sameLanguage.find(voice => femaleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
-      const otherFemaleVoice = voices.find(voice => femaleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
-      const maleVoicePattern = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex)(\W|$)/i;
+      const feminineVoicePatterns = {
+        en: /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english/i,
+        ml: /female|malayalam.*female|female.*malayalam|manju|sreeja|anitha|deepa|google.*മലയാളം/i,
+        hi: /female|swara|kalpana|heera|aditi|kavya|google.*(हिन्दी|hindi)/i,
+        ta: /female|pallavi|kavitha|kalpana|revathi|deepa|google.*(தமிழ்|tamil)/i,
+        ar: /female|hoda|maha|amira|zainab|layla|fatima|noura|google.*(العربية|arabic)/i
+      };
+      const feminineVoicePattern = feminineVoicePatterns[lang] || feminineVoicePatterns.en;
+      const feminineVoice = sameLanguage.find(voice => feminineVoicePattern.test(voice.name + ' ' + voice.voiceURI));
+      const maleVoicePattern = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex|hemant|ravi|valluvar|maged)(\W|$)/i;
       const unmarkedVoice = sameLanguage.find(voice => !maleVoicePattern.test(voice.name + ' ' + voice.voiceURI));
+      // Web Speech has no standard gender metadata. Prefer a feminine voice in this language; never borrow another language's voice.
       utterance.voice = feminineVoice || unmarkedVoice || exactLanguage || sameLanguage[0] || null;
       window.speechSynthesis.speak(utterance);
     };
