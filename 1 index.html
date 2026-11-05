@@ -6025,12 +6025,11 @@
                     document.getElementById('teacherSkillVerificationSection')?.classList.toggle('hidden', session.role !== 'teacher');
                     void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(session.role === 'hod' ? [loadHodGatepasses()] : [])]);
                 } else if (session.role === 'admin') {
+                    // Preserve the valid session, but never reopen the private admin panel on app launch.
                     document.getElementById('portalModal').classList.add('hidden');
-                    document.getElementById('adminModal').classList.remove('hidden');
-                    document.getElementById('adminLoginCard').classList.add('hidden');
-                    document.getElementById('adminDashboardCard').classList.remove('hidden');
-                    updateAdminStats(); loadCampusMetricsIntoForm();
-                    void Promise.allSettled([loadAdminAIKnowledgeDatabase(), loadOfficeLeaveRequests(), loadOfficialSiteSyncStatus(), loadAdminCampusNotices()]);
+                    document.getElementById('adminModal').classList.add('hidden');
+                    document.getElementById('adminLoginCard').classList.remove('hidden');
+                    document.getElementById('adminDashboardCard').classList.add('hidden');
                 }
                 return true;
             } catch (_) { return false; }
@@ -6412,6 +6411,15 @@
         function closeAdminModal() { 
             document.getElementById('adminModal').classList.add('hidden'); 
         } 
+
+        // If the installed app is backgrounded or closed while the admin screen is open,
+        // leave the session valid but hide privileged content before the next launch.
+        window.addEventListener('pagehide', () => {
+            document.getElementById('adminModal')?.classList.add('hidden');
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) document.getElementById('adminModal')?.classList.add('hidden');
+        });
  
         async function verifyAdminLogin() { 
             if (!ensureBackendPageForLogin()) return;
@@ -17133,6 +17141,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
+  let pendingLilyVoiceTimer = 0;
+  let pendingLilyVoiceListener = null;
   let activeRecognition = null;
   let activeRecognitionPurpose = '';
   let activeRecognitionTarget = null;
@@ -17144,23 +17154,48 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   window.speakLilyText = (text, lang = currentLang) => {
     if (!lilyVoiceEnabled || !('speechSynthesis' in window) || !String(text || '').trim()) return false;
     window.speechSynthesis.cancel();
+    clearTimeout(pendingLilyVoiceTimer);
+    if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
+    pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
     utterance.lang = speechLocales[lang] || 'en-IN';
-    const voices = window.speechSynthesis.getVoices();
-    const languageMatches = voices.filter(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
-    const sameLanguage = languageMatches.length ? languageMatches : voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
-    const feminineVoice = sameLanguage.find(voice => /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|google us english/i.test(voice.name));
-    if (feminineVoice || sameLanguage[0]) utterance.voice = feminineVoice || sameLanguage[0];
-    utterance.pitch = 1.28;
-    utterance.rate = 0.91;
-    window.speechSynthesis.speak(utterance);
+    utterance.pitch = 1.38;
+    utterance.rate = 0.9;
+    let started = false;
+    const speakWithAvailableVoice = () => {
+      if (started || !lilyVoiceEnabled) return;
+      started = true;
+      clearTimeout(pendingLilyVoiceTimer);
+      if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
+      pendingLilyVoiceListener = null;
+      const voices = window.speechSynthesis.getVoices();
+      const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
+      const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
+      const feminineVoice = sameLanguage.find(voice => /female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|google.*female/i.test(voice.name));
+      if (feminineVoice || exactLanguage || sameLanguage[0]) utterance.voice = feminineVoice || exactLanguage || sameLanguage[0];
+      window.speechSynthesis.speak(utterance);
+    };
+    if (window.speechSynthesis.getVoices().length) speakWithAvailableVoice();
+    else {
+      const voicesLoaded = () => speakWithAvailableVoice();
+      pendingLilyVoiceListener = voicesLoaded;
+      window.speechSynthesis.addEventListener?.('voiceschanged', voicesLoaded, { once: true });
+      pendingLilyVoiceTimer = setTimeout(() => {
+        speakWithAvailableVoice();
+      }, 1400);
+    }
     return true;
   };
   window.toggleLilyVoice = () => {
     lilyVoiceEnabled = !lilyVoiceEnabled;
     const button = document.getElementById('lilyVoiceToggle');
     if (button) button.textContent = lilyVoiceEnabled ? 'Voice: on' : 'Voice: off';
-    if (!lilyVoiceEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (!lilyVoiceEnabled && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      clearTimeout(pendingLilyVoiceTimer);
+      if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
+      pendingLilyVoiceListener = null;
+    }
   };
   window.stopIlahiaSpeechRecognition = () => {
     if (activeRecognition) activeRecognition.stop();
