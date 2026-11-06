@@ -17816,11 +17816,28 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const published = { icet:['Agricultural Engineering','Artificial Intelligence & Cyber Security','Biomedical Engineering','Food Technology','Master of Business Administration','Master of Computer Applications','Physical Education'], arts:['Business Administration','Commerce','Computer Applications','Computer Science','Cyber Forensics','Economics','English','Logistics Management','Mathematics','Psychology'], poly:['Mechanical Engineering','Electrical and Electronics Engineering','Automobile Engineering'], law:['Legal Studies'], pharmacy:['Pharmacy'], school:['Mathematics','School Faculty Directory'], iti:['Trade Faculty Directory'], kmlps:['Primary School Faculty Directory'] };
       knownDepartments.push(...(published[routeCampus] || []));
       const normalizedQuery = normalizeDepartmentDirectoryLabel(query);
-      const aliases = label => { const n=normalizeDepartmentDirectoryLabel(label); const map={'computer science and engineering':['cse','computer science'],'computer applications':['bca','mca','computer application'],'artificial intelligence and cyber security':['ai','ai and ds','artificial intelligence','cyber security'],'mathematics':['maths','math'],'legal studies':['law department','law'],'school faculty directory':['school faculty','school department'],'primary school faculty directory':['primary school','kmlps'],'trade faculty directory':['trade','iti department']}; return [n,...(map[n]||[])]; };
+      const aliases = label => { const n=normalizeDepartmentDirectoryLabel(label); const map={'computer science and engineering':['cse','computer science'],'computer applications':['bca','mca','computer application'],'artificial intelligence and cyber security':['ai','ai and ds','artificial intelligence','cyber security'],'mathematics':['maths','math'],'legal studies':['law department'],'school faculty directory':['school faculty','school department'],'primary school faculty directory':['primary school','kmlps'],'trade faculty directory':['trade','iti department']}; return [n,...(map[n]||[])]; };
       const department = [...new Set(knownDepartments)].sort((a,b)=>b.length-a.length).find(label => aliases(label).some(alias => alias && normalizedQuery.includes(normalizeDepartmentDirectoryLabel(alias))));
       if (department) return { text: 'Opening the ' + department + ' page at ' + (collegeDatabase[routeCampus]?.name || 'the selected institute') + '.', action: async () => { if (currentActiveKey !== routeCampus) switchCollegePage(routeCampus); openDepartmentPage(routeCampus, department); closeLilyConversation(); } };
     }
     const infoCampusKey = askedCampus || (!onLanding() ? currentActiveKey : null);
+    const pageDepartment = activeDepartmentAIContext && activeDepartmentAIContext.campusKey === infoCampusKey ? activeDepartmentAIContext.departmentName : '';
+    const departmentQuestion = /\b(department|faculty|faculties|hod|head of department|programmes?|courses?|teachers?|staff|overview|details)\b/i.test(query);
+    if (pageDepartment && departmentQuestion && infoCampusKey && campusLeadershipProfiles[infoCampusKey]) {
+      const profile = campusLeadershipProfiles[infoCampusKey];
+      const targetKey = normalizeDepartmentDirectoryLabel(pageDepartment);
+      const people = profile.people.filter(person => normalizeDepartmentDirectoryLabel(person.department) === targetKey && !/\b(chairman|manager|trustee|director|secretary|treasurer|president)\b/i.test(person.role || ''));
+      const heads = people.filter(person => /\b(head of department|professor\s*&\s*head|\bhod\b)\b/i.test(person.role || ''));
+      const campus = collegeDatabase[infoCampusKey];
+      const words = targetKey.split(' ').filter(word => word.length > 3 && !['engineering','department','studies','science','and'].includes(word));
+      const programs = (campus?.offerings || []).filter(item => { const title=normalizeDepartmentDirectoryLabel(item.title || ''); return title.includes(targetKey) || words.some(word=>title.includes(word)); });
+      const lines = [pageDepartment + ' · ' + (campus?.shortName || campus?.name || infoCampusKey)];
+      lines.push('Listed faculty: ' + (people.length ? people.slice(0,8).map(person => person.name + ' — ' + person.role).join('; ') : 'No named faculty profile is available in the current institute directory.'));
+      lines.push('Department head: ' + (heads[0]?.name || 'Not listed in the current institute directory.'));
+      lines.push('Programmes in portal records: ' + (programs.length ? programs.map(item => item.title).join('; ') : 'No programme is directly linked to this department in the current portal records.'));
+      lines.push('Faculty names and programme availability reflect the records shown on this page; they may not represent the latest staffing or intake.');
+      return lines.join('\n');
+    }
     const infoCampus = infoCampusKey ? collegeDatabase[infoCampusKey] : null;
     const campusInfoTopics = [
       { pattern: /\b(admission|admissions|apply|application|course|courses|program|programmes|programme|degree|eligib|keam)\b|പ്രവേശനം|प्रवेश|சேர்க்கை|القبول/, value: 'admissionSummary', label: 'admission and courses' },
@@ -17874,7 +17891,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
     try {
-      const response = await fetch('/api/ai-chat', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'campus', query: question.slice(0, 2000), campusKey: currentActiveKey, conversation: mascotConversationHistory.slice(-8) }) });
+      const response = await fetch('/api/ai-chat', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'campus', query: question.slice(0, 2000), campusKey: currentActiveKey || activeDepartmentAIContext?.campusKey, departmentContext: activeDepartmentAIContext?.departmentName || '', conversation: mascotConversationHistory.slice(-8) }) });
       const data = await response.json().catch(() => ({}));
       if (response.ok && typeof data.answer === 'string' && data.answer.trim()) return data.answer.trim();
     } catch (_) {}
