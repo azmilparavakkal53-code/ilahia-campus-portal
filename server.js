@@ -68,6 +68,25 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const IVY_ELEVENLABS_VOICE_ID = 'BlgEcC0TfWpBak7FmvHW';
 const ivyVoiceRateLimits = new Map();
+function getIvyElevenLabsApiKey() {
+  const fromEnvironment = String(process.env.ELEVENLABS_API_KEY || '').trim();
+  if (fromEnvironment) return fromEnvironment;
+  const candidates = [process.env.ELEVENLABS_API_KEY_FILE, '/etc/secrets/ELEVENLABS_API_KEY', path.join(ROOT, 'ELEVENLABS_API_KEY')].filter(Boolean);
+  try {
+    for (const filename of fs.readdirSync('/etc/secrets')) {
+      if (/^ELEVENLABS_API_KEY(?:\.[a-z0-9_-]+)?$/i.test(filename)) candidates.push(path.join('/etc/secrets', filename));
+    }
+  } catch {}
+  for (const filename of [...new Set(candidates)]) {
+    try {
+      const content = fs.readFileSync(filename, 'utf8').trim();
+      const assignment = content.match(/^ELEVENLABS_API_KEY\s*=\s*([\s\S]+)$/m);
+      const value = (assignment ? assignment[1] : content).trim().replace(/^['"]|['"]$/g, '');
+      if (value) return value;
+    } catch {}
+  }
+  return '';
+}
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
@@ -983,7 +1002,7 @@ const server = http.createServer(async (req, res) => {
       let voiceOriginHost = '';
       try { voiceOriginHost = req.headers.origin ? new URL(req.headers.origin).host : ''; } catch { /* Reject malformed origins. */ }
       if (!voiceOriginHost || voiceOriginHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin voice request rejected.' }); return; }
-      const apiKey = String(process.env.ELEVENLABS_API_KEY || '').trim();
+      const apiKey = getIvyElevenLabsApiKey();
       if (!apiKey) { sendJson(res, 503, { error: 'ElevenLabs voice is not configured.' }); return; }
       const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim().slice(0, 100);
       const now = Date.now();
