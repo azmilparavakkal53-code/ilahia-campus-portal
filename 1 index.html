@@ -59,7 +59,19 @@
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
-        .trust-mascot-character { width:5.5rem; height:11.4rem; flex:none; overflow:visible; animation:none; filter:drop-shadow(0 5px 8px #02081770); }
+        .mila-animation-stage { position:relative; width:5.05rem; height:11.12rem; flex:none; overflow:visible; filter:drop-shadow(0 5px 8px #02081770); }
+        .trust-mascot-character { display:block; width:100%; height:100%; object-fit:contain; }
+        .mila-arm-overlay,.mila-blink-overlay { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+        .mila-wave-arm { transform-box:view-box; transform-origin:74% 32%; animation:ilahia-wave-arm 3.2s ease-in-out infinite; }
+        .mila-wave-hand { transform-box:view-box; transform-origin:93% 23.5%; animation:ilahia-wave-hand 1.15s ease-in-out infinite; }
+        .mila-blink-overlay { opacity:0; animation:ilahia-mascot-blink 5.2s ease-in-out infinite; }
+        #trustMascotMover.is-emotion-excited .mila-wave-arm,#trustMascotMover.is-emotion-happy .mila-wave-arm { animation:ilahia-wave-arm 1.4s ease-in-out infinite; }
+        #trustMascotMover.is-emotion-sad .mila-wave-arm { animation:ilahia-comfort-arm 1.8s ease-in-out infinite; }
+        @keyframes ilahia-wave-arm { 0%,100% { transform:rotate(0deg); } 28% { transform:rotate(-4deg); } 66% { transform:rotate(2deg); } }
+        @keyframes ilahia-wave-hand { 0%,100% { transform:rotate(0deg); } 25% { transform:rotate(-13deg); } 50% { transform:rotate(10deg); } 75% { transform:rotate(-8deg); } }
+        @keyframes ilahia-comfort-arm { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(-2deg); } }
+        @keyframes ilahia-mascot-blink { 0%,91%,100% { opacity:0; } 92.5%,95% { opacity:1; } }
+        @media (prefers-reduced-motion:reduce) { .mila-wave-arm,.mila-wave-hand,.mila-blink-overlay { animation:none !important; } }
         .nila-standing-legs { pointer-events:none; }
         .nila-thinking-mark { display:none; transform-box:fill-box; transform-origin:center; }
         .nila-face-mood { display:none; pointer-events:none; transform-box:view-box; transform-origin:59.4% 20.8%; transform:scale(1.35); }
@@ -336,104 +348,26 @@
             </aside>
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Mila the Ilahia Trust welcome mascot">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Mila, the campus conversation mascot. She expresses emotions and dances during celebrations. Tap to chat." title="Mila is here. Tap her to chat; she dances when celebrating.">
-                            <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Mila, the Ilahia student mascot">
-  <defs>
-    <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
-    <radialGradient id="nila-face-skin" cx="43%" cy="34%" r="74%"><stop stop-color="#ffe1cf"/><stop offset=".54" stop-color="#f5b9a0"/><stop offset=".86" stop-color="#eea18a"/><stop offset="1" stop-color="#e58e7c"/></radialGradient><linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient><radialGradient id="nila-iris" cx="42%" cy="35%" r="72%"><stop stop-color="#95664d"/><stop offset=".62" stop-color="#573528"/><stop offset="1" stop-color="#261a20"/></radialGradient><radialGradient id="nila-blush"><stop stop-color="#ef8391" stop-opacity=".58"/><stop offset="1" stop-color="#ef8391" stop-opacity="0"/></radialGradient>
-    <linearGradient id="nila-shoe" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#344263"/><stop offset=".52" stop-color="#151a2d"/><stop offset="1" stop-color="#080b17"/></linearGradient>
-  </defs>
-<g class="mila-rig">
-  <ellipse cx="342" cy="1336" rx="89" ry="7" fill="#09172c" opacity=".18"/>
-  <g class="mila-hair mila-hair-back">
-    <path d="M257 315C224 218 236 102 337 77 424 54 493 117 492 230c0 98 20 209 36 294l-31 91-57-52-169 20-62-54 25-103c-24-38-33-75-18-111Z" fill="#39201d" stroke="#2a1719" stroke-width="10"/>
-    <g fill="#4c2a24" stroke="#2a1719" stroke-width="7"><circle cx="272" cy="188" r="57"/><circle cx="302" cy="119" r="51"/><circle cx="375" cy="91" r="53"/><circle cx="440" cy="124" r="52"/><circle cx="477" cy="191" r="49"/><circle cx="249" cy="266" r="48"/><circle cx="477" cy="267" r="47"/><circle cx="260" cy="343" r="52"/><circle cx="474" cy="343" r="55"/><circle cx="246" cy="421" r="48"/><circle cx="466" cy="421" r="52"/><circle cx="259" cy="497" r="48"/><circle cx="446" cy="491" r="55"/></g>
-    <g fill="none" stroke="#8b5844" stroke-width="8" stroke-linecap="round" opacity=".8"><path d="M258 176q18-38 47-43M354 91q31-21 56 0M434 112q34 19 34 48M235 253q-20 30-3 49M489 287q18 23 2 44M246 389q-17 29 1 50M450 458q27-15 35 9"/></g>
-  </g>
-  <g class="mila-backpack"><path d="M220 473Q184 482 177 532L165 747Q168 798 221 811L276 793 291 517Z" fill="#ec77ad" stroke="#b84f85" stroke-width="9"/><path d="M190 575Q224 548 253 574L248 661Q215 682 185 661Z" fill="#f5a2c9" stroke="#d46e9f" stroke-width="6"/><path d="M211 495Q246 477 278 504L301 604" fill="none" stroke="#f49ac5" stroke-width="18" stroke-linecap="round"/></g>
-  <g class="mila-legs"><g class="mila-leg mila-leg-left"><path d="M292 933Q282 1010 297 1094L308 1196Q322 1220 350 1200L344 1087Q359 1007 371 944Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="5"/><path d="M302 1178Q327 1193 354 1179L361 1230Q337 1247 307 1231Z" fill="#fffaf4" stroke="#d8d7e1" stroke-width="4"/><path d="M303 1226Q331 1240 362 1227Q382 1256 382 1317Q342 1341 277 1324Q282 1263 303 1226Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="7"/><path d="M298 1311q38 13 81 1" fill="none" stroke="#8b93a8" stroke-width="5" stroke-linecap="round"/></g><g class="mila-leg mila-leg-right"><path d="M365 942Q380 1012 370 1094L369 1196Q382 1220 410 1200L417 1086Q433 1011 438 945Z" fill="url(#nila-skin)" stroke="#c47d68" stroke-width="5"/><path d="M370 1179Q394 1193 421 1179L430 1230Q405 1247 375 1231Z" fill="#fffaf4" stroke="#d8d7e1" stroke-width="4"/><path d="M373 1226Q402 1240 431 1227Q452 1256 452 1317Q412 1341 347 1324Q352 1263 373 1226Z" fill="url(#nila-shoe)" stroke="#101528" stroke-width="7"/><path d="M368 1311q38 13 81 1" fill="none" stroke="#8b93a8" stroke-width="5" stroke-linecap="round"/></g></g>
-  <g class="mila-torso">
-    <path d="M284 446Q319 419 365 427L424 425Q472 435 493 468L525 657 492 960Q401 1003 278 960L251 655Z" fill="#172340" stroke="#101a32" stroke-width="9"/>
-    <path d="M283 453Q313 429 348 432L367 481 397 482 422 431Q464 431 490 463L458 554 486 648Q400 679 277 647L307 548Z" fill="#fffaf4" stroke="#ded9d3" stroke-width="6"/>
-    <path d="M352 441L391 457 427 438 411 499 390 516 365 496Z" fill="#24375f"/>
-    <path d="M274 623Q392 655 506 621L529 794Q507 916 495 960Q396 990 278 959L250 792Z" fill="#202d50" stroke="#121d38" stroke-width="8"/>
-    <path d="M281 651Q387 679 504 648M273 758Q390 787 515 756M265 864Q388 889 504 860" fill="none" stroke="#35466e" stroke-width="7" opacity=".8"/>
-    <path d="M332 650L356 960M409 659L399 964" fill="none" stroke="#111d3c" stroke-width="6" opacity=".8"/>
-  </g>
-  <g class="mila-arm mila-arm-left" transform="rotate(-8 282 476)">
-    <path d="M282 469Q251 461 237 488L211 554Q203 578 221 590L241 594Q256 583 264 557L293 518Z" fill="#fffaf4" stroke="#ddd7d1" stroke-width="6"/>
-    <g class="mila-hand-left" transform="translate(226 575) scale(.60) translate(-226 -575)">
-    <path d="M226 575Q206 556 193 530L168 480Q158 462 171 447 185 434 199 452L222 482 194 421Q187 400 204 392 220 385 231 405L252 449 241 393Q239 371 258 370 277 370 279 394L283 447 291 403Q295 382 313 388 330 395 322 416L305 473Q299 513 275 570Z" fill="url(#nila-skin)" stroke="#c9806b" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M204 475l27 34m22-49 6 40m27-25-4 34" fill="none" stroke="#e8a58d" stroke-width="5" stroke-linecap="round"/>
-    </g>
-  </g>
-  <g class="mila-arm mila-arm-right" transform="rotate(6 481 474)">
-    <path d="M464 465Q494 450 511 476L532 551Q539 577 517 591L492 586Q480 571 478 547L450 510Z" fill="#fffaf4" stroke="#ddd7d1" stroke-width="6"/>
-    <g class="mila-hand-right" transform="translate(503 590) scale(.66) translate(-503 -590)">
-    <path d="M503 567Q525 551 540 563L573 584Q590 599 578 619 568 634 548 620L527 609 546 643Q554 661 536 671 519 678 508 659L486 628Q471 607 481 586Z" fill="url(#nila-skin)" stroke="#c9806b" stroke-width="5" stroke-linejoin="round"/>
-    </g>
-  </g>
-  <g class="mila-book"><path d="M455 532Q474 510 505 521L543 548 519 710Q482 727 454 706Z" fill="#f48fbd" stroke="#be5e91" stroke-width="8"/><path d="M471 534Q490 522 510 530L541 548 520 687Q494 698 464 692Z" fill="#fff2df" stroke="#d9a8a4" stroke-width="5"/><path d="M487 548Q504 536 523 543L550 557 530 699Q506 708 479 697Z" fill="#a990e9" stroke="#7766c3" stroke-width="6"/><path d="m504 583 12 10 14-8-5 17 12 10-17 1-7 15-5-16-17-4 14-9Z" fill="#fff0f5"/></g>
-  <g class="mila-head">
-  <g class="mila-neck"><path d="M341 379Q375 401 412 378L422 444Q382 470 335 440Z" fill="url(#nila-skin)"/></g>
-  <g class="mila-face-base">
-    <ellipse cx="374" cy="276" rx="151" ry="169" fill="url(#nila-face-skin)" stroke="#d98e79" stroke-width="4"/>
-    <ellipse cx="234" cy="303" rx="18" ry="27" fill="#f4b69d" stroke="#d48e78" stroke-width="3"/><ellipse cx="514" cy="291" rx="18" ry="27" fill="#f4b69d" stroke="#d48e78" stroke-width="3"/>
-    <path d="M282 221Q310 202 345 218M402 218Q434 199 465 220" fill="none" stroke="#59372f" stroke-width="11" stroke-linecap="round"/>
-    <g class="mila-eyes">
-      <g class="mila-eye-left">
-        <ellipse cx="325" cy="266" rx="43" ry="51" fill="#fffdf9" stroke="#dfad99" stroke-width="2.5"/>
-        <ellipse cx="328" cy="271" rx="30" ry="40" fill="url(#nila-iris)"/><ellipse cx="330" cy="276" rx="18" ry="29" fill="#171116"/>
-        <ellipse cx="338" cy="254" rx="11" ry="13" fill="#fff"/><ellipse cx="319" cy="282" rx="4.5" ry="6" fill="#fff" opacity=".88"/>
-        <path d="M285 252Q323 222 361 250" fill="none" stroke="#2d1d21" stroke-width="7" stroke-linecap="round"/>
-        <path d="M292 245l-13-16m27 8-7-19m22 13-2-18m24 19 5-15M292 292l-8 8m65-8 8 7" stroke="#39252a" stroke-width="3.4" stroke-linecap="round"/>
-      </g>
-      <g class="mila-eye-right">
-        <ellipse cx="423" cy="266" rx="43" ry="51" fill="#fffdf9" stroke="#dfad99" stroke-width="2.5"/>
-        <ellipse cx="420" cy="271" rx="30" ry="40" fill="url(#nila-iris)"/><ellipse cx="419" cy="276" rx="18" ry="29" fill="#171116"/>
-        <ellipse cx="428" cy="254" rx="11" ry="13" fill="#fff"/><ellipse cx="409" cy="282" rx="4.5" ry="6" fill="#fff" opacity=".88"/>
-        <path d="M386 250Q421 222 461 252" fill="none" stroke="#2d1d21" stroke-width="7" stroke-linecap="round"/>
-        <path d="m393 245-11-16m27 8-5-19m22 13 1-18m22 19 6-15m-66 75-8 7m65-8 8 7" stroke="#39252a" stroke-width="3.4" stroke-linecap="round"/>
-      </g>
-    </g>
-    <ellipse cx="277" cy="332" rx="33" ry="17" fill="url(#nila-blush)"/><ellipse cx="474" cy="332" rx="33" ry="17" fill="url(#nila-blush)"/>
-    <path class="mila-both-blink-line" d="M285 270Q324 293 362 269M383 269Q422 292 461 270" fill="none" stroke="#39252a" stroke-width="8" stroke-linecap="round"/>
-    <path d="M361 302Q374 293 387 302Q385 317 374 320Q363 316 361 302Z" fill="#e99580" stroke="#dc8e78" stroke-width="2"/><ellipse cx="368" cy="300" rx="4" ry="2.5" fill="#ffe4d7" opacity=".95"/><ellipse cx="381" cy="307" rx="3" ry="2" fill="#d88477" opacity=".55"/>
-    <g class="mila-mouth-base">
-    <path d="M374 326Q416 303 459 322Q453 367 417 375Q382 367 374 326Z" fill="#702a3e" stroke="#8e384b" stroke-width="4"/>
-    <path d="M383 324Q416 311 450 324Q443 341 417 341Q397 339 383 324Z" fill="#fffaf3"/>
-    <path d="M388 350Q418 360 446 343Q435 370 416 371Q397 368 388 350Z" fill="#f17891"/>
-    <path d="M383 324Q416 311 450 324" fill="none" stroke="#fffdf7" stroke-width="4" stroke-linecap="round"/>
-    </g>
-  </g>
-  <g class="mila-hair mila-hair-front"><path d="M247 272Q222 159 284 93 335 37 418 73 488 104 497 203 458 167 425 154 382 204 313 207L282 298Z" fill="#39201d" stroke="#2a1719" stroke-width="9"/><path d="M276 164Q294 95 358 79M358 91Q411 74 449 122" fill="none" stroke="#8b5844" stroke-width="9" stroke-linecap="round"/></g>
-  <g class="mila-bow"><path d="M269 140Q221 82 213 137 212 180 266 190 228 227 255 246 279 253 298 195Z" fill="#f18aba" stroke="#c95991" stroke-width="7"/><path d="M282 155Q326 97 339 130 350 168 294 191 332 205 314 233 296 249 276 194Z" fill="#ffabd1" stroke="#c95991" stroke-width="7"/><circle cx="278" cy="185" r="15" fill="#ffd5e8" stroke="#c95991" stroke-width="5"/></g>
-</g>
-  </g>
-
-
-  <g class="mila-mood-overlay">
-  <g class="nila-face-mood nila-face-angry"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M394 215 344 232m56-39 42-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/><path d="m474 244 12-14m-5 28 18-3" stroke="#dc4b56" stroke-width="5" stroke-linecap="round"/>
-  <g class="nila-face-mood nila-face-sad"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><path d="M394 333Q417 308 444 329" fill="none" stroke="#763d45" stroke-width="7" stroke-linecap="round"/><path d="M293 219Q316 200 344 218m55-35Q420 165 446 179" fill="none" stroke="#59403b" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Zm112-31c-10 15-9 24 1 26 9-1 10-9-1-26Z" fill="#8ddcf1" stroke="#e5fbff" stroke-width="2"/></g>
-  <g class="nila-face-mood nila-face-surprised"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><ellipse cx="420" cy="321" rx="13" ry="20" fill="#6d2938"/><ellipse cx="420" cy="333" rx="8" ry="4" fill="#ef8290"/><path d="m292 206-8-14m177-3 11-14" stroke="#6371b8" stroke-width="5" stroke-linecap="round"/></g>
-  <g class="nila-face-mood nila-face-thinking"><path d="M294 216Q318 205 344 220M397 183Q420 174 443 183" fill="none" stroke="#563b34" stroke-width="7" stroke-linecap="round"/><text x="468" y="205" font-size="52" font-weight="900" fill="#7657bf">?</text></g>
-  <g class="nila-face-mood nila-face-sleepy"><path d="M290 254Q323 234 357 254Q335 279 304 273Zm105-38Q424 201 452 219Q429 241 402 238Z" fill="#f4b79d"/><path d="M292 255Q323 241 353 256m46-39Q421 209 448 220" fill="none" stroke="#5b332d" stroke-width="7" stroke-linecap="round"/><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><ellipse cx="420" cy="321" rx="9" ry="15" fill="#773444"/></g>
-  <g class="nila-face-mood nila-face-shy"><path d="M286 302q20-12 39 0m66-34q20-12 40 0" fill="none" stroke="#f1849a" stroke-width="11" stroke-linecap="round" opacity=".72"/><path d="m480 195 6-7 6 7-6 7Z" fill="#f27ca0"/></g>
-  <g class="nila-face-mood nila-face-excited"><path d="M309 248 313 260l13 1-10 8 3 13-10-7-11 7 4-13-10-8 13-1Zm101-38 4 11 12 1-9 7 3 12-10-6-10 6 4-12-9-7 12-1Z" fill="#ffd75f" stroke="#fff8d9" stroke-width="2"/><path d="M474 269 481 252m11 26 7-16" stroke="#ffc94d" stroke-width="5" stroke-linecap="round"/></g>
-  <g class="nila-face-mood nila-face-embarrassed"><path d="M286 302q20-12 39 0m66-34q20-12 40 0" fill="none" stroke="#f1849a" stroke-width="13" stroke-linecap="round" opacity=".8"/><path d="M479 220c-9 12-8 19 1 20 8-1 8-8-1-20Z" fill="#89d9ef"/></g>
-  <g class="nila-face-mood nila-face-scared"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><ellipse cx="420" cy="321" rx="13" ry="20" fill="#6d2938"/><path d="M292 216Q310 191 344 209m53-36Q422 157 447 173" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Zm112-31c-10 15-9 24 1 26 9-1 10-9-1-26Z" fill="#8ddcf1"/></g>
-  <g class="nila-face-mood nila-face-disappointed"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><path d="M394 333Q417 308 444 329" fill="none" stroke="#763d45" stroke-width="7" stroke-linecap="round"/><path d="M293 229Q317 212 344 226m55-37Q420 181 446 190" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="M308 277c-11 16-9 25 1 27 10-1 11-10-1-27Z" fill="#8ddcf1"/></g>
-  <g class="nila-face-mood nila-face-love"><path d="M308 248c-8-13-27 0 0 20 27-20 8-33 0-20Zm104-38c-8-13-27 0 0 20 27-20 8-33 0-20Z" fill="#ff7294" stroke="#fff2f4" stroke-width="2"/></g>
-  <g class="nila-face-mood nila-face-confused"><path class="nila-mouth-cover" d="M394 304Q418 293 446 304Q445 329 429 337Q407 340 395 328Z"/><path d="M404 321q13 9 27-2" fill="none" stroke="#763d45" stroke-width="6" stroke-linecap="round"/><path d="M291 216Q320 204 345 221m54-37Q422 176 447 187" fill="none" stroke="#563b34" stroke-width="7" stroke-linecap="round"/><text x="475" y="205" font-size="48" font-weight="900" fill="#7657bf">?</text></g>
-  <g class="nila-face-mood nila-face-tired"><path d="M290 253Q323 233 357 253Q335 276 304 272Zm105-38Q424 200 452 217Q429 238 402 236Z" fill="#f4b79d"/><path d="M292 254Q323 239 353 255m46-38Q421 208 448 218" fill="none" stroke="#5b332d" stroke-width="7" stroke-linecap="round"/><text x="474" y="184" font-size="27" font-weight="800" fill="#625baa">z</text></g>
-  <g class="nila-face-mood nila-face-proud"><path d="M293 257Q323 274 350 255m49-38Q423 232 447 215" fill="none" stroke="#563b34" stroke-width="8" stroke-linecap="round"/><path d="m474 183 7-15 7 15 16 2-12 11 3 16-14-8-13 8 3-16-12-11Z" fill="#ffd35e" stroke="#fff1b5" stroke-width="2"/></g>
-  <g class="nila-face-mood nila-face-grumpy"><path class="nila-mouth-cover" d="M378 309Q417 290 457 306Q454 364 418 372Q383 366 378 309Z"/><path d="M393 321Q417 304 443 319" fill="none" stroke="#71323c" stroke-width="8" stroke-linecap="round"/><path d="M294 211 345 231m54-39 45-18" stroke="#563329" stroke-width="10" stroke-linecap="round"/></g>
-
-  <g class="nila-thinking-mark"><circle cx="536" cy="156" r="27" fill="#fffaf0" stroke="#efc45d" stroke-width="5"/><circle cx="573" cy="125" r="7" fill="#fffaf0" stroke="#efc45d" stroke-width="4"/><circle cx="590" cy="106" r="4" fill="#fffaf0" stroke="#efc45d" stroke-width="3"/><circle cx="536" cy="147" r="3.5" fill="#6a527c"/><circle cx="547" cy="147" r="3.5" fill="#6a527c"/><path d="M531 162c4 4 9 4 13 0" fill="none" stroke="#6a527c" stroke-width="3" stroke-linecap="round"/></g>
-</g>
-</g>
-</svg>
+                    <div id="trustMascotStage" aria-label="Mila’s campus conversation greeting">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Open Mila’s campus chat" title="Open Mila’s campus chat">
+                            <div class="mila-animation-stage" aria-label="Mila, Ilahia campus companion">
+                                <img class="trust-mascot-character" src="assets/mascots/ilahia-goldhoodie.png" alt="Mila wearing the Ilahia navy and gold hoodie" loading="eager" decoding="async">
+                                <svg class="mila-arm-overlay" viewBox="0 0 684 1508" aria-hidden="true" focusable="false">
+                                  <defs><linearGradient id="mila-wave-sleeve" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172744"/><stop offset=".55" stop-color="#0b1730"/><stop offset="1" stop-color="#26385a"/></linearGradient><linearGradient id="mila-wave-skin" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#ffd8c5"/><stop offset=".55" stop-color="#f5b69d"/><stop offset="1" stop-color="#e9987f"/></linearGradient></defs>
+                                  <g class="mila-wave-arm">
+                                    <path d="M482 480 C514 457 548 450 572 422 C592 398 604 371 614 347 L644 363 C636 403 624 436 604 466 C582 498 552 523 518 538 L492 522 Z" fill="url(#mila-wave-sleeve)" stroke="#081226" stroke-width="7" stroke-linejoin="round"/>
+                                    <path d="M605 363 Q615 347 610 330 L602 309 Q598 299 605 295 Q613 292 619 304 L626 322 L624 293 Q624 283 633 282 Q642 283 643 295 L647 321 L653 300 Q657 291 665 296 Q671 301 667 311 L659 339 Q654 362 638 378 Q623 389 610 379Z" fill="url(#mila-wave-skin)" stroke="#cf846e" stroke-width="4" stroke-linejoin="round"/>
+                                    <path d="M612 357 Q624 363 638 357" fill="none" stroke="#df9a82" stroke-width="3" stroke-linecap="round"/>
+                                  </g>
+                                </svg>
+                                <svg class="mila-blink-overlay" viewBox="0 0 684 1508" aria-hidden="true" focusable="false">
+                                  <defs><radialGradient id="mila-blink-skin" cx="44%" cy="35%" r="75%"><stop stop-color="#ffd9c6"/><stop offset=".62" stop-color="#f5b9a5"/><stop offset="1" stop-color="#efa58f"/></radialGradient></defs>
+                                  <path d="M199 277 Q245 240 297 270 Q287 306 250 310 Q214 304 199 277Z" fill="url(#mila-blink-skin)"/>
+                                  <path d="M202 276 Q248 301 294 274" fill="none" stroke="#633a34" stroke-width="5" stroke-linecap="round"/>
+                                  <path d="M344 270 Q389 238 438 266 Q430 301 393 305 Q360 299 344 270Z" fill="url(#mila-blink-skin)"/>
+                                  <path d="M348 269 Q391 296 435 269" fill="none" stroke="#633a34" stroke-width="5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
                             <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Mila! Tap me for campus news and upcoming events.</span>
                         </div>
                     </div>
