@@ -566,7 +566,24 @@
             <p id="departmentCampusLabel" class="text-xs font-bold uppercase tracking-[0.18em] text-blue-700"></p>
             <h2 id="departmentPageTitle" class="mt-1 text-2xl font-extrabold text-slate-900 sm:text-3xl"></h2>
             <p id="departmentPageIntro" class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600"></p>
-            <div id="departmentFacultyGrid" class="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
+            <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 shadow-lg">
+                <div class="relative min-h-52 sm:min-h-64">
+                    <img id="departmentHeroImage" alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover opacity-55" onerror="this.hidden=true">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-blue-950/40"></div>
+                    <div class="relative flex min-h-52 items-center gap-5 p-6 sm:min-h-64 sm:p-10">
+                        <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-amber-300/50 bg-blue-950/80 text-4xl text-amber-300 shadow-xl sm:h-28 sm:w-28 sm:text-5xl"><i id="departmentHeroIcon" class="fa-solid fa-building-columns" aria-hidden="true"></i></div>
+                        <div><p id="departmentHeroCampus" class="text-xs font-bold uppercase tracking-[.18em] text-amber-200"></p><h3 id="departmentHeroTitle" class="mt-2 text-2xl font-black text-white sm:text-4xl"></h3><p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-100">Department overview, published faculty and programme details for this institute.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 grid gap-3 sm:grid-cols-3">
+                <article class="rounded-xl border border-slate-200 bg-white p-4"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Listed faculty</p><p id="departmentFacultyCount" class="mt-1 text-xl font-extrabold text-slate-900">—</p></article>
+                <article class="rounded-xl border border-slate-200 bg-white p-4"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Department head</p><p id="departmentHodName" class="mt-1 text-sm font-bold text-slate-900">Not listed</p></article>
+                <article class="rounded-xl border border-slate-200 bg-white p-4"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Published programmes</p><p id="departmentProgramCount" class="mt-1 text-xl font-extrabold text-slate-900">—</p></article>
+            </div>
+            <section class="mt-7 rounded-xl border border-slate-200 bg-white p-5"><h3 class="text-lg font-extrabold text-slate-900">Programmes linked to this department</h3><p class="mt-1 text-xs text-slate-500">Only programmes listed in this institute’s portal records appear here. Current intake and availability may change.</p><div id="departmentProgramList" class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div></section>
+            <div class="mt-8"><div class="mb-4"><h3 class="text-lg font-extrabold text-slate-900">Faculty directory</h3><p class="mt-1 text-xs text-slate-500">Names and portraits are shown only when present in the institute profile. A missing listing does not mean the department has no staff.</p></div><div id="departmentFacultyGrid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"></div></div>
+            <div class="mt-7 flex flex-wrap gap-3"><a id="departmentOfficialLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm font-bold text-blue-800 hover:bg-blue-50">Department source <i class="fa-solid fa-arrow-up-right-from-square"></i></a><button type="button" onclick="askIraAboutCurrentDepartment()" class="inline-flex items-center gap-2 rounded-lg bg-blue-800 px-4 py-2 text-sm font-bold text-white hover:bg-blue-900"><i class="fa-regular fa-comments"></i> Ask Ira about this department</button></div>
         </div>
     </section>
     <!-- Institution Overview Section -->
@@ -2499,6 +2516,32 @@
         };
 
         let departmentPageReturnState = null;
+        let activeDepartmentAIContext = null;
+        function departmentHeroIconFor(name) {
+            const text = String(name || '').toLowerCase();
+            if (/computer|artificial intelligence|cyber|data science|application/.test(text)) return 'fa-microchip';
+            if (/electrical|electronics|biomedical|physics/.test(text)) return 'fa-bolt';
+            if (/mechanical|automobile|automotive|engineering|agricultural|food technology/.test(text)) return 'fa-gears';
+            if (/civil|architecture/.test(text)) return 'fa-helmet-safety';
+            if (/commerce|business|logistics|management/.test(text)) return 'fa-chart-line';
+            if (/law|legal/.test(text)) return 'fa-scale-balanced';
+            if (/pharmacy|health|medical/.test(text)) return 'fa-capsules';
+            if (/english|language|literature/.test(text)) return 'fa-book-open';
+            if (/mathematics|maths|economics/.test(text)) return 'fa-square-root-variable';
+            if (/psychology/.test(text)) return 'fa-brain';
+            if (/school|primary|faculty directory/.test(text)) return 'fa-school';
+            if (/science/.test(text)) return 'fa-flask';
+            return 'fa-building-columns';
+        }
+        function askIraAboutCurrentDepartment() {
+            if (!activeDepartmentAIContext || typeof window.openLilyConversation !== 'function') return;
+            const prompt = 'Tell me about ' + activeDepartmentAIContext.departmentName + ' at ' + (collegeDatabase[activeDepartmentAIContext.campusKey]?.name || 'this institute');
+            void window.openLilyConversation().then(() => {
+                const input = document.getElementById('lilyConversationInput');
+                if (input) input.value = prompt;
+                if (typeof window.sendLilyMessage === 'function') void window.sendLilyMessage({ preventDefault() {} });
+            });
+        }
         function normalizeDepartmentDirectoryLabel(label) {
             const normalized = String(label || '').trim().toLocaleLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
             const aliases = {
@@ -2584,6 +2627,27 @@
             }
             const targetDepartmentKey = normalizeDepartmentDirectoryLabel(departmentName);
             const staff = profile.people.filter(person => (!/\b(principal|vice principal|manager|chairman|chairperson|trustee|director|secretary|treasurer|president|headmaster|headmistress|rector)\b/i.test(person.role || '') || /\bhead of department\b|\bhod\b/i.test(person.role || '')) && normalizeDepartmentDirectoryLabel(person.department) === targetDepartmentKey);
+            activeDepartmentAIContext = { campusKey, departmentName: String(departmentName) };
+            const campus = collegeDatabase[campusKey] || {};
+            const head = staff.find(person => /\b(head of department|professor\s*&\s*head|\bhod\b)\b/i.test(person.role || ''));
+            const image = document.getElementById('departmentHeroImage');
+            if (image) { image.hidden = false; image.alt = campus.image ? departmentName + ' and campus overview for ' + (campus.name || campusKey) : ''; image.src = campus.image || ''; }
+            document.getElementById('departmentHeroIcon').className = 'fa-solid ' + departmentHeroIconFor(departmentName);
+            document.getElementById('departmentHeroCampus').textContent = campus.name || campusKey;
+            document.getElementById('departmentHeroTitle').textContent = departmentName;
+            document.title = departmentName + ' | ' + (campus.shortName || campus.name || 'Ilahia Ecosystem');
+            document.getElementById('departmentFacultyCount').textContent = staff.length ? String(staff.length) : 'Not listed';
+            document.getElementById('departmentHodName').textContent = head?.name || 'Not listed in this profile';
+            const allOfferings = Array.isArray(campus.offerings) ? campus.offerings : [];
+            const deptWords = targetDepartmentKey.split(' ').filter(word => word.length > 3 && !['engineering','department','studies','science','and'].includes(word));
+            const programs = allOfferings.filter(item => {
+                const title = normalizeDepartmentDirectoryLabel(item.title || '');
+                return title.includes(targetDepartmentKey) || targetDepartmentKey.includes(title) || deptWords.some(word => title.includes(word));
+            });
+            document.getElementById('departmentProgramCount').textContent = programs.length ? String(programs.length) : 'Not listed';
+            document.getElementById('departmentProgramList').innerHTML = programs.length ? programs.map(item => '<article class="rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-sm font-bold text-slate-900">' + escapeHTML(item.title) + '</p><p class="mt-1 text-xs font-semibold text-blue-800">' + escapeHTML(item.cat || 'Programme') + '</p><p class="mt-2 text-xs leading-relaxed text-slate-600">' + escapeHTML(item.desc || '') + '</p></article>').join('') : '<p class="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600 sm:col-span-2 lg:col-span-3">No programme is linked to this department in the current institute records.</p>';
+            const sourceLink = document.getElementById('departmentOfficialLink');
+            if (sourceLink) sourceLink.href = staff.find(person => person.source)?.source || profile.source || '#';
             document.getElementById('departmentCampusLabel').textContent = collegeDatabase[campusKey]?.shortName || 'Institute';
             document.getElementById('departmentPageTitle').textContent = departmentName;
             const archived = [...new Set(staff.map(person => person.rosterYear).filter(Boolean))];
@@ -2603,18 +2667,30 @@
                 }).join('')
                 : '<div class="rounded-xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-600 sm:col-span-2 lg:col-span-4">No named staff profiles are available in this department directory yet.</div>';
             page.classList.remove('hidden');
+            if (!window.location.hash.startsWith('#department/')) history.pushState({ department: departmentName, campusKey }, '', '#department/' + encodeURIComponent(campusKey) + '/' + encodeURIComponent(departmentName));
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function closeDepartmentPage(shouldScroll = true) {
+        function closeDepartmentPage(shouldScroll = true, fromHistory = false) {
             const page = document.getElementById('departmentProfilePage');
             if (page) page.classList.add('hidden');
+            activeDepartmentAIContext = null;
+            document.title = (collegeDatabase[currentActiveKey]?.shortName || 'Ilahia Ecosystem') + ' | Ilahia Ecosystem';
             if (departmentPageReturnState) {
                 departmentPageReturnState.forEach(({ child, wasHidden }) => child.classList.toggle('hidden', wasHidden));
                 departmentPageReturnState = null;
             }
+            if (!fromHistory && window.location.hash.startsWith('#department/')) history.replaceState({}, '', window.location.pathname + window.location.search);
             if (shouldScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        window.addEventListener('popstate', () => {
+            if (activeDepartmentAIContext && !window.location.hash.startsWith('#department/')) closeDepartmentPage(false, true);
+        });
+        window.addEventListener('load', () => {
+            const match = window.location.hash.match(/^#department\/([^/]+)\/(.+)$/);
+            if (!match) return;
+            try { const campusKey = decodeURIComponent(match[1]); const departmentName = decodeURIComponent(match[2]); if (collegeDatabase[campusKey]) { switchCollegePage(campusKey); openDepartmentPage(campusKey, departmentName); } } catch (_) { /* ignore malformed department links */ }
+        }, { once: true });
 
         const studentAcademicModels = {
             icet: { attendance: '92.4%', attendanceNote: 'Engineering attendance · demo data', metric: 'Semester CGPA', value: '8.84 / 10', caption: 'Class percentile: 78th · demo data', marksTitle: 'Recent Internal Marks · Demo', marks: [['Data Structures', '46 / 50'], ['Engineering Mathematics', '42 / 50'], ['AI Lab', '24 / 25']] },
@@ -2932,7 +3008,7 @@
         }
         async function requestSmartAI(role, query, campusKey, conversation = []) {
               try {
-                  const memory = getMilaMemoryForAI(); const result = await requestAIKnowledge('/api/ai-chat', { method: 'POST', body: JSON.stringify({ role, query: String(query || '').slice(0, 2000), campusKey, conversation: Array.isArray(conversation) ? conversation.slice(-8) : [], memoryConsent: !!memory, personalization: memory }) });
+                  const memory = getMilaMemoryForAI(); const result = await requestAIKnowledge('/api/ai-chat', { method: 'POST', body: JSON.stringify({ role, query: String(query || '').slice(0, 2000), campusKey, departmentContext: activeDepartmentAIContext && activeDepartmentAIContext.campusKey === campusKey ? activeDepartmentAIContext.departmentName : '', conversation: Array.isArray(conversation) ? conversation.slice(-8) : [], memoryConsent: !!memory, personalization: memory }) });
                   return String(result?.answer || '').trim() || null;
               } catch (_) { return null; }
           }
@@ -17733,6 +17809,17 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       ['pharmacy', /\b(pharmacy college|pharmacy)\b/], ['kmlps', /\b(kmlps|k m l p s)\b/]
     ];
     const askedCampus = campusMatchers.find(([, pattern]) => pattern.test(query))?.[0] || null;
+    const routeIntent = /\b(take me|go to|open|show me|find|navigate to|visit)\b/i.test(query) && /\b(department|departments|faculty|hod|program|programme|school subjects|course page)\b/i.test(query);
+    const routeCampus = askedCampus || (!onLanding() ? currentActiveKey : null);
+    if (routeIntent && routeCampus && campusLeadershipProfiles[routeCampus]) {
+      const knownDepartments = [...new Set(campusLeadershipProfiles[routeCampus].people.map(person => String(person.department || '').trim()).filter(label => label && !/institute management/i.test(label)))];
+      const published = { icet:['Agricultural Engineering','Artificial Intelligence & Cyber Security','Biomedical Engineering','Food Technology','Master of Business Administration','Master of Computer Applications','Physical Education'], arts:['Business Administration','Commerce','Computer Applications','Computer Science','Cyber Forensics','Economics','English','Logistics Management','Mathematics','Psychology'], poly:['Mechanical Engineering','Electrical and Electronics Engineering','Automobile Engineering'], law:['Legal Studies'], pharmacy:['Pharmacy'], school:['Mathematics','School Faculty Directory'], iti:['Trade Faculty Directory'], kmlps:['Primary School Faculty Directory'] };
+      knownDepartments.push(...(published[routeCampus] || []));
+      const normalizedQuery = normalizeDepartmentDirectoryLabel(query);
+      const aliases = label => { const n=normalizeDepartmentDirectoryLabel(label); const map={'computer science and engineering':['cse','computer science'],'computer applications':['bca','mca','computer application'],'artificial intelligence and cyber security':['ai','ai and ds','artificial intelligence','cyber security'],'mathematics':['maths','math'],'legal studies':['law department','law'],'school faculty directory':['school faculty','school department'],'primary school faculty directory':['primary school','kmlps'],'trade faculty directory':['trade','iti department']}; return [n,...(map[n]||[])]; };
+      const department = [...new Set(knownDepartments)].sort((a,b)=>b.length-a.length).find(label => aliases(label).some(alias => alias && normalizedQuery.includes(normalizeDepartmentDirectoryLabel(alias))));
+      if (department) return { text: 'Opening the ' + department + ' page at ' + (collegeDatabase[routeCampus]?.name || 'the selected institute') + '.', action: async () => { if (currentActiveKey !== routeCampus) switchCollegePage(routeCampus); openDepartmentPage(routeCampus, department); closeLilyConversation(); } };
+    }
     const infoCampusKey = askedCampus || (!onLanding() ? currentActiveKey : null);
     const infoCampus = infoCampusKey ? collegeDatabase[infoCampusKey] : null;
     const campusInfoTopics = [
