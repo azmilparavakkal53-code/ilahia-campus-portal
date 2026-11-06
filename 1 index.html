@@ -17795,14 +17795,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     context: milaChatContext,
     async onVisitorMessage(message) {
       const text = String(message || '').trim();
-      const isExplicitReaction = /\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam|sad|hurt|lonely|bad day|failed|fail|lost(?: my| an?| the)? exam|exam went badly|couldn.t (?:pass|clear)|didn.t clear|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|thank|thanks|appreciate|love|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|surpris|unexpected|excited|amazing|awesome|great news|congrat|fantastic|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|نमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
+      const isExplicitReaction = /\b(hi|hello|hey|good|great|nice|wonderful|amazing|awesome|fantastic|excellent|happy|glad|enjoy|love|thank|thanks|grateful|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|congrat|sad|hurt|lonely|bad|worse|worst|awful|terrible|horrible|failed|fail|lost(?: my| an?| the)? exam|exam went badly|couldn.t (?:pass|clear)|didn.t clear|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|anxious|disappoint|tired|exhaust|stressed|unhappy|miserable|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|surpris|unexpected|excited|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
       const mood = isExplicitReaction ? (window.reactMilaToText?.(text, 'thinking') || 'thinking') : 'neutral';
-      const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited|completed my project)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
-        : /\b(sad|failed|fail|lost(?: my| an?| the)? exam|couldn.t (?:pass|clear)|didn.t clear|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
-        : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment|stuck|struggling)\b/i.test(text) ? 'Let us work through it one step at a time.'
+      const line = ['excited','proud'].includes(mood) ? 'That is wonderful news. I am so proud of you.'
+        : ['happy','love'].includes(mood) ? 'I am glad to hear that. Tell me more!'
+        : ['sad','disappointed','scared','tired'].includes(mood) ? 'I am sorry this feels difficult. I am here to listen.'
+        : mood === 'angry' ? 'I can tell this is frustrating. I am listening.'
+        : ['thinking','confused'].includes(mood) ? 'Let us work through it together.'
         : /\b(hello|hi|hey|good morning|good afternoon|good evening)\b/i.test(text) ? 'It is lovely to hear from you. How can I help today?'
-        : /\b(thank you|thanks|thankful|appreciate)\b/i.test(text) ? 'You are very welcome. I am glad I could help.'
-        : /\b(what|why|how|when|where|can you|could you|tell me)\b|\?/i.test(text) ? 'I am thinking it through. Let us find the answer together.'
         : 'I am listening. Tell me what is on your mind.';
       const turn = ++milaChatContext.turn; milaChatContext.userMood = mood; milaChatContext.lastUser = text; milaChatContext.lastReply = '';
       if (greeting) { greeting.textContent = await localized(line); setTimeout(() => { if (greeting && milaChatContext.turn === turn) greeting.textContent = defaultGreeting; }, 5200); }
@@ -17977,34 +17977,21 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   };
   window.reactMilaToText = (text, fallback = 'happy') => {
     const value = String(text || '').toLowerCase();
-    if (/\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/.test(value)) {
-      window.nilaGreetEmotion();
-      return 'happy';
+    if (/\b(not bad|not upset|not sad|not angry|not worried|feeling better|over it now)\b/i.test(value)) { window.expressMilaEmotion('happy', 4200); return 'happy'; }
+    if (/\b(angry|mad|frustrat|annoy|furious|grumpy|leave me alone|pissed|irritat)\b|ദേഷ്യം|കോപം|गुस्सा|கோபம்|غاضب/i.test(value)) { window.expressMilaEmotion('angry', 4800); return 'angry'; }
+    if (/\b(sad|hurt|lonely|bad day|bad|worse|worst|awful|terrible|horrible|fail|failed|failure|lost (?:my |an? |the )?exam|didn.t pass|didn.t clear|low marks|bad grade|miss you|cry|unhappy|sorry|down|low|stressed|stressful|miserable|not good|not feeling good|couldn.t complete|could not complete)\b|സങ്കടം|ദുഃഖം|ദുഖം|നിരാശ|दुखी|दुख|சோகம்|தோல்வி|حزين/i.test(value)) { window.nilaComfortEmotion(); return 'sad'; }
+    if (/\b(scared|afraid|fear|danger|worried|nervous|anxious|panic)\b|പേടി|ഭയം|डर|பயம்|خائف/i.test(value)) { window.expressMilaEmotion('scared', 4200); return 'scared'; }
+    if (/\b(disappoint|let down)\b|നിരാശ|निराश|ஏமாற்றம்|خيبة/i.test(value)) { window.expressMilaEmotion('disappointed', 4200); return 'disappointed'; }
+    if (/\b(tired|exhaust|long day|no energy|drained)\b|ക്ഷീണം|थका|சோர்வு|متعب/i.test(value)) { window.expressMilaEmotion('tired', 4200); return 'tired'; }
+    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship|promoted|got the job|got selected)\b|അഭിമാനം|गर्व|வெற்றி/i.test(value)) { window.nilaCelebrateEmotion(); return 'excited'; }
+    if (/\b(love|heart|thank|thanks|appreciate|sweet|grateful|kind)\b|സ്നേഹം|നന്ദി|प्यार|धन्यवाद|அன்பு|நன்றி|حب|شكرا/i.test(value)) { window.expressMilaEmotion('love', 4200); return 'love'; }
+    if (/\b(excited|amazing|awesome|great|good|nice|wonderful|fantastic|excellent|brilliant|beautiful|happy|glad|enjoy|fun|success|successful|congrat|positive|best day|good news|proud)\b|ആവേശം|സന്തോഷം|ഉത്സാഹം|उत्साहित|खुश|अच्छा|மகிழ்ச்சி|நல்ல|متحمس/i.test(value)) {
+      if (/\b(excited|amazing|awesome|wonderful|fantastic|excellent|congrat|best day|good news|successful|success)\b/i.test(value)) { window.nilaCelebrateEmotion(); return 'excited'; }
+      window.expressMilaEmotion('happy', 4200); return 'happy';
     }
-    if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(value)) {
-      window.nilaComfortEmotion();
-      return 'sad';
-    }
-    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b|അഭിമാനം|गर्व|வெற்றி/.test(value)) {
-      window.nilaCelebrateEmotion();
-      return 'excited';
-    }
+    if (/\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam)\b|مرحبا|السلام|नमस्ते|வணக்கம்|നമസ്കാരം/i.test(value)) { window.nilaGreetEmotion(); return 'happy'; }
     let mood = fallback;
-    if (/\b(angry|mad|frustrat|annoy|furious|grumpy|leave me alone|upset)\b|ദേഷ്യം|കോപം|गुस्सा|கோபம்|غاضب/.test(value)) mood = 'angry';
-    else if (/\b(sad|hurt|lonely|bad day|fail|miss you|cry|unhappy|sorry|down|low)\b|സങ്കടം|ദുഃഖം|दुखी|दुख|சோகம்|حزين/.test(value)) { window.nilaComfortEmotion(); return 'sad'; }
-    else if (/\b(embarrass|awkward|oops|my mistake)\b|നാണം|शर्मिंदा|வெட்கம்/.test(value)) mood = 'embarrassed';
-    else if (/\b(shy|blush)\b|ലജ്ജ|संकोच|கூச்சம்/.test(value)) mood = 'shy';
-    else if (/\b(scared|afraid|fear|danger|worried|nervous)\b|പേടി|ഭയം|डर|பயம்|خائف/.test(value)) mood = 'scared';
-    else if (/\b(sleep|bedtime|good night|nighty night)\b|ഉറക്കം|नींद|தூக்கம்|نعاس/.test(value)) mood = 'sleepy';
-    else if (/\b(tired|exhaust|long day|no energy)\b|ക്ഷീണം|थका|சோர்வு|متعب/.test(value)) mood = 'tired';
-    else if (/\b(programming|coding|subject|lesson|homework|assignment)\b/i.test(value) && /\b(don.t understand|confus|help|explain|stuck|struggling)\b/i.test(value)) mood = 'thinking';
-    else if (/\b(confus|don.t understand|unclear|what do you mean|lost)\b|ആശയക്കുഴപ്പം|उलझन|குழப்பம்|مرتبك/.test(value)) mood = 'confused';
-    else if (/\b(disappoint|let down)\b|നിരാശ|निराश|ஏமாற்றம்|خيبة/.test(value)) mood = 'disappointed';
-    else if (/\b(love|heart|thank|thanks|appreciate|sweet)\b|സ്നേഹം|നന്ദി|प्यार|धन्यवाद|அன்பு|நன்றி|حب|شكرا/.test(value)) { window.expressMilaEmotion('love', 4200); return 'love'; }
-    else if (/\b(proud|achieved|accomplish|won|winner|success)\b|അഭിമാനം|गर्व|பெருமை|فخور/.test(value)) { window.nilaCelebrateEmotion(); return 'proud'; }
-    else if (/\b(wow|surpris|unexpected|really\?)\b|അതിശയം|आश्चर्य|ஆச்சரியம்|مندهش/.test(value)) mood = 'surprised';
-    else if (/\b(excited|amazing|awesome|great news|congrat|fantastic)\b|ആവേശം|സന്തോഷം|उत्साहित|खुश|மகிழ்ச்சி|متحمس/.test(value)) { window.nilaCelebrateEmotion(); return 'excited'; }
-    else if (/\b(why|how|what|when|where|can you|could you|help|explain|tell me)\b|\?/.test(value)) mood = 'thinking';
+    if (/\b(programming|coding|subject|lesson|homework|assignment|help|explain|why|how|what|when|where|can you|could you|tell me)\b|[?؟]/i.test(value)) mood = 'thinking';
     window.expressMilaEmotion(mood);
     return mood;
   };
