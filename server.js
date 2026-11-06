@@ -1018,7 +1018,7 @@ const server = http.createServer(async (req, res) => {
       const upstream = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${IVY_ELEVENLABS_VOICE_ID}`, {
         method: 'POST',
         headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.48, similarity_boost: 0.78, style: 0.2, use_speaker_boost: true } }),
+        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.36, similarity_boost: 0.82, style: 0.58, use_speaker_boost: true } }),
         signal: AbortSignal.timeout(25_000)
       });
       if (!upstream.ok) { console.warn('[Ivy voice] ElevenLabs returned HTTP', upstream.status); sendJson(res, 502, { error: 'The selected voice could not generate audio.', providerStatus: upstream.status }); return; }
