@@ -109,7 +109,3 @@ Local-only demo security login: choose a campus, then use its distinct ID `<PREF
 The office can use the protected admin backup/restore workflow. Store exported
 backups privately because they contain portal records and uploaded documents.
 
-
-MASCOT VOICE (OPTIONAL)
-----------------------
-Ivy's speech uses the selected ElevenLabs voice when ELEVENLABS_API_KEY is set as an environment variable, or when a Render Secret File is named ELEVENLABS_API_KEY (an optional extension such as .txt is also accepted). A custom path can be set using ELEVENLABS_API_KEY_FILE. Keep the key out of HTML, GitHub, and chat. The app falls back to the device/browser speech voice if this variable is absent or ElevenLabs is temporarily unavailable. The configured voice ID is BlgEcC0TfWpBak7FmvHW; ElevenLabs usage is billed according to the account's plan.

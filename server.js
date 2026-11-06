@@ -66,27 +66,6 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
-const IVY_ELEVENLABS_VOICE_ID = 'BlgEcC0TfWpBak7FmvHW';
-const ivyVoiceRateLimits = new Map();
-function getIvyElevenLabsApiKey() {
-  const fromEnvironment = String(process.env.ELEVENLABS_API_KEY || '').trim();
-  if (fromEnvironment) return fromEnvironment;
-  const candidates = [process.env.ELEVENLABS_API_KEY_FILE, '/etc/secrets/ELEVENLABS_API_KEY', path.join(ROOT, 'ELEVENLABS_API_KEY')].filter(Boolean);
-  try {
-    for (const filename of fs.readdirSync('/etc/secrets')) {
-      if (/^ELEVENLABS_API_KEY(?:\.[a-z0-9_-]+)?$/i.test(filename)) candidates.push(path.join('/etc/secrets', filename));
-    }
-  } catch {}
-  for (const filename of [...new Set(candidates)]) {
-    try {
-      const content = fs.readFileSync(filename, 'utf8').trim();
-      const assignment = content.match(/^ELEVENLABS_API_KEY\s*=\s*([\s\S]+)$/m);
-      const value = (assignment ? assignment[1] : content).trim().replace(/^['"]|['"]$/g, '');
-      if (value) return value;
-    } catch {}
-  }
-  return '';
-}
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
@@ -979,7 +958,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-ivy-voice-v82' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-browser-voice-v83' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -997,36 +976,6 @@ const server = http.createServer(async (req, res) => {
       let originHost = '';
       try { originHost = new URL(req.headers.origin).host; } catch { /* Reject malformed origins below. */ }
       if (!originHost || originHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin request rejected.' }); return; }
-    }
-    if (req.method === 'POST' && pathname === '/api/mascot/voice') {
-      let voiceOriginHost = '';
-      try { voiceOriginHost = req.headers.origin ? new URL(req.headers.origin).host : ''; } catch { /* Reject malformed origins. */ }
-      if (!voiceOriginHost || voiceOriginHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin voice request rejected.' }); return; }
-      const apiKey = getIvyElevenLabsApiKey();
-      if (!apiKey) { sendJson(res, 503, { error: 'ElevenLabs voice is not configured.' }); return; }
-      const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim().slice(0, 100);
-      const now = Date.now();
-      const recent = (ivyVoiceRateLimits.get(ip) || []).filter(time => now - time < 60_000);
-      if (recent.length >= 15) { sendJson(res, 429, { error: 'Voice request limit reached. Try again shortly.' }, { 'Retry-After': '60' }); return; }
-      recent.push(now); ivyVoiceRateLimits.set(ip, recent);
-      if (ivyVoiceRateLimits.size > 2000) {
-        for (const [key, times] of ivyVoiceRateLimits) if (!times.some(time => now - time < 60_000)) ivyVoiceRateLimits.delete(key);
-      }
-      const body = await readJson(req, 16 * 1024);
-      const text = safeText(body.text, 1200);
-      if (!text) { sendJson(res, 400, { error: 'Text is required.' }); return; }
-      const upstream = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${IVY_ELEVENLABS_VOICE_ID}`, {
-        method: 'POST',
-        headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.36, similarity_boost: 0.82, style: 0.58, use_speaker_boost: true } }),
-        signal: AbortSignal.timeout(25_000)
-      });
-      if (!upstream.ok) { console.warn('[Ivy voice] ElevenLabs returned HTTP', upstream.status); sendJson(res, 502, { error: 'The selected voice could not generate audio.', providerStatus: upstream.status }); return; }
-      const audio = Buffer.from(await upstream.arrayBuffer());
-      if (!audio.length || audio.length > 15 * 1024 * 1024) { sendJson(res, 502, { error: 'The generated voice audio was invalid or too large.' }); return; }
-      res.writeHead(200, { 'Content-Type': 'audio/mpeg', 'Content-Length': audio.length, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
-      res.end(audio);
-      return;
     }
     if (req.method === 'GET' && pathname === '/api/admin/backup') {
       const session = getSession(req);

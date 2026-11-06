@@ -17449,64 +17449,46 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     button.setAttribute('aria-label', recording ? 'Stop and send voice message to Ivy' : 'Speak to Ivy');
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
-  let activeIvyAudio = null, activeIvyAudioUrl = '', activeIvyRequestController = null, ivySpeechRequestId = 0;
+  let ivySpeechRequestId = 0;
   const stopIvyAudio = () => {
-    activeIvyRequestController?.abort(); activeIvyRequestController = null;
-    if (activeIvyAudio) { activeIvyAudio.pause(); activeIvyAudio.src = ''; activeIvyAudio = null; }
-    if (activeIvyAudioUrl) { URL.revokeObjectURL(activeIvyAudioUrl); activeIvyAudioUrl = ''; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    clearTimeout(pendingLilyVoiceTimer);
+    if (pendingLilyVoiceListener && 'speechSynthesis' in window) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
+    pendingLilyVoiceListener = null;
     document.getElementById('trustMascotMover')?.classList.remove('is-talking');
   };
   window.speakLilyText = (text, lang = currentLang) => {
     const phrase = String(text || '').trim();
     if (!lilyVoiceEnabled || !phrase) return false;
+    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+      setVoiceStatus('Speech is not supported in this browser. You can still read Ivy’s replies.', 'lilyVoiceStatus');
+      return false;
+    }
     const requestId = ++ivySpeechRequestId;
     stopIvyAudio();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      clearTimeout(pendingLilyVoiceTimer);
-      if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
-      pendingLilyVoiceListener = null;
-    }
     const mascot = document.getElementById('trustMascotMover');
-    let fallbackStarted = false;
-    const speakWithBrowserVoice = () => {
-      if (fallbackStarted || requestId !== ivySpeechRequestId || !lilyVoiceEnabled || !('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return;
-      fallbackStarted = true;
-      const utterance = new SpeechSynthesisUtterance(phrase);
-      utterance.lang = speechLocales[lang] || 'en-IN'; utterance.pitch = 1.8; utterance.rate = 1.1;
-      utterance.onstart = () => mascot?.classList.add('is-talking');
-      utterance.onend = utterance.onerror = () => mascot?.classList.remove('is-talking');
-      const startBrowserSpeech = () => {
-        if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
-        const voices = window.speechSynthesis.getVoices();
-        const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
-        const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
-        const feminineVoicePatterns = { en:/female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english/i, ml:/female|malayalam.*female|manju|sreeja|anitha|deepa|google.*മലയാളം/i, hi:/female|swara|kalpana|heera|aditi|kavya|google.*(हिन्दी|hindi)/i, ta:/female|pallavi|kavitha|kalpana|revathi|deepa|google.*(தமிழ்|tamil)/i, ar:/female|hoda|maha|amira|zainab|layla|fatima|noura|google.*(العربية|arabic)/i };
-        const feminine = sameLanguage.find(voice => (feminineVoicePatterns[lang] || feminineVoicePatterns.en).test(voice.name + ' ' + voice.voiceURI));
-        const male = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex|hemant|ravi|valluvar|maged)(\W|$)/i;
-        const unmarked = sameLanguage.find(voice => !male.test(voice.name + ' ' + voice.voiceURI));
-        utterance.voice = feminine || unmarked || exactLanguage || sameLanguage[0] || null;
-        window.speechSynthesis.speak(utterance);
-      };
-      if (window.speechSynthesis.getVoices().length) startBrowserSpeech();
-      else { pendingLilyVoiceListener = startBrowserSpeech; window.speechSynthesis.addEventListener?.('voiceschanged', startBrowserSpeech, { once:true }); pendingLilyVoiceTimer = setTimeout(startBrowserSpeech, 1400); }
+    const utterance = new SpeechSynthesisUtterance(phrase);
+    utterance.lang = speechLocales[lang] || 'en-IN'; utterance.pitch = 1.8; utterance.rate = 1.12;
+    utterance.onstart = () => {
+      if (requestId !== ivySpeechRequestId) return;
+      mascot?.classList.add('is-talking');
+      setVoiceStatus('Ivy is speaking with your device’s voice.', 'lilyVoiceStatus');
     };
-    const requestController = new AbortController(); activeIvyRequestController = requestController;
-    fetch('/api/mascot/voice', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ text:phrase.slice(0,1200), lang }), signal:requestController.signal })
-      .then(response => { if (!response.ok || !response.headers.get('content-type')?.includes('audio')) throw new Error('ElevenLabs voice is not configured'); return response.blob(); })
-      .then(blob => {
-        if (activeIvyRequestController === requestController) activeIvyRequestController = null;
-        if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
-        activeIvyAudioUrl = URL.createObjectURL(blob); const audio = new Audio(activeIvyAudioUrl); activeIvyAudio = audio;
-        const finish = () => { if (activeIvyAudio === audio) { activeIvyAudio = null; if (activeIvyAudioUrl) { URL.revokeObjectURL(activeIvyAudioUrl); activeIvyAudioUrl = ''; } mascot?.classList.remove('is-talking'); } };
-        audio.onplay = () => { mascot?.classList.add('is-talking'); setVoiceStatus('Ivy is speaking with the selected ElevenLabs voice.', 'lilyVoiceStatus'); }; audio.onended = finish; audio.onerror = () => { finish(); speakWithBrowserVoice(); };
-        return audio.play().catch(() => { finish(); speakWithBrowserVoice(); });
-      })
-      .catch(() => {
-        if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
-        setVoiceStatus('ElevenLabs voice unavailable; using device voice. Check Render key, voice access, and deployment.', 'lilyVoiceStatus');
-        speakWithBrowserVoice();
-      });
+    utterance.onend = utterance.onerror = () => { if (requestId === ivySpeechRequestId) mascot?.classList.remove('is-talking'); };
+    const startBrowserSpeech = () => {
+      if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
+      const voices = window.speechSynthesis.getVoices();
+      const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
+      const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
+      const feminineVoicePatterns = { en:/female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english/i, ml:/female|malayalam.*female|manju|sreeja|anitha|deepa|google.*മലയാളം/i, hi:/female|swara|kalpana|heera|aditi|kavya|google.*(हिन्दी|hindi)/i, ta:/female|pallavi|kavitha|kalpana|revathi|deepa|google.*(தமிழ்|tamil)/i, ar:/female|hoda|maha|amira|zainab|layla|fatima|noura|google.*(العربية|arabic)/i };
+      const feminine = sameLanguage.find(voice => (feminineVoicePatterns[lang] || feminineVoicePatterns.en).test(voice.name + ' ' + voice.voiceURI));
+      const male = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex|hemant|ravi|valluvar|maged)(\W|$)/i;
+      const unmarked = sameLanguage.find(voice => !male.test(voice.name + ' ' + voice.voiceURI));
+      utterance.voice = feminine || unmarked || exactLanguage || sameLanguage[0] || null;
+      window.speechSynthesis.speak(utterance);
+    };
+    if (window.speechSynthesis.getVoices().length) startBrowserSpeech();
+    else { pendingLilyVoiceListener = startBrowserSpeech; window.speechSynthesis.addEventListener?.('voiceschanged', startBrowserSpeech, { once:true }); pendingLilyVoiceTimer = setTimeout(startBrowserSpeech, 1400); }
     return true;
   };
   window.speakIvyText = window.speakLilyText;
