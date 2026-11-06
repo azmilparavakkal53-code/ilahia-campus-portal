@@ -66,6 +66,8 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
+const IVY_ELEVENLABS_VOICE_ID = 'BlgEcC0TfWpBak7FmvHW';
+const ivyVoiceRateLimits = new Map();
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
@@ -929,7 +931,7 @@ function serveStatic(req, res, pathname) {
   const publicFiles = new Set(['/1 index.html', '/index.html', '/!DOCTYPE html.txt', '/BACKEND-README.txt', '/canteen.html', '/canteen-admin.html', '/iti-campus.jpg', '/manifest.webmanifest', '/sw.js', '/assets/campuses/ilahia-public-school-hero.jpg', '/assets/icons/ilahia-ecosystem-logo-v5-180.png', '/assets/icons/ilahia-ecosystem-logo-v5-192.png', '/assets/icons/ilahia-ecosystem-logo-v5-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-1024.png', '/assets/icons/ilahia-ecosystem-maskable-512.png', '/assets/icons/ilahia-ecosystem-logo-v6-maskable-1024.png', '/assets/icons/ilahia-ecosystem-final-transparent-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-180.png', '/assets/icons/ilahia-ecosystem-appicon-final-192.png', '/assets/icons/ilahia-ecosystem-appicon-final-512.png', '/assets/icons/ilahia-ecosystem-appicon-final-1024.png', '/assets/icons/ilahia-ecosystem-appicon-final-4k.png', '/assets/icons/ilahia-ecosystem-appicon-final-maskable-512.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-180.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-192.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-512.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-1024.png', '/assets/icons/ilahia-ecosystem-appicon-i-v35-maskable-512.png', '/assets/icons/ilahia-ecosystem-wordmark-gold.png', '/assets/icons/ilahia-ecosystem-wordmark-gold-512.webp']);
   const isLeadershipImage = /^\/assets\/leadership\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)$/i.test(requested);
   const isMascotImage = /^\/assets\/mascots\/(?:nila-student-source|ilahia-goldhoodie)\.png$/i.test(requested);
-  const isMascotEmotionImage = /^\/assets\/mascots\/emotions\/mila-(?:happy|curious|sad|angry)\.webp$/i.test(requested);
+  const isMascotEmotionImage = /^\/assets\/mascots\/emotions\/mila-(?:happy|curious|sad|angry|love)\.webp$/i.test(requested);
   if (!publicFiles.has(requested) && !isLeadershipImage && !isMascotImage && !isMascotEmotionImage) {
     sendJson(res, 404, { error: 'Not found.' });
     return;
@@ -958,7 +960,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-goldhoodie-rest-v80' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-ivy-voice-v81' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -976,6 +978,36 @@ const server = http.createServer(async (req, res) => {
       let originHost = '';
       try { originHost = new URL(req.headers.origin).host; } catch { /* Reject malformed origins below. */ }
       if (!originHost || originHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin request rejected.' }); return; }
+    }
+    if (req.method === 'POST' && pathname === '/api/mascot/voice') {
+      let voiceOriginHost = '';
+      try { voiceOriginHost = req.headers.origin ? new URL(req.headers.origin).host : ''; } catch { /* Reject malformed origins. */ }
+      if (!voiceOriginHost || voiceOriginHost !== req.headers.host) { sendJson(res, 403, { error: 'Cross-origin voice request rejected.' }); return; }
+      const apiKey = String(process.env.ELEVENLABS_API_KEY || '').trim();
+      if (!apiKey) { sendJson(res, 503, { error: 'ElevenLabs voice is not configured.' }); return; }
+      const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim().slice(0, 100);
+      const now = Date.now();
+      const recent = (ivyVoiceRateLimits.get(ip) || []).filter(time => now - time < 60_000);
+      if (recent.length >= 15) { sendJson(res, 429, { error: 'Voice request limit reached. Try again shortly.' }, { 'Retry-After': '60' }); return; }
+      recent.push(now); ivyVoiceRateLimits.set(ip, recent);
+      if (ivyVoiceRateLimits.size > 2000) {
+        for (const [key, times] of ivyVoiceRateLimits) if (!times.some(time => now - time < 60_000)) ivyVoiceRateLimits.delete(key);
+      }
+      const body = await readJson(req, 16 * 1024);
+      const text = safeText(body.text, 1200);
+      if (!text) { sendJson(res, 400, { error: 'Text is required.' }); return; }
+      const upstream = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${IVY_ELEVENLABS_VOICE_ID}`, {
+        method: 'POST',
+        headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.48, similarity_boost: 0.78, style: 0.2, use_speaker_boost: true } }),
+        signal: AbortSignal.timeout(25_000)
+      });
+      if (!upstream.ok) { console.warn('[Ivy voice] ElevenLabs returned HTTP', upstream.status); sendJson(res, 502, { error: 'The selected voice could not generate audio.' }); return; }
+      const audio = Buffer.from(await upstream.arrayBuffer());
+      if (!audio.length || audio.length > 15 * 1024 * 1024) { sendJson(res, 502, { error: 'The generated voice audio was invalid or too large.' }); return; }
+      res.writeHead(200, { 'Content-Type': 'audio/mpeg', 'Content-Length': audio.length, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+      res.end(audio);
+      return;
     }
     if (req.method === 'GET' && pathname === '/api/admin/backup') {
       const session = getSession(req);
