@@ -979,7 +979,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-ivy-voice-v81' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-ivy-voice-v82' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1021,7 +1021,7 @@ const server = http.createServer(async (req, res) => {
         body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', voice_settings: { stability: 0.48, similarity_boost: 0.78, style: 0.2, use_speaker_boost: true } }),
         signal: AbortSignal.timeout(25_000)
       });
-      if (!upstream.ok) { console.warn('[Ivy voice] ElevenLabs returned HTTP', upstream.status); sendJson(res, 502, { error: 'The selected voice could not generate audio.' }); return; }
+      if (!upstream.ok) { console.warn('[Ivy voice] ElevenLabs returned HTTP', upstream.status); sendJson(res, 502, { error: 'The selected voice could not generate audio.', providerStatus: upstream.status }); return; }
       const audio = Buffer.from(await upstream.arrayBuffer());
       if (!audio.length || audio.length > 15 * 1024 * 1024) { sendJson(res, 502, { error: 'The generated voice audio was invalid or too large.' }); return; }
       res.writeHead(200, { 'Content-Type': 'audio/mpeg', 'Content-Length': audio.length, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
