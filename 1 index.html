@@ -55,7 +55,7 @@
         button:hover > .ilahia-ai-launcher-mark { transform:rotate(-5deg) scale(1.08); }
         .trust-leadership-heading { font-family:"Palatino Linotype","Book Antiqua",Georgia,serif; letter-spacing:.035em; text-shadow:0 2px 14px #f6c95735; }
         #trustMascotStage { position:relative; height:12.25rem; overflow:visible; pointer-events:none; }
-        #trustMascotMover { position:absolute; z-index:17000; left:calc(50% - 2.4rem); bottom:.25rem; translate:none; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:pointer; touch-action:manipulation; user-select:none; pointer-events:auto; }
+        #trustMascotMover { position:absolute; z-index:10; left:calc(50% - 2.4rem); bottom:.25rem; translate:none; display:flex; align-items:center; gap:.55rem; width:max-content; max-width:calc(100vw - 1rem); cursor:pointer; touch-action:manipulation; user-select:none; pointer-events:auto; }
         #trustMascotMover.is-dragging { cursor:grabbing; }
         #trustMascotMover.is-popping { animation:trust-mascot-pop .82s cubic-bezier(.2,.85,.3,1) both; }
         @keyframes trust-mascot-pop { 0% { opacity:0; transform:translateY(18px) scale(.35) rotate(-10deg); } 70% { opacity:1; transform:translateY(-5px) scale(1.08) rotate(4deg); } 100% { opacity:1; transform:translateY(0) scale(1) rotate(0); } }
@@ -209,8 +209,8 @@
         @media (prefers-reduced-motion:reduce) { #trustMascotMover.is-dancing .mila-rig,#trustMascotMover.is-dancing .mila-torso,#trustMascotMover.is-dancing .mila-arm-left,#trustMascotMover.is-dancing .mila-arm-right,#trustMascotMover.is-dancing .mila-leg-left,#trustMascotMover.is-dancing .mila-leg-right,#trustMascotMover.is-dancing .mila-hair-front,#trustMascotMover.is-dancing .mila-bow { animation:none; } }
 
         .mila-eyes { transform-box:view-box; transform-origin:58% 20%; animation:mila-gaze-shift 8.4s ease-in-out infinite; }
-        .mila-eye-right { transform-box:view-box; transform-origin:65% 19.1%; animation:mila-periodic-wink 7.6s ease-in-out infinite; }
-        .mila-wink-line { opacity:0; animation:mila-wink-crease 7.6s ease-in-out infinite; }
+        .mila-eye-right { transform-box:view-box; transform-origin:65% 19.1%; animation:none; }
+        .mila-wink-line { display:none; opacity:0; animation:none; }
         @keyframes mila-gaze-shift { 0%,21%,65%,100%{transform:translateX(0)} 31%,45%{transform:translateX(3px)} 54%{transform:translateX(0)} }
         @keyframes mila-periodic-wink { 0%,7%,14%,40%,54%,100%{transform:scaleY(1)} 10%,12%,44%,50%{transform:scaleY(.07)} }
         @keyframes mila-wink-crease { 0%,8%,13%,41%,53%,100%{opacity:0} 10%,12%,44%,50%{opacity:1} }
@@ -775,7 +775,7 @@
     </footer>
     </div><!-- End selected college page content -->
     <!-- Floating AI Chat Assistant Widget -->
-    <div class="fixed bottom-5 right-5 z-50">
+    <div class="fixed bottom-5 right-5 z-[20000]">
         <button type="button" onclick="toggleChat()" aria-label="Open Ilahia AI campus guide" class="bg-blue-950 hover:bg-blue-900 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition transform hover:scale-105 ring-2 ring-amber-300/80">
             <svg class="ilahia-ai-mark ilahia-ai-launcher-mark" viewBox="0 0 128 128" aria-hidden="true"><use href="#ilahiaAiMascot"></use></svg>
         </button>
@@ -5107,7 +5107,7 @@
             currentActiveKey = key; 
             const data = collegeDatabase[key]; 
             if(!data) return;
-            window.lilyPopIntoCampusPage?.();
+            // Mila remains on the landing page; institute pages do not show the mascot.
             updateCanteenBookingAvailability(true);
             document.getElementById('campusNewsTicker')?.classList.add('hidden');
             void loadCampusEventInbox(key);
@@ -17770,7 +17770,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const mascot = document.getElementById('trustMascotMover');
   const greeting = mascot?.querySelector('.trust-mascot-greeting');
   if (!stage || !mascot || !greeting) return;
-  mascot.style.zIndex = '17000';
+  mascot.style.zIndex = '10';
   let defaultGreeting = greeting.textContent.trim();
   let idleTimers = [];
   const clearIdleTimers = () => { idleTimers.forEach(clearTimeout); idleTimers = []; };
@@ -17963,12 +17963,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
-    window.lilyPopIntoCampusPage = (floatOnPage = true) => {
-    if (floatOnPage) {
-      window.expressMilaEmotion('thinking', 2600);
-      if (mascot.parentElement !== document.body) document.body.appendChild(mascot);
-      Object.assign(mascot.style, { position:'fixed', left:'auto', right:'3rem', top:'7rem', bottom:'auto', translate:'none' });
-    }
+    window.lilyPopIntoCampusPage = () => {
+    const landing = document.getElementById('instituteLanding');
+    const collegeContent = document.getElementById('collegeContent');
+    const isLanding = !!landing && !landing.classList.contains('hidden') && (!collegeContent || collegeContent.classList.contains('hidden'));
+    if (!isLanding) { mascot.hidden = true; return; }
+    if (mascot.parentElement !== stage) stage.appendChild(mascot);
+    mascot.hidden = false;
+    Object.assign(mascot.style, { position:'', left:'', right:'', top:'', bottom:'', translate:'', zIndex:'' });
   };
   window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.lilyGreetVisitor?.(); }, 500);
   mascot.addEventListener('click', () => {
