@@ -17499,10 +17499,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
         activeIvyAudioUrl = URL.createObjectURL(blob); const audio = new Audio(activeIvyAudioUrl); activeIvyAudio = audio;
         const finish = () => { if (activeIvyAudio === audio) { activeIvyAudio = null; if (activeIvyAudioUrl) { URL.revokeObjectURL(activeIvyAudioUrl); activeIvyAudioUrl = ''; } mascot?.classList.remove('is-talking'); } };
-        audio.onplay = () => mascot?.classList.add('is-talking'); audio.onended = finish; audio.onerror = () => { finish(); speakWithBrowserVoice(); };
+        audio.onplay = () => { mascot?.classList.add('is-talking'); setVoiceStatus('Ivy is speaking with the selected ElevenLabs voice.', 'lilyVoiceStatus'); }; audio.onended = finish; audio.onerror = () => { finish(); speakWithBrowserVoice(); };
         return audio.play().catch(() => { finish(); speakWithBrowserVoice(); });
       })
-      .catch(() => speakWithBrowserVoice());
+      .catch(() => {
+        if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
+        setVoiceStatus('ElevenLabs voice unavailable; using device voice. Check Render key, voice access, and deployment.', 'lilyVoiceStatus');
+        speakWithBrowserVoice();
+      });
     return true;
   };
   window.speakIvyText = window.speakLilyText;
