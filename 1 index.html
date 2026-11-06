@@ -182,6 +182,15 @@
         #trustMascotMover.is-dancing .mila-rig { animation:mila-dance-rig 7.6s cubic-bezier(.45,0,.55,1) both; }
         #trustMascotMover.is-dancing .mila-arm-left { animation:mila-dance-left-arm 7.6s ease-in-out both; }
         #trustMascotMover.is-dancing .mila-arm-right { animation:mila-dance-right-arm 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-rig { animation:mila-dance-rig-alt 7.6s cubic-bezier(.45,0,.55,1) both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-arm-left { animation:mila-dance-arm-left-alt 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-arm-right { animation:mila-dance-arm-right-alt 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-leg-left { animation:mila-dance-leg-left-alt 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-leg-right { animation:mila-dance-leg-right-alt 7.6s ease-in-out both; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-book { animation:mila-dance-arm-right-alt 7.6s ease-in-out both; transform-origin:74.2% 35.2%; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-hair-front { animation:mila-dance-hair-alt 7.6s ease-in-out both; transform-origin:57% 19%; }
+        #trustMascotMover.is-dancing.is-dancing-alt .mila-bow { animation:mila-dance-hair-alt 7.6s ease-in-out both; transform-origin:43% 14%; }
+
         #trustMascotMover.is-dancing .mila-leg-left { animation:mila-dance-left-leg 7.6s ease-in-out both; }
         #trustMascotMover.is-dancing .mila-leg-right { animation:mila-dance-right-leg 7.6s ease-in-out both; }
         #trustMascotMover.is-dancing .mila-hair-front { animation:mila-dance-hair 7.6s ease-in-out both; transform-origin:57% 19%; }
@@ -195,7 +204,17 @@
         #trustMascotMover.is-emotion-thinking .mila-head { animation:mila-think-head .75s ease-in-out 2; }
         #trustMascotMover.is-emotion-sad .mila-head { animation:mila-sad-head 1.1s ease-in-out 2; }
         #trustMascotMover.is-emotion-happy .mila-head { animation:mila-happy-head .55s ease-in-out 2; }
+        #trustMascotMover.is-listening .mila-head { animation:mila-listen-head 1.6s ease-in-out infinite; }
+        #trustMascotMover.is-talking .mila-mouth-base { transform-box:fill-box; transform-origin:center; animation:mila-talk-mouth .18s ease-in-out infinite alternate; }
+        @keyframes mila-listen-head { 0%,100%{transform:rotate(0)} 40%{transform:rotate(-1.3deg)} 70%{transform:rotate(.8deg)} }
+        @keyframes mila-talk-mouth { from{transform:scaleY(.92)} to{transform:scaleY(1.1)} }
         @keyframes mila-dance-rig { 0%,100%{transform:translateX(0) rotate(0) rotateY(0)} 10%{transform:translateX(-5px) rotate(-2deg) rotateY(0)} 22%{transform:translateX(5px) rotate(2deg) rotateY(0)} 34%{transform:translateX(-5px) rotate(-2deg) rotateY(0)} 46%{transform:translateX(5px) rotate(2deg) rotateY(0)} 60%{transform:translateX(-4px) rotate(-2deg) rotateY(0)} 72%{transform:translateX(4px) rotate(2deg) rotateY(0)} 78%{transform:translateX(0) rotate(0) rotateY(0)} 84%{transform:translateX(0) rotate(0) rotateY(180deg)} 91%{transform:translateX(0) rotate(0) rotateY(360deg)} 100%{transform:translateX(0) rotate(0) rotateY(360deg)} }
+        @keyframes mila-dance-rig-alt { 0%,100%{transform:translateX(0) rotate(0)} 12%{transform:translateX(-6px) rotate(-3deg)} 25%{transform:translateX(7px) rotate(3deg)} 38%{transform:translateX(-7px) rotate(-4deg)} 51%{transform:translateX(6px) rotate(3deg)} 64%{transform:translateX(-5px) rotate(-3deg)} 77%{transform:translateX(5px) rotate(3deg)} 90%{transform:translateY(-3px) rotate(0)} }
+        @keyframes mila-dance-arm-left-alt { 0%,100%{transform:rotate(-8deg)} 12%{transform:rotate(36deg)} 25%{transform:rotate(-34deg)} 38%{transform:rotate(38deg)} 51%{transform:rotate(-30deg)} 64%{transform:rotate(34deg)} 77%{transform:rotate(-24deg)} 90%{transform:rotate(-42deg)} }
+        @keyframes mila-dance-arm-right-alt { 0%,100%{transform:rotate(6deg)} 12%{transform:rotate(-30deg)} 25%{transform:rotate(32deg)} 38%{transform:rotate(-35deg)} 51%{transform:rotate(30deg)} 64%{transform:rotate(-32deg)} 77%{transform:rotate(24deg)} 90%{transform:rotate(38deg)} }
+        @keyframes mila-dance-leg-left-alt { 0%,100%{transform:rotate(0)} 12%{transform:rotate(9deg) translateY(-5px)} 25%{transform:rotate(-8deg)} 38%{transform:rotate(10deg) translateY(-8px)} 51%{transform:rotate(-7deg)} 64%{transform:rotate(8deg) translateY(-6px)} 77%{transform:rotate(-7deg)} 90%{transform:rotate(0)} }
+        @keyframes mila-dance-leg-right-alt { 0%,100%{transform:rotate(0)} 12%{transform:rotate(-8deg)} 25%{transform:rotate(9deg) translateY(-6px)} 38%{transform:rotate(-9deg)} 51%{transform:rotate(8deg) translateY(-8px)} 64%{transform:rotate(-8deg)} 77%{transform:rotate(7deg) translateY(-5px)} 90%{transform:rotate(0)} }
+        @keyframes mila-dance-hair-alt { 0%,100%{transform:rotate(0)} 12%{transform:rotate(3deg)} 25%{transform:rotate(-4deg)} 38%{transform:rotate(4deg)} 51%{transform:rotate(-4deg)} 64%{transform:rotate(3deg)} 77%{transform:rotate(-3deg)} 90%{transform:rotate(0)} }
         @keyframes mila-dance-torso { 0%,100%{transform:translateX(0) rotate(0)} 10%{transform:translateX(-6px) rotate(-3deg)} 22%{transform:translateX(6px) rotate(3deg)} 34%{transform:translateX(-5px) rotate(-3deg)} 46%{transform:translateX(6px) rotate(3deg)} 60%{transform:translateX(-4px) rotate(-2deg)} 72%{transform:translateX(4px) rotate(2deg)} 84%{transform:translateX(0) rotate(0)} 92%{transform:translateY(-2px) rotate(-2deg)} }
         @keyframes mila-dance-left-arm { 0%,100%{transform:rotate(-8deg)} 10%{transform:rotate(-28deg)} 22%{transform:rotate(24deg)} 34%{transform:rotate(-26deg)} 46%{transform:rotate(22deg)} 58%{transform:rotate(-30deg)} 70%{transform:rotate(18deg)} 82%{transform:rotate(-8deg)} 92%{transform:rotate(-42deg)} }
         @keyframes mila-dance-right-arm { 0%,100%{transform:rotate(6deg)} 10%{transform:rotate(22deg)} 22%{transform:rotate(-18deg)} 34%{transform:rotate(24deg)} 46%{transform:rotate(-20deg)} 58%{transform:rotate(25deg)} 70%{transform:rotate(-18deg)} 82%{transform:rotate(6deg)} 92%{transform:rotate(38deg)} }
@@ -209,13 +228,12 @@
         @media (prefers-reduced-motion:reduce) { #trustMascotMover.is-dancing .mila-rig,#trustMascotMover.is-dancing .mila-torso,#trustMascotMover.is-dancing .mila-arm-left,#trustMascotMover.is-dancing .mila-arm-right,#trustMascotMover.is-dancing .mila-leg-left,#trustMascotMover.is-dancing .mila-leg-right,#trustMascotMover.is-dancing .mila-hair-front,#trustMascotMover.is-dancing .mila-bow { animation:none; } }
 
         .mila-eyes { transform-box:view-box; transform-origin:58% 20%; animation:mila-gaze-shift 8.4s ease-in-out infinite; }
-        .mila-eye-right { transform-box:view-box; transform-origin:65% 19.1%; animation:none; }
-        .mila-wink-line { display:none; opacity:0; animation:none; }
+        .mila-eye-left,.mila-eye-right { transform-box:fill-box; transform-origin:center; animation:mila-natural-blink 6.4s ease-in-out infinite; }
+        .mila-both-blink-line { opacity:0; animation:mila-both-blink 6.4s ease-in-out infinite; }
         @keyframes mila-gaze-shift { 0%,21%,65%,100%{transform:translateX(0)} 31%,45%{transform:translateX(3px)} 54%{transform:translateX(0)} }
-        @keyframes mila-periodic-wink { 0%,7%,14%,40%,54%,100%{transform:scaleY(1)} 10%,12%,44%,50%{transform:scaleY(.07)} }
-        @keyframes mila-wink-crease { 0%,8%,13%,41%,53%,100%{opacity:0} 10%,12%,44%,50%{opacity:1} }
-        #trustMascotMover.is-emotion-sad .mila-eye-right,#trustMascotMover.is-emotion-angry .mila-eye-right,#trustMascotMover.is-emotion-scared .mila-eye-right,#trustMascotMover.is-emotion-disappointed .mila-eye-right { animation:none; transform:none; }
-        #trustMascotMover.is-emotion-sad .mila-wink-line,#trustMascotMover.is-emotion-angry .mila-wink-line,#trustMascotMover.is-emotion-scared .mila-wink-line,#trustMascotMover.is-emotion-disappointed .mila-wink-line { animation:none; opacity:0; }
+        @keyframes mila-natural-blink { 0%,91%,100%{transform:scaleY(1)} 94%,97%{transform:scaleY(.035)} }
+        @keyframes mila-both-blink { 0%,91%,100%{opacity:0} 94%,97%{opacity:1} }
+
 </style>
 
         </head>
@@ -323,7 +341,7 @@
                             <svg class="trust-mascot-character" viewBox="0 0 648 1345" role="img" aria-label="Mila, the Ilahia student mascot">
   <defs>
     <linearGradient id="nila-face-patch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0aa90"/><stop offset=".48" stop-color="#f5b99e"/><stop offset="1" stop-color="#efaa91"/></linearGradient><filter id="nila-face-soften" x="-12%" y="-18%" width="124%" height="136%"><feGaussianBlur stdDeviation="2"/></filter>
-    <linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient>
+    <radialGradient id="nila-face-skin" cx="43%" cy="34%" r="74%"><stop stop-color="#ffe1cf"/><stop offset=".54" stop-color="#f5b9a0"/><stop offset=".86" stop-color="#eea18a"/><stop offset="1" stop-color="#e58e7c"/></radialGradient><linearGradient id="nila-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd7c1"/><stop offset=".55" stop-color="#f4b79d"/><stop offset="1" stop-color="#e9957f"/></linearGradient><radialGradient id="nila-iris" cx="42%" cy="35%" r="72%"><stop stop-color="#95664d"/><stop offset=".62" stop-color="#573528"/><stop offset="1" stop-color="#261a20"/></radialGradient><radialGradient id="nila-blush"><stop stop-color="#ef8391" stop-opacity=".58"/><stop offset="1" stop-color="#ef8391" stop-opacity="0"/></radialGradient>
     <linearGradient id="nila-shoe" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#344263"/><stop offset=".52" stop-color="#151a2d"/><stop offset="1" stop-color="#080b17"/></linearGradient>
   </defs>
 <g class="mila-rig">
@@ -360,14 +378,34 @@
   <g class="mila-head">
   <g class="mila-neck"><path d="M341 379Q375 401 412 378L422 444Q382 470 335 440Z" fill="url(#nila-skin)"/></g>
   <g class="mila-face-base">
-    <ellipse cx="374" cy="276" rx="151" ry="169" fill="url(#nila-skin)" stroke="#d48e78" stroke-width="5"/>
-    <ellipse cx="234" cy="303" rx="18" ry="27" fill="#f0b296" stroke="#d48e78" stroke-width="3"/><ellipse cx="514" cy="291" rx="18" ry="27" fill="#efad91" stroke="#d48e78" stroke-width="3"/>
-    <path d="M277 230Q309 205 345 226M394 210Q424 184 458 202" fill="none" stroke="#56352c" stroke-width="12" stroke-linecap="round"/>
-    <g class="mila-eyes"><g class="mila-eye-left"><ellipse cx="325" cy="271" rx="39" ry="45" fill="#fffdf8" stroke="#dda994" stroke-width="2"/><ellipse cx="332" cy="274" rx="27" ry="36" fill="#6d4434"/><ellipse cx="334" cy="278" rx="17" ry="27" fill="#171116"/><ellipse cx="341" cy="262" rx="10" ry="12" fill="#fff"/><ellipse cx="326" cy="290" rx="4" ry="6" fill="#fff" opacity=".85"/><path d="M291 245l-12-16m25 9-6-19m21 16-1-17" stroke="#30202a" stroke-width="5" stroke-linecap="round"/></g><g class="mila-eye-right"><ellipse cx="421" cy="253" rx="38" ry="43" fill="#fffdf8" stroke="#dda994" stroke-width="2"/><ellipse cx="424" cy="256" rx="26" ry="34" fill="#6d4434"/><ellipse cx="426" cy="260" rx="16" ry="25" fill="#171116"/><ellipse cx="433" cy="245" rx="9" ry="11" fill="#fff"/><ellipse cx="418" cy="273" rx="4" ry="5" fill="#fff" opacity=".85"/><path d="m389 228-9-14m25 9-2-17m19 16 5-16" stroke="#30202a" stroke-width="5" stroke-linecap="round"/></g></g>
-    <ellipse cx="277" cy="334" rx="30" ry="14" fill="#ef8e98" opacity=".36"/><ellipse cx="474" cy="322" rx="29" ry="14" fill="#ef8e98" opacity=".36"/>
-    <path class="mila-wink-line" d="M389 260Q419 279 451 256" fill="none" stroke="#38252a" stroke-width="8" stroke-linecap="round"/>
-    <path d="M362 299Q374 291 386 299Q384 313 375 316Q365 312 362 299Z" fill="#e99c84" stroke="#dc8e78" stroke-width="2"/><ellipse cx="369" cy="298" rx="3.8" ry="2.3" fill="#ffe3d6" opacity=".95"/>
-    <path d="M379 321Q416 301 455 317Q450 358 417 364Q385 359 379 321Z" fill="#742d40" stroke="#8e384b" stroke-width="4"/><path d="M387 320Q417 309 447 319Q441 334 418 335Q400 333 387 320Z" fill="#fff8ed"/><path d="M393 344Q418 353 442 339Q433 360 416 361Q400 358 393 344Z" fill="#f28698"/><path d="M387 320Q417 309 447 319" fill="none" stroke="#fffdf7" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="374" cy="276" rx="151" ry="169" fill="url(#nila-face-skin)" stroke="#d98e79" stroke-width="4"/>
+    <ellipse cx="234" cy="303" rx="18" ry="27" fill="#f4b69d" stroke="#d48e78" stroke-width="3"/><ellipse cx="514" cy="291" rx="18" ry="27" fill="#f4b69d" stroke="#d48e78" stroke-width="3"/>
+    <path d="M282 221Q310 202 345 218M402 218Q434 199 465 220" fill="none" stroke="#59372f" stroke-width="11" stroke-linecap="round"/>
+    <g class="mila-eyes">
+      <g class="mila-eye-left">
+        <ellipse cx="325" cy="266" rx="43" ry="51" fill="#fffdf9" stroke="#dfad99" stroke-width="2.5"/>
+        <ellipse cx="328" cy="271" rx="30" ry="40" fill="url(#nila-iris)"/><ellipse cx="330" cy="276" rx="18" ry="29" fill="#171116"/>
+        <ellipse cx="338" cy="254" rx="11" ry="13" fill="#fff"/><ellipse cx="319" cy="282" rx="4.5" ry="6" fill="#fff" opacity=".88"/>
+        <path d="M285 252Q323 222 361 250" fill="none" stroke="#2d1d21" stroke-width="7" stroke-linecap="round"/>
+        <path d="M292 245l-13-16m27 8-7-19m22 13-2-18m24 19 5-15M292 292l-8 8m65-8 8 7" stroke="#39252a" stroke-width="3.4" stroke-linecap="round"/>
+      </g>
+      <g class="mila-eye-right">
+        <ellipse cx="423" cy="266" rx="43" ry="51" fill="#fffdf9" stroke="#dfad99" stroke-width="2.5"/>
+        <ellipse cx="420" cy="271" rx="30" ry="40" fill="url(#nila-iris)"/><ellipse cx="419" cy="276" rx="18" ry="29" fill="#171116"/>
+        <ellipse cx="428" cy="254" rx="11" ry="13" fill="#fff"/><ellipse cx="409" cy="282" rx="4.5" ry="6" fill="#fff" opacity=".88"/>
+        <path d="M386 250Q421 222 461 252" fill="none" stroke="#2d1d21" stroke-width="7" stroke-linecap="round"/>
+        <path d="m393 245-11-16m27 8-5-19m22 13 1-18m22 19 6-15m-66 75-8 7m65-8 8 7" stroke="#39252a" stroke-width="3.4" stroke-linecap="round"/>
+      </g>
+    </g>
+    <ellipse cx="277" cy="332" rx="33" ry="17" fill="url(#nila-blush)"/><ellipse cx="474" cy="332" rx="33" ry="17" fill="url(#nila-blush)"/>
+    <path class="mila-both-blink-line" d="M285 270Q324 293 362 269M383 269Q422 292 461 270" fill="none" stroke="#39252a" stroke-width="8" stroke-linecap="round"/>
+    <path d="M361 302Q374 293 387 302Q385 317 374 320Q363 316 361 302Z" fill="#e99580" stroke="#dc8e78" stroke-width="2"/><ellipse cx="368" cy="300" rx="4" ry="2.5" fill="#ffe4d7" opacity=".95"/><ellipse cx="381" cy="307" rx="3" ry="2" fill="#d88477" opacity=".55"/>
+    <g class="mila-mouth-base">
+    <path d="M374 326Q416 303 459 322Q453 367 417 375Q382 367 374 326Z" fill="#702a3e" stroke="#8e384b" stroke-width="4"/>
+    <path d="M383 324Q416 311 450 324Q443 341 417 341Q397 339 383 324Z" fill="#fffaf3"/>
+    <path d="M388 350Q418 360 446 343Q435 370 416 371Q397 368 388 350Z" fill="#f17891"/>
+    <path d="M383 324Q416 311 450 324" fill="none" stroke="#fffdf7" stroke-width="4" stroke-linecap="round"/>
+    </g>
   </g>
   <g class="mila-hair mila-hair-front"><path d="M247 272Q222 159 284 93 335 37 418 73 488 104 497 203 458 167 425 154 382 204 313 207L282 298Z" fill="#39201d" stroke="#2a1719" stroke-width="9"/><path d="M276 164Q294 95 358 79M358 91Q411 74 449 122" fill="none" stroke="#8b5844" stroke-width="9" stroke-linecap="round"/></g>
   <g class="mila-bow"><path d="M269 140Q221 82 213 137 212 180 266 190 228 227 255 246 279 253 298 195Z" fill="#f18aba" stroke="#c95991" stroke-width="7"/><path d="M282 155Q326 97 339 130 350 168 294 191 332 205 314 233 296 249 276 194Z" fill="#ffabd1" stroke="#c95991" stroke-width="7"/><circle cx="278" cy="185" r="15" fill="#ffd5e8" stroke="#c95991" stroke-width="5"/></g>
@@ -798,12 +836,25 @@
                     Welcome to Ilahia Trust! I’m Ilahia AI, your campus guide. I can help you explore institutes and answer questions about programmes, admissions, fees, facilities, and transport. Ask about any campus in English, Malayalam, Tamil, Arabic, or Hindi.
                 </div>
             </div>
+            <details id="milaMemoryPanel" class="border-t border-slate-200 bg-white px-3 py-2">
+                <summary class="cursor-pointer text-[11px] font-semibold text-slate-700">Personal memory settings</summary>
+                <div class="mt-2 space-y-2">
+                    <p class="text-[10px] leading-relaxed text-slate-500">Optional: save a short preference on this device for your signed-in student account. Do not save passwords, health details, or other sensitive information. You can turn it off or erase it any time.</p>
+                    <label class="flex items-start gap-2 text-[11px] text-slate-700"><input id="milaMemoryConsent" type="checkbox" class="mt-0.5 accent-blue-700" onchange="syncMilaMemoryConsent()"><span>Allow Mila to use my saved preference in replies</span></label>
+                    <textarea id="milaMemoryText" maxlength="600" rows="2" class="w-full rounded-lg border border-slate-300 px-2.5 py-2 text-[11px] outline-none focus:border-blue-600" placeholder="Example: I prefer short explanations and am studying biology."></textarea>
+                    <div class="flex gap-2"><button type="button" onclick="saveMilaMemorySettings()" class="rounded-lg bg-blue-800 px-3 py-1.5 text-[10px] font-bold text-white">Save preference</button><button type="button" onclick="deleteMilaMemorySettings()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-[10px] font-semibold text-slate-700">Erase</button></div>
+                    <p id="milaMemoryStatus" class="text-[10px] text-slate-500" aria-live="polite">Sign in as a student to manage personal memory.</p>
+                </div>
+            </details>
             <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
-                <input type="text" id="chatInput" placeholder="Ask about courses, fees, admissions or campus services…" class="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                <input type="text" id="chatInput" placeholder="Ask about courses, fees, admissions or campus services…" class="min-w-0 flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
+                <button id="campusChatMicButton" type="button" onclick="toggleCampusChatListening()" class="shrink-0 rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-100" aria-label="Speak to the campus chatbot" aria-pressed="false"><i class="fa-solid fa-microphone"></i></button>
+                <button id="campusChatVoiceToggle" type="button" onclick="toggleCampusChatVoice()" class="shrink-0 rounded-lg border border-slate-300 px-2.5 py-2 text-[10px] font-semibold text-slate-700" aria-label="Turn chatbot voice replies on" aria-pressed="false">Voice off</button>
+                <button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 rounded-lg text-sm font-medium transition">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
+            <p id="campusChatVoiceStatus" class="px-3 pb-2 text-[10px] text-slate-500" aria-live="polite">Voice is optional. Tap the microphone to speak.</p>
         </div>
     </div>
     <!-- Portal Authentication & Dashboards Modal -->
@@ -2909,9 +2960,50 @@
               }
               return response.status === 204 ? null : response.json();
           }
-          async function requestSmartAI(role, query, campusKey) {
+          function milaMemoryStorageKey() {
+            if (currentSessionRole !== 'student' || !currentSessionUserId || !currentSessionCampusKey) return '';
+            return 'ilahia-mila-memory:' + encodeURIComponent(currentSessionCampusKey) + ':' + encodeURIComponent(currentSessionUserId);
+        }
+        function readMilaMemory() {
+            const key = milaMemoryStorageKey(); if (!key) return null;
+            try { const item = JSON.parse(localStorage.getItem(key) || "null"); return item && typeof item === "object" ? item : null; } catch { return null; }
+        }
+        function syncMilaMemoryControls() {
+            const consent = document.getElementById("milaMemoryConsent"), text = document.getElementById("milaMemoryText"), status = document.getElementById("milaMemoryStatus");
+            if (!consent || !text || !status) return;
+            const student = currentSessionRole === 'student' && !!currentSessionUserId && !!currentSessionCampusKey; consent.disabled = !student; text.disabled = !student;
+            const item = student ? readMilaMemory() : null;
+            if (!student) { status.textContent = "Sign in as a student to manage personal memory."; consent.checked = false; text.value = ""; return; }
+            consent.checked = item?.enabled === true; text.value = typeof item?.text === "string" ? item.text : "";
+            status.textContent = item ? (item.enabled ? "Your preference is saved on this device and enabled." : "Your preference is saved on this device but is currently off.") : "No personal memory saved.";
+        }
+        function syncMilaMemoryConsent() {
+            const status = document.getElementById("milaMemoryStatus"); if (!status) return;
+            if (currentSessionRole !== "student") { status.textContent = "Sign in as a student to manage personal memory."; return; }
+            status.textContent = "Save your choice to apply it to Mila replies.";
+        }
+        function saveMilaMemorySettings() {
+            const key = milaMemoryStorageKey(), consent = document.getElementById("milaMemoryConsent"), textArea = document.getElementById("milaMemoryText"), status = document.getElementById("milaMemoryStatus");
+            if (!key || !consent || !textArea || !status) { if (status) status.textContent = "Sign in as a student to manage personal memory."; return; }
+            const value = textArea.value.trim().slice(0, 600);
+            if (consent.checked && !value) { status.textContent = "Add a short preference before enabling memory."; return; }
+            if (/password|passcode|one[- ]time code|\botp\b|api key|health condition|medical record/i.test(value)) { status.textContent = "Please remove sensitive information. Save only a simple study or reply preference."; return; }
+            try { localStorage.setItem(key, JSON.stringify({ enabled: consent.checked, text: value, updatedAt: new Date().toISOString() })); status.textContent = consent.checked ? "Preference saved and enabled on this device." : "Preference saved but not used. Erase it anytime."; }
+            catch { status.textContent = "This browser could not save memory. You can keep chatting without it."; }
+        }
+        function deleteMilaMemorySettings() {
+            const key = milaMemoryStorageKey(), consent = document.getElementById("milaMemoryConsent"), textArea = document.getElementById("milaMemoryText"), status = document.getElementById("milaMemoryStatus");
+            if (!key) { if (status) status.textContent = "Sign in as a student to manage personal memory."; return; }
+            try { localStorage.removeItem(key); if (consent) consent.checked = false; if (textArea) textArea.value = ""; if (status) status.textContent = "Personal memory erased from this device."; } catch { if (status) status.textContent = "Could not erase memory in this browser."; }
+        }
+        function getMilaMemoryForAI() { const item = readMilaMemory(); return currentSessionRole === "student" && item?.enabled === true ? String(item.text || "").slice(0, 600) : ""; }
+        function getCampusChatHistory(messages) {
+            if (!messages) return [];
+            return Array.from(messages.children).filter(item => item.id !== "chatWelcomeMsg").slice(0, -1).slice(-8).map(item => ({ role: item.classList.contains("ml-auto") ? "user" : "assistant", content: String(item.textContent || "").trim().slice(0, 1200) })).filter(item => item.content);
+        }
+        async function requestSmartAI(role, query, campusKey, conversation = []) {
               try {
-                  const result = await requestAIKnowledge('/api/ai-chat', { method: 'POST', body: JSON.stringify({ role, query: String(query || '').slice(0, 2000), campusKey }) });
+                  const memory = getMilaMemoryForAI(); const result = await requestAIKnowledge('/api/ai-chat', { method: 'POST', body: JSON.stringify({ role, query: String(query || '').slice(0, 2000), campusKey, conversation: Array.isArray(conversation) ? conversation.slice(-8) : [], memoryConsent: !!memory, personalization: memory }) });
                   return String(result?.answer || '').trim() || null;
               } catch (_) { return null; }
           }
@@ -6663,12 +6755,15 @@
             bubble.textContent = points.length > 1 ? points.map(point => `• ${point}`).join('\n\n') : reply;
         }
         function toggleChat() {
-            document.getElementById('chatWindow').classList.toggle('hidden');
+            const panel = document.getElementById('chatWindow'); const opening = panel.classList.contains('hidden'); panel.classList.toggle('hidden');
+            if (opening) syncMilaMemoryControls();
+            const voiceButton = document.getElementById('campusChatVoiceToggle');
+            if (voiceButton) { voiceButton.textContent = window.campusChatVoiceReplies ? 'Voice on' : 'Voice off'; voiceButton.setAttribute('aria-pressed', String(window.campusChatVoiceReplies)); }
         }
         function handleKeyPress(event) {
             if (event.key === 'Enter') sendMessage();
         }
-        async function appendChatReply(inputText, messages, styleClass, entries, fallback, rules, pageCampusKey = currentActiveKey) {
+        async function appendChatReply(inputText, messages, styleClass, entries, fallback, rules, pageCampusKey = currentActiveKey, milaContext = null) {
             const contextRevision = campusChatContextRevision;
             const englishText = currentLang === 'en' ? inputText : await translateText(inputText, 'en', currentLang);
             if (contextRevision !== campusChatContextRevision) return;
@@ -6693,7 +6788,7 @@
                     if (terms.some(term => lower.includes(term))) { reply = response; break; }
                 }
             }
-            const modelReply = onLandingPage && !campusKey ? null : await requestSmartAI('campus', englishText, campusKey || pageCampusKey || 'icet');
+            const modelReply = onLandingPage && !campusKey ? null : await requestSmartAI('campus', englishText, campusKey || pageCampusKey || 'icet', getCampusChatHistory(messages));
             if (contextRevision !== campusChatContextRevision) return;
             if (modelReply) reply = modelReply;
             const bubble = document.createElement('div');
@@ -6701,6 +6796,8 @@
             renderChatReply(bubble, currentLang === 'en' ? reply : await translateText(reply, currentLang, 'en'));
             messages.appendChild(bubble);
             messages.scrollTop = messages.scrollHeight;
+            void Promise.resolve(window.MilaCore?.onAssistantReply?.(reply, milaContext)).catch(error => console.warn("Mila response reaction could not finish:", error));
+            if (window.campusChatVoiceReplies) window.speakLilyText?.(bubble.textContent, currentLang);
         }
         async function sendMessage() {
             const input = document.getElementById('chatInput');
@@ -6713,6 +6810,9 @@
             messages.appendChild(bubble);
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
+            window.resetLilyIdleMood?.();
+            let milaContext = null;
+            try { milaContext = await window.MilaCore?.onVisitorMessage?.(text) || null; } catch (error) { console.warn("Mila reaction could not start:", error); }
             const pageCampusKey = currentActiveKey;
             if (!aiKnowledgeDatabaseReady || Date.now() - aiKnowledgeLastLoadedAt > 60000) await loadAIKnowledgeFromDatabase();
             await appendChatReply(text, messages, 'bg-blue-50 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[85%] border border-blue-100 text-xs sm:text-sm', aiKnowledgeEntries,
@@ -6720,7 +6820,7 @@
                     [['fee', 'tuition'], 'I don\'t have a verified fee amount in the selected college records yet.'],
                     [['bus', 'transport', 'route'], 'Verified bus routes and schedules are not in the selected college records yet.'],
                     [['admission', 'seat'], 'I don\'t have a verified current admission date or seat count in the selected college records yet.']
-                ], pageCampusKey);
+                ], pageCampusKey, milaContext);
         }
         // Shared academic chat support. Keep this local and resilient so chat still
         // replies when the knowledge API or translation service is unavailable.
@@ -17368,6 +17468,25 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
+  window.campusChatVoiceReplies = false;
+  try { window.campusChatVoiceReplies = localStorage.getItem("ilahiaCampusChatVoiceReplies") === "on"; } catch {}
+  function setCampusChatMicButton(recording) {
+    const button = document.getElementById("campusChatMicButton"); if (!button) return;
+    button.innerHTML = recording ? "<i class=\"fa-solid fa-stop\"></i>" : "<i class=\"fa-solid fa-microphone\"></i>";
+    button.setAttribute("aria-label", recording ? "Stop speaking to the campus chatbot" : "Speak to the campus chatbot"); button.setAttribute("aria-pressed", recording ? "true" : "false");
+  }
+  window.toggleCampusChatVoice = () => {
+    window.campusChatVoiceReplies = !window.campusChatVoiceReplies;
+    try { localStorage.setItem("ilahiaCampusChatVoiceReplies", window.campusChatVoiceReplies ? "on" : "off"); } catch {}
+    const button = document.getElementById("campusChatVoiceToggle"); if (button) { button.textContent = window.campusChatVoiceReplies ? "Voice on" : "Voice off"; button.setAttribute("aria-pressed", String(window.campusChatVoiceReplies)); button.setAttribute("aria-label", window.campusChatVoiceReplies ? "Turn chatbot voice replies off" : "Turn chatbot voice replies on"); }
+    if (!window.campusChatVoiceReplies && "speechSynthesis" in window) { window.speechSynthesis.cancel(); document.getElementById("trustMascotMover")?.classList.remove("is-talking"); }
+  };
+  window.toggleCampusChatListening = () => {
+    if (activeRecognition && activeRecognitionPurpose === "campus-chat") { activeRecognition.stop(); return; }
+    const target = document.getElementById("chatInput"); if (target) target.value = "";
+    window.startIlahiaSpeechRecognition("campus-chat", target);
+  };
+
   let pendingLilyVoiceTimer = 0;
   let pendingLilyVoiceListener = null;
   let activeRecognition = null;
@@ -17398,6 +17517,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
     pendingLilyVoiceListener = null;
     const utterance = new SpeechSynthesisUtterance(String(text));
+    const mascot = document.getElementById('trustMascotMover');
+    mascot?.classList.remove('is-talking');
+    const stopTalking = () => mascot?.classList.remove('is-talking');
+    utterance.onstart = () => mascot?.classList.add('is-talking');
+    utterance.onend = stopTalking; utterance.onerror = stopTalking;
     utterance.lang = speechLocales[lang] || 'en-IN';
     utterance.pitch = 2;
     utterance.rate = 1.16;
@@ -17457,11 +17581,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (!SpeechRecognition) {
       if (purpose === 'interview') setInterviewRecordingButton(false);
       if (purpose === 'lily') setLilyMicButton(false);
-      setVoiceStatus('Voice input is not supported in this browser. You can type instead.', purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus');
+      setVoiceStatus('Voice input is not supported in this browser. You can type instead.', purpose === 'interview' ? 'interviewVoiceStatus' : purpose === 'campus-chat' ? 'campusChatVoiceStatus' : 'lilyVoiceStatus');
       return false;
     }
     if (activeRecognition) {
-      setVoiceStatus('Finish the current recording first.', purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus');
+      setVoiceStatus('Finish the current recording first.', purpose === 'interview' ? 'interviewVoiceStatus' : purpose === 'campus-chat' ? 'campusChatVoiceStatus' : 'lilyVoiceStatus');
       return false;
     }
     const recognition = new SpeechRecognition();
@@ -17478,11 +17602,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     };
     activeRecognition = recognition;
     activeRecognitionPurpose = purpose;
+    const mascot = document.getElementById('trustMascotMover');
+    if (purpose === 'lily' || purpose === 'campus-chat') mascot?.classList.add('is-listening');
     activeRecognitionTarget = target;
     recognition.lang = speechLocale();
+    if (purpose === 'campus-chat' && target) target.value = '';
     recognition.interimResults = true;
     recognition.continuous = purpose === 'interview';
-    const statusId = purpose === 'interview' ? 'interviewVoiceStatus' : 'lilyVoiceStatus';
+    const statusId = purpose === 'interview' ? 'interviewVoiceStatus' : purpose === 'campus-chat' ? 'campusChatVoiceStatus' : 'lilyVoiceStatus';
     if (purpose === 'interview') setInterviewRecordingButton(true);
     if (purpose === 'lily') setLilyMicButton(true);
     setVoiceStatus('Listening… speak now. Your words will appear as text.', statusId);
@@ -17491,6 +17618,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       let transcript = '';
       for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
       if (target) target.value = transcript.trim();
+      if (purpose === 'campus-chat' && event.results[event.results.length - 1]?.isFinal) { setVoiceStatus('I heard you. Sending your question…', statusId); recognition.stop(); }
       if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
         setVoiceStatus('I heard you. Sending your question to Mila…', statusId);
         clearTimeout(lilySpeechSendTimer);
@@ -17499,19 +17627,26 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       if (purpose === 'interview') setVoiceStatus('Transcript ready. Stop recording when finished; feedback will appear automatically.', statusId);
     };
     recognition.onerror = event => {
+      if (purpose === 'lily' || purpose === 'campus-chat') mascot?.classList.remove('is-listening');
       setVoiceStatus(event.error === 'not-allowed' ? 'Microphone permission was blocked. Allow microphone access or type instead.' : `Voice input stopped (${event.error}). You can type instead.`, statusId);
     };
     recognition.onend = () => {
+      if (purpose === 'lily' || purpose === 'campus-chat') mascot?.classList.remove('is-listening');
       if (activeRecognition === recognition) {
         activeRecognition = null;
         activeRecognitionPurpose = '';
         activeRecognitionTarget = null;
       }
       if (purpose === 'interview') setInterviewRecordingButton(false);
+      if (purpose === 'campus-chat') setCampusChatMicButton(false);
       if (purpose === 'lily') {
         setLilyMicButton(false);
         if (recognitionHadSpeech && target?.value.trim()) sendLilyVoiceMessage();
         else if (!lilySpeechSent) setVoiceStatus('No speech detected. Try again or type instead.', statusId);
+      }
+      else if (purpose === 'campus-chat') {
+        if (recognitionHadSpeech && target?.value.trim()) { setVoiceStatus('Sending your voice question…', statusId); window.setTimeout(() => { if (target?.value.trim()) void window.sendMessage(); }, 60); }
+        else setVoiceStatus('No speech detected. Tap the microphone to try again or type instead.', statusId);
       }
       else if (purpose === 'interview' && target?.value.trim()) {
         setVoiceStatus('Recording stopped. Analyzing your transcript…', statusId);
@@ -17523,7 +17658,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       else if (document.getElementById(statusId)?.textContent === 'Listening… speak now. Your words will appear as text.') setVoiceStatus('No speech detected. Try again or type instead.', statusId);
     };
     try { recognition.start(); return true; }
-    catch (_) { activeRecognition = null; if (purpose === 'interview') setInterviewRecordingButton(false); if (purpose === 'lily') setLilyMicButton(false); setVoiceStatus('Could not start the microphone. Try again or type instead.', statusId); return false; }
+    catch (_) { mascot?.classList.remove('is-listening'); activeRecognition = null; if (purpose === 'interview') setInterviewRecordingButton(false); if (purpose === 'lily') setLilyMicButton(false); if (purpose === 'campus-chat') setCampusChatMicButton(false); setVoiceStatus('Could not start the microphone. Try again or type instead.', statusId); return false; }
   };
   window.toggleLilyListening = () => {
     if (activeRecognition && activeRecognitionPurpose === 'lily') { activeRecognition.stop(); return; }
@@ -17703,16 +17838,20 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.sendLilyMessage({ preventDefault() {} });
   };
   const milaChatContext = { turn: 0, userMood: 'neutral', lastUser: '', lastReply: '' };
-  window.MilaChatReactions = {
+  window.MilaCore = window.MilaChatReactions = {
+    name: "MilaCore",
+    context: milaChatContext,
     async onVisitorMessage(message) {
       const text = String(message || '').trim();
       const isExplicitReaction = /\b(hi|hello|hey|good morning|good afternoon|good evening|good night|namaste|vanakkam|sad|hurt|lonely|bad day|failed|fail|lost(?: my| an?| the)? exam|exam went badly|couldn.t (?:pass|clear)|didn.t clear|down|low|angry|mad|frustrat|annoy|furious|upset|scared|afraid|worried|nervous|confus|don.t understand|unclear|help|explain|programming|coding|subject|lesson|homework|assignment|stuck|struggling|thank|thanks|appreciate|love|proud|achieved|accomplish|won|winner|success|passed|first rank|top marks|scholarship|best day|good news|surpris|unexpected|excited|amazing|awesome|great news|congrat|fantastic|question|what|why|how|when|where|can you|could you|tell me)\b|[?؟]|مرحبا|السلام|نमस्ते|வணக்கம்|നമസ്കാരം/i.test(text);
       const mood = isExplicitReaction ? (window.reactMilaToText?.(text, 'thinking') || 'thinking') : 'neutral';
-      const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
+      const line = /\b(passed|won|success|scholarship|great news|best day|happy|excited|completed my project)\b/i.test(text) ? 'That is wonderful news. I am so proud of you.'
         : /\b(sad|failed|fail|lost(?: my| an?| the)? exam|couldn.t (?:pass|clear)|didn.t clear|bad grade|lonely|down|upset|exam went badly)\b/i.test(text) ? 'I am sorry this feels difficult. I am here to listen.'
-        : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment)\b/i.test(text) ? 'Let us work through it together. Which part should we start with?'
+        : /\b(don.t understand|confused|help|explain|programming|subject|study|homework|assignment|stuck|struggling)\b/i.test(text) ? 'Let us work through it one step at a time.'
         : /\b(hello|hi|hey|good morning|good afternoon|good evening)\b/i.test(text) ? 'It is lovely to hear from you. How can I help today?'
-        : 'I am listening. Tell me a little more.';
+        : /\b(thank you|thanks|thankful|appreciate)\b/i.test(text) ? 'You are very welcome. I am glad I could help.'
+        : /\b(what|why|how|when|where|can you|could you|tell me)\b|\?/i.test(text) ? 'I am thinking it through. Let us find the answer together.'
+        : 'I am listening. Tell me what is on your mind.';
       const turn = ++milaChatContext.turn; milaChatContext.userMood = mood; milaChatContext.lastUser = text; milaChatContext.lastReply = '';
       if (greeting) { greeting.textContent = await localized(line); setTimeout(() => { if (greeting && milaChatContext.turn === turn) greeting.textContent = defaultGreeting; }, 5200); }
       return { turn, mood, line };
@@ -17724,10 +17863,13 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const userMood = context.mood;
       const replyIsSupportive = /\b(listen|sorry|one step|together|you can|try|let.s|we can|help)\b/i.test(text);
       const replyIsUseful = text.length > 80 || /\b(admission|course|attendance|event|news|library|hostel|canteen|student portal)\b/i.test(text);
+      const replyBringsGoodNews = /\b(congratulations|you passed|you have passed|you won|you were selected|great news|scholarship awarded|approved successfully)\b/i.test(text);
       if (userMood === 'sad') { if (replyIsSupportive) window.expressMilaEmotion?.('love', 3000); }
       else if (userMood === 'excited' || userMood === 'happy' || userMood === 'proud') { /* Keep the visitor celebration sequence in control. */ }
+      else if (replyBringsGoodNews) window.nilaCelebrateEmotion?.();
       else if (userMood !== 'neutral' && replyIsUseful) window.expressMilaEmotion?.(/\?|which|what|how/i.test(text) ? 'thinking' : 'happy', 2600);
-      if (greeting && replyIsUseful && userMood !== 'sad' && !['excited','happy','proud'].includes(userMood)) {
+      if (greeting && replyBringsGoodNews && !['excited','happy','proud'].includes(userMood)) { greeting.textContent = await localized('That is wonderful news. I am cheering you on!'); setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 5200); }
+      else if (greeting && replyIsUseful && userMood !== 'sad' && !['excited','happy','proud'].includes(userMood)) {
         greeting.textContent = await localized(/\?|which|what|how/i.test(text) ? 'I found something helpful. Want to explore it together?' : 'I hope that helps. What would you like to know next?');
         setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 4200);
       }
@@ -17845,7 +17987,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const stopMilaMoodSequence = () => { nilaMoodSequenceTimers.forEach(clearTimeout); nilaMoodSequenceTimers = []; };
   const beginMilaMoodSequence = () => {
     stopMilaMoodSequence(); clearIdleTimers(); clearMascotMood();
-    clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing');
+    clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing', 'is-dancing-alt');
   };
   window.nilaGreetEmotion = () => {
     beginMilaMoodSequence();
@@ -17865,9 +18007,9 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     beginMilaMoodSequence();
     const dancer = document.getElementById('trustMascotMover');
     clearTimeout(window.milaDanceTimer);
-    dancer?.classList.remove('is-dancing');
-    if (dancer) { void dancer.getBoundingClientRect(); dancer.classList.add('is-dancing'); }
-    window.milaDanceTimer = setTimeout(() => dancer?.classList.remove('is-dancing'), 7900);
+    dancer?.classList.remove('is-dancing', 'is-dancing-alt');
+    if (dancer) { void dancer.getBoundingClientRect(); dancer.classList.add('is-dancing'); if (Math.random() < 0.5) dancer.classList.add('is-dancing-alt'); }
+    window.milaDanceTimer = setTimeout(() => dancer?.classList.remove('is-dancing', 'is-dancing-alt'), 7900);
     window.expressMilaEmotion('proud', 1600);
     nilaMoodSequenceTimers.push(setTimeout(() => window.expressMilaEmotion('surprised', 1500), 1400));
     nilaMoodSequenceTimers.push(setTimeout(() => {
@@ -17908,7 +18050,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.expressMilaEmotion(mood);
     return mood;
   };
-  window.resetLilyIdleMood = () => { clearIdleTimers(); stopMilaMoodSequence(); clearMascotMood(); clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing'); scheduleIdleMood(); };
+  window.resetLilyIdleMood = () => { clearIdleTimers(); stopMilaMoodSequence(); clearMascotMood(); clearTimeout(window.milaDanceTimer); mascot.classList.remove('is-dancing', 'is-dancing-alt'); scheduleIdleMood(); };
   let loginGreetingTimer = 0;
   window.dismissLilyLoginGreeting = () => { const toast = document.getElementById('lilyLoginGreeting'); toast?.classList.add('hidden'); clearTimeout(loginGreetingTimer); };
   window.lilyGreetVisitor = () => {
