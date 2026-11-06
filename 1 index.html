@@ -17933,7 +17933,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
         : /\b(hello|hi|hey|good morning|good afternoon|good evening)\b/i.test(text) ? 'It is lovely to hear from you. How can I help today?'
         : 'I am listening. Tell me what is on your mind.';
       const turn = ++milaChatContext.turn; milaChatContext.userMood = mood; milaChatContext.lastUser = text; milaChatContext.lastReply = '';
-      if (greeting) { greeting.textContent = await localized(line); setTimeout(() => { if (greeting && milaChatContext.turn === turn) greeting.textContent = defaultGreeting; }, 5200); }
+      if (greeting) { greeting.textContent = await localized(line); setTimeout(async () => { if (greeting && milaChatContext.turn === turn) greeting.textContent = await localized(welcome); }, 5200); }
       return { turn, mood, line };
     },
     async onAssistantReply(reply, context) {
@@ -17948,10 +17948,10 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       else if (userMood === 'excited' || userMood === 'happy' || userMood === 'proud') { /* Keep the visitor celebration sequence in control. */ }
       else if (replyBringsGoodNews) window.nilaCelebrateEmotion?.();
       else if (userMood !== 'neutral' && replyIsUseful) window.expressMilaEmotion?.(/\?|which|what|how/i.test(text) ? 'thinking' : 'happy', 2600);
-      if (greeting && replyBringsGoodNews && !['excited','happy','proud'].includes(userMood)) { greeting.textContent = await localized('That is wonderful news. I am cheering you on!'); setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 5200); }
+      if (greeting && replyBringsGoodNews && !['excited','happy','proud'].includes(userMood)) { greeting.textContent = await localized('That is wonderful news. I am cheering you on!'); setTimeout(async () => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = await localized(welcome); }, 5200); }
       else if (greeting && replyIsUseful && userMood !== 'sad' && !['excited','happy','proud'].includes(userMood)) {
         greeting.textContent = await localized(/\?|which|what|how/i.test(text) ? 'I found something helpful. Want to explore it together?' : 'I hope that helps. What would you like to know next?');
-        setTimeout(() => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = defaultGreeting; }, 4200);
+        setTimeout(async () => { if (greeting && milaChatContext.turn === context.turn) greeting.textContent = await localized(welcome); }, 4200);
       }
     },
     onAssistantError(context) { if (context?.turn === milaChatContext.turn) window.expressMilaEmotion?.('sad', 2600); }
