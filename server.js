@@ -43,6 +43,8 @@ const FEEDBACK_FORMS_FILE = path.join(DATA_DIR, 'student-feedback-forms.json');
 const CAMPUS_NEWS_FILE = path.join(DATA_DIR, 'campus-news.json');
 const CAMPUS_REQUESTS_FILE = path.join(DATA_DIR, 'campus-requests.json');
 const CAMPUS_REQUEST_REPORTS_FILE = path.join(DATA_DIR, 'campus-request-weekly-reports.json');
+const TIMETABLE_FILE = path.join(DATA_DIR, 'campus-timetables.json');
+const STUDY_PLANS_FILE = path.join(DATA_DIR, 'student-study-plans.json');
 const PORTAL_BACKUP_DIR = path.join(DATA_DIR, 'backups');
 const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'ai-knowledge.json': DB_FILE,
@@ -63,7 +65,9 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'student-feedback-forms.json': FEEDBACK_FORMS_FILE,
   'campus-news.json': CAMPUS_NEWS_FILE,
   'campus-requests.json': CAMPUS_REQUESTS_FILE,
-  'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE
+  'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE,
+  'campus-timetables.json': TIMETABLE_FILE,
+  'student-study-plans.json': STUDY_PLANS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
@@ -958,7 +962,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-browser-voice-v83' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-smart-timetable-study-planner-v84' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1074,6 +1078,75 @@ const server = http.createServer(async (req, res) => {
       if (!session) { sendJson(res, 401, { error: 'Sign in to your campus account.' }); return; }
       sendJson(res, 200, { ok: true, role: session.role, userId: session.userId, displayName: session.displayName, campusKey: session.campusKey || null });
       return;
+    }
+    if (pathname === '/api/timetable' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || !['student', 'teacher', 'hod', 'admin'].includes(session.role)) { sendJson(res, 401, { error: 'Sign in to view the campus timetable.' }); return; }
+      const campusKey = session.role === 'admin' ? String(url.searchParams.get('campusKey') || '') : String(session.campusKey || '');
+      if (!CAMPUS_KEYS.includes(campusKey)) { sendJson(res, 400, { error: 'Choose a valid campus.' }); return; }
+      const group = safeText(url.searchParams.get('group') || '', 80).toLowerCase();
+      const items = readJsonArray(TIMETABLE_FILE).filter(item => item.campusKey === campusKey && (!group || String(item.group || '').toLowerCase() === group || String(item.group || '').toLowerCase() === 'all students')).sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime));
+      sendJson(res, 200, { campusKey, items }, { 'Cache-Control': 'no-store' }); return;
+    }
+    if (pathname === '/api/timetable' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || !['teacher', 'hod', 'admin'].includes(session.role)) { sendJson(res, 401, { error: 'Teacher, HOD, or admin sign-in is required to publish a timetable.' }); return; }
+      const body = await readJson(req, 16 * 1024);
+      const campusKey = session.role === 'admin' ? String(body.campusKey || '') : String(session.campusKey || '');
+      const group = safeText(body.group, 80), subject = safeText(body.subject, 120), room = safeText(body.room, 100), instructor = safeText(body.instructor, 100);
+      const dayOfWeek = Number(body.dayOfWeek), startTime = String(body.startTime || ''), endTime = String(body.endTime || '');
+      if (!CAMPUS_KEYS.includes(campusKey) || group.length < 2 || subject.length < 2 || !Number.isInteger(dayOfWeek) || dayOfWeek < 1 || dayOfWeek > 6 || !/^([01]\d|2[0-3]):[0-5]\d$/.test(startTime) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(endTime) || startTime >= endTime) { sendJson(res, 400, { error: 'Enter a campus, class group, subject, Monday–Saturday, and valid start and end times.' }); return; }
+      const items = readJsonArray(TIMETABLE_FILE);
+      const groupKey = group.toLowerCase(), roomKey = room.toLowerCase(), instructorKey = (instructor || session.displayName || '').toLowerCase();
+      const conflict = readJsonArray(TIMETABLE_FILE).find(existing => {
+        if (existing.campusKey !== campusKey || existing.dayOfWeek !== dayOfWeek || startTime >= existing.endTime || endTime <= existing.startTime) return false;
+        const existingGroup = String(existing.group || '').toLowerCase(), existingRoom = String(existing.room || '').toLowerCase(), existingInstructor = String(existing.instructor || '').toLowerCase();
+        return groupKey === 'all students' || existingGroup === 'all students' || groupKey === existingGroup || (roomKey && roomKey === existingRoom) || (instructorKey && instructorKey === existingInstructor);
+      });
+      if (conflict) { sendJson(res, 409, { error: 'This class overlaps an existing class for the same group, room, or teacher. Change its time or assignment.' }); return; }
+
+      if (items.length >= 10000) { sendJson(res, 507, { error: 'The timetable is full. Ask the administrator to archive old entries.' }); return; }
+      const now = new Date().toISOString();
+      const item = { id: crypto.randomUUID(), campusKey, group, subject, dayOfWeek, startTime, endTime, room: room || 'To be announced', instructor: instructor || session.displayName || 'Teaching staff', createdBy: session.userId, createdAt: now, updatedAt: now };
+      items.push(item); writeJsonArray(TIMETABLE_FILE, items); sendJson(res, 201, item); return;
+    }
+    const timetableDelete = pathname.match(/^\/api\/timetable\/([a-f0-9-]+)$/i);
+    if (timetableDelete && req.method === 'DELETE') {
+      const session = getSession(req);
+      if (!session || !['teacher', 'hod', 'admin'].includes(session.role)) { sendJson(res, 401, { error: 'Teacher, HOD, or admin sign-in is required to edit the timetable.' }); return; }
+      const items = readJsonArray(TIMETABLE_FILE), index = items.findIndex(item => item.id === timetableDelete[1]);
+      if (index < 0) { sendJson(res, 404, { error: 'Timetable entry not found.' }); return; }
+      if (session.role !== 'admin' && items[index].campusKey !== session.campusKey) { sendJson(res, 403, { error: 'You can only edit your own campus timetable.' }); return; }
+      items.splice(index, 1); writeJsonArray(TIMETABLE_FILE, items); sendJson(res, 200, { ok: true }); return;
+    }
+    if (pathname === '/api/study-planner' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || session.role !== 'student') { sendJson(res, 401, { error: 'Sign in to view your study planner.' }); return; }
+      const items = readJsonArray(STUDY_PLANS_FILE).filter(item => item.ownerId === session.userId && item.campusKey === session.campusKey).sort((a, b) => a.dueDate.localeCompare(b.dueDate) || a.createdAt.localeCompare(b.createdAt));
+      sendJson(res, 200, { items }, { 'Cache-Control': 'no-store' }); return;
+    }
+    if (pathname === '/api/study-planner' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'student') { sendJson(res, 401, { error: 'Sign in as a student to add a study task.' }); return; }
+      const body = await readJson(req, 12 * 1024), task = safeText(body.task, 140), subject = safeText(body.subject, 100), dueDate = String(body.dueDate || ''), minutes = Number(body.minutes), priority = ['low', 'normal', 'high'].includes(body.priority) ? body.priority : 'normal';
+      const parsedDueDate = new Date(dueDate + 'T12:00:00');
+      const validDate = /^\d{4}-\d{2}-\d{2}$/.test(dueDate) && Number.isFinite(parsedDueDate.getTime()) && parsedDueDate.toISOString().slice(0, 10) === dueDate;
+      if (task.length < 3 || subject.length < 2 || !validDate || !Number.isInteger(minutes) || minutes < 5 || minutes > 600) { sendJson(res, 400, { error: 'Enter a task, subject, due date, and a study block from 5 to 600 minutes.' }); return; }
+      const items = readJsonArray(STUDY_PLANS_FILE), owned = items.filter(item => item.ownerId === session.userId && item.campusKey === session.campusKey);
+      if (owned.length >= 200) { sendJson(res, 429, { error: 'Your planner has 200 tasks. Complete or remove some before adding more.' }); return; }
+      const now = new Date().toISOString(), item = { id: crypto.randomUUID(), ownerId: session.userId, campusKey: session.campusKey, task, subject, dueDate, minutes, priority, completed: false, createdAt: now, updatedAt: now };
+      items.push(item); writeJsonArray(STUDY_PLANS_FILE, items); sendJson(res, 201, item); return;
+    }
+    const studyTaskRoute = pathname.match(/^\/api\/study-planner\/([a-f0-9-]+)$/i);
+    if (studyTaskRoute && ['PATCH', 'DELETE'].includes(req.method)) {
+      const session = getSession(req);
+      if (!session || session.role !== 'student') { sendJson(res, 401, { error: 'Sign in as a student to update your study planner.' }); return; }
+      const items = readJsonArray(STUDY_PLANS_FILE), index = items.findIndex(item => item.id === studyTaskRoute[1] && item.ownerId === session.userId && item.campusKey === session.campusKey);
+      if (index < 0) { sendJson(res, 404, { error: 'Study task not found.' }); return; }
+      if (req.method === 'DELETE') { items.splice(index, 1); writeJsonArray(STUDY_PLANS_FILE, items); sendJson(res, 200, { ok: true }); return; }
+      const body = await readJson(req, 4 * 1024);
+      if (typeof body.completed !== 'boolean') { sendJson(res, 400, { error: 'Choose whether the study task is complete.' }); return; }
+      items[index].completed = body.completed; items[index].updatedAt = new Date().toISOString(); writeJsonArray(STUDY_PLANS_FILE, items); sendJson(res, 200, items[index]); return;
     }
     if (req.method === 'GET' && pathname === '/api/public/campus-events') {
       const campusKey = String(url.searchParams.get('campusKey') || '');

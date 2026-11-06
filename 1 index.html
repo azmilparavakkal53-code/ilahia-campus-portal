@@ -261,7 +261,7 @@
     <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
         <p id="lilyLoginGreetingText" class="m-0 flex-1 text-xs font-semibold leading-relaxed"></p>
-        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Ivy’s greeting">×</button>
+        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Ira’s greeting">×</button>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
         <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
@@ -294,7 +294,7 @@
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Ivy to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Ivy Guide</span></button>
+                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Ira to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Ira Guide</span></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
                 <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
@@ -317,8 +317,8 @@
     </div>
     <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
         <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
-            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Ivy</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
-            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Ivy conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
+            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Ira</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
+            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Ira conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
         </div>
         <div id="lilyConversationMessages" class="flex max-h-64 min-h-28 flex-col gap-2 overflow-y-auto bg-slate-50 p-3 text-xs" aria-live="polite" aria-relevant="additions text"></div>
         <div class="flex gap-2 border-t border-slate-200 px-3 pt-2">
@@ -327,10 +327,10 @@
         </div>
         <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
             <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
-            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Ivy"><i class="fa-solid fa-microphone"></i></button>
+            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Ira"><i class="fa-solid fa-microphone"></i></button>
             <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
         </form>
-        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Ivy to take you somewhere.</span><button id="lilyVoiceToggle" type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
+        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Ira to take you somewhere.</span><button id="lilyVoiceToggle" hidden type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -356,10 +356,10 @@
             </aside>
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Ivy’s campus conversation greeting">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Open Ivy’s campus chat" title="Open Ivy’s campus chat">
-                            <div class="mila-animation-stage" aria-label="Ivy, Ilahia campus companion">
-                                <img class="trust-mascot-character" src="assets/mascots/ilahia-goldhoodie.png" alt="Ivy wearing the Ilahia navy and gold hoodie" loading="eager" decoding="async">
+                    <div id="trustMascotStage" aria-label="Ira’s campus conversation greeting">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Open Ira’s campus chat" title="Open Ira’s campus chat">
+                            <div class="mila-animation-stage" aria-label="Ira, Ilahia campus companion">
+                                <img class="trust-mascot-character" src="assets/mascots/ilahia-goldhoodie.png" alt="Ira wearing the Ilahia navy and gold hoodie" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-happy" src="assets/mascots/emotions/mila-happy.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-curious" src="assets/mascots/emotions/mila-curious.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-sad" src="assets/mascots/emotions/mila-sad.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
@@ -373,7 +373,7 @@
                                   <path d="M348 269 Q391 296 435 269" fill="none" stroke="#633a34" stroke-width="5" stroke-linecap="round"/>
                                 </svg>
                             </div>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Ivy! Tap me for campus news and upcoming events.</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Ira! Tap me for campus news and upcoming events.</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -779,7 +779,7 @@
                 <summary class="cursor-pointer text-[11px] font-semibold text-slate-700">Personal memory settings</summary>
                 <div class="mt-2 space-y-2">
                     <p class="text-[10px] leading-relaxed text-slate-500">Optional: save a short preference on this device for your signed-in student account. Do not save passwords, health details, or other sensitive information. You can turn it off or erase it any time.</p>
-                    <label class="flex items-start gap-2 text-[11px] text-slate-700"><input id="milaMemoryConsent" type="checkbox" class="mt-0.5 accent-blue-700" onchange="syncMilaMemoryConsent()"><span>Allow Ivy to use my saved preference in replies</span></label>
+                    <label class="flex items-start gap-2 text-[11px] text-slate-700"><input id="milaMemoryConsent" type="checkbox" class="mt-0.5 accent-blue-700" onchange="syncMilaMemoryConsent()"><span>Allow Ira to use my saved preference in replies</span></label>
                     <textarea id="milaMemoryText" maxlength="600" rows="2" class="w-full rounded-lg border border-slate-300 px-2.5 py-2 text-[11px] outline-none focus:border-blue-600" placeholder="Example: I prefer short explanations and am studying biology."></textarea>
                     <div class="flex gap-2"><button type="button" onclick="saveMilaMemorySettings()" class="rounded-lg bg-blue-800 px-3 py-1.5 text-[10px] font-bold text-white">Save preference</button><button type="button" onclick="deleteMilaMemorySettings()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-[10px] font-semibold text-slate-700">Erase</button></div>
                     <p id="milaMemoryStatus" class="text-[10px] text-slate-500" aria-live="polite">Sign in as a student to manage personal memory.</p>
@@ -788,7 +788,7 @@
             <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
                 <input type="text" id="chatInput" placeholder="Ask about courses, fees, admissions or campus services…" class="min-w-0 flex-1 border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600" onkeypress="handleKeyPress(event)">
                 <button id="campusChatMicButton" type="button" onclick="toggleCampusChatListening()" class="shrink-0 rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-100" aria-label="Speak to the campus chatbot" aria-pressed="false"><i class="fa-solid fa-microphone"></i></button>
-                <button id="campusChatVoiceToggle" type="button" onclick="toggleCampusChatVoice()" class="shrink-0 rounded-lg border border-slate-300 px-2.5 py-2 text-[10px] font-semibold text-slate-700" aria-label="Turn chatbot voice replies on" aria-pressed="false">Voice off</button>
+                <button id="campusChatVoiceToggle" hidden type="button" onclick="toggleCampusChatVoice()" class="shrink-0 rounded-lg border border-slate-300 px-2.5 py-2 text-[10px] font-semibold text-slate-700" aria-label="Turn chatbot voice replies on" aria-pressed="false">Voice off</button>
                 <button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 rounded-lg text-sm font-medium transition">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -1057,12 +1057,12 @@
                             <div class="flex gap-2"><button onclick="loadCampusLife()" class="rounded-lg bg-emerald-800 px-3 py-2 text-xs font-semibold"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button><button onclick="closeStudentCampusHub()" class="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold"><i class="fa-solid fa-arrow-left mr-1"></i>Back to portal</button></div>
                         </div>
                         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                            <section class="rounded-xl border border-blue-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-days mr-2 text-blue-700"></i>Campus calendar & reminders</h5><p class="my-2 text-[11px] text-slate-500">Official events and your mentor appointments appear here. Add private study or assignment reminders for this browser. Live class timetables and exam dates are not connected yet.</p><form onsubmit="addPlannerReminder(event)" class="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end"><label class="text-[11px] font-semibold">Reminder<input id="plannerTitle" required maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Assignment, revision…"></label><label class="text-[11px] font-semibold">Date<input id="plannerDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label><button class="rounded-lg bg-blue-700 px-3 py-2 text-xs font-bold text-white">Add</button></form><button type="button" onclick="askClassBotForStudyPlan()" class="mt-2 text-[10px] font-semibold text-blue-800 underline">Ask ClassBot to make a sample study timetable</button><div id="campusCalendarList" class="mt-3 space-y-2"><p class="text-xs text-slate-500">Loading your calendar…</p></div></section>
+                            <section class="rounded-xl border border-blue-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-days mr-2 text-blue-700"></i>Campus calendar & reminders</h5><p class="my-2 text-[11px] text-slate-500">Campus events and mentor appointments appear with your study tasks. Tasks are tied to your student account and sync across devices.</p><h6 class="mb-2 mt-3 text-xs font-bold text-slate-800">Personal study planner</h6><form onsubmit="addPlannerReminder(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-blue-50 p-3 sm:grid-cols-2"><label class="text-[11px] font-semibold">Study task<input id="plannerTitle" name="task" required maxlength="140" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Review lecture notes"></label><label class="text-[11px] font-semibold">Subject<input id="plannerSubject" name="subject" required maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Data structures"></label><label class="text-[11px] font-semibold">Due date<input id="plannerDate" name="dueDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Study block (minutes)<input id="plannerMinutes" name="minutes" type="number" min="5" max="600" step="5" value="30" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Priority<select id="plannerPriority" name="priority" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></label><div class="flex items-end"><button class="w-full rounded-lg bg-blue-700 px-3 py-2 text-xs font-bold text-white hover:bg-blue-800">Add to study plan</button></div></form><p id="studyPlanSummary" class="mt-3 text-[10px] font-semibold text-slate-600" aria-live="polite"></p><div id="studyPlanTaskList" class="mt-2 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading your study plan…</p></div><h6 class="mt-4 border-t border-slate-200 pt-3 text-xs font-bold text-slate-800">Campus calendar & reminders</h6><div id="campusCalendarList" class="mt-2 space-y-2"><p class="text-xs text-slate-500">Loading your calendar…</p></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-clock mr-2 text-violet-700"></i>Book a mentor appointment</h5><p class="my-2 text-[11px] text-slate-500">Choose a future time and explain what you need help with. Your mentor can approve or decline it.</p><form onsubmit="requestMentorAppointment(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Topic<input id="mentorAppointmentTopic" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Course planning, assignment help…"></label><div class="grid grid-cols-2 gap-2"><label class="text-[11px] font-semibold">Date<input id="mentorAppointmentDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label><label class="text-[11px] font-semibold">Time<input id="mentorAppointmentTime" type="time" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label></div><label class="block text-[11px] font-semibold">What would you like to discuss?<textarea id="mentorAppointmentNote" required maxlength="800" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="A short note for your mentor"></textarea></label><button class="rounded-lg bg-violet-700 px-4 py-2 text-xs font-bold text-white">Send appointment request</button></form><div id="studentAppointmentList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-briefcase mr-2 text-indigo-700"></i>Placements & internships</h5><p class="my-2 text-[11px] text-slate-500">Office-reviewed openings and deadlines for your institute.</p><div id="placementBoard" class="space-y-2"></div><div id="myApplications" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-sky-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-chart-line mr-2 text-sky-700"></i>Academic progress</h5><p class="my-2 text-[11px] text-slate-500">Official marks and attendance records entered by the office. Contact your department if a record looks wrong.</p><div id="studentProgressRecords" class="space-y-2"></div><div id="progressSupportAlert" class="mt-2"></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="renderPersonalSkillMap()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
-                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Ivy asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Ivy reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
+                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button hidden type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Ira asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Ira reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
                             <section class="rounded-xl border border-pink-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-heart mr-2 text-pink-700"></i>Private student support</h5><p class="my-2 text-[11px] text-slate-500">Only the student-support office can read your request. Share only what you’re comfortable sharing.</p><form onsubmit="submitCounsellingRequest(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Support topic<select id="counsellingTopic" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option>Personal wellbeing</option><option>Study stress</option><option>Accessibility support</option><option>Financial guidance</option><option>Other support</option></select></label><label class="block text-[11px] font-semibold">What support would help?<textarea id="counsellingNote" required minlength="10" maxlength="1200" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Please avoid sharing passwords or unnecessary sensitive details"></textarea></label><label class="block text-[11px] font-semibold">Preferred contact time (optional)<input id="counsellingPreferred" maxlength="80" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. after 2 pm"></label><button class="rounded-lg bg-pink-700 px-4 py-2 text-xs font-bold text-white">Send private request</button></form><div id="studentCounsellingList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-tie mr-2 text-amber-700"></i>Alumni mentors</h5><p class="my-2 text-[11px] text-slate-500">Request career guidance from office-verified alumni. The office coordinates introductions; private contact details are not shown.</p><div id="alumniMentorList" class="space-y-2"></div><div id="myMentorshipRequests" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-people-group mr-2 text-amber-600"></i>College events & clubs</h5><p class="my-2 text-[11px] text-slate-500">See admin-published campus events and register your interest.</p><div id="campusEventsList" class="space-y-2"><p class="text-xs text-slate-500">No events are currently published.</p></div></section>
@@ -1228,22 +1228,9 @@
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                         <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
                             <i class="fa-solid fa-calendar-days text-blue-700"></i>
-                            <span id="studentScheduleHeading">Institute Programmes & Learning Areas</span>
+                            <span id="studentScheduleHeading">Weekly Class Timetable</span>
                         </h4>
-                        <ul id="studentScheduleList" class="space-y-2 text-xs text-slate-700">
-                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
-                                <span>09:30 AM - Cloud Computing Architectures</span>
-                                <span class="font-semibold text-blue-700">Hall 304</span>
-                            </li>
-                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
-                                <span>11:15 AM - Machine Learning Lab</span>
-                                <span class="font-semibold text-blue-700">AI Lab 2</span>
-                            </li>
-                            <li class="flex justify-between p-2 bg-slate-50 rounded border border-slate-100">
-                                <span>02:00 PM - Professional Ethics</span>
-                                <span class="font-semibold text-blue-700">Seminar Hall</span>
-                            </li>
-                        </ul>
+                        <div class="mb-2 flex flex-wrap items-end gap-2"><label class="text-[10px] font-semibold text-slate-600">Your class / semester<input id="studentTimetableGroup" maxlength="80" class="mt-1 block w-40 rounded-lg border border-slate-300 px-2 py-1.5 text-xs" placeholder="e.g. S3 CSE A"></label><button type="button" onclick="loadStudentTimetable(true)" class="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-[10px] font-bold text-blue-800">Show timetable</button><button type="button" onclick="loadStudentTimetable(false)" class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-slate-600">Refresh</button></div><p id="studentNextClass" class="mb-2 rounded-lg bg-blue-50 px-3 py-2 text-[10px] font-semibold text-blue-900" aria-live="polite">Loading your next class…</p><ul id="studentScheduleList" class="space-y-2 text-xs text-slate-700"><li class="p-3 text-slate-500">Loading published timetable…</li></ul>
                     </div>
                     <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                         <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
@@ -1357,6 +1344,7 @@
                         </div>
                     </div>
                 </div>
+                <section id="staffTimetableSection" class="rounded-xl border border-cyan-200 bg-white p-5 shadow-sm"><div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-week mr-2 text-cyan-700"></i>Publish class timetable</h4><p class="mt-1 text-[11px] text-slate-500">Publish a weekly schedule for your campus. Students see entries matching their class / semester group, plus entries marked All students.</p></div><form id="staffTimetableForm" onsubmit="publishCampusTimetable(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-cyan-50 p-3 sm:grid-cols-2 lg:grid-cols-4"><label class="text-[10px] font-semibold">Class / semester group<input name="group" required maxlength="80" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="S3 CSE A or All students"></label><label class="text-[10px] font-semibold">Subject / class<input name="subject" required maxlength="120" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Data Structures"></label><label class="text-[10px] font-semibold">Day<select name="dayOfWeek" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></label><label class="text-[10px] font-semibold">Room / venue<input name="room" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Room 204"></label><label class="text-[10px] font-semibold">Start<input name="startTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">End<input name="endTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">Teacher name<input name="instructor" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Optional"></label><div class="flex items-end"><button class="w-full rounded-lg bg-cyan-800 px-3 py-2 text-xs font-bold text-white hover:bg-cyan-900">Publish class</button></div></form><div id="staffTimetableList" class="mt-3 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading timetable entries…</p></div></section>
                 <section id="teacherFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
                     <div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-square-poll-vertical mr-2 text-violet-700"></i>Student feedback surveys</h4><p class="mt-1 text-[11px] text-slate-500">Release a survey to students at your selected campus and review submitted responses.</p></div>
                     <form onsubmit="publishTeacherFeedback(event)" class="grid grid-cols-1 gap-3 rounded-lg bg-violet-50 p-4 sm:grid-cols-2">
@@ -1670,6 +1658,7 @@
                 <button onclick="switchAdminTab('complaints'); void loadAdminCampusNotices()" id="admTab-complaints" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">📋 Issue reports <span id="complaintsBadge" class="ml-1 rounded-full bg-blue-700 px-1.5 py-0.2 text-[10px] text-white">0</span></button>
                         <p class="hidden px-2 pt-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-slate-400 md:block">Campus & academics</p>
                         <button onclick="switchAdminTab('broadcast')" id="admTab-broadcast" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">🏫 Campus Services & Support</button>
+                        <button onclick="switchAdminTab('timetable')" id="admTab-timetable" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">🕒 Class Timetable</button>
                         <button onclick="openAdminEventManager()" id="admTab-events" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">📅 Events &amp; Alerts</button>
                         <button onclick="switchAdminTab('programs')" id="admTab-programs" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">📚 Programs</button>
                         <button onclick="switchAdminTab('ai-knowledge')" id="admTab-ai-knowledge" class="adm-tab-btn rounded-lg bg-white px-3 py-2.5 text-left text-slate-700 hover:bg-blue-50">🧠 AI Knowledge <span id="aiKnowledgeBadge" class="ml-1 rounded-full bg-cyan-600 px-1.5 py-0.2 text-[10px] text-white">0</span></button>
@@ -1930,6 +1919,7 @@
                         </div>
                     </div>
                 </div>
+                <div id="admSection-timetable" class="adm-section hidden space-y-6"><section class="rounded-xl border border-cyan-200 bg-white p-5 shadow-sm"><div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-week mr-2 text-cyan-700"></i>Campus class timetables</h4><p class="mt-1 text-xs text-slate-600">Publish and manage weekly classes. Students select the matching class / semester group to see their schedule.</p></div><label class="mb-3 block max-w-sm text-xs font-semibold">Institute<select id="adminTimetableCampus" onchange="loadAdminTimetable()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></select></label><form id="adminTimetableForm" onsubmit="publishCampusTimetable(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-cyan-50 p-3 sm:grid-cols-2 lg:grid-cols-4"><label class="text-[10px] font-semibold">Class / semester group<input name="group" required maxlength="80" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="S3 CSE A or All students"></label><label class="text-[10px] font-semibold">Subject / class<input name="subject" required maxlength="120" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Data Structures"></label><label class="text-[10px] font-semibold">Day<select name="dayOfWeek" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></label><label class="text-[10px] font-semibold">Room / venue<input name="room" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Room 204"></label><label class="text-[10px] font-semibold">Start<input name="startTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">End<input name="endTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">Teacher name<input name="instructor" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Optional"></label><div class="flex items-end"><button class="w-full rounded-lg bg-cyan-800 px-3 py-2 text-xs font-bold text-white hover:bg-cyan-900">Publish class</button></div></form><div id="adminTimetableList" class="mt-3 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Choose an institute to load its timetable.</p></div></section></div>
                 <!-- TAB 5: BROADCAST ANNOUNCEMENT -->
                 <div id="admSection-broadcast" class="adm-section space-y-6 hidden">
                     <section class="rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 shadow-sm">
@@ -2459,7 +2449,7 @@
                     { name: 'Mr. K. Y. Sadic Muhammed', role: 'Manager · Ilahia Law College', department: 'Institute management', photo: 'assets/leadership/trust-ky-sadic-muhammed.jpg', source: 'https://icet.ac.in/icet-management/' },
                     { name: 'Mrs. Shilpa U. S.', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
                     { name: 'Mr. Jijo Antony', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
-                    { name: 'Mrs. Divya Muraleedharan', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
+                    { name: 'Mrs. Diraa Muraleedharan', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
                     { name: 'Miss Ashitha Ashraf', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
                     { name: 'Miss Aneena Babu', role: 'Assistant Professor in Law', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
                     { name: 'Adv. Praveen P.', role: 'Adjunct Faculty', department: 'Ilahia Law College', source: 'https://ilahialawcollege.com/facultydesk' },
@@ -2919,7 +2909,7 @@
         function syncMilaMemoryConsent() {
             const status = document.getElementById("milaMemoryStatus"); if (!status) return;
             if (currentSessionRole !== "student") { status.textContent = "Sign in as a student to manage personal memory."; return; }
-            status.textContent = "Save your choice to apply it to Ivy replies.";
+            status.textContent = "Save your choice to apply it to Ira replies.";
         }
         function saveMilaMemorySettings() {
             const key = milaMemoryStorageKey(), consent = document.getElementById("milaMemoryConsent"), textArea = document.getElementById("milaMemoryText"), status = document.getElementById("milaMemoryStatus");
@@ -3625,6 +3615,8 @@
             try {
                 campusLifeData = await campusLifeApi('/api/campus-life');
                 renderCampusCalendar(); renderCampusAppointments(); renderCampusEvents(); renderCampusAlerts(); renderLostFound(); renderCampusMaintenance(); renderPlacements(); renderAcademicProgress(); renderCounsellingRequests(); renderAlumniMentors(); renderStudentBusRoutes(); renderCampusProjects(); renderPersonalSkillMap();
+                if (currentSessionRole === 'student') await Promise.allSettled([loadStudyPlanner(), loadStudentTimetable()]);
+                else if (['teacher', 'hod'].includes(currentSessionRole)) void loadStaffTimetable();
                 if (currentSessionRole !== 'student') renderStaffCampusLifeInbox();
             } catch (error) {
                 for (const id of ['campusCalendarList', 'studentAppointmentList', 'campusEventsList', 'campusEmergencyAlerts', 'lostFoundList', 'studentMaintenanceList', 'staffAppointmentsList', 'staffMaintenanceList', 'projectShowcaseList', 'staffProjectReviewList']) {
@@ -3786,33 +3778,128 @@
                 if (currentSessionRole === 'admin') await loadAdminCampusNotices(); else await loadCampusLife();
             } catch (error) { alert(error.message); }
         }
-        function campusPlannerStorageKey() { return `ilahia_planner_${currentSessionCampusKey}_${currentSessionUserId}`; }
-        function addPlannerReminder(event) {
-            event.preventDefault();
-            const title = document.getElementById('plannerTitle').value.trim(), date = document.getElementById('plannerDate').value;
-            if (!title || !date) return;
-            let reminders = [];
-            try { reminders = JSON.parse(localStorage.getItem(campusPlannerStorageKey()) || '[]'); } catch (_) {}
-            reminders.push({ title, date, id: crypto.randomUUID?.() || `${Date.now()}` });
-            localStorage.setItem(campusPlannerStorageKey(), JSON.stringify(reminders));
-            event.target.reset(); renderCampusCalendar();
-        }
-        function renderCampusCalendar() {
-            const list = document.getElementById('campusCalendarList'); if (!list) return;
-            let reminders = [];
-            try { reminders = JSON.parse(localStorage.getItem(campusPlannerStorageKey()) || '[]'); } catch (_) {}
-            const rows = [
-                ...(campusLifeData.events || []).map(item => ({ date: item.date, title: item.title, detail: item.location || 'Campus event', type: item.type === 'club' ? 'Club' : item.type === 'workshop' ? 'Workshop' : 'Event' })),
-                ...(campusLifeData.appointments || []).map(item => ({ date: item.date, title: `Mentor · ${item.topic}`, detail: `${item.time} · ${item.status}`, type: 'Appointment' })),
-                ...reminders.map(item => ({ id: item.id, date: item.date, title: item.title, detail: 'Personal reminder · saved on this browser', type: 'Reminder' }))
-            ].filter(item => item.date).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 12);
-            list.innerHTML = rows.length ? rows.map(item => `<article class="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 p-2.5"><div><span class="rounded bg-blue-100 px-2 py-0.5 text-[9px] font-bold text-blue-800">${escapeHTML(item.type)}</span><strong class="ml-2 text-xs text-slate-800">${escapeHTML(item.title)}</strong><p class="mt-1 text-[10px] text-slate-500">${escapeHTML(item.detail)}</p></div><div class="flex shrink-0 items-center gap-2"><time class="text-[10px] font-semibold text-slate-600">${escapeHTML(item.date)}</time>${item.type === 'Reminder' ? `<button onclick="deletePlannerReminder('${String(item.id).replace(/[^a-zA-Z0-9_-]/g, '')}')" class="text-[10px] font-semibold text-rose-700" aria-label="Delete reminder">Remove</button>` : ''}</div></article>`).join('') : '<p class="text-xs text-slate-500">No upcoming items yet. Add a reminder or check back for campus events.</p>';
-        }
-        function deletePlannerReminder(id) {
-            try { const items = JSON.parse(localStorage.getItem(campusPlannerStorageKey()) || '[]').filter(item => String(item.id).replace(/[^a-zA-Z0-9_-]/g, '') !== id); localStorage.setItem(campusPlannerStorageKey(), JSON.stringify(items)); renderCampusCalendar(); }
-            catch (_) { alert('Could not update the personal reminder list in this browser.'); }
-        }
-        async function requestMentorAppointment(event) {
+        let studentStudyPlanItems = [];
+let studentTimetableItems = [];
+function campusPlannerStorageKey() { return 'ilahia_planner_' + currentSessionCampusKey + '_' + currentSessionUserId; }
+function studentTimetableStorageKey() { return 'ilahia_timetable_group_' + currentSessionCampusKey + '_' + currentSessionUserId; }
+async function addPlannerReminder(event) {
+    event.preventDefault();
+    const form = event.currentTarget, body = Object.fromEntries(new FormData(form).entries());
+    body.minutes = Number(body.minutes);
+    try {
+        const response = await fetch('/api/study-planner', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Could not save this study task.');
+        form.reset(); document.getElementById('plannerMinutes').value = '30'; document.getElementById('plannerPriority').value = 'normal';
+        await loadStudyPlanner();
+    } catch (error) { alert(error.message || 'Could not save the study task.'); }
+}
+async function loadStudyPlanner() {
+    if (currentSessionRole !== 'student') return;
+    try {
+        const response = await fetch('/api/study-planner', { credentials: 'same-origin', cache: 'no-store' });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Could not load your study plan.');
+        studentStudyPlanItems = Array.isArray(data.items) ? data.items : [];
+        renderStudyPlanner(); renderCampusCalendar();
+    } catch (error) {
+        const list = document.getElementById('studyPlanTaskList');
+        if (list) list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load your study plan.') + '</p>';
+    }
+}
+function renderStudyPlanner() {
+    const list = document.getElementById('studyPlanTaskList'); if (!list) return;
+    const summary = document.getElementById('studyPlanSummary');
+    const today = new Date(); const upcomingLimit = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    const localDay = date => [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+    const openTasks = studentStudyPlanItems.filter(item => !item.completed);
+    const upcomingMinutes = openTasks.filter(item => item.dueDate >= localDay(today) && item.dueDate <= localDay(upcomingLimit)).reduce((total, item) => total + Number(item.minutes || 0), 0);
+    const completedCount = studentStudyPlanItems.length - openTasks.length;
+    if (summary) summary.textContent = openTasks.length + ' open tasks · ' + upcomingMinutes + ' study minutes due in the next 7 days · ' + completedCount + ' completed';
+    const sorted = [...studentStudyPlanItems].sort((a, b) => Number(a.completed) - Number(b.completed) || a.dueDate.localeCompare(b.dueDate) || (a.priority === 'high' ? -1 : 1));
+    list.innerHTML = sorted.length ? sorted.map(item => {
+        const localToday = [new Date().getFullYear(), String(new Date().getMonth() + 1).padStart(2, '0'), String(new Date().getDate()).padStart(2, '0')].join('-');
+        const overdue = !item.completed && item.dueDate < localToday;
+        const tone = item.priority === 'high' ? 'bg-rose-100 text-rose-800' : item.priority === 'low' ? 'bg-slate-100 text-slate-600' : 'bg-blue-100 text-blue-800';
+        return '<article class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white p-2.5 ' + (item.completed ? 'opacity-60' : '') + '"><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-1.5"><strong class="text-xs ' + (item.completed ? 'line-through' : '') + '">' + escapeHTML(item.task) + '</strong><span class="rounded px-1.5 py-0.5 text-[9px] font-bold ' + tone + '">' + escapeHTML(item.priority) + '</span></div><p class="mt-1 text-[10px] text-slate-500">' + escapeHTML(item.subject) + ' · ' + escapeHTML(String(item.minutes)) + ' min · ' + escapeHTML(item.dueDate) + (overdue ? ' · overdue' : '') + '</p></div><div class="flex items-center gap-2"><button type="button" onclick="toggleStudyPlannerTask('' + String(item.id).replace(/[^a-zA-Z0-9_-]/g, '') + '',' + (!item.completed) + ')" class="rounded border border-emerald-200 px-2 py-1 text-[10px] font-semibold text-emerald-800">' + (item.completed ? 'Undo' : 'Done') + '</button><button type="button" onclick="deleteStudyPlannerTask('' + String(item.id).replace(/[^a-zA-Z0-9_-]/g, '') + '')" class="rounded px-2 py-1 text-[10px] font-semibold text-rose-700">Remove</button></div></article>';
+    }).join('') : '<p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-500">Your study plan is empty. Add a subject, task, due date, and focused study block above.</p>';
+}
+async function toggleStudyPlannerTask(id, completed) {
+    try { const response = await fetch('/api/study-planner/' + encodeURIComponent(id), { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ completed }) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not update the study task.'); await loadStudyPlanner(); }
+    catch (error) { alert(error.message || 'Could not update the study task.'); }
+}
+async function deleteStudyPlannerTask(id) {
+    try { const response = await fetch('/api/study-planner/' + encodeURIComponent(id), { method: 'DELETE', credentials: 'same-origin' }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not remove the study task.'); await loadStudyPlanner(); }
+    catch (error) { alert(error.message || 'Could not remove the study task.'); }
+}
+function renderCampusCalendar() {
+    const list = document.getElementById('campusCalendarList'); if (!list) return;
+    let legacyReminders = []; try { legacyReminders = JSON.parse(localStorage.getItem(campusPlannerStorageKey()) || '[]'); } catch (_) {}
+    const rows = [
+        ...(campusLifeData.events || []).map(item => ({ date: item.date, title: item.title, detail: item.location || 'Campus event', type: item.type === 'club' ? 'Club' : item.type === 'workshop' ? 'Workshop' : 'Event' })),
+        ...(campusLifeData.appointments || []).map(item => ({ date: item.date, title: 'Mentor · ' + item.topic, detail: item.time + ' · ' + item.status, type: 'Appointment' })),
+        ...studentStudyPlanItems.filter(item => !item.completed).map(item => ({ id: item.id, date: item.dueDate, title: item.task, detail: item.subject + ' · ' + item.minutes + ' minute study block · ' + item.priority + ' priority', type: 'Study task' })),
+        ...legacyReminders.map(item => ({ id: item.id, date: item.date, title: item.title, detail: 'Older personal reminder · saved on this browser', type: 'Reminder' }))
+    ].filter(item => item.date).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 12);
+    list.innerHTML = rows.length ? rows.map(item => '<article class="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 p-2.5"><div><span class="rounded bg-blue-100 px-2 py-0.5 text-[9px] font-bold text-blue-800">' + escapeHTML(item.type) + '</span><strong class="ml-2 text-xs text-slate-800">' + escapeHTML(item.title) + '</strong><p class="mt-1 text-[10px] text-slate-500">' + escapeHTML(item.detail) + '</p></div><time class="shrink-0 text-[10px] font-semibold text-slate-600">' + escapeHTML(item.date) + '</time></article>').join('') : '<p class="text-xs text-slate-500">No upcoming items. Campus events and unfinished study tasks will appear here.</p>';
+}
+function deletePlannerReminder(id) {
+    try { const items = JSON.parse(localStorage.getItem(campusPlannerStorageKey()) || '[]').filter(item => String(item.id).replace(/[^a-zA-Z0-9_-]/g, '') !== id); localStorage.setItem(campusPlannerStorageKey(), JSON.stringify(items)); renderCampusCalendar(); }
+    catch (_) { alert('Could not update the older local reminder list.'); }
+}
+const timetableDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+async function loadStudentTimetable(saveGroup = false) {
+    const input = document.getElementById('studentTimetableGroup'), next = document.getElementById('studentNextClass'), list = document.getElementById('studentScheduleList');
+    if (!input || !list) return;
+    let group = input.value.trim();
+    try { if (!group && !saveGroup) group = localStorage.getItem(studentTimetableStorageKey()) || ''; } catch (_) {}
+    group = group || 'General'; input.value = group;
+    if (saveGroup) { try { localStorage.setItem(studentTimetableStorageKey(), group); } catch (_) {} }
+    list.innerHTML = '<li class="p-3 text-slate-500">Loading published timetable…</li>';
+    try {
+        const response = await fetch('/api/timetable?group=' + encodeURIComponent(group), { credentials: 'same-origin', cache: 'no-store' });
+        const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not load the timetable.');
+        studentTimetableItems = Array.isArray(data.items) ? data.items : [];
+        renderStudentTimetable(group);
+    } catch (error) { list.innerHTML = '<li class="rounded-lg bg-rose-50 p-3 text-rose-700">' + escapeHTML(error.message || 'Could not load the timetable.') + '</li>'; if (next) next.textContent = 'Timetable unavailable'; }
+}
+function renderStudentTimetable(group) {
+    const list = document.getElementById('studentScheduleList'), next = document.getElementById('studentNextClass'); if (!list) return;
+    const items = [...studentTimetableItems].sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime));
+    if (!items.length) { list.innerHTML = '<li class="rounded-lg bg-slate-50 p-3 text-slate-500">No timetable is published for ' + escapeHTML(group) + ' yet. Ask a teacher or campus admin to add it.</li>'; if (next) next.textContent = 'No upcoming class published for ' + group + '.'; return; }
+    const now = new Date(), today = now.getDay() || 7, clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const current = items.find(item => item.dayOfWeek === today && item.startTime <= clock && item.endTime > clock);
+    const candidates = items.filter(item => item.dayOfWeek > today || (item.dayOfWeek === today && item.startTime > clock)).sort((a, b) => ((a.dayOfWeek - today + 7) % 7) - ((b.dayOfWeek - today + 7) % 7) || a.startTime.localeCompare(b.startTime));
+    const upcoming = candidates[0];
+    if (next) next.textContent = current ? 'In progress: ' + current.subject + ' · ends ' + current.endTime + (current.room ? ' · ' + current.room : '') : upcoming ? 'Next class: ' + timetableDayNames[upcoming.dayOfWeek] + ' at ' + upcoming.startTime + ' · ' + upcoming.subject + (upcoming.room ? ' · ' + upcoming.room : '') : 'No more classes are published for this week.';
+    list.innerHTML = items.map(item => '<li class="flex flex-wrap items-center justify-between gap-2 rounded-lg border ' + (item.id === upcoming?.id || item.id === current?.id ? 'border-blue-300 bg-blue-50' : 'border-slate-100 bg-slate-50') + ' p-2"><div><span class="font-bold text-blue-800">' + escapeHTML(timetableDayNames[item.dayOfWeek]) + ' · ' + escapeHTML(item.startTime) + '–' + escapeHTML(item.endTime) + '</span><span class="ml-2 font-semibold">' + escapeHTML(item.subject) + '</span><p class="mt-0.5 text-[10px] text-slate-500">' + escapeHTML(item.instructor || 'Teaching staff') + '</p></div><span class="text-[10px] font-semibold text-slate-600">' + escapeHTML(item.room || 'Venue TBA') + '</span></li>').join('');
+}
+function renderTimetableManagerList(items, listId, isAdmin) {
+    const list = document.getElementById(listId); if (!list) return;
+    list.innerHTML = items.length ? items.map(item => '<article class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2.5"><div><strong class="text-xs">' + escapeHTML(item.subject) + '</strong><p class="mt-1 text-[10px] text-slate-600">' + escapeHTML(item.group) + ' · ' + escapeHTML(timetableDayNames[item.dayOfWeek]) + ' · ' + escapeHTML(item.startTime) + '–' + escapeHTML(item.endTime) + ' · ' + escapeHTML(item.room || 'Venue TBA') + (isAdmin ? ' · ' + escapeHTML(collegeDatabase[item.campusKey]?.shortName || item.campusKey) : '') + '</p></div><button type="button" onclick="removeCampusTimetableEntry('' + String(item.id).replace(/[^a-zA-Z0-9_-]/g, '') + '',' + isAdmin + ')" class="rounded border border-rose-200 px-2 py-1 text-[10px] font-semibold text-rose-700">Remove</button></article>').join('') : '<p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-500">No classes have been published for this campus yet.</p>';
+}
+async function loadStaffTimetable() {
+    const list = document.getElementById('staffTimetableList'); if (!list) return;
+    try { const response = await fetch('/api/timetable', { credentials: 'same-origin', cache: 'no-store' }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not load timetable.'); renderTimetableManagerList(data.items || [], 'staffTimetableList', false); }
+    catch (error) { list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load timetable.') + '</p>'; }
+}
+async function loadAdminTimetable() {
+    const campus = document.getElementById('adminTimetableCampus'), list = document.getElementById('adminTimetableList'); if (!campus || !list) return;
+    if (!campus.options.length) { campus.innerHTML = Object.entries(collegeDatabase).map(([key, item]) => '<option value="' + escapeHTML(key) + '">' + escapeHTML(item.name) + '</option>').join(''); campus.value = collegeDatabase[currentActiveKey] ? currentActiveKey : 'icet'; }
+    try { const response = await fetch('/api/timetable?campusKey=' + encodeURIComponent(campus.value), { credentials: 'same-origin', cache: 'no-store' }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not load timetable.'); renderTimetableManagerList(data.items || [], 'adminTimetableList', true); }
+    catch (error) { list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load timetable.') + '</p>'; }
+}
+async function publishCampusTimetable(event) {
+    event.preventDefault(); const form = event.currentTarget, body = Object.fromEntries(new FormData(form).entries()); body.dayOfWeek = Number(body.dayOfWeek);
+    if (form.id === 'adminTimetableForm') body.campusKey = document.getElementById('adminTimetableCampus')?.value || '';
+    try { const response = await fetch('/api/timetable', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not publish this class.'); form.reset(); if (form.id === 'adminTimetableForm') await loadAdminTimetable(); else await loadStaffTimetable(); }
+    catch (error) { alert(error.message || 'Could not publish timetable entry.'); }
+}
+async function removeCampusTimetableEntry(id, isAdmin) {
+    try { const response = await fetch('/api/timetable/' + encodeURIComponent(id), { method: 'DELETE', credentials: 'same-origin' }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Could not remove timetable entry.'); if (isAdmin) await loadAdminTimetable(); else await loadStaffTimetable(); }
+    catch (error) { alert(error.message || 'Could not remove timetable entry.'); }
+}
+async function requestMentorAppointment(event) {
             event.preventDefault();
             const body = { topic: document.getElementById('mentorAppointmentTopic').value, date: document.getElementById('mentorAppointmentDate').value, time: document.getElementById('mentorAppointmentTime').value, note: document.getElementById('mentorAppointmentNote').value };
             try { await campusLifeApi('/api/campus-life/appointments', { method: 'POST', body: JSON.stringify(body) }); event.target.reset(); await loadCampusLife(); alert('Your appointment request was sent to campus faculty.'); }
@@ -5950,6 +6037,7 @@
             const activeTab = document.getElementById(`admTab-${tabId}`);
             activeTab.classList.remove('text-slate-700');
             activeTab.classList.add('text-blue-800', 'ring-2', 'ring-blue-300');
+            if (tabId === 'timetable') void loadAdminTimetable();
             const menu = document.getElementById('adminNavMenu');
             const toggle = document.getElementById('adminNavToggle');
             const chevron = document.getElementById('adminNavChevron');
@@ -17403,22 +17491,19 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const input = document.getElementById('lilyConversationInput');
   const greeting = document.querySelector('.trust-mascot-greeting');
   if (!panel || !messages || !input) return;
-  const welcome = 'Hi, I’m Ivy! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
+  const welcome = 'Hi, I’m Ira! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
   window.campusChatVoiceReplies = false;
-  try { window.campusChatVoiceReplies = localStorage.getItem("ilahiaCampusChatVoiceReplies") === "on"; } catch {}
   function setCampusChatMicButton(recording) {
     const button = document.getElementById("campusChatMicButton"); if (!button) return;
     button.innerHTML = recording ? "<i class=\"fa-solid fa-stop\"></i>" : "<i class=\"fa-solid fa-microphone\"></i>";
     button.setAttribute("aria-label", recording ? "Stop speaking to the campus chatbot" : "Speak to the campus chatbot"); button.setAttribute("aria-pressed", recording ? "true" : "false");
   }
   window.toggleCampusChatVoice = () => {
-    window.campusChatVoiceReplies = !window.campusChatVoiceReplies;
-    try { localStorage.setItem("ilahiaCampusChatVoiceReplies", window.campusChatVoiceReplies ? "on" : "off"); } catch {}
-    const button = document.getElementById("campusChatVoiceToggle"); if (button) { button.textContent = window.campusChatVoiceReplies ? "Voice on" : "Voice off"; button.setAttribute("aria-pressed", String(window.campusChatVoiceReplies)); button.setAttribute("aria-label", window.campusChatVoiceReplies ? "Turn chatbot voice replies off" : "Turn chatbot voice replies on"); }
-    if (!window.campusChatVoiceReplies && "speechSynthesis" in window) { window.speechSynthesis.cancel(); document.getElementById("trustMascotMover")?.classList.remove("is-talking"); }
+    window.campusChatVoiceReplies = false;
+    const button = document.getElementById("campusChatVoiceToggle"); if (button) { button.textContent = "Voice off"; button.setAttribute("aria-pressed", "false"); }
   };
   window.toggleCampusChatListening = () => {
     if (activeRecognition && activeRecognitionPurpose === "campus-chat") { activeRecognition.stop(); return; }
@@ -17426,8 +17511,6 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.startIlahiaSpeechRecognition("campus-chat", target);
   };
 
-  let pendingLilyVoiceTimer = 0;
-  let pendingLilyVoiceListener = null;
   let activeRecognition = null;
   let activeRecognitionPurpose = '';
   let activeRecognitionTarget = null;
@@ -17446,66 +17529,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const button = document.getElementById('lilyMicButton');
     if (!button) return;
     button.innerHTML = recording ? '<i class="fa-solid fa-stop"></i>' : '<i class="fa-solid fa-microphone"></i>';
-    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Ivy' : 'Speak to Ivy');
+    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Ira' : 'Speak to Ira');
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
-  let ivySpeechRequestId = 0;
-  const stopIvyAudio = () => {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    clearTimeout(pendingLilyVoiceTimer);
-    if (pendingLilyVoiceListener && 'speechSynthesis' in window) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
-    pendingLilyVoiceListener = null;
-    document.getElementById('trustMascotMover')?.classList.remove('is-talking');
-  };
-  window.speakLilyText = (text, lang = currentLang) => {
-    const phrase = String(text || '').trim();
-    if (!lilyVoiceEnabled || !phrase) return false;
-    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-      setVoiceStatus('Speech is not supported in this browser. You can still read Ivy’s replies.', 'lilyVoiceStatus');
-      return false;
-    }
-    const requestId = ++ivySpeechRequestId;
-    stopIvyAudio();
-    const mascot = document.getElementById('trustMascotMover');
-    const utterance = new SpeechSynthesisUtterance(phrase);
-    utterance.lang = speechLocales[lang] || 'en-IN'; utterance.pitch = 1.8; utterance.rate = 1.12;
-    utterance.onstart = () => {
-      if (requestId !== ivySpeechRequestId) return;
-      mascot?.classList.add('is-talking');
-      setVoiceStatus('Ivy is speaking with your device’s voice.', 'lilyVoiceStatus');
-    };
-    utterance.onend = utterance.onerror = () => { if (requestId === ivySpeechRequestId) mascot?.classList.remove('is-talking'); };
-    const startBrowserSpeech = () => {
-      if (requestId !== ivySpeechRequestId || !lilyVoiceEnabled) return;
-      const voices = window.speechSynthesis.getVoices();
-      const sameLanguage = voices.filter(voice => voice.lang.toLowerCase().startsWith(utterance.lang.slice(0, 2).toLowerCase()));
-      const exactLanguage = sameLanguage.find(voice => voice.lang.toLowerCase() === utterance.lang.toLowerCase());
-      const feminineVoicePatterns = { en:/female|zira|samantha|aria|jenny|sara|ava|victoria|allison|michelle|libby|sonia|natasha|moira|tessa|karen|salli|ivy|kendra|kimberly|nicole|olivia|amy|fiona|hazel|catherine|susan|google.*english/i, ml:/female|malayalam.*female|manju|sreeja|anitha|deepa|google.*മലയാളം/i, hi:/female|swara|kalpana|heera|aditi|kavya|google.*(हिन्दी|hindi)/i, ta:/female|pallavi|kavitha|kalpana|revathi|deepa|google.*(தமிழ்|tamil)/i, ar:/female|hoda|maha|amira|zainab|layla|fatima|noura|google.*(العربية|arabic)/i };
-      const feminine = sameLanguage.find(voice => (feminineVoicePatterns[lang] || feminineVoicePatterns.en).test(voice.name + ' ' + voice.voiceURI));
-      const male = /(^|\W)(male|david|mark|guy|andrew|brian|christopher|eric|thomas|daniel|alex|hemant|ravi|valluvar|maged)(\W|$)/i;
-      const unmarked = sameLanguage.find(voice => !male.test(voice.name + ' ' + voice.voiceURI));
-      utterance.voice = feminine || unmarked || exactLanguage || sameLanguage[0] || null;
-      window.speechSynthesis.speak(utterance);
-    };
-    if (window.speechSynthesis.getVoices().length) startBrowserSpeech();
-    else { pendingLilyVoiceListener = startBrowserSpeech; window.speechSynthesis.addEventListener?.('voiceschanged', startBrowserSpeech, { once:true }); pendingLilyVoiceTimer = setTimeout(startBrowserSpeech, 1400); }
-    return true;
-  };
-  window.speakIvyText = window.speakLilyText;
-  window.toggleLilyVoice = () => {
-    lilyVoiceEnabled = !lilyVoiceEnabled;
-    const button = document.getElementById('lilyVoiceToggle');
-    if (button) button.textContent = lilyVoiceEnabled ? 'Voice: on' : 'Voice: off';
-    if (!lilyVoiceEnabled) {
-      ivySpeechRequestId++; stopIvyAudio();
-    }
-    if (!lilyVoiceEnabled && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      clearTimeout(pendingLilyVoiceTimer);
-      if (pendingLilyVoiceListener) window.speechSynthesis.removeEventListener?.('voiceschanged', pendingLilyVoiceListener);
-      pendingLilyVoiceListener = null;
-    }
-  };
+  window.speakLilyText = window.speakIraText = () => false;
+  window.toggleLilyVoice = () => false;
   window.stopIlahiaSpeechRecognition = () => {
     if (activeRecognition) activeRecognition.stop();
   };
@@ -17530,7 +17558,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       clearTimeout(lilySpeechSendTimer);
       if (purpose !== 'lily' || lilySpeechSent || !target?.value.trim()) return false;
       lilySpeechSent = true;
-      setVoiceStatus('Sending your voice message to Ivy…', 'lilyVoiceStatus');
+      setVoiceStatus('Sending your voice message to Ira…', 'lilyVoiceStatus');
       void window.sendLilyMessage({ preventDefault() {} });
       return true;
     };
@@ -17554,7 +17582,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       if (target) target.value = transcript.trim();
       if (purpose === 'campus-chat' && event.results[event.results.length - 1]?.isFinal) { setVoiceStatus('I heard you. Sending your question…', statusId); recognition.stop(); }
       if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
-        setVoiceStatus('I heard you. Sending your question to Ivy…', statusId);
+        setVoiceStatus('I heard you. Sending your question to Ira…', statusId);
         clearTimeout(lilySpeechSendTimer);
         lilySpeechSendTimer = window.setTimeout(() => { sendLilyVoiceMessage(); recognition.stop(); }, 350);
       }
@@ -17601,8 +17629,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const lilyOfflinePhrases = {
     ml: {
       'I’m checking the latest campus updates…': 'ഞാൻ പുതിയ ക്യാമ്പസ് അറിയിപ്പുകൾ പരിശോധിക്കുകയാണ്…',
-      'Hi! I’m Ivy, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ Ivy, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
-      'I’m Ivy. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ Ivyയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
+      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ Ira, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
+      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ Iraയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'ക്യാമ്പസ് വാർത്തകളും പരിപാടികളും പറയാനും ശരിയായ സ്ഥാപന പോർട്ടലിലേക്ക് കൊണ്ടുപോകാനും എനിക്ക് കഴിയും. “ലോ കോളേജ് സ്റ്റുഡന്റ് പോർട്ടലിലേക്ക് കൊണ്ടുപോകൂ” എന്ന് ചോദിക്കൂ.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'ആദ്യം സ്ഥാപനം തിരഞ്ഞെടുക്കൂ. ശേഷം “സ്റ്റുഡന്റ് പോർട്ടൽ തുറക്കൂ” എന്ന് പറയൂ; ആ സ്ഥാപനത്തിന്റെ ലോഗിൻ തുറക്കാം.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'ഇപ്പോൾ വരാനിരിക്കുന്ന ക്യാമ്പസ് പരിപാടികൾ പ്രസിദ്ധീകരിച്ചിട്ടില്ല. പുതിയ അറിയിപ്പുകൾക്കായി പിന്നീട് ക്യാമ്പസ് ഇൻബോക്സ് പരിശോധിക്കൂ.',
@@ -17610,8 +17638,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     hi: {
       'I’m checking the latest campus updates…': 'मैं कैंपस की नई जानकारी देख रही हूँ…',
-      'Hi! I’m Ivy, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं Ivy, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
-      'I’m Ivy. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं Ivy हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
+      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं Ira, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
+      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं Ira हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'मैं कैंपस की ताज़ा खबरें और कार्यक्रम बता सकती हूँ और सही संस्थान पोर्टल तक पहुँचा सकती हूँ। कहें: “मुझे लॉ कॉलेज के छात्र पोर्टल पर ले चलो।”',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'पहले संस्थान चुनें, फिर “छात्र पोर्टल खोलो” कहें। मैं उस कैंपस का लॉगिन खोल दूँगी।',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'अभी कैंपस के कोई आगामी कार्यक्रम प्रकाशित नहीं हैं। नई सूचनाओं के लिए बाद में कैंपस इनबॉक्स देखें।',
@@ -17619,8 +17647,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ta: {
       'I’m checking the latest campus updates…': 'சமீபத்திய வளாக அறிவிப்புகளைப் பார்க்கிறேன்…',
-      'Hi! I’m Ivy, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் Ivy, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
-      'I’m Ivy. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் Ivy. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
+      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் Ira, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
+      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் Ira. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'வளாகச் செய்திகள் மற்றும் நிகழ்வுகளைச் சொல்லவும் சரியான கல்லூரி போர்ட்டலுக்கு வழிகாட்டவும் முடியும். “என்னை சட்டக் கல்லூரி மாணவர் போர்ட்டலுக்கு அழைத்துச் செல்” என்று கேளுங்கள்.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'முதலில் கல்வி நிறுவனத்தைத் தேர்ந்தெடுத்து, “மாணவர் போர்ட்டலைத் திற” என்று சொல்லுங்கள். அந்த வளாக உள்நுழைவைத் திறக்கிறேன்.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'தற்போது வரவிருக்கும் வளாக நிகழ்வுகள் வெளியிடப்படவில்லை. புதிய அறிவிப்புகளுக்கு பின்னர் வளாக இன்பாக்ஸைப் பாருங்கள்.',
@@ -17628,8 +17656,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ar: {
       'I’m checking the latest campus updates…': 'أتحقق من آخر تحديثات الحرم…',
-      'Hi! I’m Ivy, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا Ivy، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
-      'I’m Ivy. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا Ivy. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
+      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا Ira، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
+      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا Ira. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'يمكنني مشاركة أخبار الحرم والفعاليات وإرشادك إلى بوابة المعهد المناسبة. قل: «خذني إلى بوابة طلاب كلية القانون».',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'اختر المعهد أولاً ثم قل «افتح بوابة الطلاب» لأفتح صفحة تسجيل الدخول الخاصة به.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'لا توجد فعاليات قادمة منشورة حالياً. تحقق من صندوق وارد الحرم لاحقاً للاطلاع على الإعلانات الجديدة.',
@@ -17690,13 +17718,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (!events.length) return 'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.';
     return `Here are the upcoming published events:\n${events.map(item => `• ${item.title}${item.date ? ` — ${item.date}` : ''} (${collegeDatabase[item.campusKey]?.shortName || 'Campus'})${item.location ? ` · ${item.location}` : ''}${item.details ? `\n  ${plain(item.details)}` : ''}`).join('\n')}`;
   }
+  const mascotConversationHistory = [];
   async function makeReply(question) {
     const english = currentLang === 'en' ? question : await translateText(question, 'en', currentLang);
     const query = `${english} ${question}`.toLowerCase();
     if (/\b(admin(?:istrator)?(?: panel| dashboard| portal| login)?|webmaster dashboard)\b/.test(query)) {
       return 'Admin tools are reserved for authorized administrators. I can help with public campus information, news, events, and student portal destinations.';
     }
-    if (/\b(programming|coding|subject|course topic|lesson|homework|assignment)\b/i.test(query) && /\b(don.t understand|confus|help|explain|stuck|struggling)\b/i.test(query)) return 'That is okay. Let us break it into smaller steps. Which part is confusing: the basic idea, an example, or a specific question?';
+    if (/\b(programming|coding|subject|course topic|lesson|homework|assignment)\b/i.test(query) && /\b(don.t understand|confus|help|explain|stuck|struggling)\b/i.test(query)) return 'Let’s break it down. What topic or exact step is confusing?';
     const campusMatchers = [
       ['law', /\b(law|legal studies)\b/], ['icet', /\b(icet|engineering college|engineering and technology)\b/],
       ['arts', /\b(arts college|arts and science|arts & science)\b/], ['poly', /\b(polytechnic|poly college)\b/],
@@ -17748,16 +17777,21 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       return timeGreeting + '! It is lovely to hear from you. I’m here to chat, share campus news and events, or help you find a college service. What would you like to talk about?';
     }
     if (/\b(how are you|how are things|how is it going)\b/.test(query)) return 'I’m doing well and happy to chat with you. How are you feeling today? I can also help with campus news, events, college information, or finding a service.';
-    if (/\b(i feel sad|i am sad|i\'m sad|bad day|lonely|overwhelmed|feeling low|down today)\b/.test(query)) return 'I am sorry today feels heavy. You do not have to solve everything at once. Want to tell me what happened? I will listen, and we can figure out one small next step together.';
+    if (/\b(i feel sad|i am sad|i\'m sad|bad day|lonely|overwhelmed|feeling low|down today)\b/.test(query)) return 'I’m sorry today feels heavy. Want to tell me what happened? I’ll listen and help you find one next step.';
     if (/\b(i am angry|i\'m angry|i feel angry|frustrated|annoyed)\b/.test(query)) return 'That sounds frustrating. I am listening. What happened? We can work through it one step at a time.';
-    if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(query)) return 'I’m sorry; that result can really hurt. One exam or assignment does not define your ability or your future. Take a moment to breathe. When you are ready, tell me which subject felt hardest and we can make a small, realistic plan for your next attempt. I believe you can recover from this.';
-    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|best day|great news|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b/.test(query)) return 'That is wonderful news. Congratulations; you worked for this and deserve to enjoy the moment. I’m proud of you. What are you celebrating first?';
+    if (/\b(failed? (?:my |an? )?exam|lost (?:my |an? )?exam|didn.t pass|bad grade|low marks|couldn.t complete|could not complete|assignment went badly|i feel down)\b/.test(query)) return 'I’m sorry; that result hurts, but one exam doesn’t define you. Which subject was hardest? We can make a short plan for the next attempt.';
+    if (/\b(i passed|passed my exam|passed (?:my|an? )?exam|got first rank|first rank|top marks|best day|great news|won (?:the |a )?(?:competition|tournament|prize)|completed my (?:project|assignment)|finished my project|got admitted|received a scholarship)\b/.test(query)) return 'That’s wonderful—congratulations! What are you celebrating first?' ;
     if (/\b(that.s amazing|that.s great|great news|i am happy|i\'m happy|this is wonderful|fantastic|awesome)\b/.test(query)) return 'Yay, I am happy to celebrate with you. Tell me what happened; I want to hear all about it.';
     if (/\b(thank you|thanks|thank you so much)\b/.test(query)) return 'You are very welcome. I’m glad I could be here with you. What else would you like to chat about?';
 
-    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Ivy. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
+    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
-    return 'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”';
+    try {
+      const response = await fetch('/api/ai-chat', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'campus', query: question.slice(0, 2000), campusKey: currentActiveKey, conversation: mascotConversationHistory.slice(-8) }) });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && typeof data.answer === 'string' && data.answer.trim()) return data.answer.trim();
+    } catch (_) {}
+    return 'I can help with campus information, services, news, events, and general questions. Tell me the topic or college, and I’ll narrow it down.';
   }
   window.openLilyConversation = async () => {
     window.resetLilyIdleMood?.();
@@ -17772,8 +17806,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.sendLilyMessage({ preventDefault() {} });
   };
   const milaChatContext = { turn: 0, userMood: 'neutral', lastUser: '', lastReply: '' };
-  window.IvyCore = window.MilaCore = window.MilaChatReactions = {
-    name: "IvyCore",
+  window.IraCore = window.MilaCore = window.MilaChatReactions = {
+    name: "IraCore",
     context: milaChatContext,
     async onVisitorMessage(message) {
       const text = String(message || '').trim();
@@ -17822,13 +17856,15 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     try {
       const reply = await makeReply(question);
       const replyText = typeof reply === 'string' ? reply : reply.text;
+      mascotConversationHistory.push({ role: 'user', content: question }, { role: 'assistant', content: replyText });
+      while (mascotConversationHistory.length > 12) mascotConversationHistory.shift();
       await window.MilaChatReactions?.onAssistantReply(replyText, moodContext);
       thinking.textContent = await localized(replyText);
-      setVoiceStatus('Voice message sent. Tap the microphone to speak again.', 'lilyVoiceStatus');
+      setVoiceStatus('Reply ready. You can type another question or use the microphone.', 'lilyVoiceStatus');
       window.speakLilyText(thinking.textContent);
       if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
     }
-    catch (_) { window.MilaChatReactions?.onAssistantError(moodContext); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Ivy could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
+    catch (_) { window.MilaChatReactions?.onAssistantError(moodContext); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Ira could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };
@@ -17985,11 +18021,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const hour = new Date().getHours();
     const period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     const greetings = {
-      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Ivy, your campus companion. Tap me for campus news, events, or help finding a service.'},
-      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Ivy, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
-      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Ivy, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
-      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Ivy, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
-      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Ivy، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
+      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Ira, your campus companion. Tap me for campus news, events, or help finding a service.'},
+      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Ira, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
+      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Ira, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
+      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Ira, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
+      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Ira، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
     };
     defaultGreeting = greetings[language][period] + '! ' + greetings[language].line;
     greeting.textContent = defaultGreeting;
@@ -18028,7 +18064,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.resetLilyIdleMood();
     window.expressMilaEmotion('happy', 2200);
     const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
-    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Ivy says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Ira says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
