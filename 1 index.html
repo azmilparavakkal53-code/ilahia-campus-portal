@@ -19,6 +19,10 @@
         if (window.location.protocol === 'file:') {
             window.location.replace('http://127.0.0.1:3001/');
         }
+        // Start each fresh visit on the institute landing page, not a stale department deep link.
+        if (window.location.hash.startsWith('#department/')) {
+            history.replaceState({}, '', window.location.pathname + window.location.search);
+        }
     </script>
     <title>Ilahia Ecosystem</title>
     <!-- Tailwind CSS CDN -->
@@ -974,7 +978,7 @@
                     <span class="text-xs font-medium text-slate-600">Student portal session · stays signed in until you sign out.</span>
                     <button type="button" onclick="logoutPortalSession()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"><i class="fa-solid fa-right-from-bracket mr-1"></i>Sign out</button>
                 </div>
-                <section id="studentSuccessRadar" class="rounded-xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-4 shadow-sm"><div class="flex flex-wrap items-start justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-compass-drafting mr-2 text-cyan-800"></i>Student Success Radar</h4><p id="studentSuccessRadarSummary" class="mt-1 text-[10px] text-slate-600" aria-live="polite">Checking assignments, study tasks, and campus events…</p></div><button type="button" onclick="renderStudentSuccessRadar()" class="rounded-lg border border-cyan-200 px-3 py-1.5 text-[10px] font-bold text-cyan-900">Refresh view</button></div><div id="studentSuccessRadarItems" class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" aria-live="polite"><p class="text-[10px] text-slate-500">Your next actions will appear here.</p></div></section>
+                <section id="studentSuccessRadar" class="rounded-xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-4 shadow-sm"><div class="flex flex-wrap items-start justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-compass-drafting mr-2 text-cyan-800"></i>Student Success Radar</h4><p id="studentSuccessRadarSummary" class="mt-1 text-[10px] text-slate-600" aria-live="polite">Checking assignments, study tasks, and campus events…</p></div><button type="button" onclick="renderStudentSuccessRadar()" class="rounded-lg border border-cyan-200 px-3 py-1.5 text-[10px] font-bold text-cyan-900">Refresh view</button></div><div id="studentSuccessRadarItems" class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" aria-live="polite"><p class="text-[10px] text-slate-500">Your next actions will appear here.</p></div><div id="earlySupportPrompt" class="mt-3 hidden rounded-lg border border-violet-200 bg-violet-50 p-3 text-[11px] text-violet-950"><strong>Want help making a plan?</strong><p id="earlySupportReason" class="mt-1"></p><button type="button" onclick="requestEarlySupport()" class="mt-2 rounded-lg bg-violet-800 px-3 py-2 text-[10px] font-bold text-white">Ask for private study support</button><p class="mt-1 text-[9px] text-violet-800">This only opens a draft. Nothing is shared until you review and send it.</p></div></section>
                 <section id="studentFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
                     <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-clipboard-question mr-2 text-violet-700"></i>Student feedback &amp; surveys</h4><p class="mt-1 text-[11px] text-slate-500">Complete surveys released by your teachers.</p></div><button type="button" onclick="loadStudentFeedback()" class="text-xs font-semibold text-violet-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
                     <div id="studentFeedbackList" class="space-y-3" aria-live="polite"><p class="text-slate-500">Loading surveys…</p></div>
@@ -4040,15 +4044,32 @@ function renderStudentSuccessRadar() {
     const dueSoon=studentClassAssignments.filter(item=>!item.submitted&&item.dueDate>=today&&item.dueDate<=week).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
     const studySoon=studentStudyPlanItems.filter(item=>!item.completed&&item.dueDate>=today&&item.dueDate<=week).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
     const events=(campusLifeData.events||[]).filter(item=>item.date>=today&&item.date<=week).sort((a,b)=>a.date.localeCompare(b.date));
+    const records=campusLifeData.progress||[];
+    const progressFlags=records.filter(row=>(row.marks!==null&&row.marks!==undefined&&row.marks!==''&&Number.isFinite(Number(row.marks))&&Number(row.marks)<50)||(Number.isFinite(Number(row.attendance))&&Number(row.attendance)<75));
     const cards=[
       ...overdue.map(item=>({kind:'Overdue warning',title:item.title,date:item.dueDate,detail:'Deadline passed. Submit as soon as you can.',tone:'border-rose-200 bg-rose-50 text-rose-900'})),
       ...dueSoon.map(item=>({kind:'Assignment due',title:item.title,date:item.dueDate,detail:item.subject+' · '+(item.teacherName||'Teacher'),tone:'border-amber-200 bg-amber-50 text-amber-950'})),
+      ...progressFlags.slice(0,2).map(row=>({kind:'Progress check-in',title:row.subject||'Academic progress',date:'',detail:(Number(row.attendance)<75?'Attendance '+Number(row.attendance)+'%':'')+(Number(row.attendance)<75&&Number(row.marks)<50?' · ':'')+(Number(row.marks)<50?'Marks '+Number(row.marks)+'%':''),tone:'border-violet-200 bg-violet-50 text-violet-950'})),
       ...studySoon.map(item=>({kind:'Study plan',title:item.task,date:item.dueDate,detail:item.subject+' · '+item.minutes+' minutes',tone:'border-blue-200 bg-blue-50 text-blue-950'})),
       ...events.slice(0,2).map(item=>({kind:'Campus event',title:item.title,date:item.date,detail:item.location||item.type||'Upcoming event',tone:'border-emerald-200 bg-emerald-50 text-emerald-950'}))
     ].slice(0,6);
-    const immediate=overdue.length?'Start with '+overdue.length+' overdue assignment'+(overdue.length===1?'':'s')+'.':dueSoon.length?'Next, work on “'+dueSoon[0].title+'” due '+dueSoon[0].dueDate+'.':studySoon.length?'Keep your study plan moving: “'+studySoon[0].task+'” is next.':events.length?'No upcoming assignment deadline in the next week. Your next campus event is '+events[0].title+'.':'No urgent assignments or study tasks are due this week.';
+    const immediate=overdue.length?'Start with '+overdue.length+' overdue assignment'+(overdue.length===1?'':'s')+'.':progressFlags.length?'Your progress records suggest a check-in may help. Support is available if you want it.':dueSoon.length?'Next, work on “'+dueSoon[0].title+'” due '+dueSoon[0].dueDate+'.':studySoon.length?'Keep your study plan moving: “'+studySoon[0].task+'” is next.':events.length?'No upcoming assignment deadline in the next week. Your next campus event is '+events[0].title+'.':'No urgent assignments or study tasks are due this week.';
     summary.textContent=immediate;
     list.innerHTML=cards.length?cards.map(item=>'<article class="rounded-lg border p-2.5 '+item.tone+'"><div class="flex items-center justify-between gap-2"><span class="text-[9px] font-bold uppercase tracking-wide">'+escapeHTML(item.kind)+'</span><time class="text-[9px] font-semibold">'+escapeHTML(item.date||'')+'</time></div><strong class="mt-1 block text-[11px]">'+escapeHTML(item.title)+'</strong><p class="mt-1 text-[10px] opacity-80">'+escapeHTML(item.detail)+'</p></article>').join(''):'<p class="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-[11px] text-emerald-900">You are clear for the next week. Check the campus calendar for new events.</p>';
+    const support=document.getElementById('earlySupportPrompt'), reason=document.getElementById('earlySupportReason');
+    if(support&&reason){const needsCheckin=overdue.length>=2||progressFlags.length>0;support.classList.toggle('hidden',!needsCheckin);if(needsCheckin)reason.textContent=overdue.length>=2?'There are '+overdue.length+' overdue assignments'+(progressFlags.length?' and an academic progress flag':'')+'. A support staff member can help you plan next steps.':'One or more official progress records are below the portal’s check-in thresholds. This is a gentle prompt, not a diagnosis.';}
+}
+function requestEarlySupport(){
+    const topic=document.getElementById('counsellingTopic'),note=document.getElementById('counsellingNote');
+    if(!topic||!note)return;
+    topic.value='Study stress';
+    const today=new Date(), day=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+    const overdue=studentClassAssignments.filter(item=>!item.submitted&&item.dueDate<day);
+    const flags=(campusLifeData.progress||[]).filter(row=>(row.marks!==null&&row.marks!==undefined&&row.marks!==''&&Number.isFinite(Number(row.marks))&&Number(row.marks)<50)||(Number.isFinite(Number(row.attendance))&&Number(row.attendance)<75));
+    const context=[overdue.length?'I would like help planning around '+overdue.length+' overdue assignment(s): '+overdue.map(item=>item.title+' (due '+item.dueDate+')').join(', ')+'.':'',flags.length?'I would like to discuss my academic progress records and possible support options.':''].filter(Boolean).join(' ');
+    note.value=context||'I would like help making a manageable study plan.';
+    document.getElementById('counsellingTopic')?.scrollIntoView({behavior:'smooth',block:'center'});
+    note.focus({preventScroll:true});
 }
 async function loadStudentAssignments() {
     const list = document.getElementById('studentAssignmentList'); if (!list) return;
@@ -5505,6 +5526,7 @@ async function requestMentorAppointment(event) {
             updateCampusChatContext(null);
             document.getElementById('campusNewsTicker')?.classList.remove('hidden');
             void loadCampusNewsTicker();
+            window.lilyPopIntoCampusPage?.();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -5539,6 +5561,7 @@ async function requestMentorAppointment(event) {
             }
             document.getElementById('mainNav').classList.remove('hidden');
             document.getElementById('collegeContent').classList.remove('hidden');
+            window.lilyPopIntoCampusPage?.();
             toggleCollegeSwitcher(false);
             const switcherLabel = document.getElementById('collegeSwitcherLabel');
             if (switcherLabel) switcherLabel.textContent = 'Browse all institutes';
@@ -18426,9 +18449,12 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const landing = document.getElementById('instituteLanding');
     const collegeContent = document.getElementById('collegeContent');
     const isLanding = !!landing && !landing.classList.contains('hidden') && (!collegeContent || collegeContent.classList.contains('hidden'));
-    if (!isLanding) { mascot.hidden = true; return; }
+    if (!isLanding) { mascot.hidden = true; mascot.classList.add('hidden'); return; }
     if (mascot.parentElement !== stage) stage.appendChild(mascot);
     mascot.hidden = false;
+    mascot.classList.remove('hidden');
+    stage.hidden = false;
+    stage.classList.remove('hidden');
     Object.assign(mascot.style, { position:'', left:'', right:'', top:'', bottom:'', translate:'', zIndex:'' });
   };
   window.setTimeout(() => { window.lilyPopIntoCampusPage(false); window.lilyGreetVisitor?.(); }, 500);
