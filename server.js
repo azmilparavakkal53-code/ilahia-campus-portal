@@ -45,6 +45,7 @@ const CAMPUS_REQUESTS_FILE = path.join(DATA_DIR, 'campus-requests.json');
 const CAMPUS_REQUEST_REPORTS_FILE = path.join(DATA_DIR, 'campus-request-weekly-reports.json');
 const TIMETABLE_FILE = path.join(DATA_DIR, 'campus-timetables.json');
 const STUDY_PLANS_FILE = path.join(DATA_DIR, 'student-study-plans.json');
+const CLASS_ASSIGNMENTS_FILE = path.join(DATA_DIR, 'class-assignments.json');
 const PORTAL_BACKUP_DIR = path.join(DATA_DIR, 'backups');
 const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'ai-knowledge.json': DB_FILE,
@@ -65,9 +66,11 @@ const PORTAL_BACKUP_STORE_FILES = Object.freeze({
   'student-feedback-forms.json': FEEDBACK_FORMS_FILE,
   'campus-news.json': CAMPUS_NEWS_FILE,
   'campus-requests.json': CAMPUS_REQUESTS_FILE,
-  'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE,
+  'campus-request-weekly-reports.json': CAMPUS_REQUEST_REPORTS_FILE
+,
   'campus-timetables.json': TIMETABLE_FILE,
-  'student-study-plans.json': STUDY_PLANS_FILE
+  'student-study-plans.json': STUDY_PLANS_FILE,
+  'class-assignments.json': CLASS_ASSIGNMENTS_FILE
 });
 const MAX_BACKUP_BODY_BYTES = 120 * 1024 * 1024;
 const MAX_BACKUP_UPLOAD_BYTES = 85 * 1024 * 1024;
@@ -962,7 +965,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && pathname === '/api/health') {
     try {
       fs.accessSync(DATA_DIR, fs.constants.R_OK | fs.constants.W_OK);
-      sendJson(res, 200, { ok: true, appVersion: '2026.11.06-ira-scope-fix-v87' });
+      sendJson(res, 200, { ok: true, appVersion: '2026.11.07-tara-success-radar-v92' });
     } catch {
       sendJson(res, 503, { ok: false, error: 'Portal storage is unavailable.' });
     }
@@ -1136,6 +1139,41 @@ const server = http.createServer(async (req, res) => {
       if (owned.length >= 200) { sendJson(res, 429, { error: 'Your planner has 200 tasks. Complete or remove some before adding more.' }); return; }
       const now = new Date().toISOString(), item = { id: crypto.randomUUID(), ownerId: session.userId, campusKey: session.campusKey, task, subject, dueDate, minutes, priority, completed: false, createdAt: now, updatedAt: now };
       items.push(item); writeJsonArray(STUDY_PLANS_FILE, items); sendJson(res, 201, item); return;
+    }
+    if (pathname === '/api/class-assignments' && req.method === 'GET') {
+      const session = getSession(req);
+      if (!session || !['student', 'teacher', 'hod', 'admin'].includes(session.role)) { sendJson(res, 401, { error: 'Sign in to view class assignments.' }); return; }
+      const all = readJsonArray(CLASS_ASSIGNMENTS_FILE).filter(item => item.campusKey === session.campusKey).sort((a, b) => a.dueDate.localeCompare(b.dueDate) || b.createdAt.localeCompare(a.createdAt));
+      if (session.role === 'student') {
+        const items = all.map(item => { const own = (item.submissions || []).find(entry => entry.studentId === session.userId); return { id: item.id, title: item.title, subject: item.subject, instructions: item.instructions, dueDate: item.dueDate, teacherName: item.teacherName, createdAt: item.createdAt, submitted: !!own, submission: own ? { text: own.text, submittedAt: own.submittedAt } : null }; });
+        sendJson(res, 200, { items }, { 'Cache-Control': 'no-store' }); return;
+      }
+      const visible = session.role === 'teacher' ? all.filter(item => item.teacherId === session.userId) : all;
+      const items = visible.map(item => ({ ...item, submissionCount: (item.submissions || []).length }));
+      sendJson(res, 200, { items }, { 'Cache-Control': 'no-store' }); return;
+    }
+    if (pathname === '/api/class-assignments' && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'teacher') { sendJson(res, 401, { error: 'Teacher sign-in is required to publish an assignment.' }); return; }
+      const body = await readJson(req, 16 * 1024), title = safeText(body.title, 140), subject = safeText(body.subject, 100), instructions = safeText(body.instructions, 1500), dueDate = String(body.dueDate || '');
+      const parsed = new Date(dueDate + 'T12:00:00'), validDate = /^\d{4}-\d{2}-\d{2}$/.test(dueDate) && Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === dueDate;
+      if (title.length < 3 || subject.length < 2 || instructions.length < 5 || !validDate || dueDate < campusLocalDate()) { sendJson(res, 400, { error: 'Enter a title, subject, instructions, and a due date today or later.' }); return; }
+      const items = readJsonArray(CLASS_ASSIGNMENTS_FILE);
+      if (items.filter(item => item.campusKey === session.campusKey && item.teacherId === session.userId).length >= 150) { sendJson(res, 429, { error: 'You have reached the 150 active assignment limit.' }); return; }
+      const item = { id: crypto.randomUUID(), campusKey: session.campusKey, teacherId: session.userId, teacherName: safeText(session.displayName || session.name || 'Teacher', 100), title, subject, instructions, dueDate, submissions: [], createdAt: new Date().toISOString() };
+      items.push(item); writeJsonArray(CLASS_ASSIGNMENTS_FILE, items); sendJson(res, 201, { item }); return;
+    }
+    const assignmentSubmissionRoute = pathname.match(/^\/api\/class-assignments\/([a-f0-9-]+)\/submit$/i);
+    if (assignmentSubmissionRoute && req.method === 'POST') {
+      const session = getSession(req);
+      if (!session || session.role !== 'student') { sendJson(res, 401, { error: 'Student sign-in is required to submit class work.' }); return; }
+      const items = readJsonArray(CLASS_ASSIGNMENTS_FILE), item = items.find(entry => entry.id === assignmentSubmissionRoute[1] && entry.campusKey === session.campusKey);
+      if (!item) { sendJson(res, 404, { error: 'Assignment not found for this campus.' }); return; }
+      const body = await readJson(req, 24 * 1024), text = safeText(body.text, 5000);
+      if (text.length < 2) { sendJson(res, 400, { error: 'Add a short submission note or project link before submitting.' }); return; }
+      const submissions = Array.isArray(item.submissions) ? item.submissions : [], existing = submissions.findIndex(entry => entry.studentId === session.userId), submission = { studentId: session.userId, studentName: safeText(session.displayName || session.name || session.userId, 100), text, submittedAt: new Date().toISOString() };
+      if (existing >= 0) submissions[existing] = submission; else submissions.push(submission);
+      item.submissions = submissions; item.updatedAt = new Date().toISOString(); writeJsonArray(CLASS_ASSIGNMENTS_FILE, items); sendJson(res, 200, { ok: true, submission }); return;
     }
     const studyTaskRoute = pathname.match(/^\/api\/study-planner\/([a-f0-9-]+)$/i);
     if (studyTaskRoute && ['PATCH', 'DELETE'].includes(req.method)) {

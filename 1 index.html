@@ -261,7 +261,7 @@
     <div id="lilyLoginGreeting" class="hidden fixed right-3 top-3 z-[30002] flex w-[min(25rem,calc(100vw-1.5rem))] items-start gap-3 rounded-2xl border border-amber-200 bg-white p-3 text-slate-800 shadow-2xl" role="status" aria-live="polite">
         <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-amber-100 text-2xl" aria-hidden="true">🌼</span>
         <p id="lilyLoginGreetingText" class="m-0 flex-1 text-xs font-semibold leading-relaxed"></p>
-        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Ira’s greeting">×</button>
+        <button type="button" onclick="dismissLilyLoginGreeting()" class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100 text-lg leading-none text-slate-600" aria-label="Dismiss Tara’s greeting">×</button>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden" aria-hidden="true" focusable="false">
         <symbol id="ilahiaAiMascot" viewBox="0 0 128 128">
@@ -294,7 +294,7 @@
                 <span class="hidden md:inline text-slate-400">Mulavoor, Muvattupuzha, Kerala</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Ira to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Ira Guide</span></button>
+                <button id="quickActionOpen" type="button" onclick="openLilyConversation()" aria-label="Ask Tara to find a campus service" class="inline-flex items-center gap-2 rounded-lg border border-amber-400/50 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"><i class="fa-solid fa-wand-magic-sparkles text-amber-300" aria-hidden="true"></i><span>Tara Guide</span></button>
                 <button id="securityDeskOpen" type="button" onclick="openSecurityDesk()" class="inline-flex items-center gap-2 rounded-lg border border-emerald-700 bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800"><i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>Security Desk</span></button>
                 <button id="collegeSwitcherToggle" type="button" aria-expanded="false" aria-controls="collegeSwitcherPanel" onclick="toggleCollegeSwitcher()" class="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition"><i class="fa-solid fa-list"></i><span>Choose institute</span><i id="collegeSwitcherChevron" class="fa-solid fa-chevron-down text-[9px] transition-transform duration-300"></i></button>
                 <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-white" aria-label="Choose language"><i class="fa-solid fa-globe text-amber-300" aria-hidden="true"></i><select id="landingLangSelect" onchange="changeLanguage(this.value)" class="max-w-32 bg-transparent text-white outline-none"><option value="en">English</option><option value="ml">മലയാളം (Malayalam)</option><option value="ar">العربية (Arabic)</option><option value="hi">हिन्दी (Hindi)</option><option value="ta">தமிழ் (Tamil)</option></select></label>
@@ -317,8 +317,8 @@
     </div>
     <section id="lilyConversation" class="hidden fixed bottom-5 left-3 sm:left-5 w-[23rem] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-labelledby="lilyConversationTitle">
         <div class="flex items-center justify-between gap-3 bg-slate-950 px-4 py-3 text-white">
-            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Ira</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
-            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Ira conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
+            <div><h2 id="lilyConversationTitle" class="text-sm font-extrabold">Chat with Tara</h2><p data-lily-en="Your campus news and events companion" class="text-[10px] text-amber-200">Your campus news and events companion</p></div>
+            <button type="button" onclick="closeLilyConversation()" data-lily-en="Close" aria-label="Close Tara conversation" class="rounded-lg px-2 py-1 text-sm hover:bg-white/10">Close</button>
         </div>
         <div id="lilyConversationMessages" class="flex max-h-64 min-h-28 flex-col gap-2 overflow-y-auto bg-slate-50 p-3 text-xs" aria-live="polite" aria-relevant="additions text"></div>
         <div class="flex gap-2 border-t border-slate-200 px-3 pt-2">
@@ -327,10 +327,10 @@
         </div>
         <form class="flex gap-2 p-3" onsubmit="sendLilyMessage(event)">
             <input id="lilyConversationInput" maxlength="400" autocomplete="off" data-lily-placeholder="Ask me about campus news or events…" placeholder="Ask me about campus news or events…" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-xs outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100">
-            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Ira"><i class="fa-solid fa-microphone"></i></button>
+            <button type="button" id="lilyMicButton" onclick="toggleLilyListening()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100" aria-label="Speak to Tara"><i class="fa-solid fa-microphone"></i></button>
             <button type="submit" data-lily-en="Send" class="rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">Send</button>
         </form>
-        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Ira to take you somewhere.</span><button id="lilyVoiceToggle" hidden type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
+        <div class="flex items-center justify-between gap-2 px-3 pb-3 -mt-1"><span id="lilyVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">Type or use the microphone to ask Tara to take you somewhere.</span><button id="lilyVoiceToggle" hidden type="button" onclick="toggleLilyVoice()" class="shrink-0 text-[10px] font-semibold text-amber-800">Voice: on</button></div>
     </section>
     <main id="instituteLanding" class="min-h-[calc(100vh-54px)] bg-slate-100 px-3 py-5 sm:px-5 lg:py-8">
         <div class="mx-auto max-w-7xl">
@@ -356,10 +356,10 @@
             </aside>
             <section id="trustLeadershipPanel" translate="no" class="notranslate min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div id="trustLeadershipHeader" class="border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 px-5 py-3 text-white sm:px-7">
-                    <div id="trustMascotStage" aria-label="Ira’s campus conversation greeting">
-                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Open Ira’s campus chat" title="Open Ira’s campus chat">
-                            <div class="mila-animation-stage" aria-label="Ira, Ilahia campus companion">
-                                <img class="trust-mascot-character" src="assets/mascots/ilahia-goldhoodie.png" alt="Ira wearing the Ilahia navy and gold hoodie" loading="eager" decoding="async">
+                    <div id="trustMascotStage" aria-label="Tara’s campus conversation greeting">
+                        <div id="trustMascotMover" tabindex="0" role="button" aria-label="Open Tara’s campus chat" title="Open Tara’s campus chat">
+                            <div class="mila-animation-stage" aria-label="Tara, Ilahia campus companion">
+                                <img class="trust-mascot-character" src="assets/mascots/ilahia-goldhoodie.png" alt="Tara wearing the Ilahia navy and gold hoodie" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-happy" src="assets/mascots/emotions/mila-happy.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-curious" src="assets/mascots/emotions/mila-curious.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
                                 <img class="mila-expression-sprite mila-expression-sad" src="assets/mascots/emotions/mila-sad.webp" alt="" aria-hidden="true" loading="eager" decoding="async">
@@ -373,7 +373,7 @@
                                   <path d="M348 269 Q391 296 435 269" fill="none" stroke="#633a34" stroke-width="5" stroke-linecap="round"/>
                                 </svg>
                             </div>
-                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Ira! Tap me for campus news and upcoming events.</span>
+                            <span class="trust-mascot-greeting" aria-live="polite">Hi, I’m Tara! Tap me for campus news and upcoming events.</span>
                         </div>
                     </div>
                     <h2 class="trust-leadership-heading text-center text-2xl font-bold text-amber-100 sm:text-3xl">Ilahia Trust Leadership</h2>
@@ -429,7 +429,7 @@
             </div>
             <!-- Desktop Links & Portal Buttons -->
             <div class="hidden md:flex items-center space-x-4 font-medium text-sm text-slate-700">
-                <button type="button" onclick="openInstituteSelector()" class="rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100">Change institute</button>
+                <button type="button" onclick="returnToInstituteLanding()" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100" aria-label="Go to home page"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</button>
                 <a href="#overview" class="hover:text-blue-700 transition">Overview</a>
                 <a href="#details" class="hover:text-blue-700 transition">Programs</a>
                 <button type="button" onclick="openCampusMapPage()" class="hover:text-blue-700 transition">Campus Map</button>
@@ -460,7 +460,7 @@
             </div>
             <!-- Mobile Buttons -->
             <div id="mobileNavActions" class="md:hidden grid grid-cols-3 items-stretch gap-2">
-                <button type="button" onclick="openInstituteSelector()" class="min-h-9 rounded-lg bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-800">Institute</button>
+                <button type="button" onclick="returnToInstituteLanding()" class="min-h-9 rounded-lg bg-slate-100 px-2 py-2 text-xs font-semibold text-slate-800" aria-label="Go to home page"><i class="fa-solid fa-house mr-1" aria-hidden="true"></i>Home</button>
                 <button type="button" onclick="openCampusMapPage()" class="min-h-9 rounded-lg bg-blue-700 px-2 py-2 text-xs font-semibold text-white">Map</button>
                 <button type="button" onclick="openCampusEventInbox()" class="min-h-9 rounded-lg bg-amber-100 px-2 py-2 text-xs font-semibold text-amber-900"><i class="fa-regular fa-bell mr-1"></i>Inbox</button>
                 <a id="mobileCanteenBookingLink" href="/canteen.html" onclick="openCanteenBookingPanel(); return false;" class="flex min-h-9 items-center justify-center rounded-lg bg-amber-500 px-2 py-2 text-xs font-semibold text-white">Mess</a>
@@ -583,7 +583,7 @@
             </div>
             <section class="mt-7 rounded-xl border border-slate-200 bg-white p-5"><h3 class="text-lg font-extrabold text-slate-900">Programmes linked to this department</h3><p class="mt-1 text-xs text-slate-500">Only programmes listed in this institute’s portal records appear here. Current intake and availability may change.</p><div id="departmentProgramList" class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div></section>
             <div class="mt-8"><div class="mb-4"><h3 class="text-lg font-extrabold text-slate-900">Faculty directory</h3><p class="mt-1 text-xs text-slate-500">Names and portraits are shown only when present in the institute profile. A missing listing does not mean the department has no staff.</p></div><div id="departmentFacultyGrid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"></div></div>
-            <div class="mt-7 flex flex-wrap gap-3"><a id="departmentOfficialLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm font-bold text-blue-800 hover:bg-blue-50">Department source <i class="fa-solid fa-arrow-up-right-from-square"></i></a><button type="button" onclick="askIraAboutCurrentDepartment()" class="inline-flex items-center gap-2 rounded-lg bg-blue-800 px-4 py-2 text-sm font-bold text-white hover:bg-blue-900"><i class="fa-regular fa-comments"></i> Ask Ira about this department</button></div>
+            <div class="mt-7 flex flex-wrap gap-3"><a id="departmentOfficialLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm font-bold text-blue-800 hover:bg-blue-50">Department source <i class="fa-solid fa-arrow-up-right-from-square"></i></a><button type="button" onclick="askIraAboutCurrentDepartment()" class="inline-flex items-center gap-2 rounded-lg bg-blue-800 px-4 py-2 text-sm font-bold text-white hover:bg-blue-900"><i class="fa-regular fa-comments"></i> Ask Tara about this department</button></div>
         </div>
     </section>
     <!-- Institution Overview Section -->
@@ -796,7 +796,7 @@
                 <summary class="cursor-pointer text-[11px] font-semibold text-slate-700">Personal memory settings</summary>
                 <div class="mt-2 space-y-2">
                     <p class="text-[10px] leading-relaxed text-slate-500">Optional: save a short preference on this device for your signed-in student account. Do not save passwords, health details, or other sensitive information. You can turn it off or erase it any time.</p>
-                    <label class="flex items-start gap-2 text-[11px] text-slate-700"><input id="milaMemoryConsent" type="checkbox" class="mt-0.5 accent-blue-700" onchange="syncMilaMemoryConsent()"><span>Allow Ira to use my saved preference in replies</span></label>
+                    <label class="flex items-start gap-2 text-[11px] text-slate-700"><input id="milaMemoryConsent" type="checkbox" class="mt-0.5 accent-blue-700" onchange="syncMilaMemoryConsent()"><span>Allow Tara to use my saved preference in replies</span></label>
                     <textarea id="milaMemoryText" maxlength="600" rows="2" class="w-full rounded-lg border border-slate-300 px-2.5 py-2 text-[11px] outline-none focus:border-blue-600" placeholder="Example: I prefer short explanations and am studying biology."></textarea>
                     <div class="flex gap-2"><button type="button" onclick="saveMilaMemorySettings()" class="rounded-lg bg-blue-800 px-3 py-1.5 text-[10px] font-bold text-white">Save preference</button><button type="button" onclick="deleteMilaMemorySettings()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-[10px] font-semibold text-slate-700">Erase</button></div>
                     <p id="milaMemoryStatus" class="text-[10px] text-slate-500" aria-live="polite">Sign in as a student to manage personal memory.</p>
@@ -974,6 +974,7 @@
                     <span class="text-xs font-medium text-slate-600">Student portal session · stays signed in until you sign out.</span>
                     <button type="button" onclick="logoutPortalSession()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"><i class="fa-solid fa-right-from-bracket mr-1"></i>Sign out</button>
                 </div>
+                <section id="studentSuccessRadar" class="rounded-xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-4 shadow-sm"><div class="flex flex-wrap items-start justify-between gap-2"><div><h4 class="text-sm font-extrabold text-slate-900"><i class="fa-solid fa-compass-drafting mr-2 text-cyan-800"></i>Student Success Radar</h4><p id="studentSuccessRadarSummary" class="mt-1 text-[10px] text-slate-600" aria-live="polite">Checking assignments, study tasks, and campus events…</p></div><button type="button" onclick="renderStudentSuccessRadar()" class="rounded-lg border border-cyan-200 px-3 py-1.5 text-[10px] font-bold text-cyan-900">Refresh view</button></div><div id="studentSuccessRadarItems" class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" aria-live="polite"><p class="text-[10px] text-slate-500">Your next actions will appear here.</p></div></section>
                 <section id="studentFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
                     <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h4 class="font-bold text-slate-900"><i class="fa-solid fa-clipboard-question mr-2 text-violet-700"></i>Student feedback &amp; surveys</h4><p class="mt-1 text-[11px] text-slate-500">Complete surveys released by your teachers.</p></div><button type="button" onclick="loadStudentFeedback()" class="text-xs font-semibold text-violet-800"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div>
                     <div id="studentFeedbackList" class="space-y-3" aria-live="polite"><p class="text-slate-500">Loading surveys…</p></div>
@@ -1074,12 +1075,12 @@
                             <div class="flex gap-2"><button onclick="loadCampusLife()" class="rounded-lg bg-emerald-800 px-3 py-2 text-xs font-semibold"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button><button onclick="closeStudentCampusHub()" class="rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold"><i class="fa-solid fa-arrow-left mr-1"></i>Back to portal</button></div>
                         </div>
                         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                            <section class="rounded-xl border border-blue-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-days mr-2 text-blue-700"></i>Campus calendar & reminders</h5><p class="my-2 text-[11px] text-slate-500">Campus events and mentor appointments appear with your study tasks. Tasks are tied to your student account and sync across devices.</p><h6 class="mb-2 mt-3 text-xs font-bold text-slate-800">Personal study planner</h6><form onsubmit="addPlannerReminder(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-blue-50 p-3 sm:grid-cols-2"><label class="text-[11px] font-semibold">Study task<input id="plannerTitle" name="task" required maxlength="140" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Review lecture notes"></label><label class="text-[11px] font-semibold">Subject<input id="plannerSubject" name="subject" required maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Data structures"></label><label class="text-[11px] font-semibold">Due date<input id="plannerDate" name="dueDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Study block (minutes)<input id="plannerMinutes" name="minutes" type="number" min="5" max="600" step="5" value="30" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Priority<select id="plannerPriority" name="priority" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></label><div class="flex items-end"><button class="w-full rounded-lg bg-blue-700 px-3 py-2 text-xs font-bold text-white hover:bg-blue-800">Add to study plan</button></div></form><p id="studyPlanSummary" class="mt-3 text-[10px] font-semibold text-slate-600" aria-live="polite"></p><div id="studyPlanTaskList" class="mt-2 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading your study plan…</p></div><h6 class="mt-4 border-t border-slate-200 pt-3 text-xs font-bold text-slate-800">Campus calendar & reminders</h6><div id="campusCalendarList" class="mt-2 space-y-2"><p class="text-xs text-slate-500">Loading your calendar…</p></div></section>
+                            <section class="rounded-xl border border-blue-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-days mr-2 text-blue-700"></i>Campus calendar & reminders</h5><p class="my-2 text-[11px] text-slate-500">Campus events and mentor appointments appear with your study tasks. Tasks are tied to your student account and sync across devices.</p><h6 class="mb-2 mt-3 text-xs font-bold text-slate-800">Personal study planner</h6><form onsubmit="addPlannerReminder(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-blue-50 p-3 sm:grid-cols-2"><label class="text-[11px] font-semibold">Study task<input id="plannerTitle" name="task" required maxlength="140" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Review lecture notes"></label><label class="text-[11px] font-semibold">Subject<input id="plannerSubject" name="subject" required maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Data structures"></label><label class="text-[11px] font-semibold">Due date<input id="plannerDate" name="dueDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Study block (minutes)<input id="plannerMinutes" name="minutes" type="number" min="5" max="600" step="5" value="30" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"></label><label class="text-[11px] font-semibold">Priority<select id="plannerPriority" name="priority" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></label><div class="flex items-end"><button class="w-full rounded-lg bg-blue-700 px-3 py-2 text-xs font-bold text-white hover:bg-blue-800">Add to study plan</button></div></form><p id="studyPlanSummary" class="mt-3 text-[10px] font-semibold text-slate-600" aria-live="polite"></p><div id="studyPlanTaskList" class="mt-2 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading your study plan…</p></div><section class="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3"><div class="flex flex-wrap items-center justify-between gap-2"><div><h6 class="text-xs font-bold text-slate-900"><i class="fa-solid fa-bell mr-1 text-amber-700"></i>Teacher assignments & daily reminders</h6><p class="mt-1 text-[10px] text-slate-600">Assignment deadlines are shared by your teachers and added to your calendar.</p></div><div class="flex items-center gap-2"><label class="text-[10px] font-semibold">Daily reminder<input id="assignmentReminderTime" type="time" value="18:00" class="ml-1 rounded border border-amber-300 bg-white p-1.5"></label><button type="button" onclick="enableAssignmentNotifications()" class="rounded-lg bg-amber-700 px-3 py-2 text-[10px] font-bold text-white">Enable alerts</button></div></div><p id="assignmentReminderStatus" class="mt-2 text-[10px] text-slate-600" aria-live="polite">Daily alerts appear while this portal is open. Allow notifications when prompted.</p><div id="studentAssignmentList" class="mt-3 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading teacher assignments…</p></div></section><h6 class="mt-4 border-t border-slate-200 pt-3 text-xs font-bold text-slate-800">Campus calendar & reminders</h6><div id="campusCalendarList class="mt-2 space-y-2"><p class="text-xs text-slate-500">Loading your calendar…</p></div></section>
                             <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-clock mr-2 text-violet-700"></i>Book a mentor appointment</h5><p class="my-2 text-[11px] text-slate-500">Choose a future time and explain what you need help with. Your mentor can approve or decline it.</p><form onsubmit="requestMentorAppointment(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Topic<input id="mentorAppointmentTopic" required maxlength="120" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Course planning, assignment help…"></label><div class="grid grid-cols-2 gap-2"><label class="text-[11px] font-semibold">Date<input id="mentorAppointmentDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label><label class="text-[11px] font-semibold">Time<input id="mentorAppointmentTime" type="time" required class="mt-1 w-full rounded-lg border border-slate-300 p-2"></label></div><label class="block text-[11px] font-semibold">What would you like to discuss?<textarea id="mentorAppointmentNote" required maxlength="800" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="A short note for your mentor"></textarea></label><button class="rounded-lg bg-violet-700 px-4 py-2 text-xs font-bold text-white">Send appointment request</button></form><div id="studentAppointmentList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-briefcase mr-2 text-indigo-700"></i>Placements & internships</h5><p class="my-2 text-[11px] text-slate-500">Office-reviewed openings and deadlines for your institute.</p><div id="placementBoard" class="space-y-2"></div><div id="myApplications" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-sky-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-chart-line mr-2 text-sky-700"></i>Academic progress</h5><p class="my-2 text-[11px] text-slate-500">Official marks and attendance records entered by the office. Contact your department if a record looks wrong.</p><div id="studentProgressRecords" class="space-y-2"></div><div id="progressSupportAlert" class="mt-2"></div></section>
-                            <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="renderPersonalSkillMap()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
-                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><div class="flex items-end gap-2"><button hidden type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Ira asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Ira reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
+                            <section class="rounded-xl border border-violet-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex flex-wrap items-start justify-between gap-3"><div class="flex items-start gap-3"><span class="rounded-lg bg-violet-100 p-2.5 text-violet-800"><i class="fa-solid fa-diagram-project"></i></span><div><h5 class="font-bold text-slate-900">My Personal Skill Map</h5><p class="mt-1 text-[11px] text-slate-500">Choose a career path and see related signals from your approved projects, certificate titles, and peer-learning activity.</p></div></div><button type="button" onclick="refreshPersonalSkillMap()" class="rounded-lg border border-violet-200 px-3 py-1.5 text-[10px] font-bold text-violet-900"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Career direction<select id="personalSkillMapCareer" onchange="selectCareerPathForStudent()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="">Choose a path</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="cybersecurity">Cybersecurity analyst</option><option value="uiux">UI/UX designer</option><option value="agritech">Agricultural technology</option><option value="mechanical">Mechanical design engineer</option><option value="business">Business / marketing analyst</option><option value="custom">Custom job target</option></select></label><button type="button" onclick="clearPersonalSkillMapGoal()" class="self-end rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-semibold text-slate-700">Clear choice</button></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Job title you are targeting<input id="personalSkillMapCustomRole" maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="e.g. Robotics engineer or clinical data analyst"></label><button type="button" onclick="generateCareerPathway()" class="self-end rounded-lg bg-violet-800 px-3 py-2 text-[10px] font-bold text-white">Build 4-year roadmap</button></div><div id="personalSkillMapAIPlan" class="mt-2 hidden whitespace-pre-line rounded-lg border border-violet-200 bg-white p-3 text-[11px] text-slate-700" aria-live="polite"></div><div class="mt-2"><button type="button" onclick="useCareerTargetInInterview()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-semibold text-indigo-900">Use this job in Interview Studio</button><span id="careerTargetSyncStatus" class="ml-2 text-[10px] text-slate-500" aria-live="polite"></span></div><div id="personalSkillMapSummary" class="mt-3 rounded-lg bg-violet-50 p-3 text-[11px] text-violet-950" aria-live="polite">Choose a career direction to build your private skill map.</div><ol id="personalSkillMapSteps" class="mt-3 space-y-2"><li class="text-xs text-slate-500">Your career steps will appear here.</li></ol><p class="mt-3 text-[9px] leading-relaxed text-slate-500">This is a guidance tool, not an assessment of mastery. It matches text in approved projects, certificate titles/categories, and accepted or completed peer-learning requests. Your career choice stays in this browser and can be cleared at any time. It does not use your grades or login credentials.</p></section>
+                            <section class="rounded-xl border border-indigo-200 bg-white p-4 shadow-sm lg:col-span-2"><div class="flex items-start gap-3"><span class="rounded-lg bg-indigo-100 p-2.5 text-indigo-800"><i class="fa-solid fa-microphone-lines"></i></span><div><h5 class="font-bold text-slate-900">AI Interview Studio</h5><p class="mt-1 text-[11px] text-slate-500">Practise a placement interview question and get feedback on answer structure, examples, and outcomes.</p></div></div><div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto]"><label class="text-[11px] font-semibold">Practice role<select id="interviewPracticeRole" onchange="resetInterviewPractice()" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option value="general">Graduate / general</option><option value="software">Software developer</option><option value="data">Data analyst</option><option value="business">Business / marketing</option><option value="mechanical">Mechanical engineering</option><option value="agritech">Agriculture technology</option></select></label><label class="text-[11px] font-semibold">Specific target job<input id="interviewCustomRole" maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2" placeholder="Optional: paste your chosen job title"></label><div class="flex items-end gap-2"><button type="button" onclick="loadCareerTargetIntoInterview()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900">Use Skill Map target</button><button hidden type="button" onclick="speakInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-volume-high mr-1"></i>Tara asks aloud</button><button type="button" onclick="nextInterviewQuestion()" class="rounded-lg border border-indigo-200 px-3 py-2 text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-shuffle mr-1"></i>Next</button></div></div><div class="mt-3 rounded-lg bg-indigo-50 p-3"><p id="interviewQuestionCount" class="text-[9px] font-bold uppercase tracking-wide text-indigo-700">Practice question</p><p id="interviewQuestionText" class="mt-1 text-sm font-bold text-slate-900">Choose a role to begin.</p></div><form onsubmit="coachInterviewAnswer(event)" class="mt-3 space-y-2"><label class="block text-[11px] font-semibold">Your practice answer<textarea id="interviewPracticeAnswer" required maxlength="2000" rows="5" class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-xs" placeholder="Answer as if you were in an interview. Do not include private or confidential information."></textarea></label><div class="flex flex-wrap items-center gap-2"><button type="button" id="interviewRecordButton" onclick="toggleInterviewRecording()" class="rounded-lg border border-rose-200 px-4 py-2 text-xs font-bold text-rose-800"><i class="fa-solid fa-microphone mr-1"></i>Record answer</button><button class="rounded-lg bg-indigo-800 px-4 py-2 text-xs font-bold text-white"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Review my answer</button><button type="button" onclick="reviewInterviewWithAI()" class="rounded-lg border border-indigo-200 px-3 py-2 text-xs font-bold text-indigo-900">Get job-specific AI coaching</button><span id="interviewVoiceStatus" class="text-[10px] text-slate-500" aria-live="polite">You can type or dictate your answer.</span></div></form><div id="interviewPracticeFeedback" class="mt-3" aria-live="polite"></div><div id="interviewAIReview" class="mt-2" aria-live="polite"></div><p class="mt-3 text-[9px] leading-relaxed text-slate-500">Tara reads the question aloud. Speech recognition is provided by your browser and may be processed by its speech service. Stop recording to analyze the transcript automatically, or type an answer and choose Review my answer. Feedback uses a local STAR structure checklist, not a connected language model.</p></section>
                             <section class="rounded-xl border border-pink-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-heart mr-2 text-pink-700"></i>Private student support</h5><p class="my-2 text-[11px] text-slate-500">Only the student-support office can read your request. Share only what you’re comfortable sharing.</p><form onsubmit="submitCounsellingRequest(event)" class="space-y-2"><label class="block text-[11px] font-semibold">Support topic<select id="counsellingTopic" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2"><option>Personal wellbeing</option><option>Study stress</option><option>Accessibility support</option><option>Financial guidance</option><option>Other support</option></select></label><label class="block text-[11px] font-semibold">What support would help?<textarea id="counsellingNote" required minlength="10" maxlength="1200" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="Please avoid sharing passwords or unnecessary sensitive details"></textarea></label><label class="block text-[11px] font-semibold">Preferred contact time (optional)<input id="counsellingPreferred" maxlength="80" class="mt-1 w-full rounded-lg border border-slate-300 p-2" placeholder="e.g. after 2 pm"></label><button class="rounded-lg bg-pink-700 px-4 py-2 text-xs font-bold text-white">Send private request</button></form><div id="studentCounsellingList" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-user-tie mr-2 text-amber-700"></i>Alumni mentors</h5><p class="my-2 text-[11px] text-slate-500">Request career guidance from office-verified alumni. The office coordinates introductions; private contact details are not shown.</p><div id="alumniMentorList" class="space-y-2"></div><div id="myMentorshipRequests" class="mt-3 space-y-2"></div></section>
                             <section class="rounded-xl border border-amber-200 bg-white p-4 shadow-sm"><h5 class="font-bold text-slate-900"><i class="fa-solid fa-people-group mr-2 text-amber-600"></i>College events & clubs</h5><p class="my-2 text-[11px] text-slate-500">See admin-published campus events and register your interest.</p><div id="campusEventsList" class="space-y-2"><p class="text-xs text-slate-500">No events are currently published.</p></div></section>
@@ -1362,6 +1363,17 @@
                     </div>
                 </div>
                 <section id="staffTimetableSection" class="rounded-xl border border-cyan-200 bg-white p-5 shadow-sm"><div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-calendar-week mr-2 text-cyan-700"></i>Publish class timetable</h4><p class="mt-1 text-[11px] text-slate-500">Publish a weekly schedule for your campus. Students see entries matching their class / semester group, plus entries marked All students.</p></div><form id="staffTimetableForm" onsubmit="publishCampusTimetable(event)" class="grid grid-cols-1 gap-2 rounded-lg bg-cyan-50 p-3 sm:grid-cols-2 lg:grid-cols-4"><label class="text-[10px] font-semibold">Class / semester group<input name="group" required maxlength="80" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="S3 CSE A or All students"></label><label class="text-[10px] font-semibold">Subject / class<input name="subject" required maxlength="120" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Data Structures"></label><label class="text-[10px] font-semibold">Day<select name="dayOfWeek" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></label><label class="text-[10px] font-semibold">Room / venue<input name="room" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Room 204"></label><label class="text-[10px] font-semibold">Start<input name="startTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">End<input name="endTime" type="time" required class="mt-1 w-full rounded border border-slate-300 bg-white p-2"></label><label class="text-[10px] font-semibold">Teacher name<input name="instructor" maxlength="100" class="mt-1 w-full rounded border border-slate-300 bg-white p-2" placeholder="Optional"></label><div class="flex items-end"><button class="w-full rounded-lg bg-cyan-800 px-3 py-2 text-xs font-bold text-white hover:bg-cyan-900">Publish class</button></div></form><div id="staffTimetableList" class="mt-3 space-y-2" aria-live="polite"><p class="text-xs text-slate-500">Loading timetable entries…</p></div></section>
+                <section id="teacherAssignmentsSection" class="rounded-xl border border-amber-200 bg-white p-5 shadow-sm">
+                    <div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-file-circle-plus mr-2 text-amber-700"></i>Assignments & project deadlines</h4><p class="mt-1 text-[11px] text-slate-600">Publish once for your campus. The due date appears in students’ portal calendar, and their submissions are listed here.</p></div>
+                    <form onsubmit="publishTeacherAssignment(event)" class="grid grid-cols-1 gap-3 rounded-lg bg-amber-50 p-4 sm:grid-cols-2">
+                        <label class="text-xs font-semibold">Assignment / project title<input id="teacherAssignmentTitle" required maxlength="140" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="e.g. Mini project report"></label>
+                        <label class="text-xs font-semibold">Subject<input id="teacherAssignmentSubject" required maxlength="100" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="e.g. Data Structures"></label>
+                        <label class="text-xs font-semibold">Submission due date<input id="teacherAssignmentDueDate" type="date" required class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs"></label>
+                        <label class="text-xs font-semibold sm:col-span-2">Instructions<textarea id="teacherAssignmentInstructions" required maxlength="1500" rows="3" class="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs" placeholder="What students should complete and how to submit it"></textarea></label>
+                        <div class="sm:col-span-2"><button id="teacherAssignmentPublish" class="rounded-lg bg-amber-700 px-4 py-2 text-xs font-bold text-white hover:bg-amber-800">Publish assignment</button><span id="teacherAssignmentMessage" class="ml-3 text-xs text-slate-600" aria-live="polite"></span></div>
+                    </form>
+                    <div class="mb-2 flex flex-wrap items-center gap-2"><button type="button" onclick="enableTeacherSubmissionNotifications()" class="rounded-lg border border-amber-300 px-3 py-2 text-[10px] font-bold text-amber-900">Enable submission alerts</button><span id="teacherAssignmentAlertStatus" class="text-[10px] text-slate-600" aria-live="polite">Alerts identify the assignment and student who submitted it.</span></div><div id="teacherAssignmentList" class="mt-4 space-y-3" aria-live="polite"><p class="text-slate-500">Your assignments and student submissions will appear here.</p></div>
+                </section>
                 <section id="teacherFeedbackSection" class="rounded-xl border border-violet-200 bg-white p-5 shadow-sm">
                     <div class="mb-3"><h4 class="font-bold text-slate-900"><i class="fa-solid fa-square-poll-vertical mr-2 text-violet-700"></i>Student feedback surveys</h4><p class="mt-1 text-[11px] text-slate-500">Release a survey to students at your selected campus and review submitted responses.</p></div>
                     <form onsubmit="publishTeacherFeedback(event)" class="grid grid-cols-1 gap-3 rounded-lg bg-violet-50 p-4 sm:grid-cols-2">
@@ -2630,8 +2642,16 @@
             activeDepartmentAIContext = { campusKey, departmentName: String(departmentName) };
             const campus = collegeDatabase[campusKey] || {};
             const head = staff.find(person => /\b(head of department|professor\s*&\s*head|\bhod\b)\b/i.test(person.role || ''));
+            const departmentPhoto = head?.photo || staff.find(person => person.photo)?.photo || campus.image || '';
             const image = document.getElementById('departmentHeroImage');
-            if (image) { image.hidden = false; image.alt = campus.image ? departmentName + ' and campus overview for ' + (campus.name || campusKey) : ''; image.src = campus.image || ''; }
+            if (image) { image.hidden = false; image.alt = departmentPhoto ? departmentName + ' department image at ' + (campus.name || campusKey) : ''; image.src = departmentPhoto; }
+            if (page) {
+                const safeDepartmentPhoto = String(departmentPhoto).replace(/["\\\r\n]/g, '');
+                page.style.backgroundImage = safeDepartmentPhoto ? `linear-gradient(rgba(248,250,252,.91), rgba(248,250,252,.94)), url("${safeDepartmentPhoto}")` : '';
+                page.style.backgroundPosition = 'center';
+                page.style.backgroundSize = 'cover';
+                page.style.backgroundRepeat = 'no-repeat';
+            }
             document.getElementById('departmentHeroIcon').className = 'fa-solid ' + departmentHeroIconFor(departmentName);
             document.getElementById('departmentHeroCampus').textContent = campus.name || campusKey;
             document.getElementById('departmentHeroTitle').textContent = departmentName;
@@ -2671,9 +2691,18 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Expose the page-scoped department state/actions to Tara's separate chat script.
+        window.getActiveInstituteKey = () => currentActiveKey;
+        window.getActiveDepartmentAIContext = () => activeDepartmentAIContext;
+        window.openDepartmentPageFromIra = (campusKey, departmentName) => {
+            if (currentActiveKey !== campusKey) switchCollegePage(campusKey);
+            openDepartmentPage(campusKey, departmentName);
+            return !document.getElementById('departmentProfilePage')?.classList.contains('hidden');
+        };
+
         function closeDepartmentPage(shouldScroll = true, fromHistory = false) {
             const page = document.getElementById('departmentProfilePage');
-            if (page) page.classList.add('hidden');
+            if (page) { page.classList.add('hidden'); page.style.backgroundImage = ''; page.style.backgroundPosition = ''; page.style.backgroundSize = ''; page.style.backgroundRepeat = ''; }
             activeDepartmentAIContext = null;
             document.title = (collegeDatabase[currentActiveKey]?.shortName || 'Ilahia Ecosystem') + ' | Ilahia Ecosystem';
             if (departmentPageReturnState) {
@@ -2778,6 +2807,23 @@
         const myGatepassCache = { student: [], teacher: [] };
         let currentSessionRole = null;
         let currentSessionUserId = '';
+        // Select the matching role cookie for each same-origin API call. This keeps separately signed-in campus portals from reading one another's session.
+        const ilahiaNativeFetch = window.fetch.bind(window);
+        window.fetch = (input, init = {}) => {
+            try {
+                const requestUrl = new URL(typeof input === 'string' ? input : input.url, window.location.href);
+                if (requestUrl.origin === window.location.origin && requestUrl.pathname.startsWith('/api/')) {
+                    let role = currentSessionRole;
+                    if (!['student', 'teacher', 'hod', 'admin'].includes(role)) role = localStorage.getItem('ilahiaActiveSessionRole');
+                    if (['student', 'teacher', 'hod', 'admin'].includes(role)) {
+                        const headers = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+                        headers.set('X-Ilahia-Session-Role', role);
+                        init = { ...init, headers };
+                    }
+                }
+            } catch (_) { /* Keep normal fetch behavior for unsupported request inputs. */ }
+            return ilahiaNativeFetch(input, init);
+        };
         let currentPortalDisplayName = '';
         let pendingPortalCampusSession = null;
         let localAdminDemoCredentials = null;
@@ -2985,7 +3031,7 @@
         function syncMilaMemoryConsent() {
             const status = document.getElementById("milaMemoryStatus"); if (!status) return;
             if (currentSessionRole !== "student") { status.textContent = "Sign in as a student to manage personal memory."; return; }
-            status.textContent = "Save your choice to apply it to Ira replies.";
+            status.textContent = "Save your choice to apply it to Tara replies.";
         }
         function saveMilaMemorySettings() {
             const key = milaMemoryStorageKey(), consent = document.getElementById("milaMemoryConsent"), textArea = document.getElementById("milaMemoryText"), status = document.getElementById("milaMemoryStatus");
@@ -3569,12 +3615,62 @@
             ] }
         };
         function personalSkillMapStorageKey() { return `ilahia-career-path:${currentSessionCampusKey || 'campus'}:${currentSessionUserId || 'student'}`; }
+        function careerTargetStorageKey() { return 'ilahia-career-target-v1:' + (currentSessionCampusKey || 'campus') + ':' + (currentSessionUserId || 'student'); }
+        function getCareerTarget() { try { return localStorage.getItem(careerTargetStorageKey()) || ''; } catch (_) { return ''; } }
+        function saveCareerTarget(title) { try { localStorage.setItem(careerTargetStorageKey(), title); } catch (_) {} }
+        function selectCareerPathForStudent() {
+            const select = document.getElementById('personalSkillMapCareer'), custom = document.getElementById('personalSkillMapCustomRole');
+            if (select?.value && select.value !== 'custom') { const path = personalSkillMapPaths[select.value]; if (path) { saveCareerTarget(path.title); if (custom) custom.value = ''; } }
+            renderPersonalSkillMap(); loadCareerTargetIntoInterview();
+        }
+        function useCareerTargetInInterview() {
+            const select = document.getElementById('personalSkillMapCareer'), custom = document.getElementById('personalSkillMapCustomRole');
+            const title = select?.value === 'custom' ? (custom?.value || '').trim() : personalSkillMapPaths[select?.value]?.title || '';
+            if (!title) { const status=document.getElementById('careerTargetSyncStatus'); if(status) status.textContent='Choose a path or enter a job title first.'; return; }
+            saveCareerTarget(title); loadCareerTargetIntoInterview(); const status=document.getElementById('careerTargetSyncStatus'); if(status) status.textContent='Shared target saved for this student account on this device.';
+        }
+        function loadCareerTargetIntoInterview() {
+            const title=getCareerTarget(), field=document.getElementById('interviewCustomRole');
+            if(field && title) { field.value=title; resetInterviewPractice(); }
+            const select=document.getElementById('personalSkillMapCareer'), custom=document.getElementById('personalSkillMapCustomRole');
+            if(title && custom && select?.value==='custom') custom.value=title;
+        }
+        async function generateCareerPathway() {
+            const select=document.getElementById('personalSkillMapCareer'), custom=document.getElementById('personalSkillMapCustomRole'), plan=document.getElementById('personalSkillMapAIPlan'), button=document.querySelector('[onclick="generateCareerPathway()"]');
+            const title=select?.value==='custom' ? (custom?.value||'').trim() : personalSkillMapPaths[select?.value]?.title || (custom?.value||'').trim();
+            if(!title){ if(plan){plan.classList.remove('hidden');plan.textContent='Choose a career direction or enter a target job title first.';} return; }
+            saveCareerTarget(title); if(custom && select?.value==='custom') custom.value=title; renderPersonalSkillMap(); loadCareerTargetIntoInterview();
+            if(plan){plan.classList.remove('hidden');plan.textContent='Building a four-year roadmap for '+title+'…';}
+            if(button){button.disabled=true;button.textContent='Building…';}
+            const fallback='Year 1 — Build foundations: learn core concepts, communication, and essential digital tools. Complete one small guided exercise and keep notes.\n\nYear 2 — Develop applied skills: practise the tools and methods used in '+title+'. Complete two portfolio projects and ask a mentor to review your work.\n\nYear 3 — Specialize and gain experience: choose a focus within '+title+', join a team project, and seek an internship, field placement, or supervised practice.\n\nYear 4 — Demonstrate job readiness: finish a substantial capstone, document measurable results, prepare a portfolio and CV, and practise interviews for '+title+'.';
+            try {
+                const response=await fetch('/api/ai-chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'student',campusKey:currentSessionCampusKey,departmentContext:title,query:'Create a practical four-year career roadmap for a student targeting the job: '+title+'. Return exactly Year 1, Year 2, Year 3, Year 4 as separate headings. For each year give core skills, one practical project, and one readiness milestone. Use short point-by-point lines. Do not promise a job or invent mandatory certifications.'})});
+                const data=await response.json().catch(()=>({})); if(!response.ok) throw new Error(data.error||'AI roadmap is unavailable.');
+                if(plan) plan.textContent=data.answer||data.reply||fallback;
+            } catch (_) { if(plan) plan.textContent=fallback+'\n\nAI detail is currently unavailable; this is the built-in starter roadmap.'; }
+            finally { if(button){button.disabled=false;button.textContent='Build 4-year roadmap';} }
+        }
+        async function reviewInterviewWithAI() {
+            const answer=document.getElementById('interviewPracticeAnswer')?.value.trim()||'', output=document.getElementById('interviewAIReview'), job=document.getElementById('interviewCustomRole')?.value.trim()||document.getElementById('interviewPracticeRole')?.selectedOptions?.[0]?.textContent||'graduate role', question=document.getElementById('interviewQuestionText')?.textContent||'';
+            if(!output)return; if(answer.length<30){output.innerHTML='<p class="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">Add your answer first, then ask for job-specific coaching.</p>';return;}
+            output.innerHTML='<p class="text-xs text-indigo-700">Reviewing this answer for '+escapeHTML(job)+'…</p>';
+            try { const response=await fetch('/api/ai-chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'student',campusKey:currentSessionCampusKey,departmentContext:job,query:'You are an interview coach. Target job: '+job+'. Interview question: '+question+'. Student answer: '+answer+'. Give a brief, constructive review in bullets: role-specific strengths, one missing technical or behavioral detail, and one concrete improvement. Do not rewrite the whole answer or claim facts not present.'})}); const data=await response.json().catch(()=>({})); if(!response.ok)throw new Error(data.error||'AI interview coaching is unavailable.'); output.innerHTML='<article class="rounded-lg border border-indigo-200 bg-indigo-50 p-3 text-xs"><strong class="text-indigo-950">Role-specific AI coaching · '+escapeHTML(job)+'</strong><p class="mt-2 whitespace-pre-line text-slate-800">'+escapeHTML(data.answer||data.reply||'No coaching text was returned.')+'</p></article>'; }
+            catch(error){output.innerHTML='<p class="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">'+escapeHTML(error.message||'AI interview coaching is unavailable. The STAR checklist is still available above.')+'</p>';}
+        }
         function renderPersonalSkillMap() {
             const select = document.getElementById('personalSkillMapCareer'), summary = document.getElementById('personalSkillMapSummary'), steps = document.getElementById('personalSkillMapSteps');
             if (!select || !summary || !steps) return;
-            const path = personalSkillMapPaths[select.value];
-            if (!path) { summary.textContent = 'Choose a career direction to build your private skill map.'; steps.innerHTML = '<li class="text-xs text-slate-500">Your career steps will appear here.</li>'; return; }
+            const customRole = (document.getElementById('personalSkillMapCustomRole')?.value || '').trim();
+            const isCustom = select.value === 'custom';
+            const path = isCustom && customRole ? { title: customRole, skills: [
+                { name: 'Core foundations', keywords: [], next: 'Learn the fundamentals and vocabulary used in ' + customRole + '. Build a weekly practice routine and document what you learn.' },
+                { name: 'Applied tools and projects', keywords: [], next: 'Practise common tools for ' + customRole + ' and complete two guided projects with clear notes.' },
+                { name: 'Specialization and experience', keywords: [], next: 'Choose a specialty, collaborate on a real-world project, and seek supervised experience or an internship.' },
+                { name: 'Capstone and job readiness', keywords: [], next: 'Finish a portfolio-ready capstone, prepare your CV, and practise interviews for ' + customRole + '.' }
+            ] } : personalSkillMapPaths[select.value];
+            if (!path) { summary.textContent = select.value === 'custom' ? 'Enter the exact job title above, then build the roadmap.' : 'Choose a career direction to build your private skill map.'; steps.innerHTML = '<li class="text-xs text-slate-500">Your career steps will appear here.</li>'; return; }
             try { localStorage.setItem(personalSkillMapStorageKey(), select.value); } catch { /* Map remains available without browser storage. */ }
+            if (!isCustom) saveCareerTarget(path.title);
             const projects = (campusLifeData.projects || []).filter(item => item.isMine && item.status === 'published');
             const certificates = personalSkillMapEvidence.certificates || [];
             const learningRequests = (personalSkillMapEvidence.requests?.outgoing || []).filter(item => ['accepted', 'completed'].includes(item.status));
@@ -3587,7 +3683,7 @@
             const hasAnyEvidence = projects.length || certificates.length || learningRequests.length || teachingRequests.length || offers.length;
             let mappedSignals = 0, nextStepSuggestion = null;
             const mapped = path.skills.map((skill, index) => {
-                const matches = text => skill.keywords.some(keyword => text.includes(keyword));
+                const matches = text => !isCustom && skill.keywords.some(keyword => text.includes(keyword));
                 const inPortfolio = matches(projectText) || matches(certificateText);
                 const learning = matches(peerText);
                 const sharing = matches(taughtText);
@@ -3596,9 +3692,9 @@
                 if (!nextStepSuggestion && !inPortfolio && !learning) nextStepSuggestion = skill;
                 const style = inPortfolio ? ['bg-emerald-100 text-emerald-800', 'fa-check'] : learning ? ['bg-blue-100 text-blue-800', 'fa-person-chalkboard'] : sharing ? ['bg-violet-100 text-violet-800', 'fa-people-arrows-left-right'] : ['bg-slate-100 text-slate-700', 'fa-arrow-right'];
                 const sources = [inPortfolio && 'project / certificate', learning && 'peer-learning request', sharing && 'your skill offer'].filter(Boolean).join(' · ');
-                return `<li class="relative grid grid-cols-[28px_1fr] gap-3"><span class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full ${style[0]}"><i class="fa-solid ${style[1]} text-[10px]"></i></span>${index < path.skills.length - 1 ? '<span class="absolute left-[13px] top-7 h-[calc(100%-10px)] border-l-2 border-violet-100"></span>' : ''}<article class="mb-2 min-w-0 rounded-lg border border-slate-200 bg-white p-3"><div class="flex flex-wrap items-center justify-between gap-2"><strong class="text-xs text-slate-900">${index + 1}. ${escapeHTML(skill.name)}</strong><span class="rounded-full ${style[0]} px-2 py-1 text-[9px] font-bold">${state}</span></div>${sources ? `<p class="mt-1 text-[9px] text-slate-500">Signal: ${escapeHTML(sources)}</p>` : `<p class="mt-1 text-[10px] leading-relaxed text-slate-600">Try next: ${escapeHTML(skill.next)}</p>`}</article></li>`;
+                return `<li class="relative grid grid-cols-[28px_1fr] gap-3"><span class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full ${style[0]}"><i class="fa-solid ${style[1]} text-[10px]"></i></span>${index < path.skills.length - 1 ? '<span class="absolute left-[13px] top-7 h-[calc(100%-10px)] border-l-2 border-violet-100"></span>' : ''}<article class="mb-2 min-w-0 rounded-lg border border-slate-200 bg-white p-3"><div class="flex flex-wrap items-center justify-between gap-2"><strong class="text-xs text-slate-900">Year ${index + 1} · ${escapeHTML(skill.name)}</strong><span class="rounded-full ${style[0]} px-2 py-1 text-[9px] font-bold">${state}</span></div>${sources ? `<p class="mt-1 text-[9px] text-slate-500">Signal: ${escapeHTML(sources)}</p>` : `<p class="mt-1 text-[10px] leading-relaxed text-slate-600">Try next: ${escapeHTML(skill.next)}</p>`}</article></li>`;
             });
-            summary.innerHTML = `<strong>${escapeHTML(path.title)}:</strong> ${mappedSignals} of ${path.skills.length} steps have a project/certificate signal or accepted peer-learning activity.${nextStepSuggestion ? `<p class="mt-2"><strong>Suggested next step:</strong> ${escapeHTML(nextStepSuggestion.name)} — ${escapeHTML(nextStepSuggestion.next)}</p>` : '<p class="mt-2"><strong>Suggested next step:</strong> Add a new project or certificate that demonstrates an advanced skill in this path.</p>'}${hasAnyEvidence ? '' : '<p class="mt-2 font-normal">No project, certificate, or peer-learning activity is linked yet. The suggestions below are a starting roadmap.</p>'}`;
+            summary.innerHTML = `<strong>Four-year pathway · ${escapeHTML(path.title)}:</strong> ${isCustom ? 'A role-specific foundation-to-capstone starter roadmap is ready.' : mappedSignals + ' of ' + path.skills.length + ' years have a project/certificate signal or accepted peer-learning activity.'}${nextStepSuggestion ? `<p class="mt-2"><strong>Suggested next step:</strong> ${escapeHTML(nextStepSuggestion.name)} — ${escapeHTML(nextStepSuggestion.next)}</p>` : '<p class="mt-2"><strong>Suggested next step:</strong> Add a new project or certificate that demonstrates an advanced skill in this path.</p>'}${hasAnyEvidence ? '' : '<p class="mt-2 font-normal">No project, certificate, or peer-learning activity is linked yet. The suggestions below are a starting roadmap.</p>'}`;
             steps.innerHTML = mapped.join('');
         }
         async function refreshPersonalSkillMap() {
@@ -3619,8 +3715,8 @@
             finally { if (button) button.disabled = false; }
         }
         function clearPersonalSkillMapGoal() {
-            const select = document.getElementById('personalSkillMapCareer'); if (select) select.value = '';
-            try { localStorage.removeItem(personalSkillMapStorageKey()); } catch { /* Keep the map usable when browser storage is disabled. */ }
+            const select = document.getElementById('personalSkillMapCareer'), custom = document.getElementById('personalSkillMapCustomRole'), interview = document.getElementById('interviewCustomRole'); if (select) select.value = ''; if(custom) custom.value=''; if(interview) interview.value='';
+            try { localStorage.removeItem(personalSkillMapStorageKey()); localStorage.removeItem(careerTargetStorageKey()); } catch { /* Keep the map usable when browser storage is disabled. */ }
             renderPersonalSkillMap();
         }
         const libraryStarterCatalog = [
@@ -3690,7 +3786,7 @@
             if (!['student', 'teacher', 'hod'].includes(currentSessionRole)) return;
             try {
                 campusLifeData = await campusLifeApi('/api/campus-life');
-                renderCampusCalendar(); renderCampusAppointments(); renderCampusEvents(); renderCampusAlerts(); renderLostFound(); renderCampusMaintenance(); renderPlacements(); renderAcademicProgress(); renderCounsellingRequests(); renderAlumniMentors(); renderStudentBusRoutes(); renderCampusProjects(); renderPersonalSkillMap();
+                renderCampusCalendar(); renderCampusAppointments(); renderCampusEvents(); renderStudentSuccessRadar(); renderCampusAlerts(); renderLostFound(); renderCampusMaintenance(); renderPlacements(); renderAcademicProgress(); renderCounsellingRequests(); renderAlumniMentors(); renderStudentBusRoutes(); renderCampusProjects(); renderPersonalSkillMap();
                 if (currentSessionRole === 'student') await Promise.allSettled([loadStudyPlanner(), loadStudentTimetable()]);
                 else if (['teacher', 'hod'].includes(currentSessionRole)) void loadStaffTimetable();
                 if (currentSessionRole !== 'student') renderStaffCampusLifeInbox();
@@ -3856,6 +3952,57 @@
         }
         let studentStudyPlanItems = [];
 let studentTimetableItems = [];
+let studentClassAssignments = [];
+let assignmentReminderTimer = null;
+let assignmentPollTimer = null;
+let assignmentInitialLoadComplete = false;
+const assignmentReminderKey = () => 'ilahia_assignment_reminder_' + currentSessionCampusKey + '_' + currentSessionUserId;
+const assignmentSeenKey = () => assignmentReminderKey() + '_seen';
+async function enableAssignmentNotifications() {
+    const status = document.getElementById('assignmentReminderStatus');
+    if (!('Notification' in window)) { if (status) status.textContent = 'This browser does not support notifications. Your portal assignment list and calendar still work.'; return; }
+    try {
+        const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+        if (permission !== 'granted') { if (status) status.textContent = 'Notifications are blocked. Allow them in browser or device settings to receive daily alerts.'; return; }
+        if (status) status.textContent = 'Daily assignment alerts are enabled on this device while the portal is open.';
+        notifyUnseenAssignments(); checkAssignmentReminder();
+    } catch (_) { if (status) status.textContent = 'Could not enable notifications in this browser.'; }
+}
+function checkAssignmentReminder() {
+    if (currentSessionRole !== 'student' || !studentClassAssignments.length || !('Notification' in window) || Notification.permission !== 'granted') return;
+    const input = document.getElementById('assignmentReminderTime'), time = input?.value || '18:00';
+    try { localStorage.setItem(assignmentReminderKey() + '_time', time); } catch (_) {}
+    const now = new Date(), today = [now.getFullYear(), String(now.getMonth()+1).padStart(2,'0'), String(now.getDate()).padStart(2,'0')].join('-');
+    const current = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    const pending = studentClassAssignments.filter(item => !item.submitted);
+    if (!pending.length || current < time) return;
+    let sent = ''; try { sent = localStorage.getItem(assignmentReminderKey() + '_sent') || ''; } catch (_) {}
+    if (sent === today) return;
+    const limit = new Date(now.getFullYear(),now.getMonth(),now.getDate()+2); const limitDay = [limit.getFullYear(),String(limit.getMonth()+1).padStart(2,'0'),String(limit.getDate()).padStart(2,'0')].join('-');
+    const first = pending.find(item => item.dueDate <= limitDay) || pending[0], count = pending.length;
+    try {
+        const overdue = first.dueDate < today;
+        new Notification(overdue ? 'Overdue assignment warning' : count === 1 ? 'Assignment reminder' : 'Daily assignment reminder', { body: overdue ? first.title + ' is past its due date (' + first.dueDate + '). Submit it as soon as you can.' : count === 1 ? first.title + ' · ' + first.subject + ' · due ' + first.dueDate : count + ' assignments still need your submission. Next: ' + first.title + ' · due ' + first.dueDate, tag: 'ilahia-daily-assignment-' + today });
+        localStorage.setItem(assignmentReminderKey() + '_sent', today);
+    } catch (_) {}
+}
+function notifyUnseenAssignments() {
+    if (currentSessionRole !== 'student' || !('Notification' in window) || Notification.permission !== 'granted') return;
+    let known = []; try { known = JSON.parse(localStorage.getItem(assignmentSeenKey()) || '[]'); } catch (_) {}
+    const fresh = studentClassAssignments.filter(item => !known.includes(item.id));
+    if (fresh.length) {
+        const titles = fresh.slice(0, 3).map(item => item.title).join(', ');
+        try { new Notification(fresh.length === 1 ? 'New assignment from your teacher' : fresh.length + ' new assignments', { body: titles + (fresh.length > 3 ? ' and ' + (fresh.length - 3) + ' more' : ''), tag: 'ilahia-new-assignments-' + currentSessionCampusKey }); } catch (_) {}
+    }
+    try { localStorage.setItem(assignmentSeenKey(), JSON.stringify(studentClassAssignments.map(item => item.id).slice(-300))); } catch (_) {}
+}
+function startAssignmentReminderChecks() {
+    const time = document.getElementById('assignmentReminderTime');
+    try { const saved = localStorage.getItem(assignmentReminderKey() + '_time'); if (saved && time) time.value = saved; } catch (_) {}
+    if (!assignmentReminderTimer) assignmentReminderTimer = setInterval(checkAssignmentReminder, 60000);
+    if (!assignmentPollTimer) assignmentPollTimer = setInterval(() => { if (currentSessionRole === 'student') void loadStudentAssignments(); }, 120000);
+    if (time && !time.dataset.reminderListener) { time.dataset.reminderListener = '1'; time.addEventListener('change', checkAssignmentReminder); }
+}
 function campusPlannerStorageKey() { return 'ilahia_planner_' + currentSessionCampusKey + '_' + currentSessionUserId; }
 function studentTimetableStorageKey() { return 'ilahia_timetable_group_' + currentSessionCampusKey + '_' + currentSessionUserId; }
 async function addPlannerReminder(event) {
@@ -3877,11 +4024,49 @@ async function loadStudyPlanner() {
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || 'Could not load your study plan.');
         studentStudyPlanItems = Array.isArray(data.items) ? data.items : [];
-        renderStudyPlanner(); renderCampusCalendar();
+        await loadStudentAssignments();
+        renderStudyPlanner(); renderCampusCalendar(); renderStudentSuccessRadar();
     } catch (error) {
         const list = document.getElementById('studyPlanTaskList');
         if (list) list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load your study plan.') + '</p>';
     }
+}
+function renderStudentSuccessRadar() {
+    const summary=document.getElementById('studentSuccessRadarSummary'), list=document.getElementById('studentSuccessRadarItems');
+    if(!summary||!list||currentSessionRole!=='student')return;
+    const now=new Date(), today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+    const near=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7), week=[near.getFullYear(),String(near.getMonth()+1).padStart(2,'0'),String(near.getDate()).padStart(2,'0')].join('-');
+    const overdue=studentClassAssignments.filter(item=>!item.submitted&&item.dueDate<today);
+    const dueSoon=studentClassAssignments.filter(item=>!item.submitted&&item.dueDate>=today&&item.dueDate<=week).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+    const studySoon=studentStudyPlanItems.filter(item=>!item.completed&&item.dueDate>=today&&item.dueDate<=week).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+    const events=(campusLifeData.events||[]).filter(item=>item.date>=today&&item.date<=week).sort((a,b)=>a.date.localeCompare(b.date));
+    const cards=[
+      ...overdue.map(item=>({kind:'Overdue warning',title:item.title,date:item.dueDate,detail:'Deadline passed. Submit as soon as you can.',tone:'border-rose-200 bg-rose-50 text-rose-900'})),
+      ...dueSoon.map(item=>({kind:'Assignment due',title:item.title,date:item.dueDate,detail:item.subject+' · '+(item.teacherName||'Teacher'),tone:'border-amber-200 bg-amber-50 text-amber-950'})),
+      ...studySoon.map(item=>({kind:'Study plan',title:item.task,date:item.dueDate,detail:item.subject+' · '+item.minutes+' minutes',tone:'border-blue-200 bg-blue-50 text-blue-950'})),
+      ...events.slice(0,2).map(item=>({kind:'Campus event',title:item.title,date:item.date,detail:item.location||item.type||'Upcoming event',tone:'border-emerald-200 bg-emerald-50 text-emerald-950'}))
+    ].slice(0,6);
+    const immediate=overdue.length?'Start with '+overdue.length+' overdue assignment'+(overdue.length===1?'':'s')+'.':dueSoon.length?'Next, work on “'+dueSoon[0].title+'” due '+dueSoon[0].dueDate+'.':studySoon.length?'Keep your study plan moving: “'+studySoon[0].task+'” is next.':events.length?'No upcoming assignment deadline in the next week. Your next campus event is '+events[0].title+'.':'No urgent assignments or study tasks are due this week.';
+    summary.textContent=immediate;
+    list.innerHTML=cards.length?cards.map(item=>'<article class="rounded-lg border p-2.5 '+item.tone+'"><div class="flex items-center justify-between gap-2"><span class="text-[9px] font-bold uppercase tracking-wide">'+escapeHTML(item.kind)+'</span><time class="text-[9px] font-semibold">'+escapeHTML(item.date||'')+'</time></div><strong class="mt-1 block text-[11px]">'+escapeHTML(item.title)+'</strong><p class="mt-1 text-[10px] opacity-80">'+escapeHTML(item.detail)+'</p></article>').join(''):'<p class="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-[11px] text-emerald-900">You are clear for the next week. Check the campus calendar for new events.</p>';
+}
+async function loadStudentAssignments() {
+    const list = document.getElementById('studentAssignmentList'); if (!list) return;
+    try {
+        const response = await fetch('/api/class-assignments', { credentials: 'same-origin', cache: 'no-store' }), data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Could not load teacher assignments.');
+        studentClassAssignments = Array.isArray(data.items) ? data.items : [];
+        assignmentInitialLoadComplete = true; notifyUnseenAssignments(); renderStudentSuccessRadar();
+        const todayLocal = [new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-');
+        list.innerHTML = studentClassAssignments.length ? studentClassAssignments.map(item => { const overdue = !item.submitted && item.dueDate < todayLocal; return '<article class="rounded-lg border ' + (item.submitted ? 'border-emerald-200 bg-emerald-50' : overdue ? 'border-rose-300 bg-rose-50' : 'border-amber-200 bg-white') + ' p-3"><div class="flex flex-wrap items-start justify-between gap-2"><div><h6 class="text-xs font-bold text-slate-900">' + escapeHTML(item.title) + '</h6><p class="mt-1 text-[10px] ' + (overdue ? 'font-bold text-rose-800' : 'text-slate-600') + '">' + escapeHTML(item.subject) + ' · Due ' + escapeHTML(item.dueDate) + ' · ' + escapeHTML(item.teacherName || 'Teacher') + (overdue ? ' · DEADLINE PASSED — submit as soon as possible' : '') + '</p><p class="mt-2 whitespace-pre-line text-[11px] text-slate-700">' + escapeHTML(item.instructions) + '</p></div><span class="rounded-full px-2 py-1 text-[9px] font-bold ' + (item.submitted ? 'bg-emerald-100 text-emerald-800' : overdue ? 'bg-rose-200 text-rose-900' : 'bg-amber-100 text-amber-900') + '">' + (item.submitted ? 'Submitted' : overdue ? 'Overdue' : 'Pending') + '</span></div>' + (item.submitted ? '<p class="mt-2 text-[10px] text-emerald-800">Submitted ' + escapeHTML(new Date(item.submission.submittedAt).toLocaleString()) + '</p>' : '<form class="mt-3 space-y-2" onsubmit="submitClassAssignment(event, &quot;' + escapeHTML(item.id) + '&quot;)"><label class="block text-[10px] font-semibold">Submission note or project link<textarea name="text" required maxlength="5000" rows="2" class="mt-1 w-full rounded border border-slate-300 p-2 text-xs" placeholder="Paste a project link or briefly describe your submission"></textarea></label><button class="rounded bg-amber-700 px-3 py-1.5 text-[10px] font-bold text-white">Submit work</button><span class="ml-2 text-[10px]" aria-live="polite"></span></form>') + '</article>'; }).join('') : '<p class="rounded-lg bg-white p-3 text-xs text-slate-500">No assignments have been published for your campus yet.</p>';
+        startAssignmentReminderChecks(); checkAssignmentReminder(); renderCampusCalendar();
+    } catch (error) { list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load assignments.') + '</p>'; }
+}
+async function submitClassAssignment(event, id) {
+    event.preventDefault(); const form = event.currentTarget, button = form.querySelector('button'), status = form.querySelector('[aria-live]');
+    button.disabled = true; button.textContent = 'Submitting…';
+    try { const response = await fetch('/api/class-assignments/' + encodeURIComponent(id) + '/submit', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: new FormData(form).get('text') }) }), data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not submit work.'); await loadStudentAssignments(); }
+    catch (error) { status.textContent = error.message; status.className = 'ml-2 text-[10px] text-rose-700'; button.disabled = false; button.textContent = 'Submit work'; }
 }
 function renderStudyPlanner() {
     const list = document.getElementById('studyPlanTaskList'); if (!list) return;
@@ -3915,6 +4100,7 @@ function renderCampusCalendar() {
     const rows = [
         ...(campusLifeData.events || []).map(item => ({ date: item.date, title: item.title, detail: item.location || 'Campus event', type: item.type === 'club' ? 'Club' : item.type === 'workshop' ? 'Workshop' : 'Event' })),
         ...(campusLifeData.appointments || []).map(item => ({ date: item.date, title: 'Mentor · ' + item.topic, detail: item.time + ' · ' + item.status, type: 'Appointment' })),
+        ...studentClassAssignments.map(item => ({ id: item.id, date: item.dueDate, title: item.title, detail: item.subject + (item.submitted ? ' · submitted' : item.dueDate < [new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-') ? ' · DEADLINE PASSED — submit as soon as possible' : ' · assigned by ' + (item.teacherName || 'teacher')), type: item.submitted ? 'Submitted assignment' : item.dueDate < [new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-') ? 'Overdue warning' : 'Assignment deadline' })),
         ...studentStudyPlanItems.filter(item => !item.completed).map(item => ({ id: item.id, date: item.dueDate, title: item.task, detail: item.subject + ' · ' + item.minutes + ' minute study block · ' + item.priority + ' priority', type: 'Study task' })),
         ...legacyReminders.map(item => ({ id: item.id, date: item.date, title: item.title, detail: 'Older personal reminder · saved on this browser', type: 'Reminder' }))
     ].filter(item => item.date).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 12);
@@ -4627,6 +4813,30 @@ async function requestMentorAppointment(event) {
                 form.reset(); message.textContent = 'Survey released to students in your campus.'; message.className = 'ml-3 text-xs text-emerald-800'; await loadTeacherFeedback();
             } catch (error) { message.textContent = error.message || 'Could not publish survey.'; message.className = 'ml-3 text-xs text-rose-700'; }
             finally { button.disabled = false; button.textContent = 'Publish survey'; }
+        }
+
+        async function publishTeacherAssignment(event) {
+            event.preventDefault(); const form = event.currentTarget, button = document.getElementById('teacherAssignmentPublish'), message = document.getElementById('teacherAssignmentMessage');
+            button.disabled = true; button.textContent = 'Publishing…'; message.textContent = '';
+            try { const response = await fetch('/api/class-assignments', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: document.getElementById('teacherAssignmentTitle').value, subject: document.getElementById('teacherAssignmentSubject').value, dueDate: document.getElementById('teacherAssignmentDueDate').value, instructions: document.getElementById('teacherAssignmentInstructions').value }) }), data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not publish assignment.'); form.reset(); message.textContent = 'Published. The due date is now on students’ portal calendar.'; message.className = 'ml-3 text-xs text-emerald-800'; await loadTeacherAssignments(); }
+            catch (error) { message.textContent = error.message || 'Could not publish assignment.'; message.className = 'ml-3 text-xs text-rose-700'; }
+            finally { button.disabled = false; button.textContent = 'Publish assignment'; }
+        }
+        let teacherAssignmentPollTimer = null;
+        let teacherAssignmentsLoaded = false;
+        function teacherSubmissionSeenKey() { return 'ilahia_teacher_submission_seen:' + currentSessionCampusKey + ':' + currentSessionUserId; }
+        async function enableTeacherSubmissionNotifications() { const status=document.getElementById('teacherAssignmentAlertStatus'); if(!('Notification' in window)){ if(status)status.textContent='This browser does not support notifications; refresh the assignments panel to see submissions.';return;} try { const permission=Notification.permission==='granted'?'granted':await Notification.requestPermission(); if(status)status.textContent=permission==='granted'?'Submission alerts enabled for this teacher account on this device.':'Notifications blocked. Allow them in browser settings to receive submission alerts.'; if(permission==='granted') await loadTeacherAssignments(); } catch(_) { if(status)status.textContent='Could not enable notifications.'; } }
+        async function loadTeacherAssignments() {
+            const list = document.getElementById('teacherAssignmentList'); if (!list) return;
+            try { const response = await fetch('/api/class-assignments', { credentials: 'same-origin', cache: 'no-store' }), data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Could not load assignments.');
+                const submissionKeys=(data.items||[]).flatMap(item=>(item.submissions||[]).map(sub=>item.id+':'+sub.studentId+':'+sub.submittedAt));
+                let known=[]; try{known=JSON.parse(localStorage.getItem(teacherSubmissionSeenKey())||'[]')}catch(_){}
+                if(teacherAssignmentsLoaded && 'Notification' in window && Notification.permission==='granted'){ const fresh=(data.items||[]).flatMap(item=>(item.submissions||[]).filter(sub=>!known.includes(item.id+':'+sub.studentId+':'+sub.submittedAt)).map(sub=>({item,sub}))); for(const entry of fresh.slice(0,5)){ try{new Notification('Student submitted an assignment',{body:entry.sub.submittedAt ? entry.sub.studentName+' submitted “'+entry.item.title+'”.' : 'A student submitted '+entry.item.title+'.',tag:'ilahia-submission-'+entry.item.id+'-'+entry.sub.studentId});}catch(_){}} }
+                if('Notification' in window && Notification.permission==='granted'){ try{localStorage.setItem(teacherSubmissionSeenKey(),JSON.stringify(submissionKeys.slice(-500)))}catch(_){}}
+                teacherAssignmentsLoaded=true;
+                if(!teacherAssignmentPollTimer) teacherAssignmentPollTimer=setInterval(()=>{if(currentSessionRole==='teacher')void loadTeacherAssignments()},120000);
+                list.innerHTML = data.items?.length ? data.items.map(item => '<article class="rounded-lg border border-slate-200 p-3"><div class="flex flex-wrap items-start justify-between gap-2"><div><h5 class="text-xs font-bold text-slate-900">' + escapeHTML(item.title) + '</h5><p class="mt-1 text-[10px] text-slate-600">' + escapeHTML(item.subject) + ' · Due ' + escapeHTML(item.dueDate) + (item.dueDate < [new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-') ? ' · Past due' : '') + '</p><p class="mt-2 whitespace-pre-line text-[11px] text-slate-700">' + escapeHTML(item.instructions) + '</p></div><span class="rounded-full bg-blue-100 px-2 py-1 text-[9px] font-bold text-blue-900">' + Number(item.submissionCount || 0) + ' submitted</span></div>' + (item.submissions?.length ? '<details class="mt-2"><summary class="cursor-pointer text-[10px] font-semibold text-blue-800">Review student submissions</summary><div class="mt-2 space-y-2">' + item.submissions.map(sub => '<div class="rounded bg-slate-50 p-2"><strong class="text-[10px]">' + escapeHTML(sub.studentName || 'Student') + '</strong><span class="ml-2 text-[9px] text-slate-500">' + escapeHTML(new Date(sub.submittedAt).toLocaleString()) + '</span><p class="mt-1 whitespace-pre-line break-words text-[10px]">' + escapeHTML(sub.text) + '</p></div>').join('') + '</div></details>' : '') + '</article>').join('') : '<p class="rounded-lg bg-slate-50 p-3 text-xs text-slate-500">No assignments published yet.</p>';
+            } catch (error) { list.innerHTML = '<p class="text-xs text-rose-700">' + escapeHTML(error.message || 'Could not load assignments.') + '</p>'; }
         }
 
         async function loadTeacherFeedback() {
@@ -6394,7 +6604,7 @@ async function requestMentorAppointment(event) {
                     document.getElementById('staffGatepassButton')?.classList.toggle('hidden', session.role !== 'hod');
                     document.getElementById('mentorGatepassButton')?.classList.toggle('hidden', session.role !== 'teacher');
                     document.getElementById('teacherSkillVerificationSection')?.classList.toggle('hidden', session.role !== 'teacher');
-                    void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(session.role === 'hod' ? [loadHodGatepasses()] : [])]);
+                    void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherAssignments(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(session.role === 'hod' ? [loadHodGatepasses()] : [])]);
                 } else if (session.role === 'admin') {
                     // Preserve the valid session, but never reopen the private admin panel on app launch.
                     document.getElementById('portalModal').classList.add('hidden');
@@ -6621,6 +6831,7 @@ async function requestMentorAppointment(event) {
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid student ID or passcode.');
+                setActiveSessionRole('student');
                 const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 if (!sessionResponse.ok) throw new Error('Sign-in was accepted, but the browser did not retain the secure session cookie. Check that site cookies are enabled, then sign in again.');
                 const confirmedSession = await sessionResponse.json();
@@ -6678,6 +6889,7 @@ async function requestMentorAppointment(event) {
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid staff ID or passcode.');
+                setActiveSessionRole(result.role);
                 const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 const signedInSession = sessionResponse.ok ? await sessionResponse.json() : null;
                 if (!signedInSession || signedInSession.role !== result.role || signedInSession.campusKey !== currentActiveKey) throw new Error('Sign-in was accepted, but this browser did not keep the staff session. Check that site cookies are enabled, then sign in again.');
@@ -6703,7 +6915,7 @@ async function requestMentorAppointment(event) {
                 document.getElementById('staffGatepassInbox')?.classList.add('hidden');
                 document.getElementById('mentorGatepassInbox')?.classList.add('hidden');
                 if (currentLang !== 'en') translatePage(currentLang);
-                void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(result.role === 'hod' ? [loadHodGatepasses()] : []), ...(result.role === 'teacher' ? [loadMentorGatepasses(), loadTeacherSkillVerificationQueue()] : [])]);
+                void Promise.allSettled([loadAIKnowledgeFromDatabase(true), loadTeacherFeedback(), loadTeacherAssignments(), loadTeacherKnowledge(), loadStaffLeaveRequests(), loadMyGatepasses('teacher'), loadCampusLife(), ...(result.role === 'hod' ? [loadHodGatepasses()] : []), ...(result.role === 'teacher' ? [loadMentorGatepasses(), loadTeacherSkillVerificationQueue()] : [])]);
                 logSystemActivity(`[PORTAL] Faculty ${cid} successfully logged in.`); 
             } catch (error) {
                 alert(error.message || 'Could not sign in. Start the local backend and try again.');
@@ -6806,6 +7018,7 @@ async function requestMentorAppointment(event) {
                 });
                 const result = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(result.error || 'Invalid administrator credentials.');
+                setActiveSessionRole('admin');
                 const sessionResponse = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
                 const signedInSession = sessionResponse.ok ? await sessionResponse.json() : null;
                 if (signedInSession?.role !== 'admin') throw new Error('Sign-in was accepted, but this browser did not keep the administrator session. Check that site cookies are enabled, then sign in again.');
@@ -7194,7 +7407,12 @@ async function requestMentorAppointment(event) {
 
         function renderInterviewPracticeQuestion() {
             const role = document.getElementById('interviewPracticeRole')?.value || 'general';
-            const questions = interviewPracticeQuestions[role] || interviewPracticeQuestions.general;
+            const custom = document.getElementById('interviewCustomRole')?.value.trim();
+            const questions = custom ? [
+                'What skills and experience make you a strong candidate for a ' + custom + ' role?',
+                'Describe a project or challenge that shows how you would perform as a ' + custom + '.',
+                'How would you approach your first 90 days as a ' + custom + ', and how would you measure progress?'
+            ] : interviewPracticeQuestions[role] || interviewPracticeQuestions.general;
             const count = document.getElementById('interviewQuestionCount');
             const prompt = document.getElementById('interviewQuestionText');
             if (!count || !prompt) return;
@@ -7213,7 +7431,12 @@ async function requestMentorAppointment(event) {
 
         function nextInterviewQuestion() {
             const role = document.getElementById('interviewPracticeRole')?.value || 'general';
-            const questions = interviewPracticeQuestions[role] || interviewPracticeQuestions.general;
+            const custom = document.getElementById('interviewCustomRole')?.value.trim();
+            const questions = custom ? [
+                'What skills and experience make you a strong candidate for a ' + custom + ' role?',
+                'Describe a project or challenge that shows how you would perform as a ' + custom + '.',
+                'How would you approach your first 90 days as a ' + custom + ', and how would you measure progress?'
+            ] : interviewPracticeQuestions[role] || interviewPracticeQuestions.general;
             interviewPracticeQuestionIndex = (interviewPracticeQuestionIndex + 1) % questions.length;
             const answer = document.getElementById('interviewPracticeAnswer');
             const feedback = document.getElementById('interviewPracticeFeedback');
@@ -17575,7 +17798,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const input = document.getElementById('lilyConversationInput');
   const greeting = document.querySelector('.trust-mascot-greeting');
   if (!panel || !messages || !input) return;
-  const welcome = 'Hi, I’m Ira! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
+  const welcome = 'Hi, I’m Tara! I can share live campus news, alerts, and published upcoming events. Ask me “news” or “events.”';
   const plain = value => String(value || '').trim();
   const speechLocales = { en: 'en-IN', ml: 'ml-IN', ar: 'ar-SA', hi: 'hi-IN', ta: 'ta-IN' };
   let lilyVoiceEnabled = true;
@@ -17613,7 +17836,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const button = document.getElementById('lilyMicButton');
     if (!button) return;
     button.innerHTML = recording ? '<i class="fa-solid fa-stop"></i>' : '<i class="fa-solid fa-microphone"></i>';
-    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Ira' : 'Speak to Ira');
+    button.setAttribute('aria-label', recording ? 'Stop and send voice message to Tara' : 'Speak to Tara');
     button.setAttribute('aria-pressed', recording ? 'true' : 'false');
   }
   window.speakLilyText = window.speakIraText = () => false;
@@ -17642,7 +17865,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       clearTimeout(lilySpeechSendTimer);
       if (purpose !== 'lily' || lilySpeechSent || !target?.value.trim()) return false;
       lilySpeechSent = true;
-      setVoiceStatus('Sending your voice message to Ira…', 'lilyVoiceStatus');
+      setVoiceStatus('Sending your voice message to Tara…', 'lilyVoiceStatus');
       void window.sendLilyMessage({ preventDefault() {} });
       return true;
     };
@@ -17666,7 +17889,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       if (target) target.value = transcript.trim();
       if (purpose === 'campus-chat' && event.results[event.results.length - 1]?.isFinal) { setVoiceStatus('I heard you. Sending your question…', statusId); recognition.stop(); }
       if (purpose === 'lily' && event.results[event.results.length - 1]?.isFinal) {
-        setVoiceStatus('I heard you. Sending your question to Ira…', statusId);
+        setVoiceStatus('I heard you. Sending your question to Tara…', statusId);
         clearTimeout(lilySpeechSendTimer);
         lilySpeechSendTimer = window.setTimeout(() => { sendLilyVoiceMessage(); recognition.stop(); }, 350);
       }
@@ -17713,8 +17936,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
   const lilyOfflinePhrases = {
     ml: {
       'I’m checking the latest campus updates…': 'ഞാൻ പുതിയ ക്യാമ്പസ് അറിയിപ്പുകൾ പരിശോധിക്കുകയാണ്…',
-      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ Ira, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
-      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ Iraയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
+      'Hi! I’m Tara, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'ഹായ്! ഞാൻ Tara, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. പുതിയ വാർത്തകളും വരാനിരിക്കുന്ന പരിപാടികളും അറിയാൻ എന്നോട് ചോദിക്കൂ. എന്താണ് അറിയേണ്ടത്?',
+      'I’m Tara. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'ഞാൻ Iraയാണ്. ക്യാമ്പസ് വാർത്തകളും അറിയിപ്പുകളും വരാനിരിക്കുന്ന പരിപാടികളും ഞാൻ പങ്കിടും. “വാർത്ത” അല്ലെങ്കിൽ “പരിപാടികൾ” എന്ന് ചോദിക്കൂ.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'ക്യാമ്പസ് വാർത്തകളും പരിപാടികളും പറയാനും ശരിയായ സ്ഥാപന പോർട്ടലിലേക്ക് കൊണ്ടുപോകാനും എനിക്ക് കഴിയും. “ലോ കോളേജ് സ്റ്റുഡന്റ് പോർട്ടലിലേക്ക് കൊണ്ടുപോകൂ” എന്ന് ചോദിക്കൂ.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'ആദ്യം സ്ഥാപനം തിരഞ്ഞെടുക്കൂ. ശേഷം “സ്റ്റുഡന്റ് പോർട്ടൽ തുറക്കൂ” എന്ന് പറയൂ; ആ സ്ഥാപനത്തിന്റെ ലോഗിൻ തുറക്കാം.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'ഇപ്പോൾ വരാനിരിക്കുന്ന ക്യാമ്പസ് പരിപാടികൾ പ്രസിദ്ധീകരിച്ചിട്ടില്ല. പുതിയ അറിയിപ്പുകൾക്കായി പിന്നീട് ക്യാമ്പസ് ഇൻബോക്സ് പരിശോധിക്കൂ.',
@@ -17722,8 +17945,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     hi: {
       'I’m checking the latest campus updates…': 'मैं कैंपस की नई जानकारी देख रही हूँ…',
-      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं Ira, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
-      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं Ira हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
+      'Hi! I’m Tara, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'नमस्ते! मैं Tara, आपकी कैंपस साथी हूँ। मैं ताज़ा खबरें और आने वाले कार्यक्रम बता सकती हूँ। आप क्या जानना चाहेंगे?',
+      'I’m Tara. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'मैं Tara हूँ। मैं कैंपस की खबरें, सूचनाएँ और आने वाले कार्यक्रम बताती हूँ। “खबर” या “कार्यक्रम” पूछें।',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'मैं कैंपस की ताज़ा खबरें और कार्यक्रम बता सकती हूँ और सही संस्थान पोर्टल तक पहुँचा सकती हूँ। कहें: “मुझे लॉ कॉलेज के छात्र पोर्टल पर ले चलो।”',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'पहले संस्थान चुनें, फिर “छात्र पोर्टल खोलो” कहें। मैं उस कैंपस का लॉगिन खोल दूँगी।',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'अभी कैंपस के कोई आगामी कार्यक्रम प्रकाशित नहीं हैं। नई सूचनाओं के लिए बाद में कैंपस इनबॉक्स देखें।',
@@ -17731,8 +17954,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ta: {
       'I’m checking the latest campus updates…': 'சமீபத்திய வளாக அறிவிப்புகளைப் பார்க்கிறேன்…',
-      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் Ira, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
-      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் Ira. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
+      'Hi! I’m Tara, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'வணக்கம்! நான் Tara, உங்கள் வளாகத் தோழி. புதிய செய்திகள் மற்றும் வரவிருக்கும் நிகழ்வுகளைச் சொல்ல முடியும். என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?',
+      'I’m Tara. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'நான் Tara. வளாகச் செய்திகள், அறிவிப்புகள், வரவிருக்கும் நிகழ்வுகளைப் பகிர்கிறேன். “செய்தி” அல்லது “நிகழ்வுகள்” என்று கேளுங்கள்.',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'வளாகச் செய்திகள் மற்றும் நிகழ்வுகளைச் சொல்லவும் சரியான கல்லூரி போர்ட்டலுக்கு வழிகாட்டவும் முடியும். “என்னை சட்டக் கல்லூரி மாணவர் போர்ட்டலுக்கு அழைத்துச் செல்” என்று கேளுங்கள்.',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'முதலில் கல்வி நிறுவனத்தைத் தேர்ந்தெடுத்து, “மாணவர் போர்ட்டலைத் திற” என்று சொல்லுங்கள். அந்த வளாக உள்நுழைவைத் திறக்கிறேன்.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'தற்போது வரவிருக்கும் வளாக நிகழ்வுகள் வெளியிடப்படவில்லை. புதிய அறிவிப்புகளுக்கு பின்னர் வளாக இன்பாக்ஸைப் பாருங்கள்.',
@@ -17740,8 +17963,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     },
     ar: {
       'I’m checking the latest campus updates…': 'أتحقق من آخر تحديثات الحرم…',
-      'Hi! I’m Ira, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا Ira، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
-      'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا Ira. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
+      'Hi! I’m Tara, your campus companion. I can check the live news feed or tell you about upcoming campus events. What would you like to know?': 'مرحباً! أنا Tara، رفيقتك في الحرم. يمكنني عرض آخر الأخبار والفعاليات القادمة. ماذا تود أن تعرف؟',
+      'I’m Tara. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”': 'أنا Tara. أشارك أخبار الحرم والتنبيهات والفعاليات القادمة. اسألني عن «الأخبار» أو «الفعاليات».',
       'I can share live campus news and published events, and guide you to the right institute portal. Try “take me to the student portal of Law College.”': 'يمكنني مشاركة أخبار الحرم والفعاليات وإرشادك إلى بوابة المعهد المناسبة. قل: «خذني إلى بوابة طلاب كلية القانون».',
       'Choose the institute first, then tell me “open the student portal.” I can route you to that campus sign-in.': 'اختر المعهد أولاً ثم قل «افتح بوابة الطلاب» لأفتح صفحة تسجيل الدخول الخاصة به.',
       'There are no upcoming campus events published right now. Check the campus inbox again later for new announcements.': 'لا توجد فعاليات قادمة منشورة حالياً. تحقق من صندوق وارد الحرم لاحقاً للاطلاع على الإعلانات الجديدة.',
@@ -17818,7 +18041,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     ];
     const askedCampus = campusMatchers.find(([, pattern]) => pattern.test(query))?.[0] || null;
     const routeIntent = /\b(take me|go to|open|show me|find|navigate to|visit)\b/i.test(query) && /\b(department|departments|faculty|hod|program|programme|school subjects|course page)\b/i.test(query);
-    const routeCampus = askedCampus || (!onLanding() ? currentActiveKey : null);
+      const activeInstituteKey = window.getActiveInstituteKey?.() || '';
+      const routeCampus = askedCampus || (!onLanding() ? activeInstituteKey : null);
     if (routeIntent && routeCampus && campusLeadershipProfiles[routeCampus]) {
       const knownDepartments = [...new Set(campusLeadershipProfiles[routeCampus].people.map(person => String(person.department || '').trim()).filter(label => label && !/institute management/i.test(label)))];
       const published = { icet:['Agricultural Engineering','Artificial Intelligence & Cyber Security','Biomedical Engineering','Food Technology','Master of Business Administration','Master of Computer Applications','Physical Education'], arts:['Business Administration','Commerce','Computer Applications','Computer Science','Cyber Forensics','Economics','English','Logistics Management','Mathematics','Psychology'], poly:['Mechanical Engineering','Electrical and Electronics Engineering','Automobile Engineering'], law:['Legal Studies'], pharmacy:['Pharmacy'], school:['Mathematics','School Faculty Directory'], iti:['Trade Faculty Directory'], kmlps:['Primary School Faculty Directory'] };
@@ -17826,11 +18050,24 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const normalizedQuery = normalizeDepartmentDirectoryLabel(query);
       const aliases = label => { const n=normalizeDepartmentDirectoryLabel(label); const map={'computer science and engineering':['cse','computer science'],'computer applications':['bca','mca','computer application'],'artificial intelligence and cyber security':['ai','ai and ds','artificial intelligence','cyber security'],'mathematics':['maths','math'],'legal studies':['law department'],'school faculty directory':['school faculty','school department'],'primary school faculty directory':['primary school','kmlps'],'trade faculty directory':['trade','iti department']}; return [n,...(map[n]||[])]; };
       const department = [...new Set(knownDepartments)].sort((a,b)=>b.length-a.length).find(label => aliases(label).some(alias => alias && normalizedQuery.includes(normalizeDepartmentDirectoryLabel(alias))));
-      if (department) return { text: 'Opening the ' + department + ' page at ' + (collegeDatabase[routeCampus]?.name || 'the selected institute') + '.', action: async () => { if (currentActiveKey !== routeCampus) switchCollegePage(routeCampus); openDepartmentPage(routeCampus, department); closeLilyConversation(); } };
+      if (department) return { text: 'Opening the ' + department + ' page at ' + (collegeDatabase[routeCampus]?.name || 'the selected institute') + '.', action: async () => { const opened = window.openDepartmentPageFromIra?.(routeCampus, department); if (!opened) throw new Error('Department page is unavailable.'); closeLilyConversation(); } };
     }
-    const infoCampusKey = askedCampus || (!onLanding() ? currentActiveKey : null);
-    const pageDepartment = activeDepartmentAIContext && activeDepartmentAIContext.campusKey === infoCampusKey ? activeDepartmentAIContext.departmentName : '';
-    const departmentQuestion = /\b(department|faculty|faculties|hod|head of department|programmes?|courses?|teachers?|staff|overview|details)\b/i.test(query);
+    const currentDepartmentContext = window.getActiveDepartmentAIContext?.() || null;
+    const departmentInstituteKey = window.getActiveInstituteKey?.() || '';
+    const infoCampusKey = askedCampus || (!onLanding() ? departmentInstituteKey : null);
+    const pageDepartment = currentDepartmentContext?.campusKey === infoCampusKey ? currentDepartmentContext.departmentName : '';
+    const departmentPoints = value => {
+      const raw = String(value || '').replace(/\r/g, '').trim();
+      if (!raw) return raw;
+      const items = raw.split(/\n+/).flatMap(line => {
+        const clean = line.trim();
+        if (!clean) return [];
+        if (/^(?:[-*•]|\d+[.)])\s/.test(clean)) return [clean.replace(/^(?:[-*•]|\d+[.)])\s*/, '• ')];
+        return clean.split(/(?<=[.!?])\s+(?=[A-Z0-9])/).map(part => part.trim()).filter(Boolean);
+      });
+      return items.map((item, index) => index === 0 && item.length < 90 && !/[.!?]$/.test(item) ? item : '• ' + item).join('\n');
+    };
+    const departmentQuestion = /\b(department|faculty|faculties|hod|head of department|programmes?|courses?|teachers?|staff|overview|details|tell me more|tell me about|explain|what can you tell|what is|how does|learn about|what do they teach|what is taught)\b/i.test(query);
     if (pageDepartment && departmentQuestion && infoCampusKey && campusLeadershipProfiles[infoCampusKey]) {
       const profile = campusLeadershipProfiles[infoCampusKey];
       const targetKey = normalizeDepartmentDirectoryLabel(pageDepartment);
@@ -17840,10 +18077,14 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       const words = targetKey.split(' ').filter(word => word.length > 3 && !['engineering','department','studies','science','and'].includes(word));
       const programs = (campus?.offerings || []).filter(item => { const title=normalizeDepartmentDirectoryLabel(item.title || ''); return title.includes(targetKey) || words.some(word=>title.includes(word)); });
       const lines = [pageDepartment + ' · ' + (campus?.shortName || campus?.name || infoCampusKey)];
-      lines.push('Listed faculty: ' + (people.length ? people.slice(0,8).map(person => person.name + ' — ' + person.role).join('; ') : 'No named faculty profile is available in the current institute directory.'));
-      lines.push('Department head: ' + (heads[0]?.name || 'Not listed in the current institute directory.'));
-      lines.push('Programmes in portal records: ' + (programs.length ? programs.map(item => item.title).join('; ') : 'No programme is directly linked to this department in the current portal records.'));
-      lines.push('Faculty names and programme availability reflect the records shown on this page; they may not represent the latest staffing or intake.');
+      lines.push('• Department: ' + pageDepartment + ' at ' + (campus?.name || campus?.shortName || infoCampusKey) + '.');
+      lines.push('• Head of department: ' + (heads[0]?.name || 'Not listed in the current institute directory.'));
+      if (people.length) people.slice(0,8).forEach(person => lines.push('• Faculty: ' + person.name + ' — ' + person.role));
+      else lines.push('• Faculty: No named faculty profile is published in the current institute directory.');
+      if (programs.length) programs.slice(0,8).forEach(item => lines.push('• Programme: ' + item.title + (item.desc ? ' — ' + plain(item.desc) : '')));
+      else lines.push('• Programmes: No programme is directly linked to this department in the current portal records.');
+      lines.push('• On this page: review the department introduction, faculty profiles, and related programme cards.');
+      lines.push('• Record note: staffing and programme details reflect the published portal sources; confirm current availability with the institute.');
       return lines.join('\n');
     }
     const infoCampus = infoCampusKey ? collegeDatabase[infoCampusKey] : null;
@@ -17896,12 +18137,13 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     if (/\b(that.s amazing|that.s great|great news|i am happy|i\'m happy|this is wonderful|fantastic|awesome)\b/.test(query)) return 'Yay, I am happy to celebrate with you. Tell me what happened; I want to hear all about it.';
     if (/\b(thank you|thanks|thank you so much)\b/.test(query)) return 'You are very welcome. I’m glad I could be here with you. What else would you like to chat about?';
 
-    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Ira. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
+    if (/\b(who are you|your name|what can you do|help)\b|من أنت|اسمك|सहायता|तुम कौन|உதவி|ആരാണ്|സഹായം/.test(query)) return 'I’m Tara. I share the latest published campus headlines, alerts, and upcoming events. Ask me for “news” or “events.”';
     if (/\b(take me|go to|open|show me|find|where is|where can i find)\b/.test(query)) return 'Tell me the campus and destination, for example “take me to the student portal of Law College.”';
     try {
-      const response = await fetch('/api/ai-chat', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'campus', query: question.slice(0, 2000), campusKey: currentActiveKey || activeDepartmentAIContext?.campusKey, departmentContext: activeDepartmentAIContext?.departmentName || '', conversation: mascotConversationHistory.slice(-8) }) });
+      const departmentContext = window.getActiveDepartmentAIContext?.() || null;
+      const response = await fetch('/api/ai-chat', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'campus', query: question.slice(0, 2000), campusKey: window.getActiveInstituteKey?.() || departmentContext?.campusKey, departmentContext: departmentContext?.departmentName || '', conversation: mascotConversationHistory.slice(-8) }) });
       const data = await response.json().catch(() => ({}));
-      if (response.ok && typeof data.answer === 'string' && data.answer.trim()) return data.answer.trim();
+      if (response.ok && typeof data.answer === 'string' && data.answer.trim()) return pageDepartment ? departmentPoints(data.answer) : data.answer.trim();
     } catch (_) {}
     return 'I can help with campus information, services, news, events, and general questions. Tell me the topic or college, and I’ll narrow it down.';
   }
@@ -17976,7 +18218,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
       window.speakLilyText(thinking.textContent);
       if (reply && typeof reply === 'object' && reply.action) setTimeout(() => Promise.resolve(reply.action()).catch(() => setVoiceStatus('I could not open that portal just now. Please try the portal button.', 'lilyVoiceStatus')), 1000);
     }
-    catch (_) { window.MilaChatReactions?.onAssistantError(moodContext); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Ira could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
+    catch (_) { window.MilaChatReactions?.onAssistantError(moodContext); thinking.textContent = await localized('I can’t reach the campus updates right now. Please try again in a moment.'); setVoiceStatus('Tara could not load the reply. Please try again.', 'lilyVoiceStatus'); window.speakLilyText(thinking.textContent); }
     messages.scrollTop = messages.scrollHeight;
     input.focus({ preventScroll: true });
   };
@@ -18133,11 +18375,11 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     const hour = new Date().getHours();
     const period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     const greetings = {
-      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Ira, your campus companion. Tap me for campus news, events, or help finding a service.'},
-      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Ira, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
-      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Ira, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
-      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Ira, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
-      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Ira، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
+      en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',line:'I’m Tara, your campus companion. Tap me for campus news, events, or help finding a service.'},
+      ml:{morning:'സുപ്രഭാതം',afternoon:'ശുഭ ഉച്ചതിരിഞ്ഞ്',evening:'ശുഭ സായാഹ്നം',line:'ഞാൻ Tara, നിങ്ങളുടെ ക്യാമ്പസ് കൂട്ടുകാരി. വാർത്തകൾക്കും പരിപാടികൾക്കും സഹായത്തിനും എന്നെ തൊടൂ.'},
+      hi:{morning:'सुप्रभात',afternoon:'नमस्कार',evening:'शुभ संध्या',line:'मैं Tara, आपकी कैंपस साथी हूँ। खबरों, कार्यक्रमों या सेवा ढूँढने में मदद के लिए मुझे टैप करें।'},
+      ta:{morning:'காலை வணக்கம்',afternoon:'மதிய வணக்கம்',evening:'மாலை வணக்கம்',line:'நான் Tara, உங்கள் வளாகத் தோழி. செய்திகள், நிகழ்வுகள் அல்லது சேவையைத் தேட என்னைத் தொடுங்கள்.'},
+      ar:{morning:'صباح الخير',afternoon:'مساء الخير',evening:'مساء الخير',line:'أنا Tara، رفيقتك في الحرم. اضغط عليّ للأخبار والفعاليات أو للمساعدة في العثور على خدمة.'}
     };
     defaultGreeting = greetings[language][period] + '! ' + greetings[language].line;
     greeting.textContent = defaultGreeting;
@@ -18176,7 +18418,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
     window.resetLilyIdleMood();
     window.expressMilaEmotion('happy', 2200);
     const toast = document.getElementById('lilyLoginGreeting'), toastText = document.getElementById('lilyLoginGreetingText');
-    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Ira says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
+    if (toast && toastText) { toastText.textContent = (language === 'en' ? 'Tara says: ' : '') + greetingText; toast.classList.remove('hidden'); clearTimeout(loginGreetingTimer); loginGreetingTimer = setTimeout(window.dismissLilyLoginGreeting, 9000); }
     window.speakLilyText?.(greetingText, language);
   };
   scheduleIdleMood();
